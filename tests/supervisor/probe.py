@@ -70,12 +70,16 @@ def environment(subscription_id):
 
 
 def cleanup(subscription_id):
-    sql("application", f"""
-        SELECT pg_drop_replication_slot(slot_name) FROM pg_replication_slots
-         WHERE slot_name='{SLOT}';
-        DROP PUBLICATION IF EXISTS {PUBLICATION};
-        DROP TABLE IF EXISTS public.{TABLE};
-    """, check_result=False)
+    for _ in range(50):
+        dropped = sql("application", f"""
+            SELECT pg_drop_replication_slot(slot_name) FROM pg_replication_slots
+             WHERE slot_name='{SLOT}'
+        """, check_result=False)
+        if dropped.returncode == 0:
+            break
+        time.sleep(0.1)
+    sql("application", f"DROP PUBLICATION IF EXISTS {PUBLICATION}", check_result=False)
+    sql("application", f"DROP TABLE IF EXISTS public.{TABLE}", check_result=False)
     sql("analytics", f"DROP SCHEMA IF EXISTS {RUN} CASCADE", check_result=False)
     if subscription_id:
         sql("analytics", f"""
@@ -171,6 +175,30 @@ def main():
         """, lambda item: item == "running:0:1:true:true:0:0:true")
         check("durable health reports recovery, worker cycles, and drained queue",
               health, "running:0:1:true:true:0:0:true")
+
+        control_pid = value("analytics", f"""
+            SELECT pid FROM pg_stat_activity
+             WHERE application_name='lake-replication-supervisor:{subscription_id}'
+               AND pid <> pg_backend_pid()
+        """)
+        terminated = value("analytics", f"SELECT pg_terminate_backend({control_pid})::text")
+        check("destination control backend is forcibly disconnected",
+              terminated, "true")
+        value("application", f"INSERT INTO public.{TABLE} VALUES (3, 'reconnected')")
+        reconnection = wait_for(f"""
+            SELECT (reconnections > 0)::text || ':' ||
+                   (last_reconnected_at IS NOT NULL)::text || ':' ||
+                   (last_connection_error LIKE 'destination control connection lost:%')::text
+              FROM lake_replication.service_health
+             WHERE subscription_id={subscription_id}
+        """, lambda item: item == "true:true:true")
+        check("supervisor reacquires ownership and records reconnection telemetry",
+              reconnection, "true:true:true")
+        resumed_rows = wait_for(
+            f"SELECT string_agg(id || ':' || note, ',' ORDER BY id) FROM {RUN}.{TABLE}",
+            lambda item: item == "1:snapshot,2:supervised,3:reconnected")
+        check("replication resumes after destination control reconnection",
+              resumed_rows, "1:snapshot,2:supervised,3:reconnected")
 
         value("analytics",
               f"SELECT lake_replication.request_service_stop({subscription_id})")

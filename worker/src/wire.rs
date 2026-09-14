@@ -40,13 +40,29 @@ impl Client {
         database: &str,
         replication: bool,
     ) -> Result<Self, Error> {
+        Self::connect_named(
+            address,
+            user,
+            database,
+            replication,
+            "lake-replication-worker",
+        )
+    }
+
+    pub fn connect_named(
+        address: impl ToSocketAddrs,
+        user: &str,
+        database: &str,
+        replication: bool,
+        application_name: &str,
+    ) -> Result<Self, Error> {
         let mut stream = TcpStream::connect(address)?;
         stream.set_nodelay(true)?;
         let mut body = Vec::new();
         body.extend(196_608_u32.to_be_bytes());
         parameter(&mut body, "user", user);
         parameter(&mut body, "database", database);
-        parameter(&mut body, "application_name", "lake-replication-worker");
+        parameter(&mut body, "application_name", application_name);
         if replication {
             parameter(&mut body, "replication", "database");
         }

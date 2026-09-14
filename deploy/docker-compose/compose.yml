@@ -38,6 +38,7 @@ services:
       - ../../migrations/0009_schema_evolution.sql:/docker-entrypoint-initdb.d/28-schema-evolution.sql:ro
       - ../../migrations/0010_rebuild_promotion.sql:/docker-entrypoint-initdb.d/29-rebuild-promotion.sql:ro
       - ../../migrations/0011_supervisor.sql:/docker-entrypoint-initdb.d/30-supervisor.sql:ro
+      - ../../migrations/0012_service_reconnect.sql:/docker-entrypoint-initdb.d/31-service-reconnect.sql:ro
     ports:
       - "127.0.0.1:55434:5432"
     depends_on:

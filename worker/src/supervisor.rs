@@ -1,4 +1,4 @@
-use lake_replication_worker::wire::Client;
+use lake_replication_worker::wire::{Client, Error as WireError};
 use std::env;
 use std::path::Path;
 use std::process::{Command, Output};
@@ -25,23 +25,27 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut destination = config.connect()?;
     acquire_supervisor_lock(&mut destination, config.subscription_id)?;
-    destination.simple_query(&format!(
-        "SELECT lake_replication.start_service({}, {})",
-        config.subscription_id,
-        std::process::id()
-    ))?;
+    control_query(
+        &mut destination,
+        &config,
+        &format!(
+            "SELECT lake_replication.start_service({}, {})",
+            config.subscription_id,
+            std::process::id()
+        ),
+    )?;
     let mut consecutive_failures = 0_u32;
     let mut injected_failures = config.inject_failures;
 
     loop {
         let (desired_state, subscription_state) = service_state(&mut destination, &config)?;
         if desired_state == "stopped" {
-            stop(&mut destination, config.subscription_id)?;
+            stop(&mut destination, &config)?;
             println!("graceful stop requested");
             return Ok(());
         }
         if subscription_state != "streaming" {
-            report_cycle(&mut destination, config.subscription_id, "paused", 0, 0)?;
+            report_cycle(&mut destination, &config, "paused", 0, 0)?;
             thread::sleep(config.poll_interval);
             continue;
         }
@@ -57,7 +61,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 consecutive_failures = 0;
                 report_cycle(
                     &mut destination,
-                    config.subscription_id,
+                    &config,
                     "running",
                     receiver_cycles,
                     publisher_cycles,
@@ -71,18 +75,22 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     consecutive_failures,
                 );
                 consecutive_failures = consecutive_failures.saturating_add(1);
-                destination.simple_query(&format!(
-                    "SELECT lake_replication.report_service_failure({}, {}, {})",
-                    config.subscription_id,
-                    sql_literal(&error),
-                    delay.as_millis()
-                ))?;
+                control_query(
+                    &mut destination,
+                    &config,
+                    &format!(
+                        "SELECT lake_replication.report_service_failure({}, {}, {})",
+                        config.subscription_id,
+                        sql_literal(&error),
+                        delay.as_millis()
+                    ),
+                )?;
                 eprintln!(
                     "worker cycle failed; retrying in {}ms: {error}",
                     delay.as_millis()
                 );
                 if wait_for_retry_or_stop(&config, &mut destination, delay)? {
-                    stop(&mut destination, config.subscription_id)?;
+                    stop(&mut destination, &config)?;
                     println!("graceful stop requested during backoff");
                     return Ok(());
                 }
@@ -95,20 +103,91 @@ fn acquire_supervisor_lock(
     destination: &mut Client,
     subscription_id: i64,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let rows = destination.simple_query(&format!(
-        "SELECT pg_try_advisory_lock(hashtextextended('lake-replication-supervisor:{subscription_id}', 0))::text"
-    ))?;
-    if field(
-        rows.first().ok_or("advisory lock query returned no row")?,
-        0,
-        "advisory lock",
-    )? != "true"
-    {
+    if !try_acquire_supervisor_lock(destination, subscription_id)? {
         return Err(
             format!("subscription {subscription_id} already has an active supervisor").into(),
         );
     }
     Ok(())
+}
+
+fn control_query(
+    destination: &mut Client,
+    config: &Config,
+    sql: &str,
+) -> Result<Vec<Vec<Option<String>>>, Box<dyn std::error::Error>> {
+    loop {
+        match destination.simple_query(sql) {
+            Ok(rows) => return Ok(rows),
+            Err(WireError::Io(error)) => {
+                let connection_error = format!("destination control connection lost: {error}");
+                eprintln!("{connection_error}");
+                let mut failures = 0_u32;
+                loop {
+                    let delay = retry_delay(config.base_backoff, config.max_backoff, failures);
+                    failures = failures.saturating_add(1);
+                    thread::sleep(delay);
+                    let mut replacement = match config.connect() {
+                        Ok(client) => client,
+                        Err(error) => {
+                            eprintln!(
+                                "destination reconnect failed; retrying in {}ms: {error}",
+                                delay.as_millis()
+                            );
+                            continue;
+                        }
+                    };
+                    match try_acquire_supervisor_lock(&mut replacement, config.subscription_id) {
+                        Ok(true) => {}
+                        Ok(false) => {
+                            return Err(format!(
+                                "subscription {} was claimed by another supervisor during reconnect",
+                                config.subscription_id
+                            )
+                            .into());
+                        }
+                        Err(error) => {
+                            eprintln!(
+                                "destination reconnect lock check failed; retrying in {}ms: {error}",
+                                delay.as_millis()
+                            );
+                            continue;
+                        }
+                    }
+                    match replacement.simple_query(&format!(
+                        "SELECT lake_replication.report_service_reconnected({}, {})",
+                        config.subscription_id,
+                        sql_literal(&connection_error)
+                    )) {
+                        Ok(_) => {
+                            *destination = replacement;
+                            println!("destination control connection restored");
+                            break;
+                        }
+                        Err(WireError::Io(error)) => {
+                            eprintln!("destination reconnect was interrupted: {error}");
+                        }
+                        Err(error) => return Err(error.into()),
+                    }
+                }
+            }
+            Err(error) => return Err(error.into()),
+        }
+    }
+}
+
+fn try_acquire_supervisor_lock(
+    destination: &mut Client,
+    subscription_id: i64,
+) -> Result<bool, Box<dyn std::error::Error>> {
+    let rows = destination.simple_query(&format!(
+        "SELECT pg_try_advisory_lock(hashtextextended('lake-replication-supervisor:{subscription_id}', 0))::text"
+    ))?;
+    Ok(field(
+        rows.first().ok_or("advisory lock query returned no row")?,
+        0,
+        "advisory lock",
+    )? == "true")
 }
 
 fn run_cycle(
@@ -127,8 +206,8 @@ fn run_cycle(
         .map_err(|error| format!("could not start receiver: {error}"))?;
     ensure_success("receiver", &receiver_output)?;
 
-    let pending = has_pending_transactions(destination, config.subscription_id)
-        .map_err(|error| error.to_string())?;
+    let pending =
+        has_pending_transactions(destination, config).map_err(|error| error.to_string())?;
     if !pending {
         return Ok((1, 0));
     }
@@ -162,10 +241,14 @@ fn service_state(
     destination: &mut Client,
     config: &Config,
 ) -> Result<(String, String), Box<dyn std::error::Error>> {
-    let rows = destination.simple_query(&format!(
-        "SELECT ss.desired_state, s.state FROM lake_replication.service_status ss JOIN lake_replication.subscriptions s USING (subscription_id) WHERE ss.subscription_id={}",
-        config.subscription_id
-    ))?;
+    let rows = control_query(
+        destination,
+        config,
+        &format!(
+            "SELECT ss.desired_state, s.state FROM lake_replication.service_status ss JOIN lake_replication.subscriptions s USING (subscription_id) WHERE ss.subscription_id={}",
+            config.subscription_id
+        ),
+    )?;
     let row = rows.first().ok_or("service status row disappeared")?;
     Ok((
         field(row, 0, "desired state")?.to_owned(),
@@ -175,11 +258,16 @@ fn service_state(
 
 fn has_pending_transactions(
     destination: &mut Client,
-    subscription_id: i64,
+    config: &Config,
 ) -> Result<bool, Box<dyn std::error::Error>> {
-    let rows = destination.simple_query(&format!(
-        "SELECT (staged_lsn > published_lsn)::text FROM lake_replication.checkpoints WHERE subscription_id={subscription_id}"
-    ))?;
+    let rows = control_query(
+        destination,
+        config,
+        &format!(
+            "SELECT (staged_lsn > published_lsn)::text FROM lake_replication.checkpoints WHERE subscription_id={}",
+            config.subscription_id
+        ),
+    )?;
     Ok(field(
         rows.first().ok_or("checkpoint disappeared")?,
         0,
@@ -189,22 +277,32 @@ fn has_pending_transactions(
 
 fn report_cycle(
     destination: &mut Client,
-    subscription_id: i64,
+    config: &Config,
     state: &str,
     receiver_increment: i64,
     publisher_increment: i64,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    destination.simple_query(&format!(
-        "SELECT lake_replication.report_service_cycle({subscription_id}, {}, {receiver_increment}, {publisher_increment})",
-        sql_literal(state)
-    ))?;
+    control_query(
+        destination,
+        config,
+        &format!(
+            "SELECT lake_replication.report_service_cycle({}, {}, {receiver_increment}, {publisher_increment})",
+            config.subscription_id,
+            sql_literal(state)
+        ),
+    )?;
     Ok(())
 }
 
-fn stop(destination: &mut Client, subscription_id: i64) -> Result<(), Box<dyn std::error::Error>> {
-    destination.simple_query(&format!(
-        "SELECT lake_replication.report_service_stopped({subscription_id})"
-    ))?;
+fn stop(destination: &mut Client, config: &Config) -> Result<(), Box<dyn std::error::Error>> {
+    control_query(
+        destination,
+        config,
+        &format!(
+            "SELECT lake_replication.report_service_stopped({})",
+            config.subscription_id
+        ),
+    )?;
     Ok(())
 }
 
@@ -269,11 +367,12 @@ impl Config {
     }
 
     fn connect(&self) -> Result<Client, lake_replication_worker::wire::Error> {
-        Client::connect(
+        Client::connect_named(
             self.destination_address.as_str(),
             &self.user,
             &self.destination_database,
             false,
+            &format!("lake-replication-supervisor:{}", self.subscription_id),
         )
     }
 }

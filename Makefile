@@ -23,6 +23,7 @@ journal-install:
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0009_schema_evolution.sql
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0010_rebuild_promotion.sql
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0011_supervisor.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0012_service_reconnect.sql
 
 journal-test:
 	python3 tests/journal/probe.py

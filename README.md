@@ -133,6 +133,11 @@ cycles, with exponential retry, duplicate-process fencing, durable health and
 queue reporting, subscription-aware pausing, and SQL-controlled graceful stop.
 See [the Milestone 13 notes](docs/milestone-13.md).
 
+Milestone 14 keeps an established supervisor alive across destination control
+connection loss, safely reacquires subscription ownership, records reconnection
+telemetry, and resumes replication. See
+[the Milestone 14 notes](docs/milestone-14.md).
+
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using
 this Compose project for unrelated data: failure experiments target it.
