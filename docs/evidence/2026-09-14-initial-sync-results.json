@@ -1,0 +1,47 @@
+{
+  "run": "initial_20260914_103652",
+  "checks": [
+    {"name": "injected mid-copy failure is reported", "passed": true, "actual": true, "expected": true},
+    {"name": "partial snapshot rows and error state are durable", "passed": true, "actual": "error:50:true", "expected": "error:50:true"},
+    {"name": "failed copy leaves previous Iceberg state readable", "passed": true, "actual": "1:1:306b5770bfac685cf5850a6b3f3d4398", "expected": "1:1:306b5770bfac685cf5850a6b3f3d4398"},
+    {"name": "failed copy does not establish a replication baseline", "passed": true, "actual": "0/0:0/0:0/0:0/0", "expected": "0/0:0/0:0/0:0/0"},
+    {"name": "table exposes copying progress", "passed": true, "actual": "copying", "expected": "copying"},
+    {"name": "previous Iceberg state remains visible while snapshot is copied", "passed": true, "actual": "1:1:306b5770bfac685cf5850a6b3f3d4398", "expected": "1:1:306b5770bfac685cf5850a6b3f3d4398"},
+    {"name": "snapshot worker reports all pre-existing rows", "passed": true, "actual": true, "expected": true},
+    {"name": "atomic transition exposes only the exported snapshot", "passed": true, "actual": "100:snapshot-1:1", "expected": "100:snapshot-1:1"},
+    {"name": "snapshot LSN atomically initializes every checkpoint", "passed": true, "actual": "0/5375598:0/5375598:0/5375598:0/5375598", "expected": "0/5375598:0/5375598:0/5375598:0/5375598"},
+    {"name": "copy progress reaches ready with exact row count", "passed": true, "actual": "ready:100", "expected": "ready:100"},
+    {"name": "one concurrent source transaction is staged after the snapshot", "passed": true, "actual": true, "expected": true},
+    {"name": "snapshot and pgoutput use one canonical schema version", "passed": true, "actual": "1:1", "expected": "1:1"},
+    {"name": "WAL catch-up has no missing or duplicate live rows", "passed": true, "actual": "100:100:f63904230484cf044b22af6db573ecf4", "expected": "100:100:f63904230484cf044b22af6db573ecf4"},
+    {"name": "final row identities reflect update, delete, and insert", "passed": true, "actual": "caught-up-update:0:caught-up-insert", "expected": "caught-up-update:0:caught-up-insert"},
+    {"name": "relation and subscription enter continuous replication", "passed": true, "actual": "streaming:ready", "expected": "streaming:ready"}
+  ],
+  "final_state": {
+    "initial_copy": {
+      "state": "ready",
+      "last_error": null,
+      "started_at": "2026-09-14T10:36:54.200331+00:00",
+      "rows_copied": 100,
+      "completed_at": "2026-09-14T10:36:55.758917+00:00",
+      "snapshot_name": "00000084-00000004-1",
+      "consistent_lsn": "0/5375598",
+      "subscription_id": 218,
+      "remote_relation_id": "165858",
+      "destination_relation": "initial_20260914_103652.target",
+      "overwrite_destination": true,
+      "relation_schema_version": 1
+    },
+    "checkpoint": {
+      "staged_lsn": "0/5375C50",
+      "updated_at": "2026-09-14T10:36:56.668369+00:00",
+      "received_lsn": "0/5375C50",
+      "published_lsn": "0/5375C50",
+      "subscription_id": 218,
+      "acknowledged_lsn": "0/5375C50"
+    },
+    "transactions": 1,
+    "target_digest": "100:100:f63904230484cf044b22af6db573ecf4"
+  },
+  "status": "passed"
+}

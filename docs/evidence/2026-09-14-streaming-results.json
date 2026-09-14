@@ -1,0 +1,30 @@
+{
+  "run": "streaming_20260914_102042",
+  "checks": [
+    {"name": "stream fragments are not staged before source commit", "passed": true, "actual": "0:0/0:true", "expected": "0:0/0:true"},
+    {"name": "durable fragments survive receiver loss", "passed": true, "actual": true, "expected": true},
+    {"name": "large transaction used streamed delivery", "passed": true, "actual": true, "expected": true},
+    {"name": "stream commit releases one complete transaction", "passed": true, "actual": true, "expected": true},
+    {"name": "committed stream stored all changes atomically", "passed": true, "actual": "120:1", "expected": "120:1"},
+    {"name": "committed stream removes durable fragments", "passed": true, "actual": "0", "expected": "0"},
+    {"name": "stream abort is observed and discarded", "passed": true, "actual": true, "expected": true},
+    {"name": "stream abort removes durable fragments", "passed": true, "actual": "0", "expected": "0"},
+    {"name": "aborted rows never enter the journal", "passed": true, "actual": "0:1", "expected": "0:1"},
+    {"name": "streamed and post-abort transactions publish together", "passed": true, "actual": true, "expected": true},
+    {"name": "Iceberg contains committed rows only", "passed": true, "actual": "121:0:1", "expected": "121:0:1"},
+    {"name": "feedback and publication converge after stream commit", "passed": true, "actual": "true", "expected": "true"}
+  ],
+  "stream_segment_count": 120,
+  "final_state": {
+    "transactions": 2,
+    "changes": 121,
+    "target_rows": 121,
+    "checkpoint": {
+      "staged_lsn": "0/474FC30",
+      "received_lsn": "0/474FC30",
+      "published_lsn": "0/474FC30",
+      "acknowledged_lsn": "0/474FC30"
+    }
+  },
+  "status": "passed"
+}

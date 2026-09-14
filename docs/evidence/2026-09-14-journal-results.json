@@ -1,0 +1,116 @@
+{
+  "run": "journal_20260914_051629",
+  "checks": [
+    {
+      "name": "first transaction staged",
+      "passed": true,
+      "actual": "t",
+      "expected": "t"
+    },
+    {
+      "name": "identical replay is idempotent",
+      "passed": true,
+      "actual": "f",
+      "expected": "f"
+    },
+    {
+      "name": "conflicting replay fails closed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "unknown relation version fails closed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "wrong tuple width fails closed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "one transaction and one change stored",
+      "passed": true,
+      "actual": "1:1",
+      "expected": "1:1"
+    },
+    {
+      "name": "staging advances received and staged only",
+      "passed": true,
+      "actual": "0/120:0/120:0/0:0/0",
+      "expected": "0/120:0/120:0/0:0/0"
+    },
+    {
+      "name": "acknowledgement cannot exceed durable staging",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "second transaction staged",
+      "passed": true,
+      "actual": "t",
+      "expected": "t"
+    },
+    {
+      "name": "uncommitted batch preparation rolled back",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "batch rows and checkpoint commit together",
+      "passed": true,
+      "actual": "2:2:0/130",
+      "expected": "2:2:0/130"
+    },
+    {
+      "name": "third transaction staged",
+      "passed": true,
+      "actual": "t",
+      "expected": "t"
+    },
+    {
+      "name": "post-commit client result is ambiguous",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "ambiguous batch reconciles as published",
+      "passed": true,
+      "actual": "1:published:0/140",
+      "expected": "1:published:0/140"
+    },
+    {
+      "name": "deterministic batch lookup avoids replay",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "all four checkpoints converge",
+      "passed": true,
+      "actual": "0/140:0/140:0/140:0/140",
+      "expected": "0/140:0/140:0/140:0/140"
+    }
+  ],
+  "subscription_id": 67,
+  "final_state": {
+    "target_rows": 3,
+    "transactions": 3,
+    "batches": 2,
+    "checkpoint": {
+      "staged_lsn": "0/140",
+      "updated_at": "2026-09-14T05:16:31.926926+00:00",
+      "received_lsn": "0/140",
+      "published_lsn": "0/140",
+      "subscription_id": 67,
+      "acknowledged_lsn": "0/140"
+    }
+  },
+  "status": "passed"
+}

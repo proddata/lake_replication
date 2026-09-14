@@ -1,0 +1,26 @@
+{
+  "run": "rebuild_20260914_172153",
+  "checks": [
+    {"name": "incompatible source schema pauses the original subscription", "passed": true, "actual": true, "expected": true},
+    {"name": "old slot retains the incompatible transaction", "passed": true, "actual": "0/71FA1C0", "expected": "0/71FA1C0"},
+    {"name": "old Iceberg table remains readable during rebuild", "passed": true, "actual": "text:1:10,2:20", "expected": "text:1:10,2:20"},
+    {"name": "replacement snapshot contains the formerly unsafe source row", "passed": true, "actual": "bigint:1:10,2:20,3:30", "expected": "bigint:1:10,2:20,3:30"},
+    {"name": "original table is unchanged after replacement snapshot completes", "passed": true, "actual": "1:10,2:20", "expected": "1:10,2:20"},
+    {"name": "replacement slot catches up before promotion", "passed": true, "actual": "1:10,2:20,3:30,4:40", "expected": "1:10,2:20,3:30,4:40"},
+    {"name": "one rebuilt relation is promoted atomically", "passed": true, "actual": "1", "expected": "1"},
+    {"name": "canonical table now exposes rebuilt schema and caught-up rows", "passed": true, "actual": "bigint:1:10,2:20,3:30,4:40", "expected": "bigint:1:10,2:20,3:30,4:40"},
+    {"name": "previous Iceberg state is retained under the backup name", "passed": true, "actual": "text:1:10,2:20", "expected": "text:1:10,2:20"},
+    {"name": "promotion records slot handoff and disables only the old subscription", "passed": true, "actual": "disabled:streaming:rebuild_20260914_172153_old:rebuild_20260914_172153_new", "expected": "disabled:streaming:rebuild_20260914_172153_old:rebuild_20260914_172153_new"},
+    {"name": "replacement subscription continues against the promoted table", "passed": true, "actual": "1:10,2:20,3:30,4:40,5:50", "expected": "1:10,2:20,3:30,4:40,5:50"},
+    {"name": "old retained slot is explicitly removable after promotion", "passed": true, "actual": "0", "expected": "0"}
+  ],
+  "final_state": {
+    "promotion": {"promoted_at": "2026-09-14T17:21:55.604245+00:00", "backup_suffix": "__backup", "old_slot_name": "rebuild_20260914_172153_old", "shadow_suffix": "__rebuild", "target_schema": "rebuild_20260914_172153", "old_subscription_id": 234, "replacement_slot_name": "rebuild_20260914_172153_new", "replacement_subscription_id": 235},
+    "old_subscription": {"state": "disabled", "last_error": "an existing published column changed name, order, or type"},
+    "replacement_subscription": {"state": "streaming", "last_error": null},
+    "replacement_checkpoint": {"received_lsn": "0/7213EB0", "staged_lsn": "0/7213EB0", "published_lsn": "0/7213EB0", "acknowledged_lsn": "0/7213EB0"},
+    "target": [{"id": 1, "note": 10}, {"id": 2, "note": 20}, {"id": 3, "note": 30}, {"id": 4, "note": 40}, {"id": 5, "note": 50}],
+    "backup": [{"id": 1, "note": "10"}, {"id": 2, "note": "20"}]
+  },
+  "status": "passed"
+}

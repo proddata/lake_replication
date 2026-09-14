@@ -1,0 +1,28 @@
+{
+  "run": "toast_20260914_102520",
+  "checks": [
+    {"name": "source value is stored in external TOAST chunks", "passed": true, "actual": true, "expected": true},
+    {"name": "initial external value reaches Iceberg exactly", "passed": true, "actual": "128000:92831171b76416bd603a9d0fe9b9972d:v1", "expected": "128000:92831171b76416bd603a9d0fe9b9972d:v1"},
+    {"name": "unchanged TOAST field is absent from update post-image", "passed": true, "actual": "true", "expected": "true"},
+    {"name": "marker-only update preserves external Iceberg value", "passed": true, "actual": "128000:92831171b76416bd603a9d0fe9b9972d:v2", "expected": "128000:92831171b76416bd603a9d0fe9b9972d:v2"},
+    {"name": "changed external value is present in update post-image", "passed": true, "actual": "true", "expected": "true"},
+    {"name": "external-to-external replacement reaches Iceberg exactly", "passed": true, "actual": "128000:d3067ecf438e0c25f94ff02cb9e23840:v3", "expected": "128000:d3067ecf438e0c25f94ff02cb9e23840:v3"},
+    {"name": "external-to-inline transition reaches Iceberg", "passed": true, "actual": "6:03fdad155b7548884584c7c39b0c5cd2:v4", "expected": "6:03fdad155b7548884584c7c39b0c5cd2:v4"},
+    {"name": "inline-to-NULL transition reaches Iceberg", "passed": true, "actual": "NULL:NULL:v5", "expected": "NULL:NULL:v5"},
+    {"name": "NULL-to-external transition reaches Iceberg exactly", "passed": true, "actual": "128000:d258e032696398e51c8b0a8f71298871:v6", "expected": "128000:d258e032696398e51c8b0a8f71298871:v6"},
+    {"name": "source and Iceberg final states match", "passed": true, "actual": "NULL:NULL:v7", "expected": "NULL:NULL:v7"},
+    {"name": "all seven source transactions are published", "passed": true, "actual": "7:7", "expected": "7:7"}
+  ],
+  "final_state": {
+    "transactions": 7,
+    "changes": 7,
+    "target": {"id": 1, "payload": null, "marker": "v7"},
+    "checkpoint": {
+      "staged_lsn": "0/5129D00",
+      "received_lsn": "0/5129D00",
+      "published_lsn": "0/5129D00",
+      "acknowledged_lsn": "0/5129D00"
+    }
+  },
+  "status": "passed"
+}

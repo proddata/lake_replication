@@ -1,0 +1,78 @@
+COMPOSE = docker compose -p pg-lake-replication-lab -f deploy/docker-compose/compose.yml
+
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test check
+lab-build:
+	$(COMPOSE) build
+lab-up:
+	$(COMPOSE) up -d --wait --wait-timeout 180
+lab-test:
+	python3 tests/replication/probe.py
+
+lab-crash-test:
+	python3 tests/crash/probe.py
+
+journal-install:
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0001_journal.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0002_transport.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0003_publisher.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0004_mutations.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0005_streaming.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0006_initial_sync.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0007_multi_table_sync.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0008_type_contracts.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0009_schema_evolution.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0010_rebuild_promotion.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0011_supervisor.sql
+
+journal-test:
+	python3 tests/journal/probe.py
+
+transport-test:
+	python3 tests/transport/probe.py
+
+publisher-test:
+	python3 tests/publisher/probe.py
+
+mutations-test:
+	python3 tests/mutations/probe.py
+
+streaming-test:
+	python3 tests/streaming/probe.py
+
+toast-test:
+	python3 tests/toast/probe.py
+initial-sync-test:
+	python3 tests/initial_sync/probe.py
+multi-table-test:
+	python3 tests/multi_table/probe.py
+auto-schema-test:
+	python3 tests/auto_schema/probe.py
+schema-evolution-test:
+	python3 tests/schema_evolution/probe.py
+rebuild-test:
+	python3 tests/rebuild/probe.py
+supervisor-test:
+	python3 tests/supervisor/probe.py
+lab-logs:
+	$(COMPOSE) logs --no-color --tail 200
+lab-stop:
+	$(COMPOSE) stop
+check:
+	python3 -m py_compile tests/replication/probe.py
+	python3 -m py_compile tests/crash/probe.py
+	python3 -m py_compile tests/journal/probe.py
+	python3 -m py_compile tests/transport/probe.py
+	python3 -m py_compile tests/publisher/probe.py
+	python3 -m py_compile tests/mutations/probe.py
+	python3 -m py_compile tests/streaming/probe.py
+	python3 -m py_compile tests/toast/probe.py
+	python3 -m py_compile tests/initial_sync/probe.py
+	python3 -m py_compile tests/multi_table/probe.py
+	python3 -m py_compile tests/auto_schema/probe.py
+	python3 -m py_compile tests/schema_evolution/probe.py
+	python3 -m py_compile tests/rebuild/probe.py
+	python3 -m py_compile tests/supervisor/probe.py
+	python3 -m unittest discover -s tests/replication -p 'test_*.py'
+	cargo fmt --all -- --check
+	cargo test --workspace
+	$(COMPOSE) config --quiet

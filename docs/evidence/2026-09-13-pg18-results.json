@@ -1,0 +1,160 @@
+{
+  "run": "probe_20260913_190539",
+  "checks": [
+    {
+      "name": "direct inserts",
+      "passed": true,
+      "actual": "100",
+      "expected": "100"
+    },
+    {
+      "name": "direct large value",
+      "passed": true,
+      "actual": "80000",
+      "expected": "80000"
+    },
+    {
+      "name": "direct delete",
+      "passed": true,
+      "actual": "99",
+      "expected": "99"
+    },
+    {
+      "name": "direct rollback",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "writer reached transaction barrier",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "no partial cross-table transaction",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "complete direct transaction",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "complete peer transaction",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "precommit failure barrier",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "terminated transaction rejected",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "terminated transaction invisible",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "terminated peer transaction invisible",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "post-crash catalogs and checkpoint",
+      "passed": true,
+      "actual": "1:1:1",
+      "expected": "1:1:1"
+    },
+    {
+      "name": "post-crash aborted row absent",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "post-crash aborted peer absent",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "direct truncate",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "equivalent batch rows",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "native update and insert",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "native delete",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "native truncate",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "heap subscription control",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    }
+  ],
+  "native": {
+    "probe_20260913_190539_copy_heap": {
+      "first_row_reached": true,
+      "subscription_state": "{\"srrelid\": \"25710\", \"srsubid\": \"25717\", \"srsublsn\": \"0/244DE00\", \"srsubstate\": \"r\"}",
+      "errors": "{\"subid\": \"25717\", \"subname\": \"probe_20260913_190539_copy_heap\", \"stats_reset\": null, \"sync_error_count\": 0, \"apply_error_count\": 0, \"confl_insert_exists\": 0, \"confl_update_exists\": 0, \"confl_delete_missing\": 0, \"confl_update_missing\": 0, \"confl_delete_origin_differs\": 0, \"confl_update_origin_differs\": 0, \"confl_multiple_unique_conflicts\": 0}"
+    },
+    "probe_20260913_190539_copy_iceberg": {
+      "first_row_reached": false,
+      "error": "ERROR:  42809: cannot use relation \"probe_20260913_190539.copy_iceberg\" as logical replication target\nDETAIL:  This operation is not supported for foreign tables.\nLOCATION:  CheckSubscriptionRelkind, execReplication.c:881"
+    },
+    "probe_20260913_190539_stream_iceberg": {
+      "first_row_reached": false,
+      "error": "ERROR:  42809: cannot use relation \"probe_20260913_190539.stream_iceberg\" as logical replication target\nDETAIL:  This operation is not supported for foreign tables.\nLOCATION:  CheckSubscriptionRelkind, execReplication.c:881"
+    }
+  },
+  "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit",
+  "extensions": "{\"pg_map\": \"3.6\", \"pg_lake\": \"3.6\", \"plpgsql\": \"1.0\", \"btree_gist\": \"1.8\", \"pg_lake_copy\": \"3.6\", \"pg_lake_table\": \"3.6\", \"pg_lake_engine\": \"3.6\", \"pg_lake_iceberg\": \"3.6\", \"pg_extension_base\": \"3.6\"}",
+  "source_identity": "{\"system_identifier\": 7685097896224124972, \"catalog_version_no\": 202506291, \"pg_control_version\": 1800, \"pg_control_last_modified\": \"2026-09-13T19:04:50+00:00\"}",
+  "amplification": {
+    "individual": {
+      "snapshots": 10,
+      "current_files": 10
+    },
+    "batch": {
+      "snapshots": 1,
+      "current_files": 1
+    }
+  },
+  "status": "native-blocked"
+}

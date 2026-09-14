@@ -1,0 +1,26 @@
+{
+  "run": "multi_20260914_163430",
+  "checks": [
+    {"name": "PostgreSQL exposes two effective publication tables", "passed": true, "actual": "2:1:2", "expected": "2:1:2"},
+    {"name": "both discovered tables enter copying under one snapshot", "passed": true, "actual": "2:1:1", "expected": "2:1:1"},
+    {"name": "both previous Iceberg tables remain readable before cutover", "passed": true, "actual": "-1:old-account|-1:old-event", "expected": "-1:old-account|-1:old-event"},
+    {"name": "one worker discovers and copies both tables", "passed": true, "actual": true, "expected": true},
+    {"name": "row filter and column list shape the snapshot", "passed": true, "actual": "1:visible-a,3:visible-c|10:event-a,11:event-b", "expected": "1:visible-a,3:visible-c|10:event-a,11:event-b"},
+    {"name": "both copies become ready at one checkpoint boundary", "passed": true, "actual": "2:2:1:true", "expected": "2:2:1:true"},
+    {"name": "discovered relation metadata contains only published columns", "passed": true, "actual": "2:2:0", "expected": "2:2:0"},
+    {"name": "one concurrent transaction emits only the two eligible changes", "passed": true, "actual": true, "expected": true},
+    {"name": "filtered/projected WAL catch-up matches effective publication data", "passed": true, "actual": "1:visible-a,3:visible-c,4:caught-account|10:event-a,11:event-b,12:caught-event", "expected": "1:visible-a,3:visible-c,4:caught-account|10:event-a,11:event-b,12:caught-event"},
+    {"name": "filtered-out source identities never reach Iceberg", "passed": true, "actual": "0", "expected": "0"},
+    {"name": "multi-relation source transaction remains one journal transaction", "passed": true, "actual": "1:2", "expected": "1:2"}
+  ],
+  "final_state": {
+    "copies": [
+      {"state": "ready", "last_error": null, "started_at": "2026-09-14T16:34:31.240014+00:00", "rows_copied": 2, "completed_at": "2026-09-14T16:34:33.51504+00:00", "snapshot_name": "00000081-00000007-1", "consistent_lsn": "0/5CB9858", "subscription_id": 223, "remote_relation_id": "166273", "destination_relation": "multi_20260914_163430.multi_20260914_163430_accounts", "overwrite_destination": true, "relation_schema_version": 1},
+      {"state": "ready", "last_error": null, "started_at": "2026-09-14T16:34:31.241918+00:00", "rows_copied": 2, "completed_at": "2026-09-14T16:34:33.51505+00:00", "snapshot_name": "00000081-00000007-1", "consistent_lsn": "0/5CB9858", "subscription_id": 223, "remote_relation_id": "166284", "destination_relation": "multi_20260914_163430.multi_20260914_163430_events", "overwrite_destination": true, "relation_schema_version": 1}
+    ],
+    "checkpoint": {"staged_lsn": "0/5CBAA48", "updated_at": "2026-09-14T16:34:34.221144+00:00", "received_lsn": "0/5CBAA48", "published_lsn": "0/5CBAA48", "subscription_id": 223, "acknowledged_lsn": "0/5CBAA48"},
+    "accounts": [{"id": 1, "note": "visible-a"}, {"id": 3, "note": "visible-c"}, {"id": 4, "note": "caught-account"}],
+    "events": [{"id": 10, "note": "event-a"}, {"id": 11, "note": "event-b"}, {"id": 12, "note": "caught-event"}]
+  },
+  "status": "passed"
+}

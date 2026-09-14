@@ -1,0 +1,139 @@
+diff --git a/pg_lake_table/include/pg_lake/transaction/track_iceberg_metadata_changes.h b/pg_lake_table/include/pg_lake/transaction/track_iceberg_metadata_changes.h
+index 1133d13..f1e86fd 100644
+--- a/pg_lake_table/include/pg_lake/transaction/track_iceberg_metadata_changes.h
++++ b/pg_lake_table/include/pg_lake/transaction/track_iceberg_metadata_changes.h
+@@ -21,6 +21,14 @@
+ #include "access/hash.h"
+ #include "pg_lake/rest_catalog/rest_catalog.h"
+ 
++typedef enum LakeLabCrashPoint
++{
++	LAKE_LAB_CRASH_NONE = 0,
++	LAKE_LAB_CRASH_BEFORE_UPLOAD_COMPLETION,
++	LAKE_LAB_CRASH_AFTER_UPLOAD_COMPLETION,
++	LAKE_LAB_CRASH_AFTER_COMMIT
++} LakeLabCrashPoint;
++
+ typedef struct TableMetadataOperationTracker
+ {
+ 	Oid			relationId;
+@@ -51,7 +59,10 @@ typedef struct TableMetadataOperationTracker
+ }			TableMetadataOperationTracker;
+ 
+ extern PGDLLEXPORT int CommitTimeCatalogAnalyzeThreshold;
++extern PGDLLEXPORT int LakeLabCrashPointSetting;
++extern PGDLLEXPORT bool LakeLabIcebergCommitPrepared;
+ 
++extern PGDLLEXPORT void LakeLabCrashIf(LakeLabCrashPoint point);
+ extern PGDLLEXPORT void ConsumeTrackedIcebergMetadataChanges(bool isVerbose);
+ extern PGDLLEXPORT void PostAllRestCatalogRequests(void);
+ extern PGDLLEXPORT void TrackIcebergMetadataChangesInTx(Oid relationId, List *metadataOperationTypes);
+diff --git a/pg_lake_table/src/init.c b/pg_lake_table/src/init.c
+index 1e19022..f2b8380 100644
+--- a/pg_lake_table/src/init.c
++++ b/pg_lake_table/src/init.c
+@@ -80,6 +80,14 @@ static const struct config_enum_entry ParquetVersionOptions[] = {
+ 	{NULL, 0, false},
+ };
+ 
++static const struct config_enum_entry LakeLabCrashPointOptions[] = {
++	{"none", LAKE_LAB_CRASH_NONE, false},
++	{"before_upload_completion", LAKE_LAB_CRASH_BEFORE_UPLOAD_COMPLETION, false},
++	{"after_upload_completion", LAKE_LAB_CRASH_AFTER_UPLOAD_COMPLETION, false},
++	{"after_commit", LAKE_LAB_CRASH_AFTER_COMMIT, false},
++	{NULL, 0, false},
++};
++
+ 
+ /*
+  * Module load callback
+@@ -183,6 +191,19 @@ _PG_init(void)
+ 							NULL,
+ 							NULL);
+ 
++	/* Lab image only: deliberately terminates the exercising backend. */
++	DefineCustomEnumVariable("pg_lake_table.lab_crash_point",
++							 "Selects a one-shot crash boundary for recovery experiments.",
++							 NULL,
++							 &LakeLabCrashPointSetting,
++							 LAKE_LAB_CRASH_NONE,
++							 LakeLabCrashPointOptions,
++							 PGC_USERSET,
++							 GUC_NO_SHOW_ALL | GUC_NOT_IN_SAMPLE,
++							 NULL,
++							 NULL,
++							 NULL);
++
+ 	DefineCustomIntVariable("pg_lake_table.copy_on_write_threshold",
+ 							"Determines the percentage of deleted rows in a file "
+ 							"after which we use copy-on-write instead of merge-on-read "
+diff --git a/pg_lake_table/src/transaction/track_iceberg_metadata_changes.c b/pg_lake_table/src/transaction/track_iceberg_metadata_changes.c
+index 330c4c1..92d4026 100644
+--- a/pg_lake_table/src/transaction/track_iceberg_metadata_changes.c
++++ b/pg_lake_table/src/transaction/track_iceberg_metadata_changes.c
+@@ -16,6 +16,7 @@
+  */
+ 
+ #include "postgres.h"
++#include "miscadmin.h"
+ #include "utils/hsearch.h"
+ #include "access/xact.h"
+ #include "common/int.h"
+@@ -89,6 +90,21 @@ typedef struct RestCatalogRequestPerTable
+ /* GUC: see pg_lake_table.commit_time_analyze_threshold in init.c. */
+ int			CommitTimeCatalogAnalyzeThreshold = 1000;
+ 
++/* Lab image only; upstream production builds do not contain this GUC. */
++int			LakeLabCrashPointSetting = LAKE_LAB_CRASH_NONE;
++bool		LakeLabIcebergCommitPrepared = false;
++
++void
++LakeLabCrashIf(LakeLabCrashPoint point)
++{
++	if (LakeLabCrashPointSetting != point)
++		return;
++
++	LakeLabCrashPointSetting = LAKE_LAB_CRASH_NONE;
++	kill(MyProcPid, SIGKILL);
++	pg_unreachable();
++}
++
+ static void ApplyTrackedIcebergMetadataChanges(bool isVerbose);
+ static void RecordIcebergMetadataOperation(Oid relationId, TableMetadataOperationType operationType);
+ static void InitTableMetadataTrackerHashIfNeeded(void);
+@@ -1038,8 +1054,13 @@ ApplyTrackedIcebergMetadataChanges(bool isVerbose)
+ 
+ 	MemoryContextDelete(perRelationContext);
+ 
++	LakeLabCrashIf(LAKE_LAB_CRASH_BEFORE_UPLOAD_COMPLETION);
++
+ 	/* now write all the metadata files to object storage in parallel */
+ 	FinishAllUploads();
++	LakeLabIcebergCommitPrepared = true;
++
++	LakeLabCrashIf(LAKE_LAB_CRASH_AFTER_UPLOAD_COMPLETION);
+ 
+ 	INJECTION_POINT_COMPAT("after-apply-iceberg-changes");
+ 
+diff --git a/pg_lake_table/src/transaction/transaction_hooks.c b/pg_lake_table/src/transaction/transaction_hooks.c
+index 192d837..9190d9a 100644
+--- a/pg_lake_table/src/transaction/transaction_hooks.c
++++ b/pg_lake_table/src/transaction/transaction_hooks.c
+@@ -65,6 +65,7 @@ IcebergXactCallback(XactEvent event, void *arg)
+ 			{
+ 				ResetTrackedIcebergMetadataOperation();
+ 				ResetRestCatalogRequests();
++				LakeLabIcebergCommitPrepared = false;
+ 				break;
+ 			}
+ 		case XACT_EVENT_PRE_PREPARE:
+@@ -82,6 +83,9 @@ IcebergXactCallback(XactEvent event, void *arg)
+ 			{
+ 				PostAllRestCatalogRequests();
+ 				ResetRestCatalogRequests();
++				if (LakeLabIcebergCommitPrepared)
++					LakeLabCrashIf(LAKE_LAB_CRASH_AFTER_COMMIT);
++				LakeLabIcebergCommitPrepared = false;
+ 				break;
+ 			}
+ 	}

@@ -1,0 +1,37 @@
+{
+  "run": "schema_20260914_165528",
+  "checks": [
+    {"name": "missing destination is created automatically", "passed": true, "actual": "f:pg_lake_iceberg", "expected": "f:pg_lake_iceberg"},
+    {"name": "created schema uses canonical mapped types in source order", "passed": true, "actual": "id:bigint,note:text,enabled:boolean,happened_at:timestamp with time zone", "expected": "id:bigint,note:text,enabled:boolean,happened_at:timestamp with time zone"},
+    {"name": "automatic DDL preserves source NOT NULL contracts", "passed": true, "actual": "id:true,note:true,enabled:false,happened_at:true", "expected": "id:true,note:true,enabled:false,happened_at:true"},
+    {"name": "initial rows populate the automatically created Iceberg table", "passed": true, "actual": "1:automatic:true:2026-09-14 12:34:56+00,2:nullable:NULL:2026-09-14 13:00:00+00", "expected": "1:automatic:true:2026-09-14 12:34:56+00,2:nullable:NULL:2026-09-14 13:00:00+00"},
+    {"name": "relation records mapping version one and four contracts", "passed": true, "actual": "1:4", "expected": "1:4"},
+    {"name": "mapping catalog exposes the supported version", "passed": true, "actual": "13:true", "expected": "13:true"},
+    {"name": "incompatible pre-created destination is rejected", "passed": true, "actual": true, "expected": true},
+    {"name": "schema rejection occurs before snapshot staging or checkpoints", "passed": true, "actual": "0:0/0:0/0", "expected": "0:0/0:0/0"},
+    {"name": "rejected destination retains its prior data", "passed": true, "actual": "old:still-readable", "expected": "old:still-readable"}
+  ],
+  "final_state": {
+    "mapping_count": 13,
+    "good_contract": {
+      "columns": [
+        {"name": "id", "not_null": true, "generated": false, "source_type": "bigint"},
+        {"name": "note", "not_null": true, "generated": false, "source_type": "text"},
+        {"name": "enabled", "not_null": false, "generated": false, "source_type": "boolean"},
+        {"name": "happened_at", "not_null": true, "generated": false, "source_type": "timestamp with time zone"}
+      ],
+      "created_at": "2026-09-14T16:55:29.173114+00:00",
+      "mapping_version": 1,
+      "subscription_id": 227,
+      "remote_relation_id": "166753",
+      "relation_schema_version": 1
+    },
+    "good_rows": [
+      {"id": 1, "note": "automatic", "enabled": true, "happened_at": "2026-09-14T12:34:56+00:00"},
+      {"id": 2, "note": "nullable", "enabled": null, "happened_at": "2026-09-14T13:00:00+00:00"}
+    ],
+    "bad_checkpoint": {"staged_lsn": "0/0", "updated_at": "2026-09-14T16:55:29.970802+00:00", "received_lsn": "0/0", "published_lsn": "0/0", "subscription_id": 228, "acknowledged_lsn": "0/0"},
+    "bad_rows": [{"id": "old", "note": "still-readable"}]
+  },
+  "status": "passed"
+}

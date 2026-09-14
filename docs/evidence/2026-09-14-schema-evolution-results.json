@@ -1,0 +1,35 @@
+{
+  "run": "evolution_20260914_170156",
+  "checks": [
+    {"name": "initial schema starts at one assigned version", "passed": true, "actual": "1:1:1", "expected": "1:1:1"},
+    {"name": "receiver stages the transaction after additive reconciliation", "passed": true, "actual": true, "expected": true},
+    {"name": "nullable appended column creates one ready assigned version", "passed": true, "actual": "2:2:1", "expected": "2:2:1"},
+    {"name": "Iceberg destination gains the mapped nullable column", "passed": true, "actual": "extra:text:false", "expected": "extra:text:false"},
+    {"name": "additive change and new rows publish with old rows preserved", "passed": true, "actual": "1:11:added-online,2:20:NULL,3:30:new-row", "expected": "1:11:added-online,2:20:NULL,3:30:new-row"},
+    {"name": "incompatible type change stops the receiver", "passed": true, "actual": true, "expected": true},
+    {"name": "incompatible relation version is durably paused with diagnostics", "passed": true, "actual": "paused:paused:true", "expected": "paused:paused:true"},
+    {"name": "unsafe transaction is neither staged nor checkpointed", "passed": true, "actual": "1:0/6B34D00", "expected": "1:0/6B34D00"},
+    {"name": "source slot remains at the last durable safe position", "passed": true, "actual": "0/6B34D00", "expected": "0/6B34D00"},
+    {"name": "prior Iceberg schema and data remain readable after pause", "passed": true, "actual": "text:1:11:added-online,2:20:NULL,3:30:new-row", "expected": "text:1:11:added-online,2:20:NULL,3:30:new-row"}
+  ],
+  "final_state": {
+    "relations": [
+      {"schema_version": 1, "state": "ready", "destination_relation": "evolution_20260914_170156.target"},
+      {"schema_version": 2, "state": "ready", "destination_relation": "evolution_20260914_170156.target"},
+      {"schema_version": 3, "state": "paused", "destination_relation": null}
+    ],
+    "contracts": [
+      {"relation_schema_version": 1, "mapping_version": 1, "types": ["bigint", "text"]},
+      {"relation_schema_version": 2, "mapping_version": 1, "types": ["bigint", "text", "text"]},
+      {"relation_schema_version": 3, "mapping_version": 1, "types": ["bigint", "bigint", "text"]}
+    ],
+    "checkpoint": {"received_lsn": "0/6B34D00", "staged_lsn": "0/6B34D00", "published_lsn": "0/6B34D00", "acknowledged_lsn": "0/6B34D00"},
+    "subscription": {"state": "paused", "last_error": "an existing published column changed name, order, or type"},
+    "target": [
+      {"id": 1, "note": "11", "extra": "added-online"},
+      {"id": 2, "note": "20", "extra": null},
+      {"id": 3, "note": "30", "extra": "new-row"}
+    ]
+  },
+  "status": "passed"
+}

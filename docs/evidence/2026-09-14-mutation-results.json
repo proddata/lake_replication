@@ -1,0 +1,31 @@
+{
+  "run": "mutations_20260914_063517",
+  "checks": [
+    {"name": "initial insert transaction decoded", "passed": true, "actual": true, "expected": true},
+    {"name": "initial rows published", "passed": true, "actual": true, "expected": true},
+    {"name": "update and delete transaction decoded", "passed": true, "actual": true, "expected": true},
+    {"name": "mutation identities are named and non-empty", "passed": true, "actual": "2:1:true", "expected": "2:1:true"},
+    {"name": "three mutations applied in one batch", "passed": true, "actual": true, "expected": true},
+    {"name": "key-changing update and delete match source", "passed": true, "actual": "20=twenty", "expected": "20=twenty"},
+    {"name": "mutation transaction creates one additional snapshot", "passed": true, "actual": "2", "expected": "2"},
+    {"name": "insert and truncate transactions decoded", "passed": true, "actual": 2, "expected": 2},
+    {"name": "truncate envelope has no row tuple", "passed": true, "actual": "true", "expected": "true"},
+    {"name": "ordered insert plus truncate share one batch", "passed": true, "actual": true, "expected": true},
+    {"name": "truncate leaves destination equal to source", "passed": true, "actual": "0:0", "expected": "0:0"},
+    {"name": "four source commits become three Iceberg snapshots", "passed": true, "actual": "3", "expected": "3"},
+    {"name": "all progress coordinates converge", "passed": true, "actual": "true", "expected": "true"}
+  ],
+  "final_state": {
+    "transactions": 4,
+    "changes": 7,
+    "batches": 3,
+    "snapshots": 3,
+    "checkpoint": {
+      "staged_lsn": "0/3A19738",
+      "received_lsn": "0/3A19738",
+      "published_lsn": "0/3A19738",
+      "acknowledged_lsn": "0/3A19738"
+    }
+  },
+  "status": "passed"
+}

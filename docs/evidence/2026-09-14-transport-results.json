@@ -1,0 +1,26 @@
+{
+  "run": "transport_20260914_061335",
+  "checks": [
+    {"name": "first live transaction decoded and staged", "passed": true, "actual": true, "expected": true},
+    {"name": "source flush feedback follows durable staging", "passed": true, "actual": "0/2EEFC00", "expected": "0/2EEFC00"},
+    {"name": "received, staged, and acknowledged positions converge", "passed": true, "actual": "0/2EEFC00:0/2EEFC00:0/2EEFC00", "expected": "0/2EEFC00:0/2EEFC00:0/2EEFC00"},
+    {"name": "live relation metadata registered", "passed": true, "actual": "1:1", "expected": "1:1"},
+    {"name": "text tuple survives JSON and SQL escaping", "passed": true, "actual": "first O'Reilly \\ value", "expected": "first O'Reilly \\ value"},
+    {"name": "fresh process resumes with a complete source transaction", "passed": true, "actual": true, "expected": true},
+    {"name": "restart feedback advances the source slot", "passed": true, "actual": "0/2EF3E48", "expected": "0/2EF3E48"},
+    {"name": "restart creates no duplicate relation schema version", "passed": true, "actual": "1:1", "expected": "1:1"},
+    {"name": "transaction boundaries and insert order retained", "passed": true, "actual": "2:3:1,2,3", "expected": "2:3:1,2,3"}
+  ],
+  "final_state": {
+    "transactions": 2,
+    "changes": 3,
+    "checkpoint": {
+      "staged_lsn": "0/2EF3E48",
+      "received_lsn": "0/2EF3E48",
+      "published_lsn": "0/0",
+      "acknowledged_lsn": "0/2EF3E48"
+    },
+    "slot_flush_lsn": "0/2EF3E48"
+  },
+  "status": "passed"
+}

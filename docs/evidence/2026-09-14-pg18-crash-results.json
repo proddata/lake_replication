@@ -1,0 +1,196 @@
+{
+  "run": "crash_20260914_045535",
+  "checks": [
+    {
+      "name": "instrumentation defaults off",
+      "passed": true,
+      "actual": "none",
+      "expected": "none"
+    },
+    {
+      "name": "before_upload_completion: client did not receive success",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "before_upload_completion: recovered row count",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "before_upload_completion: backend killed at boundary",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "before_upload_completion: PostgreSQL performed crash recovery",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "before_upload_completion: abandoned objects are discoverable",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "before_upload_completion: VACUUM cleared orphan records",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "after_upload_completion: client did not receive success",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "after_upload_completion: recovered row count",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "after_upload_completion: backend killed at boundary",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "after_upload_completion: PostgreSQL performed crash recovery",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "after_upload_completion: abandoned objects are discoverable",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "after_upload_completion: VACUUM cleared orphan records",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "after_commit: client did not receive success",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "after_commit: recovered row count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "name": "after_commit: backend killed at boundary",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "after_commit: PostgreSQL performed crash recovery",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    }
+  ],
+  "boundaries": {
+    "before_upload_completion": {
+      "writer_returncode": 2,
+      "writer_stdout": "SET\n",
+      "writer_stderr": "server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.\nconnection to server was lost\n",
+      "postmaster_start_before": "2026-09-14 04:49:03.114618+00",
+      "postmaster_start_after": "2026-09-14 04:49:03.114618+00",
+      "recovered": {
+        "rows": 0,
+        "snapshots": 0,
+        "in_progress": 4,
+        "in_progress_files": [
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/before_upload_completion/83098/data/be/bebc819a-4f50-4e74-84bc-7bbd600b6aef",
+            "is_prefix": true,
+            "operation_id": 289
+          },
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/before_upload_completion/83098/metadata/d0521505-da81-4e41-ba6d-798ecb742206-m0.avro",
+            "is_prefix": false,
+            "operation_id": 289
+          },
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/before_upload_completion/83098/metadata/snap-6916796495104897440-1-d0521505-da81-4e41-ba6d-798ecb742206.avro",
+            "is_prefix": false,
+            "operation_id": 289
+          },
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/before_upload_completion/83098/metadata/00001-e9c236df-6a0e-4a02-9637-e87e4e77fc86.metadata.json",
+            "is_prefix": false,
+            "operation_id": 289
+          }
+        ],
+        "metadata_location": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/before_upload_completion/83098/metadata/00000-8f5cfd37-8dd2-42c5-8a07-b78b1e34841f.metadata.json"
+      },
+      "in_progress_after_vacuum": 0
+    },
+    "after_upload_completion": {
+      "writer_returncode": 2,
+      "writer_stdout": "SET\n",
+      "writer_stderr": "server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.\nconnection to server was lost\n",
+      "postmaster_start_before": "2026-09-14 04:49:03.114618+00",
+      "postmaster_start_after": "2026-09-14 04:49:03.114618+00",
+      "recovered": {
+        "rows": 0,
+        "snapshots": 0,
+        "in_progress": 4,
+        "in_progress_files": [
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/after_upload_completion/91289/data/2f/2fb69737-e673-499b-99a6-22a88f5a8d5a",
+            "is_prefix": true,
+            "operation_id": 322
+          },
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/after_upload_completion/91289/metadata/9e228506-20dc-4199-80da-e54bd4431eb2-m0.avro",
+            "is_prefix": false,
+            "operation_id": 322
+          },
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/after_upload_completion/91289/metadata/snap-28656687659736663-1-9e228506-20dc-4199-80da-e54bd4431eb2.avro",
+            "is_prefix": false,
+            "operation_id": 322
+          },
+          {
+            "path": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/after_upload_completion/91289/metadata/00001-696eca07-5c16-4779-b1de-b3dd878b8a4a.metadata.json",
+            "is_prefix": false,
+            "operation_id": 322
+          }
+        ],
+        "metadata_location": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/after_upload_completion/91289/metadata/00000-c26c604a-82d2-4630-9809-ba418a005276.metadata.json"
+      },
+      "in_progress_after_vacuum": 0
+    },
+    "after_commit": {
+      "writer_returncode": 2,
+      "writer_stdout": "SET\n",
+      "writer_stderr": "server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.\nconnection to server was lost\n",
+      "postmaster_start_before": "2026-09-14 04:49:03.114618+00",
+      "postmaster_start_after": "2026-09-14 04:49:03.114618+00",
+      "recovered": {
+        "rows": 1,
+        "snapshots": 1,
+        "in_progress": 0,
+        "in_progress_files": [],
+        "metadata_location": "s3://lake-lab/iceberg/analytics/crash_20260914_045535/after_commit/99481/metadata/00001-6d869186-35ef-4513-ac36-5f0e043a66f7.metadata.json"
+      }
+    }
+  },
+  "status": "passed"
+}

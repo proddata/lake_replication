@@ -1,0 +1,48 @@
+{
+  "run": "supervisor_20260914_173031",
+  "checks": [
+    {
+      "name": "recoverable child failure enters observable bounded backoff",
+      "passed": true,
+      "actual": "backoff:1:1:true:true",
+      "expected": "backoff:1:1:true:true"
+    },
+    {
+      "name": "advisory lock fences a duplicate supervisor",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "supervisor receives and publishes the queued transaction exactly once",
+      "passed": true,
+      "actual": "1:snapshot,2:supervised",
+      "expected": "1:snapshot,2:supervised"
+    },
+    {
+      "name": "durable health reports recovery, worker cycles, and drained queue",
+      "passed": true,
+      "actual": "running:0:1:true:true:0:0:true",
+      "expected": "running:0:1:true:true:0:0:true"
+    },
+    {
+      "name": "SQL stop request produces a clean supervisor exit",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "graceful shutdown leaves a durable stopped status",
+      "passed": true,
+      "actual": "stopped:stopped:true:true",
+      "expected": "stopped:stopped:true:true"
+    },
+    {
+      "name": "source slot confirmation matches durable acknowledgement",
+      "passed": true,
+      "actual": "0/78A1B38",
+      "expected": "0/78A1B38"
+    }
+  ],
+  "completed_at": "2026-09-14T17:30:35.744872+00:00"
+}

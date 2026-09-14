@@ -1,0 +1,5 @@
+.lab/
+__pycache__/
+*.pyc
+.env
+target/
