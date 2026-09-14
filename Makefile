@@ -1,6 +1,6 @@
 COMPOSE = docker compose -p pg-lake-replication-lab -f deploy/docker-compose/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -24,6 +24,7 @@ journal-install:
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0010_rebuild_promotion.sql
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0011_supervisor.sql
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0012_service_reconnect.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0013_source_continuity.sql
 
 journal-test:
 	python3 tests/journal/probe.py
@@ -54,6 +55,8 @@ rebuild-test:
 	python3 tests/rebuild/probe.py
 supervisor-test:
 	python3 tests/supervisor/probe.py
+source-continuity-test:
+	python3 tests/source_continuity/probe.py
 lab-logs:
 	$(COMPOSE) logs --no-color --tail 200
 lab-stop:
@@ -73,6 +76,7 @@ check:
 	python3 -m py_compile tests/schema_evolution/probe.py
 	python3 -m py_compile tests/rebuild/probe.py
 	python3 -m py_compile tests/supervisor/probe.py
+	python3 -m py_compile tests/source_continuity/probe.py
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace

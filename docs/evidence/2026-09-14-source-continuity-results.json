@@ -1,0 +1,66 @@
+{
+  "run": "source_20260914_200541",
+  "checks": [
+    {
+      "name": "validated source continues replication",
+      "passed": true,
+      "actual": "1:snapshot,2:healthy",
+      "expected": "1:snapshot,2:healthy"
+    },
+    {
+      "name": "healthy source identity and timeline are durably observable",
+      "passed": true,
+      "actual": "true:7685097896224124972:16384:1:0",
+      "expected": "true:7685097896224124972:16384:1:0"
+    },
+    {
+      "name": "validated supervisor stops cleanly",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "identity_mismatch fails before launching the receiver",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "identity_mismatch is recorded as a fail-closed source error",
+      "passed": true,
+      "actual": "error:error:1:true",
+      "expected": "error:error:1:true"
+    },
+    {
+      "name": "identity_mismatch does not stage or publish queued WAL",
+      "passed": true,
+      "actual": "0/864FA30:1:snapshot",
+      "expected": "0/864FA30:1:snapshot"
+    },
+    {
+      "name": "identity mismatch does not advance source slot",
+      "passed": true,
+      "actual": "0/864FA30",
+      "expected": "0/864FA30"
+    },
+    {
+      "name": "missing_slot fails before launching the receiver",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "missing_slot is recorded as a fail-closed source error",
+      "passed": true,
+      "actual": "error:error:1:true",
+      "expected": "error:error:1:true"
+    },
+    {
+      "name": "missing_slot does not stage or publish queued WAL",
+      "passed": true,
+      "actual": "0/8662F38:1:snapshot",
+      "expected": "0/8662F38:1:snapshot"
+    }
+  ],
+  "completed_at": "2026-09-14T20:05:46.621898+00:00"
+}

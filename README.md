@@ -43,6 +43,7 @@ make auto-schema-test
 make schema-evolution-test
 make rebuild-test
 make supervisor-test
+make source-continuity-test
 make lab-logs
 make lab-stop
 ```
@@ -137,6 +138,11 @@ Milestone 14 keeps an established supervisor alive across destination control
 connection loss, safely reacquires subscription ownership, records reconnection
 telemetry, and resumes replication. See
 [the Milestone 14 notes](docs/milestone-14.md).
+
+Milestone 15 validates the source system/database identity, logical slot safety,
+durable checkpoint boundary, and timeline ancestry before every receiver cycle,
+failing closed without consuming WAL when continuity cannot be proven. See
+[the Milestone 15 notes](docs/milestone-15.md).
 
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using
