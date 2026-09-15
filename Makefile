@@ -1,7 +1,8 @@
 COMPOSE = docker compose -p pg-lake-replication-lab -f deploy/docker-compose/compose.yml
 FAILOVER_COMPOSE = docker compose -p pg-lake-replication-failover-lab -f deploy/failover/compose.yml
+PATRONI_COMPOSE = docker compose -p pg-lake-replication-patroni-lab -f deploy/patroni/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -15,6 +16,13 @@ failover-test:
 	python3 tests/failover/probe.py
 failover-stop:
 	$(FAILOVER_COMPOSE) down -v
+
+patroni-up:
+	$(PATRONI_COMPOSE) up -d --build --wait --wait-timeout 240
+patroni-test:
+	python3 tests/patroni/probe.py
+patroni-stop:
+	$(PATRONI_COMPOSE) down -v
 
 lab-crash-test:
 	python3 tests/crash/probe.py
@@ -90,8 +98,10 @@ check:
 	python3 -m py_compile tests/source_continuity/probe.py
 	python3 -m py_compile tests/source_endpoints/probe.py
 	python3 -m py_compile tests/failover/probe.py
+	python3 -m py_compile tests/patroni/probe.py
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace
 	$(COMPOSE) config --quiet
 	$(FAILOVER_COMPOSE) config --quiet
+	$(PATRONI_COMPOSE) config --quiet

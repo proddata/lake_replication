@@ -1,0 +1,86 @@
+name: pg-lake-replication-patroni-lab
+services:
+  etcd:
+    image: gcr.io/etcd-development/etcd:v3.6.14@sha256:a491baeaa0cb0c9cd89c0062ac44ece53886e3e5bddad18d2daf36678ce665b6
+    command:
+      - /usr/local/bin/etcd
+      - --name=etcd
+      - --data-dir=/etcd-data
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://etcd:2379
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --initial-advertise-peer-urls=http://etcd:2380
+      - --initial-cluster=etcd=http://etcd:2380
+      - --initial-cluster-state=new
+    volumes:
+      - etcd-data:/etcd-data
+    healthcheck:
+      test: [CMD, /usr/local/bin/etcdctl, --endpoints=http://127.0.0.1:2379, endpoint, health]
+      interval: 1s
+      timeout: 2s
+      retries: 60
+
+  pg1:
+    build:
+      context: .
+      args:
+        PATRONI_VERSION: 4.1.5
+    image: pg-lake-replication-patroni:4.1.5-pg18
+    command: [/etc/patroni/patroni.yml]
+    volumes:
+      - pg1-data:/var/lib/postgresql/18/data
+      - ./pg1.yml:/etc/patroni/patroni.yml:ro
+    ports:
+      - "127.0.0.1:55437:5432"
+      - "127.0.0.1:58008:8008"
+    depends_on:
+      etcd:
+        condition: service_healthy
+      pg1-permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD-SHELL, "curl -fsS http://127.0.0.1:8008/liveness >/dev/null"]
+      interval: 1s
+      timeout: 2s
+      retries: 120
+
+  pg1-permissions:
+    image: postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af
+    user: root
+    entrypoint: [bash, /lab/prepare-data.sh, /var/lib/postgresql/18/data]
+    volumes:
+      - pg1-data:/var/lib/postgresql/18/data
+      - ./prepare-data.sh:/lab/prepare-data.sh:ro
+
+  pg2:
+    image: pg-lake-replication-patroni:4.1.5-pg18
+    command: [/etc/patroni/patroni.yml]
+    volumes:
+      - pg2-data:/var/lib/postgresql/18/data
+      - ./pg2.yml:/etc/patroni/patroni.yml:ro
+    ports:
+      - "127.0.0.1:55438:5432"
+      - "127.0.0.1:58009:8008"
+    depends_on:
+      etcd:
+        condition: service_healthy
+      pg2-permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD-SHELL, "curl -fsS http://127.0.0.1:8008/liveness >/dev/null"]
+      interval: 1s
+      timeout: 2s
+      retries: 120
+
+  pg2-permissions:
+    image: postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af
+    user: root
+    entrypoint: [bash, /lab/prepare-data.sh, /var/lib/postgresql/18/data]
+    volumes:
+      - pg2-data:/var/lib/postgresql/18/data
+      - ./prepare-data.sh:/lab/prepare-data.sh:ro
+
+volumes:
+  etcd-data:
+  pg1-data:
+  pg2-data:

@@ -1,0 +1,61 @@
+{
+  "run": "patroni_20260915_051737",
+  "checks": [
+    {
+      "name": "Patroni elects one leader and one streaming synchronous standby",
+      "passed": true,
+      "actual": "pg1:leader,pg2:sync_standby",
+      "expected": "pg1:leader,pg2:sync_standby"
+    },
+    {
+      "name": "supervisor publishes through the Patroni leader",
+      "passed": true,
+      "actual": "1:snapshot,2:before-failover",
+      "expected": "1:snapshot,2:before-failover"
+    },
+    {
+      "name": "Patroni standby has a persistent synchronized failover slot",
+      "passed": true,
+      "actual": "true:true:false:true",
+      "expected": "true:true:false:true"
+    },
+    {
+      "name": "Patroni configures PostgreSQL slot synchronization prerequisites",
+      "passed": true,
+      "actual": "on:on:pg2",
+      "expected": "on:on:pg2"
+    },
+    {
+      "name": "Patroni automatically promotes the synchronized standby",
+      "passed": true,
+      "actual": "pg2",
+      "expected": "pg2"
+    },
+    {
+      "name": "replication resumes after automatic promotion without duplicates",
+      "passed": true,
+      "actual": "1:snapshot,2:before-failover,3:after-failover",
+      "expected": "1:snapshot,2:before-failover,3:after-failover"
+    },
+    {
+      "name": "health records Patroni endpoint and timeline failover",
+      "passed": true,
+      "actual": "127.0.0.1:55438:1:2:streaming:running",
+      "expected": "127.0.0.1:55438:1:2:streaming:running"
+    },
+    {
+      "name": "promoted Patroni slot remains valid at the acknowledged LSN",
+      "passed": true,
+      "actual": "true:true:0/303BEF8",
+      "expected": "true:true:0/303BEF8"
+    },
+    {
+      "name": "supervisor stops cleanly after Patroni failover",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    }
+  ],
+  "automatic_failover_seconds": 19.629,
+  "completed_at": "2026-09-15T05:18:22.995155+00:00"
+}

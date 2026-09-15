@@ -46,6 +46,7 @@ make supervisor-test
 make source-continuity-test
 make source-endpoints-test
 make failover-test
+make patroni-test
 make lab-logs
 make lab-stop
 ```
@@ -155,6 +156,11 @@ Milestone 17 proves the data path across a real PostgreSQL 18 physical standby
 promotion using synchronized failover logical slots, promotion fencing, current
 timeline discovery, and exact continuation on the promoted node. See
 [the Milestone 17 notes](docs/milestone-17.md).
+
+Milestone 18 adds a pinned Patroni/etcd laboratory and proves automatic
+promotion after an unplanned leader process loss, including worker endpoint
+rediscovery and exact continuation on the synchronized logical slot. See
+[the Milestone 18 notes](docs/milestone-18.md).
 
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using

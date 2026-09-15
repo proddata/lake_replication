@@ -9,6 +9,8 @@ patching occur inside the development image.
 | New project code | This repository | PostgreSQL License, see LICENSE |
 | Rust worker core | Rust standard library only in the current slice | PostgreSQL License, see LICENSE |
 | PostgreSQL | 18 Bookworm image pinned by digest | [PostgreSQL License](https://www.postgresql.org/about/licence/) |
+| Patroni | `4.1.5`, installed into the PostgreSQL 18 HA lab image | [MIT](https://github.com/patroni/patroni/blob/v4.1.5/LICENSE) |
+| etcd | `3.6.14` official image pinned by digest | [Apache-2.0](https://github.com/etcd-io/etcd/blob/v3.6.14/LICENSE) |
 | pg_lake | `8180647d4535fdb1ed223f92f301ba6094a8ec3e` | [Apache-2.0](https://github.com/Snowflake-Labs/pg_lake/blob/8180647d4535fdb1ed223f92f301ba6094a8ec3e/LICENSE) |
 | DuckDB and extensions | Resolved by pinned pg_lake build | Each upstream license must be inventoried; patches retain upstream terms |
 | Apache Avro | pg_lake submodule plus upstream patch | [Apache-2.0](https://github.com/apache/avro/blob/main/LICENSE.txt) |
@@ -24,6 +26,7 @@ storage selection and distribution obligations need explicit review before
 packaging. The replication code is independently developed and does not use
 proprietary Crunchy Data implementation code or WalShadow code.
 
-Remaining work: lock all runtime image digests and fetched dependencies, export
-an SBOM and copyright files, review patched DuckDB extension dependencies, and
-add automated inventory/license checks to CI.
+The Patroni version and etcd image are pinned, but Patroni's pip and Debian
+transitive dependencies are resolved at image-build time. Remaining work: lock
+all fetched dependencies, export an SBOM and copyright files, review patched
+DuckDB extension dependencies, and add automated inventory/license checks to CI.
