@@ -262,11 +262,104 @@ def main():
         check("promoted Patroni slot remains valid at the acknowledged LSN",
               continuity, f"true:true:{acknowledged}")
 
+        restarted = command(SOURCE_COMPOSE + ["start", leader])
+        if restarted.returncode:
+            raise RuntimeError(restarted.stderr.strip())
+        rejoined_cluster = wait_cluster(lambda state:
+            member(state, "leader") is not None and
+            member(state, "leader")["name"] == standby and
+            member(state, "sync_standby") is not None and
+            member(state, "sync_standby")["name"] == leader and
+            member(state, "sync_standby").get("state") == "streaming",
+            timeout=120)
+        rejoined = member(rejoined_cluster, "sync_standby")["name"]
+        check("killed former leader rejoins as the synchronous standby",
+              rejoined, leader)
+        rejoined_identity = value(leader_port, f"""
+            SELECT pg_is_in_recovery()::text || ':' ||
+                   ((SELECT system_identifier FROM pg_control_system()) =
+                    {identity['system_identifier']})::text
+        """)
+        check("rejoined node retains source identity and runs in recovery",
+              rejoined_identity, "true:true")
+        rewind_logs = command(SOURCE_COMPOSE + ["logs", "--no-color", leader])
+        rewind_seen = "pg_rewind exit code=0" in (
+            rewind_logs.stdout + rewind_logs.stderr)
+        check("Patroni repairs the divergent former primary with pg_rewind",
+              rewind_seen, True)
+
+        rejoined_slot = wait_for(f"""
+            SELECT synced::text || ':' || failover::text || ':' || temporary::text || ':' ||
+                   (invalidation_reason IS NULL)::text
+              FROM pg_replication_slots WHERE slot_name='{SLOT}'
+        """, lambda item: item == "true:true:false:true",
+            port=leader_port, database="postgres", timeout=90)
+        check("rejoined standby resynchronizes the persistent failover slot",
+              rejoined_slot, "true:true:false:true")
+        value(standby_port,
+              f"INSERT INTO public.{TABLE} VALUES (4, 'after-rejoin')")
+        after_rejoin = wait_for(
+            f"SELECT string_agg(id || ':' || note, ',' ORDER BY id) FROM {RUN}.{TABLE}",
+            lambda item: item ==
+                "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin")
+        check("replication continues while the former leader rejoins", after_rejoin,
+              "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin")
+
+        second_failure_started = time.monotonic()
+        second_kill = command(SOURCE_COMPOSE + ["kill", "--signal", "SIGKILL", standby])
+        if second_kill.returncode:
+            raise RuntimeError(second_kill.stderr.strip())
+        second_cluster = wait_cluster(lambda state:
+            member(state, "leader") is not None and
+            member(state, "leader")["name"] == leader and
+            member(state, "leader").get("state") == "running")
+        second_failover_seconds = round(time.monotonic() - second_failure_started, 3)
+        second_promoted = member(second_cluster, "leader")["name"]
+        check("Patroni automatically promotes the rewound member", second_promoted, leader)
+        EVIDENCE["second_automatic_failover_seconds"] = second_failover_seconds
+
+        second_timeline = wait_for(
+            "SELECT (('x' || substr(pg_walfile_name(pg_current_wal_flush_lsn()), "
+            "1, 8))::bit(32)::bigint)::text",
+            lambda item: int(item or 0) > int(timeline),
+            port=leader_port, database="postgres")
+        value(leader_port,
+              f"INSERT INTO public.{TABLE} VALUES (5, 'after-second-failover')")
+        repeated = wait_for(
+            f"SELECT string_agg(id || ':' || note, ',' ORDER BY id) FROM {RUN}.{TABLE}",
+            lambda item: item ==
+                "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin,"
+                "5:after-second-failover")
+        check("replication survives a second promotion without duplicates", repeated,
+              "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin,"
+              "5:after-second-failover")
+        repeated_health = wait_for(f"""
+            SELECT active_source_address || ':' || source_switches || ':' ||
+                   observed_timeline || ':' || subscription_state || ':' || service_state
+              FROM lake_replication.service_health
+             WHERE subscription_id={subscription_id}
+        """, lambda item: item ==
+            f"127.0.0.1:{leader_port}:2:{second_timeline}:streaming:running")
+        check("health records two endpoint switches and three timelines",
+              repeated_health,
+              f"127.0.0.1:{leader_port}:2:{second_timeline}:streaming:running")
+        repeated_continuity = value(leader_port, f"""
+            SELECT failover::text || ':' || (invalidation_reason IS NULL)::text || ':' ||
+                   confirmed_flush_lsn FROM pg_replication_slots WHERE slot_name='{SLOT}'
+        """)
+        repeated_acknowledged = destination(f"""
+            SELECT acknowledged_lsn FROM lake_replication.checkpoints
+             WHERE subscription_id={subscription_id}
+        """).stdout.strip()
+        check("twice-promoted slot remains valid at the acknowledged LSN",
+              repeated_continuity, f"true:true:{repeated_acknowledged}")
+
         destination(f"SELECT lake_replication.request_service_stop({subscription_id})")
         stdout, stderr = supervisor.communicate(timeout=10)
         (RESULTS / "supervisor.stdout").write_text(stdout)
         (RESULTS / "supervisor.stderr").write_text(stderr)
-        check("supervisor stops cleanly after Patroni failover", supervisor.returncode, 0)
+        check("supervisor stops cleanly after repeated Patroni failover",
+              supervisor.returncode, 0)
         supervisor = None
         exit_code = 0
     except Exception as error:

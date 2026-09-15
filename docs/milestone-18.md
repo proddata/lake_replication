@@ -74,7 +74,9 @@ last eligible standby.
 Other remaining boundaries are:
 
 - the DCS has one etcd member and is not itself highly available;
-- the killed old primary is not reinitialized or rewound into the cluster;
-- repeated failover, switchover, split-brain network partitions, and DCS loss
-  are not yet exercised; and
+- controlled switchover, split-brain network partitions, and DCS loss are not
+  yet exercised; and
 - lab authentication is trust-based and the Patroni REST API is unauthenticated.
+
+Milestone 19 extends this laboratory through former-primary rewind, slot
+resynchronization, and a second automatic failover.

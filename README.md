@@ -162,6 +162,11 @@ promotion after an unplanned leader process loss, including worker endpoint
 rediscovery and exact continuation on the synchronized logical slot. See
 [the Milestone 18 notes](docs/milestone-18.md).
 
+Milestone 19 rejoins the divergent former primary with `pg_rewind`,
+resynchronizes its logical failover slot, and proves a second automatic
+promotion across timeline 3 without rebuilding the subscription. See
+[the Milestone 19 notes](docs/milestone-19.md).
+
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using
 this Compose project for unrelated data: failure experiments target it.

@@ -14,6 +14,7 @@ bootstrap:
     ttl: 20
     loop_wait: 2
     retry_timeout: 5
+    check_timeline: true
     maximum_lag_on_failover: 0
     synchronous_mode: true
     synchronous_mode_strict: false
