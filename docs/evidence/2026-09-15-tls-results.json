@@ -1,0 +1,54 @@
+{
+  "run": "tls_20260915_102010",
+  "checks": [
+    {
+      "name": "source rejects plaintext TCP connections",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "administrative control observes an encrypted TLS session",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "worker rejects a certificate from an untrusted CA",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "worker rejects a mismatched server identity",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "verify-full TLS initial copy completes",
+      "passed": true,
+      "actual": "1:snapshot",
+      "expected": "1:snapshot"
+    },
+    {
+      "name": "source observes worker connections only over TLS",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "TLS logical stream publishes exactly",
+      "passed": true,
+      "actual": "1:snapshot,2:tls-stream",
+      "expected": "1:snapshot,2:tls-stream"
+    },
+    {
+      "name": "TLS supervisor stops cleanly",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    }
+  ],
+  "completed_at": "2026-09-15T10:20:17.219843+00:00"
+}

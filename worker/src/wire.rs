@@ -1,9 +1,29 @@
 //! Minimal PostgreSQL v3 wire client for simple queries and logical replication.
 
 use postgres_protocol::authentication::sasl::{ChannelBinding, SCRAM_SHA_256, ScramSha256};
+use rustls::pki_types::ServerName;
+use rustls::{ClientConfig, ClientConnection, RootCertStore, StreamOwned};
+use std::fs::File;
 use std::io::{self, Read, Write};
-use std::net::{TcpStream, ToSocketAddrs};
+use std::net::{IpAddr, TcpStream, ToSocketAddrs};
+use std::path::PathBuf;
+use std::sync::Arc;
 use std::time::Duration;
+
+#[derive(Clone, Debug)]
+pub struct TlsConfig {
+    root_certificate: PathBuf,
+    server_name: Option<String>,
+}
+
+impl TlsConfig {
+    pub fn verify_full(root_certificate: impl Into<PathBuf>, server_name: Option<String>) -> Self {
+        Self {
+            root_certificate: root_certificate.into(),
+            server_name,
+        }
+    }
+}
 
 #[derive(Debug)]
 pub enum Error {
@@ -31,7 +51,37 @@ impl From<io::Error> for Error {
 }
 
 pub struct Client {
-    stream: TcpStream,
+    stream: Transport,
+}
+
+enum Transport {
+    Plain(TcpStream),
+    Tls(Box<StreamOwned<ClientConnection, TcpStream>>),
+}
+
+impl Read for Transport {
+    fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+        match self {
+            Self::Plain(stream) => stream.read(buffer),
+            Self::Tls(stream) => stream.read(buffer),
+        }
+    }
+}
+
+impl Write for Transport {
+    fn write(&mut self, buffer: &[u8]) -> io::Result<usize> {
+        match self {
+            Self::Plain(stream) => stream.write(buffer),
+            Self::Tls(stream) => stream.write(buffer),
+        }
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        match self {
+            Self::Plain(stream) => stream.flush(),
+            Self::Tls(stream) => stream.flush(),
+        }
+    }
 }
 
 impl Client {
@@ -86,8 +136,70 @@ impl Client {
         application_name: &str,
         password: Option<&str>,
     ) -> Result<Self, Error> {
-        let mut stream = TcpStream::connect(address)?;
+        let stream = TcpStream::connect(address)?;
         stream.set_nodelay(true)?;
+        Self::startup(
+            Transport::Plain(stream),
+            user,
+            database,
+            replication,
+            application_name,
+            password,
+        )
+    }
+
+    pub fn connect_named_secure(
+        address: &str,
+        user: &str,
+        database: &str,
+        replication: bool,
+        application_name: &str,
+        password: Option<&str>,
+        tls: Option<&TlsConfig>,
+    ) -> Result<Self, Error> {
+        let stream = TcpStream::connect(address)?;
+        stream.set_nodelay(true)?;
+        let stream = match tls {
+            None => Transport::Plain(stream),
+            Some(tls) => Transport::Tls(Box::new(tls_stream(stream, address, tls)?)),
+        };
+        Self::startup(
+            stream,
+            user,
+            database,
+            replication,
+            application_name,
+            password,
+        )
+    }
+
+    pub fn connect_secure(
+        address: &str,
+        user: &str,
+        database: &str,
+        replication: bool,
+        password: Option<&str>,
+        tls: Option<&TlsConfig>,
+    ) -> Result<Self, Error> {
+        Self::connect_named_secure(
+            address,
+            user,
+            database,
+            replication,
+            "lake-replication-worker",
+            password,
+            tls,
+        )
+    }
+
+    fn startup(
+        mut stream: Transport,
+        user: &str,
+        database: &str,
+        replication: bool,
+        application_name: &str,
+        password: Option<&str>,
+    ) -> Result<Self, Error> {
         let mut body = Vec::new();
         body.extend(196_608_u32.to_be_bytes());
         parameter(&mut body, "user", user);
@@ -194,7 +306,10 @@ impl Client {
     }
 
     pub fn set_read_timeout(&self, timeout: Option<Duration>) -> Result<(), Error> {
-        self.stream.set_read_timeout(timeout)?;
+        match &self.stream {
+            Transport::Plain(stream) => stream.set_read_timeout(timeout)?,
+            Transport::Tls(stream) => stream.sock.set_read_timeout(timeout)?,
+        }
         Ok(())
     }
 
@@ -314,6 +429,70 @@ impl Client {
         self.stream.read_exact(&mut body)?;
         Ok((header[0], body))
     }
+}
+
+fn tls_stream(
+    mut stream: TcpStream,
+    address: &str,
+    tls: &TlsConfig,
+) -> Result<StreamOwned<ClientConnection, TcpStream>, Error> {
+    stream.write_all(&8_u32.to_be_bytes())?;
+    stream.write_all(&80_877_103_u32.to_be_bytes())?;
+    stream.flush()?;
+    let mut response = [0_u8; 1];
+    stream.read_exact(&mut response)?;
+    match response[0] {
+        b'S' => {}
+        b'N' => return Err(Error::Protocol("PostgreSQL server refused TLS".into())),
+        other => {
+            return Err(Error::Protocol(format!(
+                "invalid PostgreSQL TLS negotiation response {other:#x}"
+            )));
+        }
+    }
+
+    let mut roots = RootCertStore::empty();
+    let mut reader = io::BufReader::new(File::open(&tls.root_certificate)?);
+    let certificates = rustls_pemfile::certs(&mut reader)
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|error| Error::Protocol(format!("invalid TLS root certificate: {error}")))?;
+    if certificates.is_empty() {
+        return Err(Error::Protocol(
+            "TLS root certificate file contains no certificates".into(),
+        ));
+    }
+    for certificate in certificates {
+        roots
+            .add(certificate)
+            .map_err(|error| Error::Protocol(format!("invalid TLS trust anchor: {error}")))?;
+    }
+    let crypto = rustls::crypto::ring::default_provider();
+    let config = ClientConfig::builder_with_provider(Arc::new(crypto))
+        .with_safe_default_protocol_versions()
+        .map_err(|error| Error::Protocol(format!("invalid TLS protocol configuration: {error}")))?
+        .with_root_certificates(roots)
+        .with_no_client_auth();
+    let server_name = tls
+        .server_name
+        .clone()
+        .unwrap_or_else(|| address_host(address).to_owned());
+    let server_name = ServerName::try_from(server_name)
+        .map_err(|error| Error::Protocol(format!("invalid TLS server name: {error}")))?;
+    let connection = ClientConnection::new(Arc::new(config), server_name)
+        .map_err(|error| Error::Protocol(format!("could not initialize TLS: {error}")))?;
+    Ok(StreamOwned::new(connection, stream))
+}
+
+fn address_host(address: &str) -> &str {
+    if let Some(address) = address.strip_prefix('[') {
+        return address.split_once(']').map_or(address, |(host, _)| host);
+    }
+    address.rsplit_once(':').map_or(address, |(host, _)| host)
+}
+
+pub fn address_is_loopback(address: &str) -> bool {
+    let host = address_host(address);
+    host == "localhost" || host.parse::<IpAddr>().is_ok_and(|ip| ip.is_loopback())
 }
 
 fn sasl_mechanisms(body: &[u8]) -> Result<Vec<&str>, Error> {
@@ -452,5 +631,14 @@ mod tests {
     #[test]
     fn rejects_unterminated_sasl_mechanism_lists() {
         assert!(sasl_mechanisms(b"SCRAM-SHA-256").is_err());
+    }
+
+    #[test]
+    fn recognizes_only_loopback_database_addresses() {
+        assert!(address_is_loopback("127.0.0.1:5432"));
+        assert!(address_is_loopback("[::1]:5432"));
+        assert!(address_is_loopback("localhost:5432"));
+        assert!(!address_is_loopback("database.internal:5432"));
+        assert!(!address_is_loopback("10.0.0.4:5432"));
     }
 }

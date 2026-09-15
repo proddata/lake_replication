@@ -1,0 +1,43 @@
+name: pg-lake-replication-tls-lab
+services:
+  source:
+    image: postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af
+    entrypoint: [bash, /lab/entrypoint.sh]
+    environment:
+      POSTGRES_DB: application
+      POSTGRES_PASSWORD: ${TLS_LAB_ADMIN_PASSWORD:?set TLS_LAB_ADMIN_PASSWORD}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      TLS_LAB_SOURCE_PASSWORD: ${TLS_LAB_SOURCE_PASSWORD:?set TLS_LAB_SOURCE_PASSWORD}
+      PGDATA: /var/lib/postgresql/18/data
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_replication_slots=8
+      - -c
+      - max_wal_senders=8
+      - -c
+      - password_encryption=scram-sha-256
+      - -c
+      - ssl=on
+      - -c
+      - ssl_cert_file=/certs/server.crt
+      - -c
+      - ssl_key_file=/certs/server.key
+    ports:
+      - "127.0.0.1:55441:5432"
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d application"]
+      interval: 1s
+      timeout: 2s
+      retries: 60
+    volumes:
+      - source-data:/var/lib/postgresql/18/data
+      - certificates:/certs
+      - ./entrypoint.sh:/lab/entrypoint.sh:ro
+      - ./init-auth.sh:/docker-entrypoint-initdb.d/10-auth.sh:ro
+
+volumes:
+  source-data:
+  certificates:

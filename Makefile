@@ -3,8 +3,9 @@ FAILOVER_COMPOSE = docker compose -p pg-lake-replication-failover-lab -f deploy/
 PATRONI_COMPOSE = docker compose -p pg-lake-replication-patroni-lab -f deploy/patroni/compose.yml
 SLOT_LOSS_COMPOSE = docker compose -p pg-lake-replication-slot-loss-lab -f deploy/slot-loss/compose.yml
 SCRAM_COMPOSE = docker compose -p pg-lake-replication-scram-lab -f deploy/scram/compose.yml
+TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -35,6 +36,8 @@ slot-loss-stop:
 
 scram-test:
 	python3 tests/scram/probe.py
+tls-test:
+	python3 tests/tls/probe.py
 
 lab-crash-test:
 	python3 tests/crash/probe.py
@@ -113,6 +116,7 @@ check:
 	python3 -m py_compile tests/patroni/probe.py
 	python3 -m py_compile tests/slot_loss/probe.py
 	python3 -m py_compile tests/scram/probe.py
+	python3 -m py_compile tests/tls/probe.py
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace
@@ -121,3 +125,4 @@ check:
 	$(PATRONI_COMPOSE) config --quiet
 	$(SLOT_LOSS_COMPOSE) config --quiet
 	AUTH_LAB_ADMIN_PASSWORD=check AUTH_LAB_SOURCE_PASSWORD=check $(SCRAM_COMPOSE) config --quiet
+	TLS_LAB_ADMIN_PASSWORD=check TLS_LAB_SOURCE_PASSWORD=check $(TLS_COMPOSE) config --quiet

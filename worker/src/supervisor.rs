@@ -1,4 +1,4 @@
-use lake_replication_worker::wire::{Client, Error as WireError};
+use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
 use std::path::Path;
 use std::process::{Command, Output};
@@ -670,8 +670,10 @@ struct Config {
     destination_address: String,
     source_user: String,
     source_password: Option<String>,
+    source_tls: Option<TlsConfig>,
     destination_user: String,
     destination_password: Option<String>,
+    destination_tls: Option<TlsConfig>,
     source_database: String,
     destination_database: String,
     slot: String,
@@ -687,9 +689,17 @@ struct Config {
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
         let legacy_user = value("LAKE_USER", "postgres");
+        let source_addresses = source_addresses()?;
+        let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
+        let source_address_refs = source_addresses
+            .iter()
+            .map(String::as_str)
+            .collect::<Vec<_>>();
         let config = Self {
-            source_addresses: source_addresses()?,
-            destination_address: value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434"),
+            source_tls: tls_config("LAKE_SOURCE", &source_address_refs)?,
+            destination_tls: tls_config("LAKE_DESTINATION", &[&destination_address])?,
+            source_addresses,
+            destination_address,
             source_user: value("LAKE_SOURCE_USER", &legacy_user),
             source_password: env::var("LAKE_SOURCE_PASSWORD").ok(),
             destination_user: value("LAKE_DESTINATION_USER", &legacy_user),
@@ -717,13 +727,14 @@ impl Config {
     }
 
     fn connect(&self) -> Result<Client, lake_replication_worker::wire::Error> {
-        Client::connect_named_authenticated(
+        Client::connect_named_secure(
             self.destination_address.as_str(),
             &self.destination_user,
             &self.destination_database,
             false,
             &format!("lake-replication-supervisor:{}", self.subscription_id),
             self.destination_password.as_deref(),
+            self.destination_tls.as_ref(),
         )
     }
 
@@ -731,14 +742,37 @@ impl Config {
         &self,
         address: &str,
     ) -> Result<Client, lake_replication_worker::wire::Error> {
-        Client::connect_named_authenticated(
+        Client::connect_named_secure(
             address,
             &self.source_user,
             &self.source_database,
             false,
             &format!("lake-replication-source-check:{}", self.subscription_id),
             self.source_password.as_deref(),
+            self.source_tls.as_ref(),
         )
+    }
+}
+
+fn tls_config(
+    prefix: &str,
+    addresses: &[&str],
+) -> Result<Option<TlsConfig>, Box<dyn std::error::Error>> {
+    let default_mode = if addresses.iter().all(|address| address_is_loopback(address)) {
+        "disable"
+    } else {
+        "verify-full"
+    };
+    match value(&format!("{prefix}_TLS_MODE"), default_mode).as_str() {
+        "disable" => Ok(None),
+        "verify-full" => Ok(Some(TlsConfig::verify_full(
+            required(&format!("{prefix}_TLS_ROOT_CERT"))?,
+            env::var(format!("{prefix}_TLS_SERVER_NAME")).ok(),
+        ))),
+        mode => Err(format!(
+            "unsupported {prefix}_TLS_MODE {mode}; expected disable or verify-full"
+        )
+        .into()),
     }
 }
 

@@ -49,6 +49,7 @@ make failover-test
 make patroni-test
 make slot-loss-test
 make scram-test
+make tls-test
 make lab-logs
 make lab-stop
 ```
@@ -185,11 +186,22 @@ connection, separates source and destination credentials, and validates initial
 copy plus logical streaming with a non-superuser, read-only replication role.
 See [the Milestone 22 notes](docs/milestone-22.md).
 
+Milestone 23 adds strict certificate-verified PostgreSQL TLS, defaults every
+non-loopback endpoint to `verify-full`, rejects untrusted and name-mismatched
+certificates, and proves initial copy plus logical streaming over the encrypted
+connection. See [the Milestone 23 notes](docs/milestone-23.md).
+
 Authentication settings are `LAKE_SOURCE_USER`, `LAKE_SOURCE_PASSWORD`,
 `LAKE_DESTINATION_USER`, and `LAKE_DESTINATION_PASSWORD`. `LAKE_USER` remains a
 backward-compatible username fallback. Passwords are not logged, but this slice
 does not yet encrypt the connection; use only trusted networks until the TLS
 milestone is complete.
+
+TLS settings use `LAKE_SOURCE_TLS_MODE`, `LAKE_SOURCE_TLS_ROOT_CERT`, and the
+optional `LAKE_SOURCE_TLS_SERVER_NAME`; replace `SOURCE` with `DESTINATION` for
+the destination connection. Supported modes are only `disable` and
+`verify-full`. Loopback defaults to `disable`; all other addresses default to
+`verify-full` and require an explicit root certificate.
 
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using

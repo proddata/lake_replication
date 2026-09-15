@@ -1,4 +1,4 @@
-use lake_replication_worker::wire::Client;
+use lake_replication_worker::wire::{Client, TlsConfig, address_is_loopback};
 use std::env;
 
 fn main() {
@@ -10,12 +10,13 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut destination = Client::connect_authenticated(
+    let mut destination = Client::connect_secure(
         config.destination_address.as_str(),
         &config.destination_user,
         &config.destination_database,
         false,
         config.destination_password.as_deref(),
+        config.destination_tls.as_ref(),
     )?;
     if let Some(crash_point) = &config.lab_crash_point {
         destination.simple_query(&format!(
@@ -73,6 +74,7 @@ struct Config {
     destination_address: String,
     destination_user: String,
     destination_password: Option<String>,
+    destination_tls: Option<TlsConfig>,
     destination_database: String,
     subscription_id: i64,
     max_transactions: i64,
@@ -84,8 +86,10 @@ struct Config {
 
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
+        let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
         let config = Self {
-            destination_address: value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434"),
+            destination_tls: tls_config("LAKE_DESTINATION", &[&destination_address])?,
+            destination_address,
             destination_user: value("LAKE_DESTINATION_USER", &value("LAKE_USER", "postgres")),
             destination_password: env::var("LAKE_DESTINATION_PASSWORD").ok(),
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
@@ -104,6 +108,28 @@ impl Config {
             return Err("batch limits must be positive".into());
         }
         Ok(config)
+    }
+}
+
+fn tls_config(
+    prefix: &str,
+    addresses: &[&str],
+) -> Result<Option<TlsConfig>, Box<dyn std::error::Error>> {
+    let default_mode = if addresses.iter().all(|address| address_is_loopback(address)) {
+        "disable"
+    } else {
+        "verify-full"
+    };
+    match value(&format!("{prefix}_TLS_MODE"), default_mode).as_str() {
+        "disable" => Ok(None),
+        "verify-full" => Ok(Some(TlsConfig::verify_full(
+            required(&format!("{prefix}_TLS_ROOT_CERT"))?,
+            env::var(format!("{prefix}_TLS_SERVER_NAME")).ok(),
+        ))),
+        mode => Err(format!(
+            "unsupported {prefix}_TLS_MODE {mode}; expected disable or verify-full"
+        )
+        .into()),
     }
 }
 

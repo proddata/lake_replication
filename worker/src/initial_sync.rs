@@ -1,4 +1,4 @@
-use lake_replication_worker::wire::{Client, Error as WireError};
+use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
 use std::thread;
 use std::time::Duration;
@@ -12,12 +12,13 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut slot_owner = Client::connect_authenticated(
+    let mut slot_owner = Client::connect_secure(
         config.source_address.as_str(),
         &config.source_user,
         &config.source_database,
         true,
         config.source_password.as_deref(),
+        config.source_tls.as_ref(),
     )?;
     let slot_rows = slot_owner.simple_query(&format!(
         "CREATE_REPLICATION_SLOT {} LOGICAL pgoutput (SNAPSHOT 'export', FAILOVER {})",
@@ -28,12 +29,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let consistent_lsn = field(slot_row, 1, "consistent_point")?.to_owned();
     let snapshot_name = field(slot_row, 2, "snapshot_name")?.to_owned();
 
-    let mut source = Client::connect_authenticated(
+    let mut source = Client::connect_secure(
         config.source_address.as_str(),
         &config.source_user,
         &config.source_database,
         false,
         config.source_password.as_deref(),
+        config.source_tls.as_ref(),
     )?;
     source.simple_query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY")?;
     source.simple_query(&format!(
@@ -45,12 +47,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         return Err("publication contains no eligible tables".into());
     }
 
-    let mut destination = Client::connect_authenticated(
+    let mut destination = Client::connect_secure(
         config.destination_address.as_str(),
         &config.destination_user,
         &config.destination_database,
         false,
         config.destination_password.as_deref(),
+        config.destination_tls.as_ref(),
     )?;
     for plan in &mut plans {
         let registered = destination.simple_query(&format!(
@@ -393,8 +396,10 @@ struct Config {
     destination_address: String,
     source_user: String,
     source_password: Option<String>,
+    source_tls: Option<TlsConfig>,
     destination_user: String,
     destination_password: Option<String>,
+    destination_tls: Option<TlsConfig>,
     source_database: String,
     destination_database: String,
     slot: String,
@@ -419,9 +424,13 @@ struct Config {
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
         let legacy_user = value("LAKE_USER", "postgres");
+        let source_address = value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434");
+        let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
         let config = Self {
-            source_address: value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434"),
-            destination_address: value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434"),
+            source_tls: tls_config("LAKE_SOURCE", &[&source_address])?,
+            destination_tls: tls_config("LAKE_DESTINATION", &[&destination_address])?,
+            source_address,
+            destination_address,
             source_user: value("LAKE_SOURCE_USER", &legacy_user),
             source_password: env::var("LAKE_SOURCE_PASSWORD").ok(),
             destination_user: value("LAKE_DESTINATION_USER", &legacy_user),
@@ -450,6 +459,28 @@ impl Config {
             return Err("initial-copy row and byte chunk limits must be positive".into());
         }
         Ok(config)
+    }
+}
+
+fn tls_config(
+    prefix: &str,
+    addresses: &[&str],
+) -> Result<Option<TlsConfig>, Box<dyn std::error::Error>> {
+    let default_mode = if addresses.iter().all(|address| address_is_loopback(address)) {
+        "disable"
+    } else {
+        "verify-full"
+    };
+    match value(&format!("{prefix}_TLS_MODE"), default_mode).as_str() {
+        "disable" => Ok(None),
+        "verify-full" => Ok(Some(TlsConfig::verify_full(
+            required(&format!("{prefix}_TLS_ROOT_CERT"))?,
+            env::var(format!("{prefix}_TLS_SERVER_NAME")).ok(),
+        ))),
+        mode => Err(format!(
+            "unsupported {prefix}_TLS_MODE {mode}; expected disable or verify-full"
+        )
+        .into()),
     }
 }
 
