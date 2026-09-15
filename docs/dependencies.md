@@ -7,7 +7,7 @@ patching occur inside the development image.
 | Component | Selection | Upstream license/source |
 |---|---|---|
 | New project code | This repository | PostgreSQL License, see LICENSE |
-| Rust worker core | Rust standard library only in the current slice | PostgreSQL License, see LICENSE |
+| Rust worker core | Rust standard library plus `postgres-protocol` 0.6.12 for SCRAM | PostgreSQL License, see LICENSE; [`postgres-protocol`](https://github.com/sfackler/rust-postgres) is MIT OR Apache-2.0 |
 | PostgreSQL | 18 Bookworm image pinned by digest | [PostgreSQL License](https://www.postgresql.org/about/licence/) |
 | Patroni | `4.1.5`, installed into the PostgreSQL 18 HA lab image | [MIT](https://github.com/patroni/patroni/blob/v4.1.5/LICENSE) |
 | etcd | `3.6.14` official image pinned by digest | [Apache-2.0](https://github.com/etcd-io/etcd/blob/v3.6.14/LICENSE) |

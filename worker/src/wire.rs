@@ -1,5 +1,6 @@
 //! Minimal PostgreSQL v3 wire client for simple queries and logical replication.
 
+use postgres_protocol::authentication::sasl::{ChannelBinding, SCRAM_SHA_256, ScramSha256};
 use std::io::{self, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 use std::time::Duration;
@@ -40,12 +41,23 @@ impl Client {
         database: &str,
         replication: bool,
     ) -> Result<Self, Error> {
-        Self::connect_named(
+        Self::connect_authenticated(address, user, database, replication, None)
+    }
+
+    pub fn connect_authenticated(
+        address: impl ToSocketAddrs,
+        user: &str,
+        database: &str,
+        replication: bool,
+        password: Option<&str>,
+    ) -> Result<Self, Error> {
+        Self::connect_named_authenticated(
             address,
             user,
             database,
             replication,
             "lake-replication-worker",
+            password,
         )
     }
 
@@ -55,6 +67,24 @@ impl Client {
         database: &str,
         replication: bool,
         application_name: &str,
+    ) -> Result<Self, Error> {
+        Self::connect_named_authenticated(
+            address,
+            user,
+            database,
+            replication,
+            application_name,
+            None,
+        )
+    }
+
+    pub fn connect_named_authenticated(
+        address: impl ToSocketAddrs,
+        user: &str,
+        database: &str,
+        replication: bool,
+        application_name: &str,
+        password: Option<&str>,
     ) -> Result<Self, Error> {
         let mut stream = TcpStream::connect(address)?;
         stream.set_nodelay(true)?;
@@ -73,18 +103,86 @@ impl Client {
         stream.write_all(&body)?;
 
         let mut client = Self { stream };
+        let mut scram = None;
+        let mut scram_verified = false;
+        let mut authentication_ok = false;
         loop {
             let (tag, body) = client.read_message()?;
             match tag {
-                b'R' if read_u32(&body, 0)? == 0 => {}
+                b'R' if read_u32(&body, 0)? == 0 => {
+                    if scram.is_some() && !scram_verified {
+                        return Err(Error::Protocol(
+                            "PostgreSQL skipped SCRAM server verification".into(),
+                        ));
+                    }
+                    authentication_ok = true;
+                }
+                b'R' if read_u32(&body, 0)? == 10 => {
+                    if scram.is_some() || authentication_ok {
+                        return Err(Error::Protocol("unexpected SCRAM start".into()));
+                    }
+                    let password = password.ok_or_else(|| {
+                        Error::Protocol(
+                            "PostgreSQL requested SCRAM-SHA-256 but no password was configured"
+                                .into(),
+                        )
+                    })?;
+                    if !sasl_mechanisms(&body[4..])?.contains(&SCRAM_SHA_256) {
+                        return Err(Error::Protocol(
+                            "PostgreSQL did not offer SCRAM-SHA-256 authentication".into(),
+                        ));
+                    }
+                    let state =
+                        ScramSha256::new(password.as_bytes(), ChannelBinding::unsupported());
+                    let mut response = nul_terminated(SCRAM_SHA_256);
+                    response.extend(
+                        i32::try_from(state.message().len())
+                            .map_err(|_| Error::Protocol("SCRAM message is too large".into()))?
+                            .to_be_bytes(),
+                    );
+                    response.extend(state.message());
+                    client.send_message(b'p', &response)?;
+                    scram = Some(state);
+                }
+                b'R' if read_u32(&body, 0)? == 11 => {
+                    let state = scram
+                        .as_mut()
+                        .ok_or_else(|| Error::Protocol("unexpected SCRAM continuation".into()))?;
+                    state
+                        .update(body.get(4..).ok_or_else(|| {
+                            Error::Protocol("truncated SCRAM continuation".into())
+                        })?)
+                        .map_err(|error| {
+                            Error::Protocol(format!("invalid SCRAM continuation: {error}"))
+                        })?;
+                    client.send_message(b'p', state.message())?;
+                }
+                b'R' if read_u32(&body, 0)? == 12 => {
+                    scram
+                        .as_mut()
+                        .ok_or_else(|| Error::Protocol("unexpected SCRAM final message".into()))?
+                        .finish(body.get(4..).ok_or_else(|| {
+                            Error::Protocol("truncated SCRAM final message".into())
+                        })?)
+                        .map_err(|error| {
+                            Error::Protocol(format!("SCRAM server verification failed: {error}"))
+                        })?;
+                    scram_verified = true;
+                }
                 b'R' => {
-                    return Err(Error::Protocol(
-                        "only trust authentication is supported by the milestone receiver".into(),
-                    ));
+                    return Err(Error::Protocol(format!(
+                        "unsupported PostgreSQL authentication method {}",
+                        read_u32(&body, 0)?
+                    )));
                 }
                 b'S' | b'K' | b'N' => {}
                 b'E' => return Err(Error::Server(error_message(&body))),
-                b'Z' => break,
+                b'Z' if authentication_ok => break,
+                b'Z' => {
+                    return Err(Error::Protocol(
+                        "PostgreSQL became ready before authentication completed".into(),
+                    ));
+                }
                 other => {
                     return Err(Error::Protocol(format!(
                         "unexpected startup message {other:#x}"
@@ -218,6 +316,19 @@ impl Client {
     }
 }
 
+fn sasl_mechanisms(body: &[u8]) -> Result<Vec<&str>, Error> {
+    if body.last().copied() != Some(0) {
+        return Err(Error::Protocol("unterminated SASL mechanism list".into()));
+    }
+    body[..body.len() - 1]
+        .split(|byte| *byte == 0)
+        .map(|mechanism| {
+            std::str::from_utf8(mechanism)
+                .map_err(|_| Error::Protocol("non-UTF-8 SASL mechanism".into()))
+        })
+        .collect()
+}
+
 fn parameter(buffer: &mut Vec<u8>, key: &str, value: &str) {
     buffer.extend(key.as_bytes());
     buffer.push(0);
@@ -324,4 +435,22 @@ fn postgres_now_micros() -> i64 {
         .unwrap_or(i64::MAX)
         .saturating_mul(1_000_000)
         .saturating_add(i64::from(unix.subsec_micros()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_postgresql_sasl_mechanism_lists() {
+        assert_eq!(
+            sasl_mechanisms(b"SCRAM-SHA-256-PLUS\0SCRAM-SHA-256\0").unwrap(),
+            ["SCRAM-SHA-256-PLUS", "SCRAM-SHA-256"]
+        );
+    }
+
+    #[test]
+    fn rejects_unterminated_sasl_mechanism_lists() {
+        assert!(sasl_mechanisms(b"SCRAM-SHA-256").is_err());
+    }
 }

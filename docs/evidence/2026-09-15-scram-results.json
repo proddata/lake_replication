@@ -1,0 +1,66 @@
+{
+  "run": "scram_20260915_101007",
+  "checks": [
+    {
+      "name": "source identity is a non-superuser replication role",
+      "passed": true,
+      "actual": "false:true:false:false",
+      "expected": "false:true:false:false"
+    },
+    {
+      "name": "least-privilege role can read the published table",
+      "passed": true,
+      "actual": "1:snapshot",
+      "expected": "1:snapshot"
+    },
+    {
+      "name": "least-privilege role cannot write source data",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "incorrect SCRAM credentials are rejected",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "authentication errors do not disclose the attempted password",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "SCRAM-authenticated initial copy completes",
+      "passed": true,
+      "actual": "1:snapshot",
+      "expected": "1:snapshot"
+    },
+    {
+      "name": "SCRAM-authenticated logical stream publishes exactly",
+      "passed": true,
+      "actual": "1:snapshot,2:scram-stream",
+      "expected": "1:snapshot,2:scram-stream"
+    },
+    {
+      "name": "authenticated supervisor stops cleanly",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "successful worker output discloses no configured password",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "source logs disclose no configured password",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    }
+  ],
+  "completed_at": "2026-09-15T10:10:12.650239+00:00"
+}

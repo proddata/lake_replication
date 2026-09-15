@@ -48,6 +48,7 @@ make source-endpoints-test
 make failover-test
 make patroni-test
 make slot-loss-test
+make scram-test
 make lab-logs
 make lab-stop
 ```
@@ -178,6 +179,17 @@ Milestone 21 forces PostgreSQL to invalidate an inactive logical slot after its
 required WAL is removed, then proves that the supervisor fails closed before
 receiver launch without advancing checkpoints or silently skipping source data.
 See [the Milestone 21 notes](docs/milestone-21.md).
+
+Milestone 22 adds PostgreSQL SCRAM-SHA-256 authentication to every worker
+connection, separates source and destination credentials, and validates initial
+copy plus logical streaming with a non-superuser, read-only replication role.
+See [the Milestone 22 notes](docs/milestone-22.md).
+
+Authentication settings are `LAKE_SOURCE_USER`, `LAKE_SOURCE_PASSWORD`,
+`LAKE_DESTINATION_USER`, and `LAKE_DESTINATION_PASSWORD`. `LAKE_USER` remains a
+backward-compatible username fallback. Passwords are not logged, but this slice
+does not yet encrypt the connection; use only trusted networks until the TLS
+milestone is complete.
 
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using

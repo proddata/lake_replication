@@ -1,0 +1,33 @@
+name: pg-lake-replication-scram-lab
+services:
+  source:
+    image: postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af
+    environment:
+      POSTGRES_DB: application
+      POSTGRES_PASSWORD: ${AUTH_LAB_ADMIN_PASSWORD:?set AUTH_LAB_ADMIN_PASSWORD}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      AUTH_LAB_SOURCE_PASSWORD: ${AUTH_LAB_SOURCE_PASSWORD:?set AUTH_LAB_SOURCE_PASSWORD}
+      PGDATA: /var/lib/postgresql/18/data
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_replication_slots=8
+      - -c
+      - max_wal_senders=8
+      - -c
+      - password_encryption=scram-sha-256
+    ports:
+      - "127.0.0.1:55440:5432"
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d application"]
+      interval: 1s
+      timeout: 2s
+      retries: 60
+    volumes:
+      - source-data:/var/lib/postgresql/18/data
+      - ./init-auth.sh:/docker-entrypoint-initdb.d/10-auth.sh:ro
+
+volumes:
+  source-data:

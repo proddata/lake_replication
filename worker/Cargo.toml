@@ -6,6 +6,9 @@ license.workspace = true
 rust-version.workspace = true
 publish = false
 
+[dependencies]
+postgres-protocol = "=0.6.12"
+
 [lib]
 name = "lake_replication_worker"
 path = "src/lib.rs"

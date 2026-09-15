@@ -548,6 +548,7 @@ fn run_cycle(
         return Ok((1, 0));
     }
     let publisher_output = Command::new(publisher)
+        .env_remove("LAKE_SOURCE_PASSWORD")
         .env("LAKE_MAX_BATCHES", config.publisher_max_batches.to_string())
         .output()
         .map_err(|error| CycleError::Retry(format!("could not start publisher: {error}")))?;
@@ -667,7 +668,10 @@ fn retry_delay(base: Duration, maximum: Duration, failures: u32) -> Duration {
 struct Config {
     source_addresses: Vec<String>,
     destination_address: String,
-    user: String,
+    source_user: String,
+    source_password: Option<String>,
+    destination_user: String,
+    destination_password: Option<String>,
     source_database: String,
     destination_database: String,
     slot: String,
@@ -682,10 +686,14 @@ struct Config {
 
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
+        let legacy_user = value("LAKE_USER", "postgres");
         let config = Self {
             source_addresses: source_addresses()?,
             destination_address: value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434"),
-            user: value("LAKE_USER", "postgres"),
+            source_user: value("LAKE_SOURCE_USER", &legacy_user),
+            source_password: env::var("LAKE_SOURCE_PASSWORD").ok(),
+            destination_user: value("LAKE_DESTINATION_USER", &legacy_user),
+            destination_password: env::var("LAKE_DESTINATION_PASSWORD").ok(),
             source_database: value("LAKE_SOURCE_DATABASE", "application"),
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
             slot: required("LAKE_SLOT")?,
@@ -709,12 +717,13 @@ impl Config {
     }
 
     fn connect(&self) -> Result<Client, lake_replication_worker::wire::Error> {
-        Client::connect_named(
+        Client::connect_named_authenticated(
             self.destination_address.as_str(),
-            &self.user,
+            &self.destination_user,
             &self.destination_database,
             false,
             &format!("lake-replication-supervisor:{}", self.subscription_id),
+            self.destination_password.as_deref(),
         )
     }
 
@@ -722,12 +731,13 @@ impl Config {
         &self,
         address: &str,
     ) -> Result<Client, lake_replication_worker::wire::Error> {
-        Client::connect_named(
+        Client::connect_named_authenticated(
             address,
-            &self.user,
+            &self.source_user,
             &self.source_database,
             false,
             &format!("lake-replication-source-check:{}", self.subscription_id),
+            self.source_password.as_deref(),
         )
     }
 }

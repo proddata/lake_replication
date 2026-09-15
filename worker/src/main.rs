@@ -20,29 +20,32 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut destination = Client::connect(
+    let mut destination = Client::connect_authenticated(
         config.destination_address.as_str(),
-        &config.user,
+        &config.destination_user,
         &config.destination_database,
         false,
+        config.destination_password.as_deref(),
     )?;
     let start_lsn = checkpoint(&mut destination, config.subscription_id)?;
     let schema_contracts = schema_contracts_enabled(&mut destination, config.subscription_id)?;
     let mut metadata_source = if schema_contracts {
-        Some(Client::connect(
+        Some(Client::connect_authenticated(
             config.source_address.as_str(),
-            &config.user,
+            &config.source_user,
             &config.source_database,
             false,
+            config.source_password.as_deref(),
         )?)
     } else {
         None
     };
-    let mut source = Client::connect(
+    let mut source = Client::connect_authenticated(
         config.source_address.as_str(),
-        &config.user,
+        &config.source_user,
         &config.source_database,
         true,
+        config.source_password.as_deref(),
     )?;
     if config.idle_timeout_ms > 0 {
         source.set_read_timeout(Some(Duration::from_millis(config.idle_timeout_ms)))?;
@@ -263,7 +266,10 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 struct Config {
     source_address: String,
     destination_address: String,
-    user: String,
+    source_user: String,
+    source_password: Option<String>,
+    destination_user: String,
+    destination_password: Option<String>,
     source_database: String,
     destination_database: String,
     slot: String,
@@ -277,10 +283,14 @@ struct Config {
 
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
+        let legacy_user = value("LAKE_USER", "postgres");
         Ok(Self {
             source_address: value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434"),
             destination_address: value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434"),
-            user: value("LAKE_USER", "postgres"),
+            source_user: value("LAKE_SOURCE_USER", &legacy_user),
+            source_password: env::var("LAKE_SOURCE_PASSWORD").ok(),
+            destination_user: value("LAKE_DESTINATION_USER", &legacy_user),
+            destination_password: env::var("LAKE_DESTINATION_PASSWORD").ok(),
             source_database: value("LAKE_SOURCE_DATABASE", "application"),
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
             slot: required("LAKE_SLOT")?,

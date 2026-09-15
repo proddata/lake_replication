@@ -10,11 +10,12 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut destination = Client::connect(
+    let mut destination = Client::connect_authenticated(
         config.destination_address.as_str(),
-        &config.user,
+        &config.destination_user,
         &config.destination_database,
         false,
+        config.destination_password.as_deref(),
     )?;
     if let Some(crash_point) = &config.lab_crash_point {
         destination.simple_query(&format!(
@@ -70,7 +71,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
 struct Config {
     destination_address: String,
-    user: String,
+    destination_user: String,
+    destination_password: Option<String>,
     destination_database: String,
     subscription_id: i64,
     max_transactions: i64,
@@ -84,7 +86,8 @@ impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
         let config = Self {
             destination_address: value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434"),
-            user: value("LAKE_USER", "postgres"),
+            destination_user: value("LAKE_DESTINATION_USER", &value("LAKE_USER", "postgres")),
+            destination_password: env::var("LAKE_DESTINATION_PASSWORD").ok(),
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
             subscription_id: required("LAKE_SUBSCRIPTION_ID")?.parse()?,
             max_transactions: value("LAKE_BATCH_MAX_TRANSACTIONS", "1000").parse()?,
