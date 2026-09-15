@@ -47,6 +47,7 @@ make source-continuity-test
 make source-endpoints-test
 make failover-test
 make patroni-test
+make slot-loss-test
 make lab-logs
 make lab-stop
 ```
@@ -172,6 +173,11 @@ replica maintenance: drain the logical receiver, verify the synchronized
 candidate, switch through Patroni, resume from the durable checkpoint, and
 restart the demoted replica without changing the active source. See
 [the Milestone 20 notes](docs/milestone-20.md).
+
+Milestone 21 forces PostgreSQL to invalidate an inactive logical slot after its
+required WAL is removed, then proves that the supervisor fails closed before
+receiver launch without advancing checkpoints or silently skipping source data.
+See [the Milestone 21 notes](docs/milestone-21.md).
 
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using

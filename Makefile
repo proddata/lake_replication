@@ -1,8 +1,9 @@
 COMPOSE = docker compose -p pg-lake-replication-lab -f deploy/docker-compose/compose.yml
 FAILOVER_COMPOSE = docker compose -p pg-lake-replication-failover-lab -f deploy/failover/compose.yml
 PATRONI_COMPOSE = docker compose -p pg-lake-replication-patroni-lab -f deploy/patroni/compose.yml
+SLOT_LOSS_COMPOSE = docker compose -p pg-lake-replication-slot-loss-lab -f deploy/slot-loss/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -23,6 +24,13 @@ patroni-test:
 	python3 tests/patroni/probe.py
 patroni-stop:
 	$(PATRONI_COMPOSE) down -v
+
+slot-loss-up:
+	$(SLOT_LOSS_COMPOSE) up -d --wait --wait-timeout 180
+slot-loss-test:
+	python3 tests/slot_loss/probe.py
+slot-loss-stop:
+	$(SLOT_LOSS_COMPOSE) down -v
 
 lab-crash-test:
 	python3 tests/crash/probe.py
@@ -99,9 +107,11 @@ check:
 	python3 -m py_compile tests/source_endpoints/probe.py
 	python3 -m py_compile tests/failover/probe.py
 	python3 -m py_compile tests/patroni/probe.py
+	python3 -m py_compile tests/slot_loss/probe.py
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace
 	$(COMPOSE) config --quiet
 	$(FAILOVER_COMPOSE) config --quiet
 	$(PATRONI_COMPOSE) config --quiet
+	$(SLOT_LOSS_COMPOSE) config --quiet

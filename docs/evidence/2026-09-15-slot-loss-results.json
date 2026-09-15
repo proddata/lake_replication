@@ -1,0 +1,54 @@
+{
+  "run": "slot_loss_20260915_095846",
+  "checks": [
+    {
+      "name": "healthy slot publishes before WAL loss",
+      "passed": true,
+      "actual": "1:snapshot,2:before-slot-loss",
+      "expected": "1:snapshot,2:before-slot-loss"
+    },
+    {
+      "name": "supervisor drains before forced retention overrun",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "source confirmation equals the durable acknowledged checkpoint",
+      "passed": true,
+      "actual": "0/1BCC920",
+      "expected": "0/1BCC920"
+    },
+    {
+      "name": "PostgreSQL invalidates the inactive slot after WAL removal",
+      "passed": true,
+      "actual": "lost:wal_removed",
+      "expected": "lost:wal_removed"
+    },
+    {
+      "name": "supervisor fails before launching a receiver on the lost slot",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "slot loss is durably visible as a fail-closed source error",
+      "passed": true,
+      "actual": "error:error:1:true:true",
+      "expected": "error:error:1:true:true"
+    },
+    {
+      "name": "lost WAL neither advances checkpoints nor silently skips the row",
+      "passed": true,
+      "actual": "0/1BCC920:0/1BCC920:0/1BCC920:1:snapshot,2:before-slot-loss",
+      "expected": "0/1BCC920:0/1BCC920:0/1BCC920:1:snapshot,2:before-slot-loss"
+    },
+    {
+      "name": "failed validation does not advance the invalidated slot",
+      "passed": true,
+      "actual": "0/1BCC920",
+      "expected": "0/1BCC920"
+    }
+  ],
+  "completed_at": "2026-09-15T09:58:51.530027+00:00"
+}
