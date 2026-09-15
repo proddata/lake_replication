@@ -41,6 +41,7 @@ services:
       - ../../migrations/0012_service_reconnect.sql:/docker-entrypoint-initdb.d/31-service-reconnect.sql:ro
       - ../../migrations/0013_source_continuity.sql:/docker-entrypoint-initdb.d/32-source-continuity.sql:ro
       - ../../migrations/0014_source_endpoints.sql:/docker-entrypoint-initdb.d/33-source-endpoints.sql:ro
+      - ../../migrations/0015_journal_maintenance.sql:/docker-entrypoint-initdb.d/34-journal-maintenance.sql:ro
     ports:
       - "127.0.0.1:55434:5432"
     depends_on:

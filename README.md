@@ -191,11 +191,16 @@ non-loopback endpoint to `verify-full`, rejects untrusted and name-mismatched
 certificates, and proves initial copy plus logical streaming over the encrypted
 connection. See [the Milestone 23 notes](docs/milestone-23.md).
 
+Milestone 24 bounds the durable staging journal with per-subscription retention,
+incremental cleanup, automatic supervisor scheduling, and SQL maintenance
+telemetry. Cleanup is limited by both the published and source-acknowledged LSNs
+and never removes staged or ambiguous publishing work. See
+[the Milestone 24 notes](docs/milestone-24.md).
+
 Authentication settings are `LAKE_SOURCE_USER`, `LAKE_SOURCE_PASSWORD`,
 `LAKE_DESTINATION_USER`, and `LAKE_DESTINATION_PASSWORD`. `LAKE_USER` remains a
-backward-compatible username fallback. Passwords are not logged, but this slice
-does not yet encrypt the connection; use only trusted networks until the TLS
-milestone is complete.
+backward-compatible username fallback. Passwords are not logged and remote
+connections default to certificate-verified TLS.
 
 TLS settings use `LAKE_SOURCE_TLS_MODE`, `LAKE_SOURCE_TLS_ROOT_CERT`, and the
 optional `LAKE_SOURCE_TLS_SERVER_NAME`; replace `SOURCE` with `DESTINATION` for

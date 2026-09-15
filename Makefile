@@ -5,7 +5,7 @@ SLOT_LOSS_COMPOSE = docker compose -p pg-lake-replication-slot-loss-lab -f deplo
 SCRAM_COMPOSE = docker compose -p pg-lake-replication-scram-lab -f deploy/scram/compose.yml
 TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -57,9 +57,13 @@ journal-install:
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0012_service_reconnect.sql
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0013_source_continuity.sql
 	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0014_source_endpoints.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0015_journal_maintenance.sql
 
 journal-test:
 	python3 tests/journal/probe.py
+
+journal-maintenance-test:
+	python3 tests/journal_maintenance/probe.py
 
 transport-test:
 	python3 tests/transport/probe.py
@@ -117,6 +121,7 @@ check:
 	python3 -m py_compile tests/slot_loss/probe.py
 	python3 -m py_compile tests/scram/probe.py
 	python3 -m py_compile tests/tls/probe.py
+	python3 -m py_compile tests/journal_maintenance/probe.py
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace

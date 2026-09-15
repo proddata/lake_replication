@@ -1,0 +1,30 @@
+{
+  "run": "maintenance_20260915_115653",
+  "checks": [
+    {"name": "new subscription receives default policy", "passed": true},
+    {"name": "successful service cycle runs due cleanup automatically", "passed": true},
+    {"name": "maintenance failure does not roll back service progress", "passed": true},
+    {"name": "cleanup is capped and bounded by both checkpoints", "passed": true},
+    {"name": "newer published and staged recovery evidence remains", "passed": true},
+    {"name": "repeat cleanup is idempotent at the same watermark", "passed": true},
+    {"name": "publication remains the limiting cleanup checkpoint", "passed": true},
+    {"name": "publishing transaction survives maintenance", "passed": true},
+    {"name": "ambiguous batch and transaction are retained", "passed": true},
+    {"name": "completed ambiguous work becomes reclaimable", "passed": true},
+    {"name": "retention window protects recent published evidence", "passed": true},
+    {"name": "forced cleanup bypasses schedule but honors policy", "passed": true},
+    {"name": "ordinary run is rate limited by cleanup interval", "passed": true},
+    {"name": "disabled policy also blocks forced cleanup", "passed": true},
+    {"name": "health view reports bounded storage and cumulative work", "passed": true}
+  ],
+  "final_state": {
+    "safe_cleanup_lsn": "0/140",
+    "retained_transactions": 0,
+    "retained_changes": 0,
+    "total_transactions_deleted": 5,
+    "total_changes_deleted": 5,
+    "total_batches_deleted": 4,
+    "maintenance_failures_injected": 1
+  },
+  "status": "passed"
+}
