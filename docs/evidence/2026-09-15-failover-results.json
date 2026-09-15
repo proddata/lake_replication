@@ -1,0 +1,66 @@
+{
+  "run": "failover_20260915_045438",
+  "checks": [
+    {
+      "name": "initial sync creates a persistent valid failover slot",
+      "passed": true,
+      "actual": "true:false:true",
+      "expected": "true:false:true"
+    },
+    {
+      "name": "supervisor publishes through the original primary",
+      "passed": true,
+      "actual": "1:snapshot,2:before-promotion",
+      "expected": "1:snapshot,2:before-promotion"
+    },
+    {
+      "name": "logical failover slot becomes persistent and synced on standby",
+      "passed": true,
+      "actual": "true:true:false:true",
+      "expected": "true:true:false:true"
+    },
+    {
+      "name": "standby slot synchronization prerequisites are active",
+      "passed": true,
+      "actual": "on:on:ha_standby",
+      "expected": "on:on:ha_standby"
+    },
+    {
+      "name": "primary decoding is fenced by the physical standby slot",
+      "passed": true,
+      "actual": "ha_standby:true",
+      "expected": "ha_standby:true"
+    },
+    {
+      "name": "physical standby promotes successfully",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "replication resumes on the promoted timeline without duplicates",
+      "passed": true,
+      "actual": "1:snapshot,2:before-promotion,3:after-promotion",
+      "expected": "1:snapshot,2:before-promotion,3:after-promotion"
+    },
+    {
+      "name": "health records endpoint switch and descendant timeline",
+      "passed": true,
+      "actual": "127.0.0.1:55436:1:2:streaming:running",
+      "expected": "127.0.0.1:55436:1:2:streaming:running"
+    },
+    {
+      "name": "promoted failover slot remains valid at the acknowledged LSN",
+      "passed": true,
+      "actual": "true:true:0/308DAE0",
+      "expected": "true:true:0/308DAE0"
+    },
+    {
+      "name": "supervisor stops cleanly after failover",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    }
+  ],
+  "completed_at": "2026-09-15T04:55:20.977227+00:00"
+}

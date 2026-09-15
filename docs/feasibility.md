@@ -79,7 +79,8 @@ test does not model an ambiguous remote REST-catalog response.
 - PostgreSQL 18 official Bookworm image, manifest digest
   `sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af`.
 - Upstream build documentation lists PostgreSQL 16–19; our initial target is 18.
-  Supporting 17 and failover remains later work.
+  PostgreSQL 17 compatibility remains later work. A synchronized logical-slot
+  promotion path is now covered by the Milestone 17 two-node PostgreSQL 18 lab.
 
 ## Source findings
 

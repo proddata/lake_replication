@@ -45,6 +45,7 @@ make rebuild-test
 make supervisor-test
 make source-continuity-test
 make source-endpoints-test
+make failover-test
 make lab-logs
 make lab-stop
 ```
@@ -149,6 +150,11 @@ Milestone 16 selects a safe writable source from ordered PostgreSQL endpoints,
 routes receiver cycles to it, records endpoint switches and candidate failures,
 and treats election-time unavailability as retryable. See
 [the Milestone 16 notes](docs/milestone-16.md).
+
+Milestone 17 proves the data path across a real PostgreSQL 18 physical standby
+promotion using synchronized failover logical slots, promotion fencing, current
+timeline discovery, and exact continuation on the promoted node. See
+[the Milestone 17 notes](docs/milestone-17.md).
 
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using

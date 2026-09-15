@@ -308,17 +308,29 @@ fn inspect_source_candidate(
     let mut source = config.connect_source(address).map_err(source_query_error)?;
     let identity_rows = source
         .simple_query(
-            "SELECT (SELECT system_identifier::text FROM pg_control_system()), (SELECT oid::text FROM pg_database WHERE datname=current_database()), (SELECT timeline_id::text FROM pg_control_checkpoint()), pg_is_in_recovery()::text",
+            "SELECT (SELECT system_identifier::text FROM pg_control_system()), (SELECT oid::text FROM pg_database WHERE datname=current_database()), pg_is_in_recovery()::text",
         )
         .map_err(source_query_error)?;
     let identity = identity_rows
         .first()
         .ok_or_else(|| CycleError::Fatal("source identity query returned no row".into()))?;
-    if parse_bool(cycle_field(identity, 3, "source recovery state")?)? {
+    if parse_bool(cycle_field(identity, 2, "source recovery state")?)? {
         return Err(CycleError::Retry(
             "endpoint is a standby, not the writable leader".into(),
         ));
     }
+    let timeline_rows = source
+        .simple_query(
+            "SELECT (('x' || substr(pg_walfile_name(pg_current_wal_flush_lsn()), 1, 8))::bit(32)::bigint)::text",
+        )
+        .map_err(source_query_error)?;
+    let timeline = parse_cycle(cycle_field(
+        timeline_rows
+            .first()
+            .ok_or_else(|| CycleError::Fatal("source timeline query returned no row".into()))?,
+        0,
+        "observed timeline",
+    )?)?;
     let slot_rows = source
         .simple_query(&format!(
             "SELECT plugin::text, slot_type, database::text, temporary::text, active::text, wal_status, invalidation_reason, conflicting::text, failover::text, COALESCE(confirmed_flush_lsn, '0/0')::text FROM pg_replication_slots WHERE slot_name={}",
@@ -334,7 +346,7 @@ fn inspect_source_candidate(
     let observation = SourceObservation {
         system_identifier: cycle_field(identity, 0, "observed system identifier")?.to_owned(),
         database_oid: parse_cycle(cycle_field(identity, 1, "observed database OID")?)?,
-        timeline: parse_cycle(cycle_field(identity, 2, "observed timeline")?)?,
+        timeline,
         plugin: cycle_field(slot, 0, "slot plugin")?.to_owned(),
         slot_type: cycle_field(slot, 1, "slot type")?.to_owned(),
         database: cycle_field(slot, 2, "slot database")?.to_owned(),

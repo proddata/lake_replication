@@ -19,8 +19,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         true,
     )?;
     let slot_rows = slot_owner.simple_query(&format!(
-        "CREATE_REPLICATION_SLOT {} LOGICAL pgoutput EXPORT_SNAPSHOT",
-        quote_identifier(&config.slot)
+        "CREATE_REPLICATION_SLOT {} LOGICAL pgoutput (SNAPSHOT 'export', FAILOVER {})",
+        quote_identifier(&config.slot),
+        config.slot_failover
     ))?;
     let slot_row = slot_rows.first().ok_or("slot creation returned no row")?;
     let consistent_lsn = field(slot_row, 1, "consistent_point")?.to_owned();
@@ -406,6 +407,7 @@ struct Config {
     fail_after_rows: u64,
     pause_after_snapshot_ms: u64,
     pause_after_chunk_ms: u64,
+    slot_failover: bool,
 }
 
 impl Config {
@@ -432,6 +434,7 @@ impl Config {
             fail_after_rows: value("LAKE_INITIAL_COPY_FAIL_AFTER_ROWS", "0").parse()?,
             pause_after_snapshot_ms: value("LAKE_INITIAL_COPY_PAUSE_MS", "0").parse()?,
             pause_after_chunk_ms: value("LAKE_INITIAL_COPY_CHUNK_PAUSE_MS", "0").parse()?,
+            slot_failover: value("LAKE_SLOT_FAILOVER", "1") == "1",
         };
         if config.chunk_rows == 0 || config.chunk_bytes == 0 || config.type_mapping_version <= 0 {
             return Err("initial-copy row and byte chunk limits must be positive".into());
