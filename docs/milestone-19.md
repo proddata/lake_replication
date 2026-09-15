@@ -60,10 +60,12 @@ PostgreSQL volumes afterward.
 ## Remaining boundaries
 
 - The second killed leader is not rejoined a second time in the same run.
-- Controlled Patroni switchover and rolling maintenance are not covered.
 - Network partitions, DCS loss, watchdog fencing, and a multi-member etcd
   quorum remain untested.
 - Rewind failure and fallback replica reinitialization need explicit tests.
 - The two-data-node synchronous topology prioritizes durability; write
   availability while either member is absent depends on Patroni's non-strict
   synchronous-mode policy.
+
+Milestone 20 extends the same lifecycle through coordinated planned switchover
+and a role-fenced restart of the demoted replica.

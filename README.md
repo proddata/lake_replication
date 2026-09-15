@@ -167,6 +167,12 @@ resynchronizes its logical failover slot, and proves a second automatic
 promotion across timeline 3 without rebuilding the subscription. See
 [the Milestone 19 notes](docs/milestone-19.md).
 
+Milestone 20 adds a coordinated planned-switchover procedure and rolling
+replica maintenance: drain the logical receiver, verify the synchronized
+candidate, switch through Patroni, resume from the durable checkpoint, and
+restart the demoted replica without changing the active source. See
+[the Milestone 20 notes](docs/milestone-20.md).
+
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using
 this Compose project for unrelated data: failure experiments target it.

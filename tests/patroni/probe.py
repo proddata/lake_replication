@@ -6,8 +6,8 @@ import os
 from pathlib import Path
 import subprocess
 import time
-from urllib.error import URLError
-from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -86,6 +86,19 @@ def wait_cluster(predicate, timeout=90):
             return latest
         time.sleep(0.5)
     raise TimeoutError(f"timed out waiting for Patroni cluster; latest={latest!r}")
+
+
+def post_json(node, path, payload):
+    request = Request(
+        f"http://127.0.0.1:{API_PORTS[node]}{path}",
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST")
+    try:
+        with urlopen(request, timeout=60) as response:
+            return response.status, response.read().decode()
+    except HTTPError as error:
+        return error.code, error.read().decode()
 
 
 def member(cluster, role):
@@ -354,11 +367,158 @@ def main():
         check("twice-promoted slot remains valid at the acknowledged LSN",
               repeated_continuity, f"true:true:{repeated_acknowledged}")
 
+        second_restart = command(SOURCE_COMPOSE + ["start", standby])
+        if second_restart.returncode:
+            raise RuntimeError(second_restart.stderr.strip())
+        maintenance_cluster = wait_cluster(lambda state:
+            member(state, "leader") is not None and
+            member(state, "leader")["name"] == leader and
+            member(state, "sync_standby") is not None and
+            member(state, "sync_standby")["name"] == standby and
+            member(state, "sync_standby").get("state") == "streaming",
+            timeout=120)
+        check("second former leader rejoins before planned maintenance",
+              member(maintenance_cluster, "sync_standby")["name"], standby)
+        second_rewind_logs = command(SOURCE_COMPOSE + ["logs", "--no-color", standby])
+        second_rewind_seen = "pg_rewind exit code=0" in (
+            second_rewind_logs.stdout + second_rewind_logs.stderr)
+        check("Patroni rewinds the second divergent former primary",
+              second_rewind_seen, True)
+        maintenance_slot = wait_for(f"""
+            SELECT synced::text || ':' || failover::text || ':' || temporary::text || ':' ||
+                   (invalidation_reason IS NULL)::text
+              FROM pg_replication_slots WHERE slot_name='{SLOT}'
+        """, lambda item: item == "true:true:false:true",
+            port=standby_port, database="postgres", timeout=90)
+        check("maintenance candidate has a synchronized failover slot",
+              maintenance_slot, "true:true:false:true")
+
+        destination(f"SELECT lake_replication.request_service_stop({subscription_id})")
+        pre_switchover_stdout, pre_switchover_stderr = supervisor.communicate(timeout=10)
+        (RESULTS / "supervisor.pre-switchover.stdout").write_text(
+            pre_switchover_stdout)
+        (RESULTS / "supervisor.pre-switchover.stderr").write_text(
+            pre_switchover_stderr)
+        check("supervisor drains cleanly before planned switchover",
+              supervisor.returncode, 0)
+        supervisor = None
+
+        switchover_started = time.monotonic()
+        switchover_status, switchover_body = post_json(
+            leader, "/switchover", {"leader": leader, "candidate": standby})
+        check("Patroni accepts the targeted synchronous switchover",
+              switchover_status, 200)
+        EVIDENCE["switchover_response"] = switchover_body.strip()
+        switched_cluster = wait_cluster(lambda state:
+            member(state, "leader") is not None and
+            member(state, "leader")["name"] == standby and
+            member(state, "leader").get("state") == "running" and
+            member(state, "sync_standby") is not None and
+            member(state, "sync_standby")["name"] == leader and
+            member(state, "sync_standby").get("state") == "streaming",
+            timeout=90)
+        EVIDENCE["planned_switchover_seconds"] = round(
+            time.monotonic() - switchover_started, 3)
+        check("planned switchover cleanly exchanges leader and synchronous standby",
+              f"{member(switched_cluster, 'leader')['name']}:leader,"
+              f"{member(switched_cluster, 'sync_standby')['name']}:sync_standby",
+              f"{standby}:leader,{leader}:sync_standby")
+
+        switched_timeline = wait_for(
+            "SELECT (('x' || substr(pg_walfile_name(pg_current_wal_flush_lsn()), "
+            "1, 8))::bit(32)::bigint)::text",
+            lambda item: int(item or 0) > int(second_timeline),
+            port=standby_port, database="postgres")
+        supervisor = subprocess.Popen(
+            [str(ROOT / "target/debug/lake-replication-supervisor")], cwd=ROOT,
+            env=environment(subscription_id, leader_port, standby_port), text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        value(standby_port,
+              f"INSERT INTO public.{TABLE} VALUES (6, 'after-switchover')")
+        after_switchover = wait_for(
+            f"SELECT string_agg(id || ':' || note, ',' ORDER BY id) FROM {RUN}.{TABLE}",
+            lambda item: item ==
+                "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin,"
+                "5:after-second-failover,6:after-switchover")
+        check("replication continues through planned switchover", after_switchover,
+              "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin,"
+              "5:after-second-failover,6:after-switchover")
+        switched_health = wait_for(f"""
+            SELECT active_source_address || ':' || source_switches || ':' ||
+                   observed_timeline || ':' || subscription_state || ':' || service_state
+              FROM lake_replication.service_health
+             WHERE subscription_id={subscription_id}
+        """, lambda item: item ==
+            f"127.0.0.1:{standby_port}:3:{switched_timeline}:streaming:running")
+        check("health records the planned switch and fourth timeline",
+              switched_health,
+              f"127.0.0.1:{standby_port}:3:{switched_timeline}:streaming:running")
+
+        replica_started_at = value(
+            leader_port, "SELECT pg_postmaster_start_time()::text")
+        restart_status, restart_body = post_json(
+            leader, "/restart", {"role": "replica", "timeout": 30})
+        check("Patroni accepts a role-fenced restart of the demoted replica",
+              restart_status, 200)
+        EVIDENCE["replica_restart_response"] = restart_body.strip()
+        restarted_cluster = wait_cluster(lambda state:
+            member(state, "leader") is not None and
+            member(state, "leader")["name"] == standby and
+            member(state, "sync_standby") is not None and
+            member(state, "sync_standby")["name"] == leader and
+            member(state, "sync_standby").get("state") == "streaming")
+        replica_restarted_at = wait_for(
+            "SELECT pg_postmaster_start_time()::text",
+            lambda item: bool(item) and item != replica_started_at,
+            port=leader_port, database="postgres")
+        check("demoted PostgreSQL replica restarts and rejoins without leader change",
+              f"{member(restarted_cluster, 'leader')['name']}:{replica_restarted_at != replica_started_at}",
+              f"{standby}:True")
+        restarted_slot = wait_for(f"""
+            SELECT synced::text || ':' || failover::text || ':' || temporary::text || ':' ||
+                   (invalidation_reason IS NULL)::text
+              FROM pg_replication_slots WHERE slot_name='{SLOT}'
+        """, lambda item: item == "true:true:false:true",
+            port=leader_port, database="postgres", timeout=90)
+        check("restarted replica restores its synchronized logical slot",
+              restarted_slot, "true:true:false:true")
+
+        value(standby_port,
+              f"INSERT INTO public.{TABLE} VALUES (7, 'after-maintenance')")
+        maintained = wait_for(
+            f"SELECT string_agg(id || ':' || note, ',' ORDER BY id) FROM {RUN}.{TABLE}",
+            lambda item: item ==
+                "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin,"
+                "5:after-second-failover,6:after-switchover,7:after-maintenance")
+        check("replication remains exact after rolling replica maintenance", maintained,
+              "1:snapshot,2:before-failover,3:after-failover,4:after-rejoin,"
+              "5:after-second-failover,6:after-switchover,7:after-maintenance")
+        maintenance_health = wait_for(f"""
+            SELECT active_source_address || ':' || source_switches || ':' ||
+                   observed_timeline || ':' || subscription_state || ':' || service_state
+              FROM lake_replication.service_health
+             WHERE subscription_id={subscription_id}
+        """, lambda item: item ==
+            f"127.0.0.1:{standby_port}:3:{switched_timeline}:streaming:running")
+        check("replica maintenance causes no spurious worker source switch",
+              maintenance_health,
+              f"127.0.0.1:{standby_port}:3:{switched_timeline}:streaming:running")
+        maintenance_continuity = value(standby_port, f"""
+            SELECT failover::text || ':' || (invalidation_reason IS NULL)::text || ':' ||
+                   confirmed_flush_lsn FROM pg_replication_slots WHERE slot_name='{SLOT}'
+        """)
+        maintenance_acknowledged = destination(f"""
+            SELECT acknowledged_lsn FROM lake_replication.checkpoints
+             WHERE subscription_id={subscription_id}
+        """).stdout.strip()
+        check("switched leader slot remains valid at the acknowledged LSN",
+              maintenance_continuity, f"true:true:{maintenance_acknowledged}")
+
         destination(f"SELECT lake_replication.request_service_stop({subscription_id})")
         stdout, stderr = supervisor.communicate(timeout=10)
         (RESULTS / "supervisor.stdout").write_text(stdout)
         (RESULTS / "supervisor.stderr").write_text(stderr)
-        check("supervisor stops cleanly after repeated Patroni failover",
+        check("supervisor stops cleanly after Patroni maintenance cycle",
               supervisor.returncode, 0)
         supervisor = None
         exit_code = 0
