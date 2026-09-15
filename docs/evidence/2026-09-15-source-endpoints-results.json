@@ -1,0 +1,54 @@
+{
+  "run": "endpoints_20260915_043735",
+  "checks": [
+    {
+      "name": "unreachable first candidate falls through to the writable source",
+      "passed": true,
+      "actual": "1:snapshot,2:fallback",
+      "expected": "1:snapshot,2:fallback"
+    },
+    {
+      "name": "selected endpoint and failed candidate are observable",
+      "passed": true,
+      "actual": "127.0.0.1:55434:0:true",
+      "expected": "127.0.0.1:55434:0:true"
+    },
+    {
+      "name": "first endpoint session stops cleanly",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "receiver uses the newly selected endpoint",
+      "passed": true,
+      "actual": "1:snapshot,2:fallback,3:switched",
+      "expected": "1:snapshot,2:fallback,3:switched"
+    },
+    {
+      "name": "endpoint change increments durable switch telemetry",
+      "passed": true,
+      "actual": "localhost:55434:1:true",
+      "expected": "localhost:55434:1:true"
+    },
+    {
+      "name": "switched endpoint session stops cleanly",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "temporary endpoint unavailability retries without poisoning subscription",
+      "passed": true,
+      "actual": "streaming:backoff:true",
+      "expected": "streaming:backoff:true"
+    },
+    {
+      "name": "unavailable endpoint session remains SQL-stoppable",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    }
+  ],
+  "completed_at": "2026-09-15T04:37:39.601404+00:00"
+}

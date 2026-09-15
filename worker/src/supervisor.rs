@@ -236,7 +236,7 @@ struct SourceObservation {
     confirmed_lsn: u64,
 }
 
-fn source_preflight(destination: &mut Client, config: &Config) -> Result<(), CycleError> {
+fn source_preflight(destination: &mut Client, config: &Config) -> Result<String, CycleError> {
     let expected_rows = control_query(
         destination,
         config,
@@ -258,15 +258,67 @@ fn source_preflight(destination: &mut Client, config: &Config) -> Result<(), Cyc
             .map_err(CycleError::Fatal)?,
     };
 
-    let mut source = config.connect_source().map_err(source_query_error)?;
+    let mut candidate_errors = Vec::new();
+    let mut retryable_failure = false;
+    for address in &config.source_addresses {
+        match inspect_source_candidate(config, address, &expected) {
+            Ok(observation) => {
+                control_query(
+                    destination,
+                    config,
+                    &format!(
+                        "SELECT lake_replication.report_source_healthy({}, {}, {}, {}, {}::pg_lsn, {}, {})",
+                        config.subscription_id,
+                        observation.system_identifier,
+                        observation.database_oid,
+                        observation.timeline,
+                        sql_literal(&format_lsn(observation.confirmed_lsn)),
+                        sql_literal(address),
+                        sql_literal(&candidate_errors.join(" | "))
+                    ),
+                )
+                .map_err(|error| CycleError::Fatal(error.to_string()))?;
+                return Ok(address.clone());
+            }
+            Err(CycleError::Retry(error)) => {
+                retryable_failure = true;
+                candidate_errors.push(format!("{address}: {error}"));
+            }
+            Err(CycleError::Fatal(error)) => {
+                candidate_errors.push(format!("{address}: {error}"));
+            }
+        }
+    }
+    let error = format!(
+        "no safe writable source endpoint: {}",
+        candidate_errors.join(" | ")
+    );
+    if retryable_failure {
+        Err(CycleError::Retry(error))
+    } else {
+        Err(CycleError::Fatal(error))
+    }
+}
+
+fn inspect_source_candidate(
+    config: &Config,
+    address: &str,
+    expected: &ExpectedSource,
+) -> Result<SourceObservation, CycleError> {
+    let mut source = config.connect_source(address).map_err(source_query_error)?;
     let identity_rows = source
         .simple_query(
-            "SELECT (SELECT system_identifier::text FROM pg_control_system()), (SELECT oid::text FROM pg_database WHERE datname=current_database()), (SELECT timeline_id::text FROM pg_control_checkpoint())",
+            "SELECT (SELECT system_identifier::text FROM pg_control_system()), (SELECT oid::text FROM pg_database WHERE datname=current_database()), (SELECT timeline_id::text FROM pg_control_checkpoint()), pg_is_in_recovery()::text",
         )
         .map_err(source_query_error)?;
     let identity = identity_rows
         .first()
         .ok_or_else(|| CycleError::Fatal("source identity query returned no row".into()))?;
+    if parse_bool(cycle_field(identity, 3, "source recovery state")?)? {
+        return Err(CycleError::Retry(
+            "endpoint is a standby, not the writable leader".into(),
+        ));
+    }
     let slot_rows = source
         .simple_query(&format!(
             "SELECT plugin::text, slot_type, database::text, temporary::text, active::text, wal_status, invalidation_reason, conflicting::text, failover::text, COALESCE(confirmed_flush_lsn, '0/0')::text FROM pg_replication_slots WHERE slot_name={}",
@@ -315,21 +367,8 @@ fn source_preflight(destination: &mut Client, config: &Config) -> Result<(), Cyc
     } else {
         None
     };
-    validate_source(&expected, &observation, history.as_deref()).map_err(CycleError::Fatal)?;
-    control_query(
-        destination,
-        config,
-        &format!(
-            "SELECT lake_replication.report_source_healthy({}, {}, {}, {}, {}::pg_lsn)",
-            config.subscription_id,
-            observation.system_identifier,
-            observation.database_oid,
-            observation.timeline,
-            sql_literal(&format_lsn(observation.confirmed_lsn))
-        ),
-    )
-    .map_err(|error| CycleError::Fatal(error.to_string()))?;
-    Ok(())
+    validate_source(expected, &observation, history.as_deref()).map_err(CycleError::Fatal)?;
+    Ok(observation)
 }
 
 fn validate_source(
@@ -479,8 +518,9 @@ fn run_cycle(
     publisher: &Path,
     destination: &mut Client,
 ) -> Result<(i64, i64), CycleError> {
-    source_preflight(destination, config)?;
+    let source_address = source_preflight(destination, config)?;
     let receiver_output = Command::new(receiver)
+        .env("LAKE_SOURCE_ADDRESS", source_address)
         .env(
             "LAKE_RECEIVER_IDLE_TIMEOUT_MS",
             config.receiver_idle_timeout.as_millis().to_string(),
@@ -613,7 +653,7 @@ fn retry_delay(base: Duration, maximum: Duration, failures: u32) -> Duration {
 }
 
 struct Config {
-    source_address: String,
+    source_addresses: Vec<String>,
     destination_address: String,
     user: String,
     source_database: String,
@@ -631,7 +671,7 @@ struct Config {
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
         let config = Self {
-            source_address: value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434"),
+            source_addresses: source_addresses()?,
             destination_address: value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434"),
             user: value("LAKE_USER", "postgres"),
             source_database: value("LAKE_SOURCE_DATABASE", "application"),
@@ -666,15 +706,33 @@ impl Config {
         )
     }
 
-    fn connect_source(&self) -> Result<Client, lake_replication_worker::wire::Error> {
+    fn connect_source(
+        &self,
+        address: &str,
+    ) -> Result<Client, lake_replication_worker::wire::Error> {
         Client::connect_named(
-            self.source_address.as_str(),
+            address,
             &self.user,
             &self.source_database,
             false,
             &format!("lake-replication-source-check:{}", self.subscription_id),
         )
     }
+}
+
+fn source_addresses() -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let configured = env::var("LAKE_SOURCE_ADDRESSES")
+        .unwrap_or_else(|_| value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434"));
+    let addresses = configured
+        .split(',')
+        .map(str::trim)
+        .filter(|address| !address.is_empty())
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+    if addresses.is_empty() {
+        return Err("LAKE_SOURCE_ADDRESSES must contain at least one endpoint".into());
+    }
+    Ok(addresses)
 }
 
 fn milliseconds(name: &str, default: &str) -> Result<Duration, Box<dyn std::error::Error>> {

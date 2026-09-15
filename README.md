@@ -44,6 +44,7 @@ make schema-evolution-test
 make rebuild-test
 make supervisor-test
 make source-continuity-test
+make source-endpoints-test
 make lab-logs
 make lab-stop
 ```
@@ -143,6 +144,11 @@ Milestone 15 validates the source system/database identity, logical slot safety,
 durable checkpoint boundary, and timeline ancestry before every receiver cycle,
 failing closed without consuming WAL when continuity cannot be proven. See
 [the Milestone 15 notes](docs/milestone-15.md).
+
+Milestone 16 selects a safe writable source from ordered PostgreSQL endpoints,
+routes receiver cycles to it, records endpoint switches and candidate failures,
+and treats election-time unavailability as retryable. See
+[the Milestone 16 notes](docs/milestone-16.md).
 
 The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
 them. Rebuilding the image does not reinitialize existing databases. Avoid using
