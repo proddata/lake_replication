@@ -1,0 +1,54 @@
+{
+  "run": "icebergvac_20260916_190130",
+  "checks": [
+    {
+      "name": "newly created destination has no autovacuum override",
+      "passed": true,
+      "actual": "",
+      "expected": ""
+    },
+    {
+      "name": "five separate commits amplify into five data files",
+      "passed": true,
+      "actual": "5",
+      "expected": "5"
+    },
+    {
+      "name": "VACUUM compacts data files into one",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "VACUUM's own compaction commits add snapshots rather than pruning history still within max_snapshot_age",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "max_snapshot_age=0 keeps only the latest snapshot without VACUUM",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "autovacuum_enabled=false is recorded on the destination table",
+      "passed": true,
+      "actual": "false",
+      "expected": "false"
+    },
+    {
+      "name": "dropped table's files enter the deletion queue",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "VACUUM (ICEBERG) respects the 10-day deletion-queue retention",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    }
+  ],
+  "status": "passed"
+}

@@ -5,7 +5,7 @@ SLOT_LOSS_COMPOSE = docker compose -p pg-lake-replication-slot-loss-lab -f deplo
 SCRAM_COMPOSE = docker compose -p pg-lake-replication-scram-lab -f deploy/scram/compose.yml
 TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -95,6 +95,8 @@ source-continuity-test:
 	python3 tests/source_continuity/probe.py
 source-endpoints-test:
 	python3 tests/source_endpoints/probe.py
+iceberg-maintenance-test:
+	python3 tests/iceberg_maintenance/probe.py
 lab-logs:
 	$(COMPOSE) logs --no-color --tail 200
 lab-stop:
@@ -122,6 +124,7 @@ check:
 	python3 -m py_compile tests/scram/probe.py
 	python3 -m py_compile tests/tls/probe.py
 	python3 -m py_compile tests/journal_maintenance/probe.py
+	python3 -m py_compile tests/iceberg_maintenance/probe.py
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace

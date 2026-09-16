@@ -32,6 +32,7 @@ make lab-up
 make lab-test
 make lab-crash-test
 make journal-test
+make journal-maintenance-test
 make transport-test
 make publisher-test
 make mutations-test
@@ -45,6 +46,7 @@ make rebuild-test
 make supervisor-test
 make source-continuity-test
 make source-endpoints-test
+make iceberg-maintenance-test
 make failover-test
 make patroni-test
 make slot-loss-test
@@ -196,6 +198,12 @@ incremental cleanup, automatic supervisor scheduling, and SQL maintenance
 telemetry. Cleanup is limited by both the published and source-acknowledged LSNs
 and never removes staged or ambiguous publishing work. See
 [the Milestone 24 notes](docs/milestone-24.md).
+
+Milestone 25 validates that the pinned `pg_lake` revision's own Iceberg storage
+maintenance — manual and automatic `VACUUM`, per-table snapshot retention, and
+deletion-queue file retention — already covers destination tables this project
+creates, with no additional maintenance logic of its own. See
+[the Milestone 25 notes](docs/milestone-25.md).
 
 Authentication settings are `LAKE_SOURCE_USER`, `LAKE_SOURCE_PASSWORD`,
 `LAKE_DESTINATION_USER`, and `LAKE_DESTINATION_PASSWORD`. `LAKE_USER` remains a
