@@ -1,5 +1,5 @@
 {
-  "run": "subsug_20260917_045036",
+  "run": "subsug_20260917_050818",
   "checks": [
     {
       "name": "hook logs interception before routing to the control plane",
@@ -10,8 +10,14 @@
     {
       "name": "our own control plane received a real subscription row",
       "passed": true,
-      "actual": "subsug_20260917_045036_sub_slot:{subsug_20260917_045036_pub}",
-      "expected": "subsug_20260917_045036_sub_slot:{subsug_20260917_045036_pub}"
+      "actual": "subsug_20260917_050818_sub_slot:{subsug_20260917_050818_pub}",
+      "expected": "subsug_20260917_050818_sub_slot:{subsug_20260917_050818_pub}"
+    },
+    {
+      "name": "real source identity was discovered via dblink, not stubbed",
+      "passed": true,
+      "actual": "7686209771552849964:16384:1",
+      "expected": "7686209771552849964:16384:1"
     },
     {
       "name": "PostgreSQL's native subscription catalog was never touched",
@@ -21,6 +27,42 @@
     },
     {
       "name": "no real replication slot was created on the source",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "monitoring view reports the unflushed insert before any batch publishes",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "monitoring view reflects the flush: unflushed count drops to zero",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "monitoring view reports a real flush timestamp and lsn",
+      "passed": true,
+      "actual": "true:true:0/200",
+      "expected": "true:true:0/200"
+    },
+    {
+      "name": "ALTER SUBSCRIPTION DISABLE is intercepted and routed to a graceful stop",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "DROP SUBSCRIPTION is intercepted and tears down our own state",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "the control-plane row is actually gone after DROP",
       "passed": true,
       "actual": "0",
       "expected": "0"

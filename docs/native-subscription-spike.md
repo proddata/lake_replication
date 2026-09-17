@@ -259,10 +259,11 @@ existing control plane, using the same `ProcessUtility_hook` trick `pg_lake`
 already uses for `VACUUM (ICEBERG)` (see "What the source shows" above).
 This was built and run against the live lab as
 [`extensions/lake_subscription_sugar/lake_subscription_sugar.c`](../extensions/lake_subscription_sugar/lake_subscription_sugar.c)
-(~110 lines of C, compiled and `LOAD`ed with no image rebuild). Run
-`make subscription-sugar-test` to reproduce it; run `subsug_20260917_045036`
-passed all 4 assertions, recorded
-[here](evidence/2026-09-17-subscription-sugar-results.json):
+(compiled and `LOAD`ed with no image rebuild) plus
+[`extensions/lake_subscription_sugar/monitoring_views.sql`](../extensions/lake_subscription_sugar/monitoring_views.sql).
+Run `make subscription-sugar-test` to reproduce it; run
+`subsug_20260917_050818` passed all 11 assertions, recorded
+[here](evidence/2026-09-17-subscription-sugar-results.json).
 
 ```sql
 LOAD 'lake_subscription_sugar';
@@ -274,36 +275,79 @@ CREATE SUBSCRIPTION sugar_sub
 ```
 
 The hook detects the `lake_target = 'iceberg'` option on the parsed
-`CreateSubscriptionStmt`, and if present, never calls
-`standard_ProcessUtility` -- routing the call to
-`lake_replication.create_subscription(...)` via SPI instead. Checks against
-the running lab confirmed what actually happened:
+`CreateSubscriptionStmt` and, if present, never calls
+`standard_ProcessUtility`. `ALTER`/`DROP SUBSCRIPTION` are intercepted the
+same way, but only when `subname` matches a subscription this hook already
+created (looked up by name in `lake_replication.subscriptions`); anything
+else falls through untouched, so ordinary native subscriptions keep
+working alongside these. Checks against the running lab confirmed:
 
-- `lake_replication.subscriptions` gained a real row (`sugar_sub`,
-  `sugar_sub_slot`, `{sugar_pub}`) -- routed to this project's own control
-  plane;
-- `pg_subscription` on the destination stayed empty -- PostgreSQL's real
-  subscription catalog was never touched; and
-- `pg_replication_slots` on the source stayed empty -- no real slot was
-  created, and the native walreceiver/apply-worker machinery never ran.
+- `lake_replication.subscriptions` gained a real row, routed through this
+  project's own control plane, with **the real source identity** -- this
+  is no longer a stub. The hook connects to the statement's own `conninfo`
+  via `dblink` and reads `system_identifier`/`database_oid`/`timeline` from
+  `pg_control_system()`/`pg_control_checkpoint()` on the actual source,
+  exactly like every other probe in this project. The discovered values
+  matched the source's real identity exactly in the probe run.
+- `pg_subscription` and `pg_replication_slots` stayed empty throughout --
+  PostgreSQL's real subscription/slot/apply-worker machinery never ran.
+- `ALTER SUBSCRIPTION ... DISABLE` is routed to
+  `lake_replication.request_service_stop()`; other `ALTER` kinds are
+  accepted and logged as an intentional no-op rather than erroring, since
+  there is no real `pg_subscription` row for core to act on.
+  `ALTER SUBSCRIPTION ... ENABLE` cannot actually start anything -- there
+  is no running process to hand off to from inside a DDL hook; an operator
+  still has to run `lake-replication-supervisor` pointed at the
+  subscription id.
+- `DROP SUBSCRIPTION` tears down this project's own control-plane rows
+  (transactions, changes, batches, relations, checkpoints, the
+  subscription itself) instead of erroring for lack of a real
+  `pg_subscription` row to drop.
+- The `crunchy_iceberg.stat_subscription`/`stat_subscription_rel` views
+  (mirroring the field names from Crunchy's own docs) correctly tracked a
+  staged-but-unpublished insert as `unflushed_inserts = 1`, then reported
+  it as flushed with a real `last_flush_time`/`last_flush_duration`/
+  `last_flush_lsn` once the batch was published -- built entirely over
+  existing `lake_replication.batches`/`transactions`/`changes` data, no new
+  instrumentation. Deliberately not implemented: Crunchy's cumulative
+  `rows_inserted`/`rows_deleted` counters, since this project does not keep
+  a running total once Milestone 24 maintenance reclaims journal rows.
 
-Known stub, not yet solved: the source identity
-(`system_identifier`/`database_oid`/`timeline`) is hardcoded rather than
-discovered by connecting to the given `conninfo` and reading
-`pg_control_system()`/`pg_control_checkpoint()` from the real source. That
-is a bounded, ordinary engineering problem (a libpq connection or `dblink`
-call), not a research question the way the TAM's row-identity problem was.
+Decision made along the way, worth recording: rather than trying to fake a
+`pg_subscription` catalog row for `ALTER`/`DROP` to act on (risky --
+hand-inserting into a system catalog bypasses cache invalidation and other
+invariants core relies on), `ALTER`/`DROP SUBSCRIPTION` are intercepted the
+same way `CREATE` is, matched by name against this project's own metadata
+instead of a real catalog row.
 
 ## Where this leaves the project
 
 Do not build a real Iceberg table access method (see "Is a TAM actually
-needed?"). Do keep pursuing `CREATE SUBSCRIPTION`-shaped ergonomics as a
-syntax wrapper over the existing receiver/journal/publisher design -- it is
-cheap, already proven against the live lab, and is the best-supported guess
-at what Crunchy Data Warehouse itself actually ships. The concrete next
-steps, in order: replace the hardcoded source identity with real discovery
-against `conninfo`; decide whether a cosmetic `pg_subscription` row is worth
-creating so `ALTER`/`DROP SUBSCRIPTION` keep working the way Crunchy's docs
-describe; and add `crunchy_iceberg`-shaped monitoring views (flush lag,
-unflushed row counts) over this project's existing `service_status` and
-`journal_maintenance_health` data, rather than inventing new terminology.
+needed?"). The `CREATE SUBSCRIPTION`-shaped syntax-wrapper route is no
+longer just a cheap idea -- it is a working prototype covering create,
+disable, drop, and Crunchy-shaped monitoring, all proven against the live
+lab and all still just a `ProcessUtility_hook` extension on stock
+PostgreSQL, no core patch, no TAM.
+
+What is still deliberately unfinished, since this remains a prototype, not
+shipped code:
+
+- the extension only claims a statement when its `lake_target`/matching-
+  name conditions are met; it has not been reviewed for every
+  `CreateSubscriptionStmt`/`AlterSubscriptionStmt`/`DropSubscriptionStmt`
+  shape PostgreSQL's grammar allows (multiple publications, `SERVER`-form
+  `CREATE SUBSCRIPTION`, etc.);
+- `ALTER SUBSCRIPTION ... ENABLE` only records intent; nothing here starts
+  `lake-replication-supervisor` for the operator;
+- the monitoring views omit cumulative row counters, as noted above; and
+- none of this has been connected to the real receiver/publisher binaries
+  -- creating a subscription this way registers control-plane state, but
+  an operator still has to run the supervisor against that subscription id
+  exactly as before.
+
+Promoting this from prototype to something operators could actually rely
+on would mean deciding how far to take it: keep it as an optional,
+separately-installed convenience layer over the existing SQL-function
+control plane (low risk, purely additive), or make it the documented,
+primary way to configure a subscription (bigger commitment: it would need
+the grammar-shape review above, and a real answer for `ENABLE`).
