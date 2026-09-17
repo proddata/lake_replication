@@ -16,10 +16,13 @@ against the live lab (see "A working prototype of the syntax-sugar route")
 extended to genuinely auto-start replication end to end (see "CREATE
 SUBSCRIPTION now actually starts replication"), and extended again to use
 real source addressing and real source-side slot cleanup instead of
-lab-only shortcuts (see "Real addressing and source-side slot cleanup").
-The decision has been made to evolve this into something real rather than
-leave it a documented dead end; the "Where this leaves the project" section
-tracks what is still deliberately unfinished toward that.
+lab-only shortcuts (see "Real addressing and source-side slot cleanup"),
+and packaged as a proper versioned extension activated the same way
+`pg_lake` itself ships, instead of a hand-`LOAD`ed `.so` (see "Packaged the
+way `pg_lake` itself ships"). The decision has been made to evolve this
+into something real rather than leave it a documented dead end; the "Where
+this leaves the project" section tracks what is still deliberately
+unfinished toward that.
 
 ## The question
 
@@ -269,7 +272,9 @@ This was built and run against the live lab as
 [`extensions/lake_subscription_sugar/monitoring_views.sql`](../extensions/lake_subscription_sugar/monitoring_views.sql).
 Run `make subscription-sugar-test` to reproduce it; run
 `subsug_20260917_050818` passed all 11 assertions, recorded
-[here](evidence/2026-09-17-subscription-sugar-results.json).
+[here](evidence/2026-09-17-subscription-sugar-results.json). (The manual
+`LOAD` shown next was later replaced by a proper `CREATE EXTENSION` --
+see "Packaged the way `pg_lake` itself ships" below.)
 
 ```sql
 LOAD 'lake_subscription_sugar';
@@ -416,8 +421,45 @@ string), that password is stored here too.
 
 `make subscription-sugar-test` now covers this too -- 18 checks, including
 that the source-side slot and the `pending_cleanup` row are both actually
-gone after `DROP`. Run `subsug_20260917_055455` passed all of them,
-recorded [here](evidence/2026-09-17-subscription-sugar-results.json).
+gone after `DROP`.
+
+## Packaged the way `pg_lake` itself ships
+
+This was still a raw `.so` compiled and `LOAD`ed by hand, with `pending_cleanup`
+created ad hoc from C via `CREATE SCHEMA IF NOT EXISTS`. Since the goal is
+now to make this real, it is packaged the way `pg_lake` actually ships,
+read directly from `pg_lake_table.control` and how the lab's own
+`compose.yml` activates it:
+
+- **A real, versioned extension.** `lake_subscription_sugar.control` +
+  `lake_subscription_sugar--1.0.sql` (`default_version`, `module_pathname`,
+  `requires = 'dblink'`, matching the exact fields `pg_lake_table.control`
+  uses) so `CREATE EXTENSION lake_subscription_sugar` installs it and
+  `DROP EXTENSION lake_subscription_sugar` cleans it up -- `pending_cleanup`
+  is now created by the version script, not by C code, and is a real
+  member of the extension (dropped automatically with it).
+- **`requires = 'dblink'`** replaces the old defensive runtime
+  `CREATE EXTENSION IF NOT EXISTS dblink` calls in the C code: declaring it
+  as a dependency makes PostgreSQL install it first, automatically.
+- **No `shared_preload_libraries`.** `pg_lake`'s own `compose.yml` only
+  preloads `pg_extension_base` (a generic framework); `pg_lake_table` and
+  the rest activate purely through `CREATE EXTENSION`, no restart, no
+  postgresql.conf edit. This extension follows the same model:
+  `session_preload_libraries` (a normal, per-database, `ALTER DATABASE ...
+  SET`-able GUC, no restart needed) makes the `ProcessUtility_hook` active
+  for every future session to a database, and the version script itself
+  contains a bare `LOAD 'lake_subscription_sugar'` so the *current* session
+  -- the one that just ran `CREATE EXTENSION` -- gets it immediately too,
+  without waiting for a fresh connection.
+
+Confirmed against the live lab: a brand-new `psql` connection, with no
+manual `LOAD` anywhere, intercepted `CREATE SUBSCRIPTION` correctly purely
+from `session_preload_libraries`. `tests/subscription_sugar/probe.py` now
+installs and activates it this same way -- `CREATE EXTENSION` plus
+`ALTER DATABASE ... SET session_preload_libraries`, no per-statement `LOAD`
+anywhere in the probe either. All 18 checks still pass this way; run
+`subsug_20260917_063631` recorded
+[here](evidence/2026-09-17-subscription-sugar-results.json).
 
 ## Where this leaves the project
 

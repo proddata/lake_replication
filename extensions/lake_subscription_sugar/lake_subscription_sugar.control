@@ -1,0 +1,7 @@
+# lake_subscription_sugar extension
+comment = 'Experiment: routes CREATE/ALTER/DROP SUBSCRIPTION ... WITH (lake_target = ''iceberg'') to this project''s own Iceberg replication control plane instead of native logical replication'
+default_version = '1.0'
+module_pathname = '$libdir/lake_subscription_sugar'
+relocatable = false
+schema = lake_subscription_sugar
+requires = 'dblink'

@@ -146,9 +146,7 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 	char	   *host;
 	char	   *port;
 
-	if (SPI_execute("CREATE EXTENSION IF NOT EXISTS dblink", false, 0) < 0)
-		elog(ERROR, "lake_subscription_sugar: could not create the dblink extension");
-
+	/* dblink is guaranteed installed: declared in the control file's `requires`. */
 	initStringInfo(&buf);
 	appendStringInfo(&buf,
 					 "SELECT identity.system_identifier, identity.database_oid, "
@@ -285,13 +283,12 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 }
 
 /*
- * ensure_pending_cleanup_table lazily creates a small side-table this
- * extension owns -- separate from lake_replication's own shipped schema,
- * since this state exists only to support this prototype's DROP
- * SUBSCRIPTION handling, not the replication path itself -- recording just
- * enough (the source conninfo and slot name) to drop the source-side
- * replication slot lake-replication-initial-sync creates, since
- * DropSubscriptionStmt carries no conninfo of its own.
+ * record_pending_cleanup writes to lake_subscription_sugar.pending_cleanup
+ * (owned by this extension's own --1.0.sql install script, not created
+ * here -- see that file) just enough -- the source conninfo and slot
+ * name -- to later drop the source-side replication slot
+ * lake-replication-initial-sync creates, since DropSubscriptionStmt
+ * carries no conninfo of its own.
  *
  * Security note: this stores conninfo exactly as given in the original
  * CREATE SUBSCRIPTION statement, which already appears in cleartext in
@@ -303,25 +300,9 @@ build_worker_env(int64 subscriptionId, const char *slotName,
  * already connected.
  */
 static void
-ensure_pending_cleanup_table(void)
-{
-	if (SPI_execute(
-			"CREATE SCHEMA IF NOT EXISTS lake_subscription_sugar; "
-			"CREATE TABLE IF NOT EXISTS lake_subscription_sugar.pending_cleanup ("
-			"    subscription_id bigint PRIMARY KEY,"
-			"    source_conninfo text NOT NULL,"
-			"    source_slot_name text NOT NULL,"
-			"    created_at timestamptz NOT NULL DEFAULT clock_timestamp()"
-			")", false, 0) < 0)
-		elog(ERROR, "lake_subscription_sugar: could not create its own "
-					"pending_cleanup table");
-}
-
-static void
 record_pending_cleanup(int64 subscriptionId, const char *conninfo,
 					   const char *slotName)
 {
-	ensure_pending_cleanup_table();
 	SPI_execute(psprintf(
 		"INSERT INTO lake_subscription_sugar.pending_cleanup "
 		"(subscription_id, source_conninfo, source_slot_name) "
@@ -344,7 +325,6 @@ drop_source_slot(int64 subscriptionId)
 	char	   *conninfo = NULL;
 	char	   *slotName = NULL;
 
-	ensure_pending_cleanup_table();
 	if (SPI_execute(psprintf(
 			"SELECT source_conninfo, source_slot_name FROM "
 			"lake_subscription_sugar.pending_cleanup WHERE subscription_id = %lld",
@@ -357,13 +337,6 @@ drop_source_slot(int64 subscriptionId)
 
 	if (conninfo != NULL && slotName != NULL)
 	{
-		if (SPI_execute("CREATE EXTENSION IF NOT EXISTS dblink", false, 0) < 0)
-		{
-			ereport(WARNING,
-					(errmsg("lake_subscription_sugar: could not create dblink "
-							"to drop the source-side slot; it is left behind")));
-		}
-		else
 		{
 			char	   *slotLiteral = quote_literal_cstr(slotName);
 			char	   *innerQuery = psprintf(

@@ -1,5 +1,5 @@
 {
-  "run": "subsug_20260917_055455",
+  "run": "subsug_20260917_063631",
   "checks": [
     {
       "name": "hook logs interception before routing to the control plane",
@@ -16,8 +16,8 @@
     {
       "name": "our own control plane received a real subscription row",
       "passed": true,
-      "actual": "subsug_20260917_055455_sub_slot:{subsug_20260917_055455_pub}",
-      "expected": "subsug_20260917_055455_sub_slot:{subsug_20260917_055455_pub}"
+      "actual": "subsug_20260917_063631_sub_slot:{subsug_20260917_063631_pub}",
+      "expected": "subsug_20260917_063631_sub_slot:{subsug_20260917_063631_pub}"
     },
     {
       "name": "real source identity was discovered via dblink, not stubbed",

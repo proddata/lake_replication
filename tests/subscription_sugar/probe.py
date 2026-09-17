@@ -83,7 +83,8 @@ def container_id():
 
 def build_and_install_extension(cid):
     command(["docker", "exec", cid, "mkdir", "-p", "/tmp/lake_subscription_sugar"])
-    for name in ("lake_subscription_sugar.c", "Makefile"):
+    for name in ("lake_subscription_sugar.c", "Makefile", "lake_subscription_sugar.control",
+                 "lake_subscription_sugar--1.0.sql"):
         result = command(["docker", "cp", str(EXT_DIR / name),
                           f"{cid}:/tmp/lake_subscription_sugar/{name}"])
         if result.returncode:
@@ -93,6 +94,15 @@ def build_and_install_extension(cid):
                           "make", target])
         if result.returncode:
             raise RuntimeError(result.stderr.strip())
+
+    # Installed and activated the way pg_lake itself ships: CREATE
+    # EXTENSION once (no shared_preload_libraries, no manual LOAD per
+    # statement), with session_preload_libraries making the
+    # ProcessUtility_hook active for every future session to this database.
+    sql("analytics", "DROP EXTENSION IF EXISTS lake_subscription_sugar CASCADE")
+    sql("analytics", "CREATE EXTENSION lake_subscription_sugar")
+    sql("analytics", "ALTER DATABASE analytics SET session_preload_libraries "
+                     "= 'lake_subscription_sugar'")
 
 
 def wait_for(database, statement, expected, timeout=15):
@@ -229,7 +239,6 @@ def main():
         """)
 
         result = sql("analytics", f"""
-            LOAD 'lake_subscription_sugar';
             CREATE SUBSCRIPTION {SUBSCRIPTION}
               CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
               PUBLICATION {PUBLICATION}
@@ -306,14 +315,12 @@ def main():
               """), "true:true:true")
 
         result = sql("analytics", f"""
-            LOAD 'lake_subscription_sugar';
             ALTER SUBSCRIPTION {SUBSCRIPTION} DISABLE;
         """)
         check("ALTER SUBSCRIPTION DISABLE is intercepted and routed to a graceful stop",
               "intercepted ALTER SUBSCRIPTION" in (result.stdout + result.stderr), True)
 
         result = sql("analytics", f"""
-            LOAD 'lake_subscription_sugar';
             DROP SUBSCRIPTION {SUBSCRIPTION};
         """)
         check("DROP SUBSCRIPTION is intercepted and completes without error",
