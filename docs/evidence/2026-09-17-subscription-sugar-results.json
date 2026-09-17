@@ -1,5 +1,5 @@
 {
-  "run": "subsug_20260917_063631",
+  "run": "subsug_20260917_065541",
   "checks": [
     {
       "name": "hook logs interception before routing to the control plane",
@@ -16,8 +16,8 @@
     {
       "name": "our own control plane received a real subscription row",
       "passed": true,
-      "actual": "subsug_20260917_063631_sub_slot:{subsug_20260917_063631_pub}",
-      "expected": "subsug_20260917_063631_sub_slot:{subsug_20260917_063631_pub}"
+      "actual": "subsug_20260917_065541_sub_slot:{subsug_20260917_065541_pub}",
+      "expected": "subsug_20260917_065541_sub_slot:{subsug_20260917_065541_pub}"
     },
     {
       "name": "real source identity was discovered via dblink, not stubbed",
@@ -74,6 +74,30 @@
       "expected": true
     },
     {
+      "name": "the supervisor is actually gone after DISABLE",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "ALTER SUBSCRIPTION ENABLE is intercepted and restarts the supervisor",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "a row inserted while disabled is replicated once re-enabled, with no manual worker invocation",
+      "passed": true,
+      "actual": "1=ONE-updated,2=two,3=three-while-disabled",
+      "expected": "1=ONE-updated,2=two,3=three-while-disabled"
+    },
+    {
+      "name": "re-enabling started a genuinely new supervisor process",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
       "name": "DROP SUBSCRIPTION is intercepted and completes without error",
       "passed": true,
       "actual": true,
@@ -86,7 +110,7 @@
       "expected": "2026-09-16 18:59:29.499677+00"
     },
     {
-      "name": "the supervisor process is actually gone after DROP",
+      "name": "the (re-enabled) supervisor process is actually gone after DROP",
       "passed": true,
       "actual": true,
       "expected": true

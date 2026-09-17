@@ -35,12 +35,18 @@
  * Any statement not claimed by the rules above falls through to
  * standard_ProcessUtility (or the next hook) unmodified.
  *
+ * ALTER SUBSCRIPTION ... ENABLE restarts a stopped subscription by
+ * respawning only the supervisor (not initial sync, which already ran
+ * once and is not safe to blindly re-run against a table that may
+ * already be streaming) -- see handle_enable_subscription. It requires
+ * this extension's own pending_cleanup row from CREATE time to reconnect
+ * to the source and rediscover its address; a subscription created
+ * before that tracking existed cannot be restarted this way.
+ *
  * Known limitations, in addition to the ones noted inline below:
  * - LAKE_DESTINATION_SCHEMA is hardcoded to "public".
  * - the worker binaries are expected at /usr/local/bin/lake-replication-*;
  *   nothing here builds or installs them (see tests/subscription_sugar/probe.py).
- * - ALTER SUBSCRIPTION ... ENABLE still cannot restart a stopped
- *   subscription: this hook only spawns the workers at CREATE time.
  */
 #include "postgres.h"
 #include "access/xact.h"
@@ -364,6 +370,89 @@ drop_source_slot(int64 subscriptionId)
 		"WHERE subscription_id = %lld", (long long) subscriptionId), false, 0);
 }
 
+/*
+ * discover_destination reads this same instance's own database name and
+ * port. The destination is always loopback: the workers this hook spawns
+ * run alongside this same PostgreSQL instance no matter where the source
+ * is, so only the port needs discovering, not a routable address. Must be
+ * called with SPI already connected.
+ */
+static void
+discover_destination(char **outDatabase, char **outAddress)
+{
+	if (SPI_execute("SELECT current_database(), current_setting('port')",
+					true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+		elog(ERROR, "lake_subscription_sugar: could not determine "
+					"current_database()/port");
+	*outDatabase = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
+	*outAddress = psprintf("127.0.0.1:%s",
+						   SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2));
+}
+
+/*
+ * spawn_workers fire-and-forgets lake-replication-supervisor (and, when
+ * `spawnInitialSync`, lake-replication-initial-sync too) as detached
+ * processes for `subscriptionId`. Shared by CREATE (which always needs
+ * initial sync) and ALTER ... ENABLE (which only needs to restart the
+ * supervisor, since initial sync already ran once at CREATE time).
+ */
+static void
+spawn_workers(int64 subscriptionId, const char *slotName,
+			 const char *publicationName, const char *sourceDatabase,
+			 const char *destinationDatabase, const char *sourceAddress,
+			 const char *destinationAddress, bool spawnInitialSync)
+{
+	char	  **envp;
+	char	   *supervisorPath;
+	char	   *supervisorArgv[2];
+	char	   *supervisorLog;
+	char	   *initialSyncPath;
+	char	   *initialSyncArgv[2];
+	char	   *initialSyncLog;
+
+	envp = build_worker_env(subscriptionId, slotName, publicationName,
+							sourceDatabase, destinationDatabase,
+							sourceAddress, destinationAddress);
+	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
+	supervisorArgv[0] = supervisorPath;
+	supervisorArgv[1] = NULL;
+	supervisorLog = psprintf("/tmp/lake_sugar_%lld_supervisor.log",
+							 (long long) subscriptionId);
+
+	if (spawnInitialSync)
+	{
+		initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
+		initialSyncArgv[0] = initialSyncPath;
+		initialSyncArgv[1] = NULL;
+		initialSyncLog = psprintf("/tmp/lake_sugar_%lld_initial_sync.log",
+								  (long long) subscriptionId);
+
+		ereport(NOTICE,
+				(errmsg("lake_subscription_sugar: starting initial sync and the "
+						"supervisor for subscription_id=%lld (logs: %s, %s)",
+						(long long) subscriptionId, initialSyncLog, supervisorLog)));
+
+		/*
+		 * Fire-and-forget both: the supervisor's own poll loop already
+		 * reports "paused" and keeps waiting for as long as the
+		 * subscription's state is not yet 'streaming', so starting it
+		 * concurrently with initial sync (rather than waiting for initial
+		 * sync to finish first) mirrors how native logical replication's
+		 * tablesync and apply workers overlap.
+		 */
+		spawn_detached(initialSyncPath, initialSyncArgv, envp, initialSyncLog);
+	}
+	else
+	{
+		ereport(NOTICE,
+				(errmsg("lake_subscription_sugar: restarting the supervisor for "
+						"subscription_id=%lld (log: %s)",
+						(long long) subscriptionId, supervisorLog)));
+	}
+
+	spawn_detached(supervisorPath, supervisorArgv, envp, supervisorLog);
+}
+
 static void
 handle_create_subscription(CreateSubscriptionStmt *stmt)
 {
@@ -378,13 +467,6 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	char	   *destinationAddress;
 	char	   *slotName;
 	int64		subscriptionId;
-	char	  **envp;
-	char	   *initialSyncArgv[2];
-	char	   *supervisorArgv[2];
-	char	   *initialSyncPath;
-	char	   *supervisorPath;
-	char	   *initialSyncLog;
-	char	   *supervisorLog;
 
 	pubname = strVal(linitial(stmt->publication));
 	slotName = psprintf("%s_slot", stmt->subname);
@@ -393,21 +475,7 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 
 	discover_source_identity(stmt->conninfo, &systemIdentifier, &databaseOid,
 							 &timeline, &sourceDatabase, &sourceAddress);
-
-	/*
-	 * The destination is always reachable at loopback: the workers this
-	 * hook spawns run alongside this same PostgreSQL instance regardless
-	 * of where the source is, so only the port -- not a routable address
-	 * -- needs to be discovered.
-	 */
-	if (SPI_execute("SELECT current_database(), current_setting('port')",
-					true, 1) != SPI_OK_SELECT || SPI_processed != 1)
-		elog(ERROR, "lake_subscription_sugar: could not determine "
-					"current_database()/port");
-	destinationDatabase = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
-	destinationAddress = psprintf("127.0.0.1:%s",
-								  SPI_getvalue(SPI_tuptable->vals[0],
-											  SPI_tuptable->tupdesc, 2));
+	discover_destination(&destinationDatabase, &destinationAddress);
 
 	ereport(NOTICE,
 			(errmsg("lake_subscription_sugar: intercepted CREATE SUBSCRIPTION \"%s\" "
@@ -438,31 +506,9 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 
 	record_pending_cleanup(subscriptionId, stmt->conninfo, slotName);
 
-	envp = build_worker_env(subscriptionId, slotName, pubname, sourceDatabase,
-							destinationDatabase, sourceAddress, destinationAddress);
-	initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
-	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
-	initialSyncArgv[0] = initialSyncPath;
-	initialSyncArgv[1] = NULL;
-	supervisorArgv[0] = supervisorPath;
-	supervisorArgv[1] = NULL;
-	initialSyncLog = psprintf("/tmp/lake_sugar_%lld_initial_sync.log", (long long) subscriptionId);
-	supervisorLog = psprintf("/tmp/lake_sugar_%lld_supervisor.log", (long long) subscriptionId);
-
-	ereport(NOTICE,
-			(errmsg("lake_subscription_sugar: starting initial sync and the "
-					"supervisor for subscription_id=%lld (logs: %s, %s)",
-					(long long) subscriptionId, initialSyncLog, supervisorLog)));
-
-	/*
-	 * Fire-and-forget both: the supervisor's own poll loop already reports
-	 * "paused" and keeps waiting for as long as the subscription's state
-	 * is not yet 'streaming', so starting it concurrently with initial
-	 * sync (rather than waiting for initial sync to finish first) mirrors
-	 * how native logical replication's tablesync and apply workers overlap.
-	 */
-	spawn_detached(initialSyncPath, initialSyncArgv, envp, initialSyncLog);
-	spawn_detached(supervisorPath, supervisorArgv, envp, supervisorLog);
+	spawn_workers(subscriptionId, slotName, pubname, sourceDatabase,
+				 destinationDatabase, sourceAddress, destinationAddress,
+				 true /* spawnInitialSync */ );
 
 	SPI_finish();
 }
@@ -581,6 +627,58 @@ handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId,
 	PopActiveSnapshot();
 }
 
+/*
+ * handle_enable_subscription restarts replication for a subscription that
+ * was previously disabled: only the supervisor is respawned (not initial
+ * sync, which already ran once at CREATE time and is not safe to blindly
+ * re-run against a table that may already be streaming). Requires this
+ * extension's own pending_cleanup row from CREATE time to reconnect to
+ * the source and rediscover its address; a subscription created before
+ * that tracking existed cannot be restarted this way.
+ */
+static void
+handle_enable_subscription(const char *subname, int64 subscriptionId)
+{
+	char	   *slotName;
+	char	   *publicationName;
+	char	   *conninfo;
+	char	   *systemIdentifier;
+	char	   *databaseOid;
+	char	   *timeline;
+	char	   *sourceDatabase;
+	char	   *sourceAddress;
+	char	   *destinationDatabase;
+	char	   *destinationAddress;
+
+	if (SPI_execute(psprintf(
+			"SELECT slot_name, array_to_string(publication_names, ',') "
+			"FROM lake_replication.subscriptions WHERE subscription_id = %lld",
+			(long long) subscriptionId), true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+		elog(ERROR, "lake_subscription_sugar: could not look up subscription %lld",
+			 (long long) subscriptionId);
+	slotName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
+	publicationName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2);
+
+	if (SPI_execute(psprintf(
+			"SELECT source_conninfo FROM lake_subscription_sugar.pending_cleanup "
+			"WHERE subscription_id = %lld", (long long) subscriptionId),
+			true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+		ereport(ERROR,
+				(errmsg("lake_subscription_sugar: cannot restart \"%s\": no "
+						"recorded source connection info for subscription_id=%lld "
+						"(it predates this extension's pending_cleanup tracking)",
+						subname, (long long) subscriptionId)));
+	conninfo = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
+
+	discover_source_identity(conninfo, &systemIdentifier, &databaseOid,
+							 &timeline, &sourceDatabase, &sourceAddress);
+	discover_destination(&destinationDatabase, &destinationAddress);
+
+	spawn_workers(subscriptionId, slotName, publicationName, sourceDatabase,
+				 destinationDatabase, sourceAddress, destinationAddress,
+				 false /* spawnInitialSync */ );
+}
+
 static void
 handle_alter_subscription(AlterSubscriptionStmt *stmt, int64 subscriptionId)
 {
@@ -601,11 +699,9 @@ handle_alter_subscription(AlterSubscriptionStmt *stmt, int64 subscriptionId)
 		else
 		{
 			ereport(NOTICE,
-					(errmsg("lake_subscription_sugar: ALTER SUBSCRIPTION \"%s\" ENABLE "
-							"recorded, but nothing runs the replication until an "
-							"operator starts lake-replication-supervisor for "
-							"subscription_id=%lld", stmt->subname,
-							(long long) subscriptionId)));
+					(errmsg("lake_subscription_sugar: intercepted ALTER SUBSCRIPTION "
+							"\"%s\" ENABLE; restarting the supervisor", stmt->subname)));
+			handle_enable_subscription(stmt->subname, subscriptionId);
 		}
 	}
 	else

@@ -1,28 +1,23 @@
 # Spike: could native `CREATE SUBSCRIPTION` ever target Iceberg?
 
-Status: open, redirected. This is an architecture spike, not part of the
-shipped replication path. It investigates why PostgreSQL's own logical
-replication cannot target `pg_lake` Iceberg tables today, whether that is
-fixable without patching PostgreSQL itself, and what is actually worth
-building toward. A from-scratch Iceberg table access method is rejected (see
-"The real obstacle a TAM would face" and "Is a TAM actually needed?" below).
-But public evidence about how Crunchy Data Warehouse's own
-`CREATE SUBSCRIPTION ... WITH (create_tables_using = 'iceberg')` behaves
-(see "What Crunchy's own public docs suggest they actually built") points at
-a different, much cheaper design -- a `CREATE SUBSCRIPTION`-shaped syntax
-wrapper over a custom batching writer, structurally close to what this
-project already has -- which this project has since prototyped successfully
-against the live lab (see "A working prototype of the syntax-sugar route")
-extended to genuinely auto-start replication end to end (see "CREATE
-SUBSCRIPTION now actually starts replication"), and extended again to use
-real source addressing and real source-side slot cleanup instead of
-lab-only shortcuts (see "Real addressing and source-side slot cleanup"),
-and packaged as a proper versioned extension activated the same way
-`pg_lake` itself ships, instead of a hand-`LOAD`ed `.so` (see "Packaged the
-way `pg_lake` itself ships"). The decision has been made to evolve this
-into something real rather than leave it a documented dead end; the "Where
-this leaves the project" section tracks what is still deliberately
-unfinished toward that.
+Status: open, redirected, actively evolving into something real. This is
+an architecture spike, not (yet) part of the shipped replication path. It
+investigates why PostgreSQL's own logical replication cannot target
+`pg_lake` Iceberg tables today, whether that is fixable without patching
+PostgreSQL itself, and what is actually worth building toward. A
+from-scratch Iceberg table access method is rejected (see "The real
+obstacle a TAM would face" and "Is a TAM actually needed?" below). Public
+evidence about Crunchy Data Warehouse's own `CREATE SUBSCRIPTION ... WITH
+(create_tables_using = 'iceberg')` (see "What Crunchy's own public docs
+suggest they actually built") points at a much cheaper design instead -- a
+`CREATE SUBSCRIPTION`-shaped syntax wrapper over this project's existing
+control plane -- which has since been built out into a working prototype
+covering the full lifecycle (create with real auto-started replication and
+real addressing, disable, enable, drop -- crash-safe, with real slot
+cleanup), Crunchy-shaped monitoring, and packaging that matches how
+`pg_lake` itself ships. The sections below are in the order this was built,
+each with its own evidence; "Where this leaves the project" has the
+current, up-to-date summary and what is still open.
 
 ## The question
 
@@ -461,15 +456,46 @@ anywhere in the probe either. All 18 checks still pass this way; run
 `subsug_20260917_063631` recorded
 [here](evidence/2026-09-17-subscription-sugar-results.json).
 
+## ALTER SUBSCRIPTION ... ENABLE genuinely restarts replication
+
+The remaining functional gap in the lifecycle -- `ENABLE` only recorded
+intent, with no way to resume a disabled subscription short of dropping
+and recreating it -- is now closed. `handle_enable_subscription` looks up
+the subscription's `slot_name`/`publication_names` (already in
+`lake_replication.subscriptions`) and its `source_conninfo` (from this
+extension's own `pending_cleanup`, recorded at `CREATE` time), rediscovers
+the source address via the same `dblink` + `inet_server_addr()` path
+`CREATE` uses, and respawns **only** the supervisor -- not initial sync,
+which already ran once and is not safe to blindly re-run against a table
+that may already be streaming.
+
+The spawn logic itself was factored out of `handle_create_subscription`
+into a shared `spawn_workers()` (and a small `discover_destination()`
+helper for the loopback address/port lookup both paths need), so `CREATE`
+and `ENABLE` share one code path rather than two copies drifting apart.
+
+Confirmed against the live lab, including the case that actually matters:
+a row inserted on the source *while disabled* was correctly picked up once
+re-enabled, via a genuinely new supervisor OS process (checked by
+comparing PIDs, not just that some process exists).
+`tests/subscription_sugar/probe.py` now runs the full cycle -- create,
+disable, insert while disabled, enable, verify catch-up, drop -- 22 checks,
+run reproducibly three times in a row. One race the probe itself caught
+along the way: `service_status.supervisor_pid` can briefly lag behind
+`subscriptions.state = 'streaming'`, since `initial-sync` sets the latter
+independently of the supervisor's own startup; the probe now polls for a
+non-empty pid instead of reading it once.
+
 ## Where this leaves the project
 
 Do not build a real Iceberg table access method (see "Is a TAM actually
 needed?"). The `CREATE SUBSCRIPTION`-shaped syntax-wrapper route is no
-longer just a cheap idea -- it is a working prototype covering create
-(with real auto-started replication and real addressing), disable, drop
-(crash-safe, with real slot cleanup), and Crunchy-shaped monitoring, all
-proven against the live lab and all still just a `ProcessUtility_hook`
-extension on stock PostgreSQL, no core patch, no TAM.
+longer just a cheap idea -- it is a working prototype covering the full
+lifecycle (create with real auto-started replication and real addressing,
+disable, **enable**, drop -- crash-safe, with real slot cleanup) and
+Crunchy-shaped monitoring, packaged the way `pg_lake` itself ships, all
+proven against the live lab, and all still just a `ProcessUtility_hook`
+extension on stock PostgreSQL -- no core patch, no TAM.
 
 What is still deliberately unfinished, since this remains a prototype, not
 shipped code:
@@ -479,9 +505,9 @@ shipped code:
   `CreateSubscriptionStmt`/`AlterSubscriptionStmt`/`DropSubscriptionStmt`
   shape PostgreSQL's grammar allows (multiple publications, `SERVER`-form
   `CREATE SUBSCRIPTION`, etc.);
-- `ALTER SUBSCRIPTION ... ENABLE` only records intent -- it cannot restart
-  a stopped subscription, since this hook only spawns the workers at
-  `CREATE` time;
+- `ENABLE` cannot restart a subscription created before this extension's
+  `pending_cleanup` tracking existed (no recorded conninfo to reconnect
+  with) -- it raises a clear error in that case rather than guessing;
 - `LAKE_DESTINATION_SCHEMA` is hardcoded to `public`, with no way to
   override it per subscription; and
 - the monitoring views omit cumulative row counters, as noted above.
@@ -491,4 +517,4 @@ on would mean deciding how far to take it: keep it as an optional,
 separately-installed convenience layer over the existing SQL-function
 control plane (low risk, purely additive), or make it the documented,
 primary way to configure a subscription (bigger commitment: it would need
-the grammar-shape review and a real answer for `ENABLE`, both above).
+the grammar-shape review above).

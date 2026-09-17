@@ -116,6 +116,15 @@ def wait_for(database, statement, expected, timeout=15):
     return latest
 
 
+def wait_for_process_gone(cid, pid, timeout=10):
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if command(["docker", "exec", cid, "kill", "-0", pid]).returncode != 0:
+            return True
+        time.sleep(0.2)
+    return False
+
+
 def is_linux_elf(path):
     if not path.exists():
         return False
@@ -281,10 +290,19 @@ def main():
               wait_for("analytics", f"SELECT note FROM public.{TABLE} WHERE id=1",
                        "one", timeout=10), "one")
 
-        supervisor_pid = value("analytics", f"""
-            SELECT supervisor_pid FROM lake_replication.service_status
-             WHERE subscription_id={subscription_id}
-        """)
+        # supervisor_pid can briefly lag behind state='streaming', which
+        # initial-sync sets independently of the supervisor's own startup
+        # (SPI connect, acquire the per-subscription lock, start_service),
+        # so poll for a non-empty value rather than reading it once.
+        supervisor_pid = ""
+        deadline = time.monotonic() + 10
+        while not supervisor_pid and time.monotonic() < deadline:
+            supervisor_pid = value("analytics", f"""
+                SELECT coalesce(supervisor_pid::text, '') FROM lake_replication.service_status
+                 WHERE subscription_id={subscription_id}
+            """)
+            if not supervisor_pid:
+                time.sleep(0.2)
         check("the supervisor is a real, running OS process inside the container",
               command(["docker", "exec", cid, "kill", "-0", supervisor_pid]).returncode, 0)
 
@@ -319,6 +337,31 @@ def main():
         """)
         check("ALTER SUBSCRIPTION DISABLE is intercepted and routed to a graceful stop",
               "intercepted ALTER SUBSCRIPTION" in (result.stdout + result.stderr), True)
+        check("the supervisor is actually gone after DISABLE",
+              wait_for_process_gone(cid, supervisor_pid), True)
+
+        value("application", f"INSERT INTO public.{TABLE} VALUES (3, 'three-while-disabled')")
+
+        result = sql("analytics", f"""
+            ALTER SUBSCRIPTION {SUBSCRIPTION} ENABLE;
+        """)
+        check("ALTER SUBSCRIPTION ENABLE is intercepted and restarts the supervisor",
+              "intercepted ALTER SUBSCRIPTION" in (result.stdout + result.stderr)
+              and "restarting the supervisor" in (result.stdout + result.stderr), True)
+        check("a row inserted while disabled is replicated once re-enabled, "
+              "with no manual worker invocation",
+              wait_for("analytics", f"""
+                  SELECT string_agg(id || '=' || note, ',' ORDER BY id)
+                    FROM public.{TABLE}
+              """, "1=ONE-updated,2=two,3=three-while-disabled", timeout=10),
+              "1=ONE-updated,2=two,3=three-while-disabled")
+
+        supervisor_pid = value("analytics", f"""
+            SELECT supervisor_pid FROM lake_replication.service_status
+             WHERE subscription_id={subscription_id}
+        """)
+        check("re-enabling started a genuinely new supervisor process",
+              command(["docker", "exec", cid, "kill", "-0", supervisor_pid]).returncode, 0)
 
         result = sql("analytics", f"""
             DROP SUBSCRIPTION {SUBSCRIPTION};
@@ -329,7 +372,7 @@ def main():
         check("DROP SUBSCRIPTION did not crash the cluster "
               "(postmaster start time is unchanged)",
               value("analytics", "SELECT pg_postmaster_start_time()"), postmaster_start)
-        check("the supervisor process is actually gone after DROP",
+        check("the (re-enabled) supervisor process is actually gone after DROP",
               command(["docker", "exec", cid, "kill", "-0", supervisor_pid]).returncode != 0,
               True)
         check("the control-plane row is actually gone after DROP",
