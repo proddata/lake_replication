@@ -226,7 +226,9 @@ source and licensing notes. `make check` runs offline probe-classification tests
 and validates Python syntax and Compose configuration; it does not run integration
 tests.
 
-`make native-subscription-spike-test` is an architecture spike, not part of the
-replication path above: it checks whether native `CREATE SUBSCRIPTION` could
-ever target an Iceberg destination directly, and why it cannot today. See
+`make native-subscription-spike-test` and `make subscription-sugar-test` are
+architecture spikes, not part of the replication path above: they check
+whether native `CREATE SUBSCRIPTION` could ever target an Iceberg destination
+directly, why it cannot today, and prototype `CREATE SUBSCRIPTION`-shaped
+syntax as a thin wrapper over this project's own control plane instead. See
 [the native-subscription spike notes](docs/native-subscription-spike.md).

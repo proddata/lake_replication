@@ -1,0 +1,30 @@
+{
+  "run": "subsug_20260917_045036",
+  "checks": [
+    {
+      "name": "hook logs interception before routing to the control plane",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "our own control plane received a real subscription row",
+      "passed": true,
+      "actual": "subsug_20260917_045036_sub_slot:{subsug_20260917_045036_pub}",
+      "expected": "subsug_20260917_045036_sub_slot:{subsug_20260917_045036_pub}"
+    },
+    {
+      "name": "PostgreSQL's native subscription catalog was never touched",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "no real replication slot was created on the source",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    }
+  ],
+  "status": "passed"
+}

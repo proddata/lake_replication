@@ -1,12 +1,19 @@
 # Spike: could native `CREATE SUBSCRIPTION` ever target Iceberg?
 
-Status: closed. This is an architecture spike, not part of the shipped
-replication path. It investigates why PostgreSQL's own logical replication
-cannot target `pg_lake` Iceberg tables today, whether that is fixable
-without patching PostgreSQL itself, and whether fixing it is worth pursuing
-for this project. Conclusion: fixable in principle (Crunchy Data Warehouse
-already ships it), but not worth pursuing here -- see "Is any of this
-actually needed?" below.
+Status: open, redirected. This is an architecture spike, not part of the
+shipped replication path. It investigates why PostgreSQL's own logical
+replication cannot target `pg_lake` Iceberg tables today, whether that is
+fixable without patching PostgreSQL itself, and what is actually worth
+building toward. A from-scratch Iceberg table access method is rejected (see
+"The real obstacle a TAM would face" and "Is a TAM actually needed?" below).
+But public evidence about how Crunchy Data Warehouse's own
+`CREATE SUBSCRIPTION ... WITH (create_tables_using = 'iceberg')` behaves
+(see "What Crunchy's own public docs suggest they actually built") points at
+a different, much cheaper design -- a `CREATE SUBSCRIPTION`-shaped syntax
+wrapper over a custom batching writer, structurally close to what this
+project already has -- which this project has since prototyped successfully
+against the live lab (see "A working prototype of the syntax-sugar route").
+That is the live direction now.
 
 ## The question
 
@@ -167,10 +174,10 @@ surface (`INSERT`/`COPY`/predicate-based `DELETE`), and `pg_lake` resolves
 row identity internally via Iceberg's own merge-on-read equality-deletes,
 not PostgreSQL TIDs.
 
-## Is any of this actually needed?
+## Is a TAM actually needed?
 
-No. Nothing here is required for this project's stated purpose --
-replicating PostgreSQL tables into Iceberg reliably. The current
+No. Nothing in this section is required for this project's stated purpose
+-- replicating PostgreSQL tables into Iceberg reliably. The current
 external-worker design already achieves that outcome, with 25 milestones of
 evidence behind its correctness, durability, and HA. A native-subscription
 TAM would not add a capability the project is missing; it would only change
@@ -188,6 +195,115 @@ even go away under a TAM design, it just moves), TOAST handling (Milestone
 17-21). On top of re-solving those, it would need to solve the row-identity-
 vs-compaction problem above, which the current design was never exposed to.
 That is a substantially larger and riskier undertaking than the ergonomic
-gain justifies. Recommendation: do not pursue the TAM rewrite. Treat this
-spike as closed background knowledge about why `pg_lake` and this project
-are shaped the way they are, not as a queued next step.
+gain justifies. Recommendation: do not build a real Iceberg table access
+method for this.
+
+That recommendation turned out to rest on an assumption worth checking:
+that Crunchy Data Warehouse's own `CREATE SUBSCRIPTION` support is backed by
+a real TAM in the first place. The next two sections check that assumption
+against Crunchy's own public documentation, and find it's probably wrong.
+
+## What Crunchy's own public docs suggest they actually built
+
+Their [replication docs](https://docs.crunchybridge.com/warehouse/replication)
+describe monitoring through two custom views, not the standard PostgreSQL
+ones:
+
+- `crunchy_iceberg.stat_subscription` -- `last_flush_time`,
+  `last_flush_duration`, `last_flush_lsn`
+- `crunchy_iceberg.stat_subscription_rel` -- `unflushed_inserts`,
+  `unflushed_deletes`, `rows_inserted`, `rows_deleted`
+
+If the destination were a real TAM being written by PostgreSQL's actual
+built-in apply worker, the standard `pg_stat_subscription`/
+`pg_stat_subscription_rel` views (which already report receive/flush LSNs
+per subscription and per relation) would already cover this -- there would
+be no reason to invent a parallel `crunchy_iceberg` schema. The vocabulary
+is "flush," not "apply," and `unflushed_inserts`/`unflushed_deletes` are
+counts of buffered work, not transaction-apply state. That is durable-
+journal-plus-batch-flush language, not per-tuple-apply-worker language.
+
+The documented apply cadence confirms it: "The apply worker applies the
+changes... to the Iceberg tables in **batches every 30 seconds**, which
+leads to an end-to-end lag which is typically under 60 seconds." PostgreSQL's
+real logical replication apply worker applies each transaction as it
+streams in; there is no 30-second batch timer in the native path. A fixed
+flush cadence is a custom micro-batcher.
+
+And their own docs recommend the *exact* same-cluster workaround this
+project's spike independently hit above: creating the slot manually with
+`pg_create_logical_replication_slot('source', 'pgoutput')` and passing
+`create_slot = false` to `CREATE SUBSCRIPTION`, "for same-server
+replication." That is not a coincidence -- it implies their subscription
+path opens the same kind of nested connection back into the same cluster
+ours did, consistent with a real slot and a real streaming connection for
+*receiving* WAL, decoupled from a custom worker that *writes* into Iceberg
+on its own schedule.
+
+The best-supported read: `CREATE SUBSCRIPTION ... WITH
+(create_tables_using = 'iceberg')` likely does create a real `pg_subscription`
+row and a real slot receiving real WAL (so `ALTER`/`DROP SUBSCRIPTION` work
+as documented), but the actual Iceberg-writing side is a custom batching
+worker with its own tracking schema -- not PostgreSQL's built-in per-tuple
+apply worker hitting a real table access method. That is structurally much
+closer to this project's own receiver-to-journal-to-micro-batch-publisher
+split than to a from-scratch Iceberg TAM. This cannot be fully confirmed
+without Crunchy's source (not public); it is the best-supported reading of
+their own documentation, not a proven fact.
+
+## A working prototype of the syntax-sugar route
+
+If the above reading is right, the achievable target is not a TAM -- it is
+`CREATE SUBSCRIPTION`-shaped syntax as a thin wrapper over this project's
+existing control plane, using the same `ProcessUtility_hook` trick `pg_lake`
+already uses for `VACUUM (ICEBERG)` (see "What the source shows" above).
+This was built and run against the live lab as
+[`extensions/lake_subscription_sugar/lake_subscription_sugar.c`](../extensions/lake_subscription_sugar/lake_subscription_sugar.c)
+(~110 lines of C, compiled and `LOAD`ed with no image rebuild). Run
+`make subscription-sugar-test` to reproduce it; run `subsug_20260917_045036`
+passed all 4 assertions, recorded
+[here](evidence/2026-09-17-subscription-sugar-results.json):
+
+```sql
+LOAD 'lake_subscription_sugar';
+CREATE SUBSCRIPTION sugar_sub
+  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
+  PUBLICATION sugar_pub
+  WITH (lake_target = 'iceberg');
+-- CREATE SUBSCRIPTION
+```
+
+The hook detects the `lake_target = 'iceberg'` option on the parsed
+`CreateSubscriptionStmt`, and if present, never calls
+`standard_ProcessUtility` -- routing the call to
+`lake_replication.create_subscription(...)` via SPI instead. Checks against
+the running lab confirmed what actually happened:
+
+- `lake_replication.subscriptions` gained a real row (`sugar_sub`,
+  `sugar_sub_slot`, `{sugar_pub}`) -- routed to this project's own control
+  plane;
+- `pg_subscription` on the destination stayed empty -- PostgreSQL's real
+  subscription catalog was never touched; and
+- `pg_replication_slots` on the source stayed empty -- no real slot was
+  created, and the native walreceiver/apply-worker machinery never ran.
+
+Known stub, not yet solved: the source identity
+(`system_identifier`/`database_oid`/`timeline`) is hardcoded rather than
+discovered by connecting to the given `conninfo` and reading
+`pg_control_system()`/`pg_control_checkpoint()` from the real source. That
+is a bounded, ordinary engineering problem (a libpq connection or `dblink`
+call), not a research question the way the TAM's row-identity problem was.
+
+## Where this leaves the project
+
+Do not build a real Iceberg table access method (see "Is a TAM actually
+needed?"). Do keep pursuing `CREATE SUBSCRIPTION`-shaped ergonomics as a
+syntax wrapper over the existing receiver/journal/publisher design -- it is
+cheap, already proven against the live lab, and is the best-supported guess
+at what Crunchy Data Warehouse itself actually ships. The concrete next
+steps, in order: replace the hardcoded source identity with real discovery
+against `conninfo`; decide whether a cosmetic `pg_subscription` row is worth
+creating so `ALTER`/`DROP SUBSCRIPTION` keep working the way Crunchy's docs
+describe; and add `crunchy_iceberg`-shaped monitoring views (flush lag,
+unflushed row counts) over this project's existing `service_status` and
+`journal_maintenance_health` data, rather than inventing new terminology.
