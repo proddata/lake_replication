@@ -1,0 +1,36 @@
+{
+  "run": "natsub_20260917_041052",
+  "checks": [
+    {
+      "name": "destination table uses a non-default table access method",
+      "passed": true,
+      "actual": "r:heap2",
+      "expected": "r:heap2"
+    },
+    {
+      "name": "native CREATE SUBSCRIPTION accepts the table as a target (no SQLSTATE 42809)",
+      "passed": true,
+      "actual": "r",
+      "expected": "r"
+    },
+    {
+      "name": "apply worker streams INSERT into the heap2-backed table",
+      "passed": true,
+      "actual": "1=one,2=two,3=three",
+      "expected": "1=one,2=two,3=three"
+    },
+    {
+      "name": "apply worker streams UPDATE and DELETE into the heap2-backed table",
+      "passed": true,
+      "actual": "1=one,2=TWO-updated",
+      "expected": "1=one,2=TWO-updated"
+    },
+    {
+      "name": "destination table was never rewritten off the custom access method",
+      "passed": true,
+      "actual": "r:heap2",
+      "expected": "r:heap2"
+    }
+  ],
+  "status": "passed"
+}
