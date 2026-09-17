@@ -12,8 +12,10 @@ But public evidence about how Crunchy Data Warehouse's own
 a different, much cheaper design -- a `CREATE SUBSCRIPTION`-shaped syntax
 wrapper over a custom batching writer, structurally close to what this
 project already has -- which this project has since prototyped successfully
-against the live lab (see "A working prototype of the syntax-sugar route").
-That is the live direction now.
+against the live lab (see "A working prototype of the syntax-sugar route")
+and extended to genuinely auto-start replication end to end (see "CREATE
+SUBSCRIPTION now actually starts replication"). That is the live direction
+now.
 
 ## The question
 
@@ -320,14 +322,62 @@ invariants core relies on), `ALTER`/`DROP SUBSCRIPTION` are intercepted the
 same way `CREATE` is, matched by name against this project's own metadata
 instead of a real catalog row.
 
+## CREATE SUBSCRIPTION now actually starts replication
+
+The prototype above registered control-plane state but still left starting
+the workers to an operator -- unlike native `CREATE SUBSCRIPTION`, which
+gets PostgreSQL's postmaster to spawn its own walreceiver/apply worker for
+you. `handle_create_subscription` now closes that gap: after registering
+the subscription, it `fork`+`execve`s (never a shell -- `subname` and
+publication names are attacker-influenceable SQL identifiers, so building a
+shell command string from them would be a real command-injection class)
+`lake-replication-initial-sync` and `lake-replication-supervisor` as
+detached processes, with a full `LAKE_*` environment built from the real
+discovered source identity. `DROP SUBSCRIPTION` now stops the supervisor
+and tears down the control-plane rows in one statement.
+
+Run `make subscription-sugar-test` to reproduce it end to end: a single
+`CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')` copies a
+pre-existing row unattended, then streams live `INSERT`/`UPDATE`s with no
+manual worker invocation at all, into a real Iceberg destination table.
+Run `subsug_20260917_054401` passed all 16 assertions, recorded
+[here](evidence/2026-09-17-subscription-sugar-results.json).
+
+### A real crash, and what it means for this container specifically
+
+Building this surfaced a genuine bug, not a cosmetic one: the first version
+signaled the running supervisor with `SIGTERM` on `DROP SUBSCRIPTION`, and
+that **crashed the entire PostgreSQL cluster** -- every connection dropped,
+full crash recovery on restart. The cause is specific to this lab's
+container: PostgreSQL runs as PID 1 in it (no separate init process), so a
+detached grandchild process (this hook double-forks to fully daemonize the
+workers) that later dies *by signal* gets reparented straight onto the
+postmaster, which logs `untracked child process (PID N) was terminated by
+signal 15` and restarts the whole cluster out of caution, assuming shared
+memory might be corrupted. A clean `exit(0)` does not trigger this --
+`lake-replication-supervisor` already exits(0) on its own once it notices
+`lake_replication.request_service_stop()`.
+
+The deeper bug underneath that: `request_service_stop()`'s `UPDATE` runs
+inside the same still-open transaction as the `DROP SUBSCRIPTION` statement
+itself, so the supervisor's separate connection can never see it committed
+-- no amount of waiting inside that transaction would ever have worked.
+The fix commits that one write mid-statement, exactly the technique
+`pg_lake`'s own `VACUUM (ICEBERG)` uses (`PreventInTransactionBlock` +
+`PushActiveSnapshot`/`PopActiveSnapshot` + `CommitTransactionCommand`/
+`StartTransactionCommand`, read directly from `vacuum.c` earlier in this
+spike) -- so `DROP SUBSCRIPTION` only reaches for `SIGTERM` as a rare
+last resort, after polling for a real, clean exit first.
+
 ## Where this leaves the project
 
 Do not build a real Iceberg table access method (see "Is a TAM actually
 needed?"). The `CREATE SUBSCRIPTION`-shaped syntax-wrapper route is no
-longer just a cheap idea -- it is a working prototype covering create,
-disable, drop, and Crunchy-shaped monitoring, all proven against the live
-lab and all still just a `ProcessUtility_hook` extension on stock
-PostgreSQL, no core patch, no TAM.
+longer just a cheap idea -- it is a working prototype covering create
+(with real auto-started replication), disable, drop (crash-safe), and
+Crunchy-shaped monitoring, all proven against the live lab and all still
+just a `ProcessUtility_hook` extension on stock PostgreSQL, no core patch,
+no TAM.
 
 What is still deliberately unfinished, since this remains a prototype, not
 shipped code:
@@ -337,17 +387,24 @@ shipped code:
   `CreateSubscriptionStmt`/`AlterSubscriptionStmt`/`DropSubscriptionStmt`
   shape PostgreSQL's grammar allows (multiple publications, `SERVER`-form
   `CREATE SUBSCRIPTION`, etc.);
-- `ALTER SUBSCRIPTION ... ENABLE` only records intent; nothing here starts
-  `lake-replication-supervisor` for the operator;
-- the monitoring views omit cumulative row counters, as noted above; and
-- none of this has been connected to the real receiver/publisher binaries
-  -- creating a subscription this way registers control-plane state, but
-  an operator still has to run the supervisor against that subscription id
-  exactly as before.
+- `ALTER SUBSCRIPTION ... ENABLE` only records intent -- it cannot restart
+  a stopped subscription, since this hook only spawns the workers at
+  `CREATE` time;
+- `LAKE_SOURCE_ADDRESS`/`LAKE_DESTINATION_ADDRESS` are hardcoded to
+  `127.0.0.1:5432` and `LAKE_DESTINATION_SCHEMA` to `public`: this only
+  works when source and destination are two databases on the one instance
+  this extension is loaded into, not a real deployment with a separate
+  source cluster;
+- `DROP SUBSCRIPTION` does not drop the source-side replication slot
+  `lake-replication-initial-sync` creates -- `DropSubscriptionStmt` carries
+  no `conninfo` to reconnect to the source with, so the slot is left
+  behind, inactive, until an operator drops it manually; and
+- the monitoring views omit cumulative row counters, as noted above.
 
 Promoting this from prototype to something operators could actually rely
 on would mean deciding how far to take it: keep it as an optional,
 separately-installed convenience layer over the existing SQL-function
 control plane (low risk, purely additive), or make it the documented,
 primary way to configure a subscription (bigger commitment: it would need
-the grammar-shape review above, and a real answer for `ENABLE`).
+the grammar-shape review, the leftover-slot cleanup, and a real answer for
+`ENABLE`, all above).

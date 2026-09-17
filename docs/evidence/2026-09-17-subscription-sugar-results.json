@@ -1,5 +1,5 @@
 {
-  "run": "subsug_20260917_050818",
+  "run": "subsug_20260917_054401",
   "checks": [
     {
       "name": "hook logs interception before routing to the control plane",
@@ -8,10 +8,16 @@
       "expected": true
     },
     {
+      "name": "CREATE SUBSCRIPTION reports that it started the workers",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
       "name": "our own control plane received a real subscription row",
       "passed": true,
-      "actual": "subsug_20260917_050818_sub_slot:{subsug_20260917_050818_pub}",
-      "expected": "subsug_20260917_050818_sub_slot:{subsug_20260917_050818_pub}"
+      "actual": "subsug_20260917_054401_sub_slot:{subsug_20260917_054401_pub}",
+      "expected": "subsug_20260917_054401_sub_slot:{subsug_20260917_054401_pub}"
     },
     {
       "name": "real source identity was discovered via dblink, not stubbed",
@@ -26,28 +32,40 @@
       "expected": "0"
     },
     {
-      "name": "no real replication slot was created on the source",
+      "name": "subscription reaches streaming on its own (initial sync ran unattended)",
       "passed": true,
-      "actual": "0",
-      "expected": "0"
+      "actual": "streaming",
+      "expected": "streaming"
     },
     {
-      "name": "monitoring view reports the unflushed insert before any batch publishes",
+      "name": "the pre-existing row was copied without any manual step",
       "passed": true,
-      "actual": "1",
-      "expected": "1"
+      "actual": "one",
+      "expected": "one"
     },
     {
-      "name": "monitoring view reflects the flush: unflushed count drops to zero",
+      "name": "the supervisor is a real, running OS process inside the container",
       "passed": true,
-      "actual": "0",
-      "expected": "0"
+      "actual": 0,
+      "expected": 0
     },
     {
-      "name": "monitoring view reports a real flush timestamp and lsn",
+      "name": "ongoing INSERT/UPDATE replicate live, with no manual worker invocation",
       "passed": true,
-      "actual": "true:true:0/200",
-      "expected": "true:true:0/200"
+      "actual": "1=ONE-updated,2=two",
+      "expected": "1=ONE-updated,2=two"
+    },
+    {
+      "name": "monitoring view catches up to zero unflushed rows once the supervisor's next cycle publishes them",
+      "passed": true,
+      "actual": "0:0",
+      "expected": "0:0"
+    },
+    {
+      "name": "monitoring view reports a real flush timestamp, duration, and lsn",
+      "passed": true,
+      "actual": "true:true:true",
+      "expected": "true:true:true"
     },
     {
       "name": "ALTER SUBSCRIPTION DISABLE is intercepted and routed to a graceful stop",
@@ -56,7 +74,19 @@
       "expected": true
     },
     {
-      "name": "DROP SUBSCRIPTION is intercepted and tears down our own state",
+      "name": "DROP SUBSCRIPTION is intercepted and completes without error",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "DROP SUBSCRIPTION did not crash the cluster (postmaster start time is unchanged)",
+      "passed": true,
+      "actual": "2026-09-16 18:59:29.499677+00",
+      "expected": "2026-09-16 18:59:29.499677+00"
+    },
+    {
+      "name": "the supervisor process is actually gone after DROP",
       "passed": true,
       "actual": true,
       "expected": true

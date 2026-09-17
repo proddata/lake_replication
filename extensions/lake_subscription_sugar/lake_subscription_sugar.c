@@ -7,27 +7,44 @@
  * - CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg') is claimed by
  *   this hook. The source system identity is discovered for real, via
  *   dblink against the statement's own CONNECTION string, then handed to
- *   lake_replication.create_subscription().
+ *   lake_replication.create_subscription(). It then spawns
+ *   lake-replication-initial-sync and lake-replication-supervisor as
+ *   detached OS processes (fork+execve, never a shell) so replication
+ *   actually starts, the way native CREATE SUBSCRIPTION would spawn its
+ *   own walreceiver/apply worker -- this project just does it with its own
+ *   binaries instead of core's.
  * - ALTER/DROP SUBSCRIPTION are claimed only when `subname` matches a
  *   subscription this hook already created (looked up by name in
  *   lake_replication.subscriptions); anything else falls through
- *   unchanged, so ordinary native subscriptions keep working.
+ *   unchanged, so ordinary native subscriptions keep working. DROP signals
+ *   the running supervisor to stop cooperatively, then SIGTERMs its pid as
+ *   a backstop, and tears down the control-plane rows.
  *
  * Any statement not claimed by the rules above falls through to
  * standard_ProcessUtility (or the next hook) unmodified.
  *
- * Known limitation: ALTER SUBSCRIPTION ... ENABLE cannot actually start
- * anything -- there is no running process to hand off to here. It only
- * clears the desired_state; an operator still has to run
- * lake-replication-supervisor pointed at the subscription id. DISABLE maps
- * onto lake_replication.request_service_stop(), which a running supervisor
- * observes and exits on. Every other ALTER kind is accepted and logged as
- * a no-op rather than erroring, since there is no real pg_subscription row
- * for core to act on.
+ * Known limitations, in addition to the ones noted inline below:
+ * - LAKE_SOURCE_ADDRESS/LAKE_DESTINATION_ADDRESS are hardcoded to
+ *   127.0.0.1:5432: this only works when the source and destination are
+ *   two databases on the one PostgreSQL instance this extension is loaded
+ *   into (true of this project's lab), not a real deployment with a
+ *   separate source cluster.
+ * - LAKE_DESTINATION_SCHEMA is hardcoded to "public".
+ * - the worker binaries are expected at /usr/local/bin/lake-replication-*;
+ *   nothing here builds or installs them (see tests/subscription_sugar/probe.py).
+ * - ALTER SUBSCRIPTION ... ENABLE still cannot restart a stopped
+ *   subscription: this hook only spawns the workers at CREATE time.
+ * - DROP SUBSCRIPTION does not drop the source-side replication slot that
+ *   lake-replication-initial-sync creates: DropSubscriptionStmt carries no
+ *   conninfo, and this hook does not currently look one up to connect back
+ *   to the source for that one cleanup step. The slot is left behind,
+ *   inactive, on the source until an operator drops it manually.
  */
 #include "postgres.h"
+#include "access/xact.h"
 #include "fmgr.h"
 #include "tcop/utility.h"
+#include "utils/snapmgr.h"
 #include "nodes/parsenodes.h"
 #include "nodes/pg_list.h"
 #include "commands/defrem.h"
@@ -35,7 +52,15 @@
 #include "utils/builtins.h"
 #include "lib/stringinfo.h"
 
+#include <fcntl.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
 PG_MODULE_MAGIC;
+
+#define WORKER_BIN_DIR "/usr/local/bin"
 
 static ProcessUtility_hook_type prev_ProcessUtility = NULL;
 
@@ -101,13 +126,16 @@ lake_subscription_id(const char *subname)
  * discover_source_identity connects to `conninfo` via dblink and reads the
  * real system_identifier/database_oid/timeline of that source, the same
  * three values every other probe in this project fetches from
- * pg_control_system()/pg_control_checkpoint(). Must be called with SPI
- * already connected. Raises an error if the source is unreachable or the
- * dblink extension cannot be created.
+ * pg_control_system()/pg_control_checkpoint(), plus the source's own
+ * database name (so the spawned workers connect to the same database this
+ * statement's CONNECTION string pointed at, without re-parsing conninfo).
+ * Must be called with SPI already connected. Raises an error if the
+ * source is unreachable or the dblink extension cannot be created.
  */
 static void
 discover_source_identity(const char *conninfo, char **outSystemIdentifier,
-						 char **outDatabaseOid, char **outTimeline)
+						 char **outDatabaseOid, char **outTimeline,
+						 char **outDatabaseName)
 {
 	StringInfoData buf;
 
@@ -117,13 +145,14 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 	initStringInfo(&buf);
 	appendStringInfo(&buf,
 					 "SELECT identity.system_identifier, identity.database_oid, "
-					 "identity.timeline FROM dblink(%s, "
+					 "identity.timeline, identity.database_name FROM dblink(%s, "
 					 "'SELECT system_identifier, "
 					 "(SELECT oid FROM pg_database WHERE datname = current_database()), "
-					 "(SELECT timeline_id FROM pg_control_checkpoint()) "
+					 "(SELECT timeline_id FROM pg_control_checkpoint()), "
+					 "current_database() "
 					 "FROM pg_control_system()') "
 					 "AS identity(system_identifier numeric, database_oid oid, "
-					 "timeline bigint)", quote_literal_cstr(conninfo));
+					 "timeline bigint, database_name text)", quote_literal_cstr(conninfo));
 
 	if (SPI_execute(buf.data, true, 0) != SPI_OK_SELECT || SPI_processed != 1)
 		elog(ERROR,
@@ -133,6 +162,107 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 	*outSystemIdentifier = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
 	*outDatabaseOid = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2);
 	*outTimeline = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 3);
+	*outDatabaseName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 4);
+}
+
+/*
+ * spawn_detached execve()s `path` with `argv`/`envp` (never a shell -- argv
+ * elements coming from SQL identifiers must never be interpolated into a
+ * command string) as a fully detached process: double-forked so the
+ * grandchild is reparented to init and this backend never waits on it, in
+ * its own session (setsid) so it outlives this backend's process group,
+ * with stdout/stderr redirected to `logPath`.
+ *
+ * Between fork() and execve() the child must only call
+ * async-signal-safe functions -- no more SPI, no more elog -- which is why
+ * every argv/envp string is fully built before this is called.
+ */
+static void
+spawn_detached(const char *path, char *const argv[], char *const envp[],
+			  const char *logPath)
+{
+	pid_t		first;
+
+	first = fork();
+	if (first < 0)
+		elog(ERROR, "lake_subscription_sugar: fork failed: %m");
+
+	if (first == 0)
+	{
+		pid_t		second = fork();
+
+		if (second == 0)
+		{
+			int			logFd;
+			int			fd;
+
+			setsid();
+
+			/*
+			 * Close every inherited descriptor above stderr -- this
+			 * backend's sockets and shared-memory mappings are otherwise
+			 * still open in the child until execve() replaces the process
+			 * image, and not all of them are marked close-on-exec.
+			 */
+			for (fd = 3; fd < 256; fd++)
+				close(fd);
+
+			logFd = open(logPath, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			if (logFd >= 0)
+			{
+				dup2(logFd, STDOUT_FILENO);
+				dup2(logFd, STDERR_FILENO);
+				close(logFd);
+			}
+			execve(path, argv, envp);
+			_exit(127);
+		}
+		_exit(0);
+	}
+
+	waitpid(first, NULL, 0);
+}
+
+/*
+ * build_worker_env allocates a NULL-terminated envp array (each entry
+ * palloc'd via psprintf, so it lives in the current SPI/portal memory
+ * context and does not need manual freeing here) with everything
+ * lake-replication-initial-sync and lake-replication-supervisor need to
+ * run inside this same PostgreSQL instance and pick up the subscription
+ * this hook just created.
+ */
+static char **
+build_worker_env(int64 subscriptionId, const char *slotName,
+				 const char *publicationName, const char *sourceDatabase,
+				 const char *destinationDatabase)
+{
+	char	  **envp = palloc(15 * sizeof(char *));
+	int			i = 0;
+
+	envp[i++] = psprintf("LAKE_SLOT=%s", slotName);
+	envp[i++] = psprintf("LAKE_PUBLICATION=%s", publicationName);
+	envp[i++] = psprintf("LAKE_SUBSCRIPTION_ID=%lld", (long long) subscriptionId);
+	envp[i++] = pstrdup("LAKE_DISCOVER_PUBLICATION=1");
+	envp[i++] = pstrdup("LAKE_DESTINATION_SCHEMA=public");
+	envp[i++] = pstrdup("LAKE_CREATE_TABLES_USING_ICEBERG=1");
+	envp[i++] = pstrdup("LAKE_TYPE_MAPPING_VERSION=1");
+	envp[i++] = pstrdup("LAKE_SOURCE_ADDRESS=127.0.0.1:5432");
+	envp[i++] = pstrdup("LAKE_DESTINATION_ADDRESS=127.0.0.1:5432");
+	envp[i++] = psprintf("LAKE_SOURCE_DATABASE=%s", sourceDatabase);
+	envp[i++] = psprintf("LAKE_DESTINATION_DATABASE=%s", destinationDatabase);
+	envp[i++] = pstrdup("LAKE_USER=postgres");
+
+	/*
+	 * Keep each supervisor cycle short so a stop request (checked only
+	 * between cycles) is noticed quickly -- DROP SUBSCRIPTION waits for a
+	 * clean exit before it dares fall back to a signal (see
+	 * handle_drop_subscription for why a signal is dangerous here).
+	 */
+	envp[i++] = pstrdup("LAKE_RECEIVER_IDLE_TIMEOUT_MS=200");
+	envp[i++] = pstrdup("LAKE_SUPERVISOR_POLL_MS=100");
+	envp[i++] = NULL;
+	Assert(i == 15);
+	return envp;
 }
 
 static void
@@ -143,12 +273,30 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	char	   *systemIdentifier;
 	char	   *databaseOid;
 	char	   *timeline;
+	char	   *sourceDatabase;
+	char	   *destinationDatabase;
+	char	   *slotName;
+	int64		subscriptionId;
+	char	  **envp;
+	char	   *initialSyncArgv[2];
+	char	   *supervisorArgv[2];
+	char	   *initialSyncPath;
+	char	   *supervisorPath;
+	char	   *initialSyncLog;
+	char	   *supervisorLog;
 
 	pubname = strVal(linitial(stmt->publication));
+	slotName = psprintf("%s_slot", stmt->subname);
 
 	SPI_connect();
 
-	discover_source_identity(stmt->conninfo, &systemIdentifier, &databaseOid, &timeline);
+	discover_source_identity(stmt->conninfo, &systemIdentifier, &databaseOid,
+							 &timeline, &sourceDatabase);
+
+	if (SPI_execute("SELECT current_database()", true, 1) != SPI_OK_SELECT
+		|| SPI_processed != 1)
+		elog(ERROR, "lake_subscription_sugar: could not determine current_database()");
+	destinationDatabase = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
 
 	ereport(NOTICE,
 			(errmsg("lake_subscription_sugar: intercepted CREATE SUBSCRIPTION \"%s\" "
@@ -165,28 +313,136 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 					 "%s::name, %s::name, ARRAY[%s]::text[])",
 					 systemIdentifier, databaseOid, timeline,
 					 quote_literal_cstr(stmt->subname),
-					 quote_literal_cstr(psprintf("%s_slot", stmt->subname)),
+					 quote_literal_cstr(slotName),
 					 quote_literal_cstr(pubname));
-	if (SPI_execute(buf.data, false, 0) != SPI_OK_SELECT)
+	if (SPI_execute(buf.data, true, 0) != SPI_OK_SELECT || SPI_processed != 1)
 		elog(ERROR, "lake_subscription_sugar: create_subscription call failed");
+	{
+		bool		isnull;
+
+		subscriptionId = DatumGetInt64(SPI_getbinval(SPI_tuptable->vals[0],
+													 SPI_tuptable->tupdesc, 1,
+													 &isnull));
+	}
+
+	envp = build_worker_env(subscriptionId, slotName, pubname, sourceDatabase,
+							destinationDatabase);
+	initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
+	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
+	initialSyncArgv[0] = initialSyncPath;
+	initialSyncArgv[1] = NULL;
+	supervisorArgv[0] = supervisorPath;
+	supervisorArgv[1] = NULL;
+	initialSyncLog = psprintf("/tmp/lake_sugar_%lld_initial_sync.log", (long long) subscriptionId);
+	supervisorLog = psprintf("/tmp/lake_sugar_%lld_supervisor.log", (long long) subscriptionId);
+
+	ereport(NOTICE,
+			(errmsg("lake_subscription_sugar: starting initial sync and the "
+					"supervisor for subscription_id=%lld (logs: %s, %s)",
+					(long long) subscriptionId, initialSyncLog, supervisorLog)));
+
+	/*
+	 * Fire-and-forget both: the supervisor's own poll loop already reports
+	 * "paused" and keeps waiting for as long as the subscription's state
+	 * is not yet 'streaming', so starting it concurrently with initial
+	 * sync (rather than waiting for initial sync to finish first) mirrors
+	 * how native logical replication's tablesync and apply workers overlap.
+	 */
+	spawn_detached(initialSyncPath, initialSyncArgv, envp, initialSyncLog);
+	spawn_detached(supervisorPath, supervisorArgv, envp, supervisorLog);
 
 	SPI_finish();
 }
 
 static void
-handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId)
+handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId,
+						 bool isTopLevel)
 {
 	StringInfoData buf;
+	pid_t		supervisorPid = -1;
 
 	ereport(NOTICE,
 			(errmsg("lake_subscription_sugar: intercepted DROP SUBSCRIPTION \"%s\"; "
 					"tearing down lake_replication control-plane state instead of "
 					"native apply", stmt->subname)));
 
+	/*
+	 * What follows commits a write partway through this statement (see
+	 * below), the same technique pg_lake's own VACUUM (ICEBERG) uses. That
+	 * is only safe as the sole statement in its own transaction, exactly
+	 * like VACUUM -- hence the same guard VACUUM uses.
+	 */
+	PreventInTransactionBlock(isTopLevel, "DROP SUBSCRIPTION");
+
+	if (!ActiveSnapshotSet())
+		PushActiveSnapshot(GetTransactionSnapshot());
+
 	SPI_connect();
+
+	/*
+	 * Ask the running supervisor to stop cooperatively (it polls
+	 * desired_state and, on noticing 'stopped', calls
+	 * report_service_stopped() and exits cleanly -- exit(0), no signal).
+	 * This matters in this exact container: PostgreSQL runs as PID 1 here
+	 * (no separate init), so a detached grandchild that later dies BY
+	 * SIGNAL is reparented straight onto the postmaster, which logs it as
+	 * an "untracked child ... terminated by signal" and restarts the
+	 * entire cluster out of caution -- a clean exit(0) does not trigger
+	 * that. So the SIGTERM below is a last resort for a supervisor that
+	 * ignored the cooperative stop, not the normal path.
+	 */
 	SPI_execute(psprintf("SELECT lake_replication.request_service_stop(%lld)",
 						  (long long) subscriptionId), false, 0);
+	if (SPI_execute(psprintf("SELECT supervisor_pid FROM lake_replication.service_status "
+							  "WHERE subscription_id = %lld", (long long) subscriptionId),
+					true, 1) == SPI_OK_SELECT && SPI_processed == 1)
+	{
+		bool		isnull;
+		Datum		value = SPI_getbinval(SPI_tuptable->vals[0], SPI_tuptable->tupdesc,
+											  1, &isnull);
 
+		if (!isnull)
+			supervisorPid = (pid_t) DatumGetInt64(value);
+	}
+	SPI_finish();
+
+	/*
+	 * Commit the stop request now, in its own transaction, so the
+	 * supervisor's separate connection can actually see desired_state =
+	 * 'stopped' -- it cannot while this statement's own transaction is
+	 * still open, no matter how long the poll loop below waits.
+	 */
+	PopActiveSnapshot();
+	CommitTransactionCommand();
+	StartTransactionCommand();
+	PushActiveSnapshot(GetTransactionSnapshot());
+
+	if (supervisorPid > 0)
+	{
+		int			waited;
+		bool		exited = false;
+
+		for (waited = 0; waited < 120; waited++)
+		{
+			/* kill(pid, 0) only checks existence; it never signals. */
+			if (kill(supervisorPid, 0) != 0)
+			{
+				exited = true;
+				break;
+			}
+			usleep(50000);		/* 50ms; up to 6s total */
+		}
+		if (!exited)
+		{
+			ereport(WARNING,
+					(errmsg("lake_subscription_sugar: supervisor pid %d did not "
+							"stop on its own within 6s; sending SIGTERM as a "
+							"last resort", (int) supervisorPid)));
+			kill(supervisorPid, SIGTERM);
+		}
+	}
+
+	SPI_connect();
 	initStringInfo(&buf);
 	appendStringInfo(&buf,
 					 "DELETE FROM lake_replication.changes WHERE transaction_id IN "
@@ -206,6 +462,7 @@ handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId)
 		elog(ERROR, "lake_subscription_sugar: failed to tear down subscription state");
 
 	SPI_finish();
+	PopActiveSnapshot();
 }
 
 static void
@@ -278,7 +535,8 @@ lake_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
 
 		if (subscriptionId >= 0)
 		{
-			handle_drop_subscription(stmt, subscriptionId);
+			handle_drop_subscription(stmt, subscriptionId,
+									 context == PROCESS_UTILITY_TOPLEVEL);
 			return;
 		}
 	}
