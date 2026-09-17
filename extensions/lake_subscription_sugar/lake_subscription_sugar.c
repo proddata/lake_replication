@@ -16,29 +16,31 @@
  * - ALTER/DROP SUBSCRIPTION are claimed only when `subname` matches a
  *   subscription this hook already created (looked up by name in
  *   lake_replication.subscriptions); anything else falls through
- *   unchanged, so ordinary native subscriptions keep working. DROP signals
- *   the running supervisor to stop cooperatively, then SIGTERMs its pid as
- *   a backstop, and tears down the control-plane rows.
+ *   unchanged, so ordinary native subscriptions keep working. DROP drops
+ *   the source-side replication slot for real (via a second dblink
+ *   connection, using conninfo recorded at CREATE time in this
+ *   extension's own lake_subscription_sugar.pending_cleanup table -- see
+ *   drop_source_slot), signals the running supervisor to stop
+ *   cooperatively, then SIGTERMs its pid only as a backstop, and tears
+ *   down the control-plane rows.
+ *
+ * LAKE_SOURCE_ADDRESS is the real host:port the CONNECTION string's own
+ * dblink connection used to reach the source (inet_server_addr()/
+ * inet_server_port()), correct whether the source is local or genuinely
+ * remote. LAKE_DESTINATION_ADDRESS stays loopback deliberately: the
+ * workers this hook spawns always run alongside this same instance
+ * regardless of where the source is, so only its port is discovered
+ * (current_setting('port')), not a routable address.
  *
  * Any statement not claimed by the rules above falls through to
  * standard_ProcessUtility (or the next hook) unmodified.
  *
  * Known limitations, in addition to the ones noted inline below:
- * - LAKE_SOURCE_ADDRESS/LAKE_DESTINATION_ADDRESS are hardcoded to
- *   127.0.0.1:5432: this only works when the source and destination are
- *   two databases on the one PostgreSQL instance this extension is loaded
- *   into (true of this project's lab), not a real deployment with a
- *   separate source cluster.
  * - LAKE_DESTINATION_SCHEMA is hardcoded to "public".
  * - the worker binaries are expected at /usr/local/bin/lake-replication-*;
  *   nothing here builds or installs them (see tests/subscription_sugar/probe.py).
  * - ALTER SUBSCRIPTION ... ENABLE still cannot restart a stopped
  *   subscription: this hook only spawns the workers at CREATE time.
- * - DROP SUBSCRIPTION does not drop the source-side replication slot that
- *   lake-replication-initial-sync creates: DropSubscriptionStmt carries no
- *   conninfo, and this hook does not currently look one up to connect back
- *   to the source for that one cleanup step. The slot is left behind,
- *   inactive, on the source until an operator drops it manually.
  */
 #include "postgres.h"
 #include "access/xact.h"
@@ -126,18 +128,23 @@ lake_subscription_id(const char *subname)
  * discover_source_identity connects to `conninfo` via dblink and reads the
  * real system_identifier/database_oid/timeline of that source, the same
  * three values every other probe in this project fetches from
- * pg_control_system()/pg_control_checkpoint(), plus the source's own
- * database name (so the spawned workers connect to the same database this
- * statement's CONNECTION string pointed at, without re-parsing conninfo).
+ * pg_control_system()/pg_control_checkpoint(); the source's own database
+ * name (so the spawned workers connect to the same database this
+ * statement's CONNECTION string pointed at, without re-parsing conninfo);
+ * and the real "host:port" the dblink connection actually used to reach
+ * it (inet_server_addr()/inet_server_port(), correct whether the source
+ * is local or a genuinely remote cluster, unlike guessing from conninfo).
  * Must be called with SPI already connected. Raises an error if the
  * source is unreachable or the dblink extension cannot be created.
  */
 static void
 discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 						 char **outDatabaseOid, char **outTimeline,
-						 char **outDatabaseName)
+						 char **outDatabaseName, char **outSourceAddress)
 {
 	StringInfoData buf;
+	char	   *host;
+	char	   *port;
 
 	if (SPI_execute("CREATE EXTENSION IF NOT EXISTS dblink", false, 0) < 0)
 		elog(ERROR, "lake_subscription_sugar: could not create the dblink extension");
@@ -145,14 +152,17 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 	initStringInfo(&buf);
 	appendStringInfo(&buf,
 					 "SELECT identity.system_identifier, identity.database_oid, "
-					 "identity.timeline, identity.database_name FROM dblink(%s, "
+					 "identity.timeline, identity.database_name, "
+					 "identity.host, identity.port FROM dblink(%s, "
 					 "'SELECT system_identifier, "
 					 "(SELECT oid FROM pg_database WHERE datname = current_database()), "
 					 "(SELECT timeline_id FROM pg_control_checkpoint()), "
-					 "current_database() "
+					 "current_database(), "
+					 "host(inet_server_addr()), inet_server_port() "
 					 "FROM pg_control_system()') "
 					 "AS identity(system_identifier numeric, database_oid oid, "
-					 "timeline bigint, database_name text)", quote_literal_cstr(conninfo));
+					 "timeline bigint, database_name text, host text, port int)",
+					 quote_literal_cstr(conninfo));
 
 	if (SPI_execute(buf.data, true, 0) != SPI_OK_SELECT || SPI_processed != 1)
 		elog(ERROR,
@@ -163,6 +173,14 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 	*outDatabaseOid = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2);
 	*outTimeline = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 3);
 	*outDatabaseName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 4);
+	host = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 5);
+	port = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 6);
+	if (host == NULL || port == NULL)
+		elog(ERROR,
+			 "lake_subscription_sugar: source connection for conninfo %s did not "
+			 "report a TCP address (inet_server_addr() is NULL for non-TCP "
+			 "connections, e.g. a unix socket)", conninfo);
+	*outSourceAddress = psprintf("%s:%s", host, port);
 }
 
 /*
@@ -234,7 +252,8 @@ spawn_detached(const char *path, char *const argv[], char *const envp[],
 static char **
 build_worker_env(int64 subscriptionId, const char *slotName,
 				 const char *publicationName, const char *sourceDatabase,
-				 const char *destinationDatabase)
+				 const char *destinationDatabase, const char *sourceAddress,
+				 const char *destinationAddress)
 {
 	char	  **envp = palloc(15 * sizeof(char *));
 	int			i = 0;
@@ -246,8 +265,8 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	envp[i++] = pstrdup("LAKE_DESTINATION_SCHEMA=public");
 	envp[i++] = pstrdup("LAKE_CREATE_TABLES_USING_ICEBERG=1");
 	envp[i++] = pstrdup("LAKE_TYPE_MAPPING_VERSION=1");
-	envp[i++] = pstrdup("LAKE_SOURCE_ADDRESS=127.0.0.1:5432");
-	envp[i++] = pstrdup("LAKE_DESTINATION_ADDRESS=127.0.0.1:5432");
+	envp[i++] = psprintf("LAKE_SOURCE_ADDRESS=%s", sourceAddress);
+	envp[i++] = psprintf("LAKE_DESTINATION_ADDRESS=%s", destinationAddress);
 	envp[i++] = psprintf("LAKE_SOURCE_DATABASE=%s", sourceDatabase);
 	envp[i++] = psprintf("LAKE_DESTINATION_DATABASE=%s", destinationDatabase);
 	envp[i++] = pstrdup("LAKE_USER=postgres");
@@ -265,6 +284,113 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	return envp;
 }
 
+/*
+ * ensure_pending_cleanup_table lazily creates a small side-table this
+ * extension owns -- separate from lake_replication's own shipped schema,
+ * since this state exists only to support this prototype's DROP
+ * SUBSCRIPTION handling, not the replication path itself -- recording just
+ * enough (the source conninfo and slot name) to drop the source-side
+ * replication slot lake-replication-initial-sync creates, since
+ * DropSubscriptionStmt carries no conninfo of its own.
+ *
+ * Security note: this stores conninfo exactly as given in the original
+ * CREATE SUBSCRIPTION statement, which already appears in cleartext in
+ * the server log and pg_stat_activity for that statement; if a caller
+ * embeds a password in CONNECTION instead of using out-of-band
+ * credentials (matching how this project's own workers take
+ * LAKE_SOURCE_PASSWORD from the environment, never from a connection
+ * string), that password is stored here too. Must be called with SPI
+ * already connected.
+ */
+static void
+ensure_pending_cleanup_table(void)
+{
+	if (SPI_execute(
+			"CREATE SCHEMA IF NOT EXISTS lake_subscription_sugar; "
+			"CREATE TABLE IF NOT EXISTS lake_subscription_sugar.pending_cleanup ("
+			"    subscription_id bigint PRIMARY KEY,"
+			"    source_conninfo text NOT NULL,"
+			"    source_slot_name text NOT NULL,"
+			"    created_at timestamptz NOT NULL DEFAULT clock_timestamp()"
+			")", false, 0) < 0)
+		elog(ERROR, "lake_subscription_sugar: could not create its own "
+					"pending_cleanup table");
+}
+
+static void
+record_pending_cleanup(int64 subscriptionId, const char *conninfo,
+					   const char *slotName)
+{
+	ensure_pending_cleanup_table();
+	SPI_execute(psprintf(
+		"INSERT INTO lake_subscription_sugar.pending_cleanup "
+		"(subscription_id, source_conninfo, source_slot_name) "
+		"VALUES (%lld, %s, %s)",
+		(long long) subscriptionId, quote_literal_cstr(conninfo),
+		quote_literal_cstr(slotName)), false, 0);
+}
+
+/*
+ * drop_source_slot looks up the pending_cleanup row for `subscriptionId`,
+ * if any, reconnects to the source via dblink, and drops the slot for
+ * real. Best-effort: a source that is unreachable, or that has already
+ * lost the slot on its own (e.g. a Milestone-21-style invalidation), only
+ * gets a WARNING here, never an ERROR that would abort the whole DROP
+ * SUBSCRIPTION over a cleanup step that no longer matters.
+ */
+static void
+drop_source_slot(int64 subscriptionId)
+{
+	char	   *conninfo = NULL;
+	char	   *slotName = NULL;
+
+	ensure_pending_cleanup_table();
+	if (SPI_execute(psprintf(
+			"SELECT source_conninfo, source_slot_name FROM "
+			"lake_subscription_sugar.pending_cleanup WHERE subscription_id = %lld",
+			(long long) subscriptionId), true, 1) == SPI_OK_SELECT
+		&& SPI_processed == 1)
+	{
+		conninfo = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
+		slotName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2);
+	}
+
+	if (conninfo != NULL && slotName != NULL)
+	{
+		if (SPI_execute("CREATE EXTENSION IF NOT EXISTS dblink", false, 0) < 0)
+		{
+			ereport(WARNING,
+					(errmsg("lake_subscription_sugar: could not create dblink "
+							"to drop the source-side slot; it is left behind")));
+		}
+		else
+		{
+			char	   *slotLiteral = quote_literal_cstr(slotName);
+			char	   *innerQuery = psprintf(
+				"DO $lake_sugar_drop_slot$ BEGIN "
+				"IF EXISTS (SELECT 1 FROM pg_replication_slots WHERE slot_name = %s) "
+				"THEN PERFORM pg_drop_replication_slot(%s); END IF; "
+				"END $lake_sugar_drop_slot$",
+				slotLiteral, slotLiteral);
+			StringInfoData buf;
+
+			initStringInfo(&buf);
+			appendStringInfo(&buf, "SELECT dblink_exec(%s, %s)",
+							 quote_literal_cstr(conninfo),
+							 quote_literal_cstr(innerQuery));
+			if (SPI_execute(buf.data, false, 0) < 0)
+				ereport(WARNING,
+						(errmsg("lake_subscription_sugar: could not drop "
+								"source-side slot \"%s\"; it is left behind",
+								slotName)));
+		}
+	}
+
+	SPI_execute(psprintf(
+		"DELETE FROM lake_subscription_sugar.pending_cleanup "
+		"WHERE subscription_id = %lld", (long long) subscriptionId), false, 0);
+}
+
 static void
 handle_create_subscription(CreateSubscriptionStmt *stmt)
 {
@@ -275,6 +401,8 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	char	   *timeline;
 	char	   *sourceDatabase;
 	char	   *destinationDatabase;
+	char	   *sourceAddress;
+	char	   *destinationAddress;
 	char	   *slotName;
 	int64		subscriptionId;
 	char	  **envp;
@@ -291,12 +419,22 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	SPI_connect();
 
 	discover_source_identity(stmt->conninfo, &systemIdentifier, &databaseOid,
-							 &timeline, &sourceDatabase);
+							 &timeline, &sourceDatabase, &sourceAddress);
 
-	if (SPI_execute("SELECT current_database()", true, 1) != SPI_OK_SELECT
-		|| SPI_processed != 1)
-		elog(ERROR, "lake_subscription_sugar: could not determine current_database()");
+	/*
+	 * The destination is always reachable at loopback: the workers this
+	 * hook spawns run alongside this same PostgreSQL instance regardless
+	 * of where the source is, so only the port -- not a routable address
+	 * -- needs to be discovered.
+	 */
+	if (SPI_execute("SELECT current_database(), current_setting('port')",
+					true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+		elog(ERROR, "lake_subscription_sugar: could not determine "
+					"current_database()/port");
 	destinationDatabase = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
+	destinationAddress = psprintf("127.0.0.1:%s",
+								  SPI_getvalue(SPI_tuptable->vals[0],
+											  SPI_tuptable->tupdesc, 2));
 
 	ereport(NOTICE,
 			(errmsg("lake_subscription_sugar: intercepted CREATE SUBSCRIPTION \"%s\" "
@@ -325,8 +463,10 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 													 &isnull));
 	}
 
+	record_pending_cleanup(subscriptionId, stmt->conninfo, slotName);
+
 	envp = build_worker_env(subscriptionId, slotName, pubname, sourceDatabase,
-							destinationDatabase);
+							destinationDatabase, sourceAddress, destinationAddress);
 	initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
 	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
 	initialSyncArgv[0] = initialSyncPath;
@@ -443,6 +583,9 @@ handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId,
 	}
 
 	SPI_connect();
+
+	drop_source_slot(subscriptionId);
+
 	initStringInfo(&buf);
 	appendStringInfo(&buf,
 					 "DELETE FROM lake_replication.changes WHERE transaction_id IN "

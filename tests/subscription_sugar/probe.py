@@ -330,6 +330,16 @@ def main():
                   SELECT count(*) FROM lake_replication.subscriptions
                    WHERE subscription_id={subscription_id}
               """), "0")
+        check("the source-side replication slot was dropped for real, not left behind",
+              value("application", f"""
+                  SELECT count(*) FROM pg_replication_slots
+                   WHERE slot_name='{SUBSCRIPTION}_slot'
+              """), "0")
+        check("this extension's own pending_cleanup bookkeeping row is gone too",
+              value("analytics", f"""
+                  SELECT count(*) FROM lake_subscription_sugar.pending_cleanup
+                   WHERE subscription_id={subscription_id}
+              """), "0")
         subscription_id = None
 
         EVIDENCE["status"] = "passed"

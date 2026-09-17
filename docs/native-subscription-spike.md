@@ -13,9 +13,13 @@ a different, much cheaper design -- a `CREATE SUBSCRIPTION`-shaped syntax
 wrapper over a custom batching writer, structurally close to what this
 project already has -- which this project has since prototyped successfully
 against the live lab (see "A working prototype of the syntax-sugar route")
-and extended to genuinely auto-start replication end to end (see "CREATE
-SUBSCRIPTION now actually starts replication"). That is the live direction
-now.
+extended to genuinely auto-start replication end to end (see "CREATE
+SUBSCRIPTION now actually starts replication"), and extended again to use
+real source addressing and real source-side slot cleanup instead of
+lab-only shortcuts (see "Real addressing and source-side slot cleanup").
+The decision has been made to evolve this into something real rather than
+leave it a documented dead end; the "Where this leaves the project" section
+tracks what is still deliberately unfinished toward that.
 
 ## The question
 
@@ -369,15 +373,61 @@ The fix commits that one write mid-statement, exactly the technique
 spike) -- so `DROP SUBSCRIPTION` only reaches for `SIGTERM` as a rare
 last resort, after polling for a real, clean exit first.
 
+## Real addressing and source-side slot cleanup
+
+The first version of the auto-start work above still carried two lab-only
+shortcuts: `LAKE_SOURCE_ADDRESS`/`LAKE_DESTINATION_ADDRESS` hardcoded to
+`127.0.0.1:5432`, and `DROP SUBSCRIPTION` never dropping the source-side
+replication slot `lake-replication-initial-sync` creates (since
+`DropSubscriptionStmt` carries no `conninfo` to reconnect with). Both are
+now fixed, because the goal shifted from "prove the mechanism" to "this is
+meant to become real":
+
+- **Real source address.** `discover_source_identity`'s existing `dblink`
+  connection now also selects `host(inet_server_addr()), inet_server_port()`
+  -- the actual host:port that connection used to reach the source. That is
+  correct whether the source is local (this lab) or a genuinely remote
+  cluster, with no conninfo-parsing needed. The destination address stays
+  loopback deliberately: the workers this hook spawns always run alongside
+  this same PostgreSQL instance no matter where the source is, so only its
+  port needs discovering (`current_setting('port')`), not a routable
+  address.
+- **Real slot cleanup.** This extension now keeps its own tiny side-table,
+  `lake_subscription_sugar.pending_cleanup` (subscription_id, source
+  conninfo, slot name) -- deliberately separate from `lake_replication`'s
+  own shipped schema, since this state exists only to support this
+  prototype's `DROP` handling, not the replication path itself. `DROP
+  SUBSCRIPTION` looks up that row, opens a second `dblink` connection back
+  to the source, and drops the slot for real (wrapped in a `DO` block,
+  since `dblink_exec` rejects any command that returns rows, which a bare
+  `SELECT pg_drop_replication_slot(...)` does) before tearing down the
+  control-plane rows. Best-effort: an unreachable source only gets a
+  `WARNING`, never an `ERROR` that would abort the whole `DROP` over a
+  cleanup step that no longer matters.
+
+Security note recorded in the code: `pending_cleanup` stores `conninfo`
+exactly as given in the original `CREATE SUBSCRIPTION` statement. That
+string already appears in cleartext in the server log and
+`pg_stat_activity` for that statement, so storing it isn't a new exposure
+in this lab -- but if a caller embeds a password in `CONNECTION` instead of
+using out-of-band credentials (the way this project's own workers already
+take `LAKE_SOURCE_PASSWORD` from the environment, never from a connection
+string), that password is stored here too.
+
+`make subscription-sugar-test` now covers this too -- 18 checks, including
+that the source-side slot and the `pending_cleanup` row are both actually
+gone after `DROP`. Run `subsug_20260917_055455` passed all of them,
+recorded [here](evidence/2026-09-17-subscription-sugar-results.json).
+
 ## Where this leaves the project
 
 Do not build a real Iceberg table access method (see "Is a TAM actually
 needed?"). The `CREATE SUBSCRIPTION`-shaped syntax-wrapper route is no
 longer just a cheap idea -- it is a working prototype covering create
-(with real auto-started replication), disable, drop (crash-safe), and
-Crunchy-shaped monitoring, all proven against the live lab and all still
-just a `ProcessUtility_hook` extension on stock PostgreSQL, no core patch,
-no TAM.
+(with real auto-started replication and real addressing), disable, drop
+(crash-safe, with real slot cleanup), and Crunchy-shaped monitoring, all
+proven against the live lab and all still just a `ProcessUtility_hook`
+extension on stock PostgreSQL, no core patch, no TAM.
 
 What is still deliberately unfinished, since this remains a prototype, not
 shipped code:
@@ -390,15 +440,8 @@ shipped code:
 - `ALTER SUBSCRIPTION ... ENABLE` only records intent -- it cannot restart
   a stopped subscription, since this hook only spawns the workers at
   `CREATE` time;
-- `LAKE_SOURCE_ADDRESS`/`LAKE_DESTINATION_ADDRESS` are hardcoded to
-  `127.0.0.1:5432` and `LAKE_DESTINATION_SCHEMA` to `public`: this only
-  works when source and destination are two databases on the one instance
-  this extension is loaded into, not a real deployment with a separate
-  source cluster;
-- `DROP SUBSCRIPTION` does not drop the source-side replication slot
-  `lake-replication-initial-sync` creates -- `DropSubscriptionStmt` carries
-  no `conninfo` to reconnect to the source with, so the slot is left
-  behind, inactive, until an operator drops it manually; and
+- `LAKE_DESTINATION_SCHEMA` is hardcoded to `public`, with no way to
+  override it per subscription; and
 - the monitoring views omit cumulative row counters, as noted above.
 
 Promoting this from prototype to something operators could actually rely
@@ -406,5 +449,4 @@ on would mean deciding how far to take it: keep it as an optional,
 separately-installed convenience layer over the existing SQL-function
 control plane (low risk, purely additive), or make it the documented,
 primary way to configure a subscription (bigger commitment: it would need
-the grammar-shape review, the leftover-slot cleanup, and a real answer for
-`ENABLE`, all above).
+the grammar-shape review and a real answer for `ENABLE`, both above).
