@@ -1,11 +1,12 @@
 # Spike: could native `CREATE SUBSCRIPTION` ever target Iceberg?
 
-Status: this is an architecture spike, not part of the shipped replication
-path. It investigates why PostgreSQL's own logical replication cannot target
-`pg_lake` Iceberg tables today, and whether that is fixable without patching
-PostgreSQL itself. It directly informs, but does not decide, whether a
-future rewrite of this project onto a native `CREATE SUBSCRIPTION` design is
-viable.
+Status: closed. This is an architecture spike, not part of the shipped
+replication path. It investigates why PostgreSQL's own logical replication
+cannot target `pg_lake` Iceberg tables today, whether that is fixable
+without patching PostgreSQL itself, and whether fixing it is worth pursuing
+for this project. Conclusion: fixable in principle (Crunchy Data Warehouse
+already ships it), but not worth pursuing here -- see "Is any of this
+actually needed?" below.
 
 ## The question
 
@@ -115,9 +116,78 @@ PostgreSQL core changes. The `create_tables_using`-style convenience is also
 implementable purely as an extension, via the same `ProcessUtility_hook`
 pattern `pg_lake` already uses for `VACUUM (ICEBERG)`.
 
-Not settled: whether implementing a real Iceberg table access method --
-correct MVCC visibility, all the TAM callback paths, concurrent access, not
-just routing single-row inserts into Parquet files -- is a smaller or larger
-effort than this project's current external-worker design, which already
-has 25 milestones of correctness and HA validation behind it. That is the
-next question, not answered here.
+Not settled: whether implementing a real Iceberg table access method is a
+smaller or larger effort than this project's current external-worker
+design, which already has 25 milestones of correctness and HA validation
+behind it.
+
+## The real obstacle a TAM would face: row identity vs. compaction
+
+Reading the full `TableAmRoutine` struct (`src/include/access/tableam.h`)
+narrows the *number* of callbacks a replication-only Iceberg TAM would need,
+but surfaces a harder problem than "how many callbacks."
+
+The apply worker can locate the row to update/delete in two ways: through a
+unique index (needing real btree integration -- `index_scan_*`,
+`index_build_range_scan`), or, with `REPLICA IDENTITY FULL`, through a plain
+sequential scan comparing whole rows (`scan_begin`/`scan_getnextslot` only).
+Since a destination Iceberg table has no natural unique-index concept
+anyway, `REPLICA IDENTITY FULL` on both ends avoids the entire index-callback
+group. That leaves a real but bounded set: `slot_callbacks`, the sequential
+scan callbacks, `tuple_insert`/`multi_insert`, `tuple_update`, `tuple_delete`,
+`tuple_lock`, `tuple_fetch_row_version`, `relation_set_new_filelocator`, plus
+TOAST support (already solved in the current design, Milestone 6) and
+`relation_nontransactional_truncate` (already solved, Milestone 4).
+
+But every one of those write/lock/fetch callbacks identifies its target row
+by `ItemPointer tid` -- PostgreSQL's physical row address. The executor's
+contract assumes a `tid` obtained from a scan stays valid long enough to act
+on it. Iceberg has no equivalent physical identity: a row lives in some
+Parquet file at some row offset, and Milestone 25 already proved, against
+this exact pinned `pg_lake` revision, that its autovacuum **rewrites and
+compacts those files automatically every 10 minutes by default**. A naive
+TAM's `tid`s would routinely point at locations compaction has since
+rewritten.
+
+This is not a proof of infeasibility -- Crunchy Data Warehouse is a real,
+shipped product that does exactly this in production, so it has been solved
+by someone. The plausible shape of a solution: make the TAM's `tid` an
+opaque logical row identifier the AM controls (backed by its own internal
+mapping to current file/offset), and make the AM's own compaction
+(`relation_vacuum`) never invalidate a `tid` a live transaction might still
+hold -- the same discipline ordinary heap tables already follow (ordinary
+autovacuum never relocates a live tuple's `tid`; only `VACUUM FULL`/`CLUSTER`
+do, and both already get special-cased in the TAM interface). That is a
+real, scoped, *additional* subsystem -- not a blocker, but a materially
+bigger prototype than "implement the write callbacks."
+
+The current design never has to solve this, because it never touches
+physical row identity: the publisher writes through `pg_lake`'s own SQL/FDW
+surface (`INSERT`/`COPY`/predicate-based `DELETE`), and `pg_lake` resolves
+row identity internally via Iceberg's own merge-on-read equality-deletes,
+not PostgreSQL TIDs.
+
+## Is any of this actually needed?
+
+No. Nothing here is required for this project's stated purpose --
+replicating PostgreSQL tables into Iceberg reliably. The current
+external-worker design already achieves that outcome, with 25 milestones of
+evidence behind its correctness, durability, and HA. A native-subscription
+TAM would not add a capability the project is missing; it would only change
+two things: the operator-facing syntax (`CREATE SUBSCRIPTION ... WITH
+(create_tables_using = 'iceberg')` instead of this project's own SQL
+functions plus deployed Rust binaries), and the deployment footprint (one
+fewer external process).
+
+Against that limited upside, a TAM rewrite would need to re-solve, in C,
+inside a PostgreSQL backend, several problems this project has already
+solved once in Rust/SQL: schema evolution (Milestone 11 -- and note native
+logical replication does not replicate DDL at all, so this problem does not
+even go away under a TAM design, it just moves), TOAST handling (Milestone
+6), mutation semantics (Milestone 4), and HA/failover behavior (Milestones
+17-21). On top of re-solving those, it would need to solve the row-identity-
+vs-compaction problem above, which the current design was never exposed to.
+That is a substantially larger and riskier undertaking than the ergonomic
+gain justifies. Recommendation: do not pursue the TAM rewrite. Treat this
+spike as closed background knowledge about why `pg_lake` and this project
+are shaped the way they are, not as a queued next step.
