@@ -486,30 +486,61 @@ along the way: `service_status.supervisor_pid` can briefly lag behind
 independently of the supervisor's own startup; the probe now polls for a
 non-empty pid instead of reading it once.
 
+## Grammar-shape review, and a per-subscription destination schema
+
+Two more gaps closed, in priority order:
+
+- **Multi-publication `CREATE SUBSCRIPTION` is now rejected outright**,
+  not silently truncated to the first publication. The earlier "grammar-
+  shape review" item turned out to have a wrong half: PG18's actual
+  `CreateSubscriptionStmt` (`nodes/parsenodes.h`, checked directly against
+  the pinned build) has no `SERVER`-form field at all -- that grammar
+  exists only in a newer/devel PostgreSQL branch a first pass of the
+  `postgres/postgres` repository happened to fetch from, not this pinned
+  version, so it was never a real gap here. The real gap was multiple
+  publications: this project's own worker binaries only support exactly
+  one, end to end (`initial_sync.rs` matches a single publication name by
+  SQL equality against `pg_publication_tables`, and the wire protocol's
+  `publication_names` option is populated from that same single value).
+  Silently using only the first name would have been a silent correctness
+  bug; `handle_create_subscription` now rejects the statement with a clear
+  error instead, before any control-plane row is created.
+- **`WITH (lake_target_schema = '...')`** overrides the default `public`
+  destination schema `lake-replication-initial-sync` creates missing
+  Iceberg tables in. Only relevant at `CREATE` time -- `ENABLE`'s restart
+  never respawns initial sync, so the value is inert there.
+
+Confirmed against the live lab: a two-publication `CREATE SUBSCRIPTION`
+fails immediately with no control-plane row left behind, and
+`WITH (lake_target_schema = 'custom_target')` correctly routed a real
+Iceberg foreign table into that schema instead of `public`.
+`tests/subscription_sugar/probe.py` covers both -- 25 checks now, still
+reproducible across repeated runs.
+
 ## Where this leaves the project
 
 Do not build a real Iceberg table access method (see "Is a TAM actually
 needed?"). The `CREATE SUBSCRIPTION`-shaped syntax-wrapper route is no
 longer just a cheap idea -- it is a working prototype covering the full
-lifecycle (create with real auto-started replication and real addressing,
-disable, **enable**, drop -- crash-safe, with real slot cleanup) and
-Crunchy-shaped monitoring, packaged the way `pg_lake` itself ships, all
-proven against the live lab, and all still just a `ProcessUtility_hook`
-extension on stock PostgreSQL -- no core patch, no TAM.
+lifecycle (create with real auto-started replication, real addressing, and
+a configurable destination schema; disable; **enable**; drop -- crash-safe,
+with real slot cleanup), a reviewed and honestly-bounded grammar shape
+(single publication, clearly rejecting what the workers cannot support),
+Crunchy-shaped monitoring, and packaging that matches how `pg_lake` itself
+ships. All proven against the live lab, and all still just a
+`ProcessUtility_hook` extension on stock PostgreSQL -- no core patch, no TAM.
 
 What is still deliberately unfinished, since this remains a prototype, not
 shipped code:
 
-- the extension only claims a statement when its `lake_target`/matching-
-  name conditions are met; it has not been reviewed for every
-  `CreateSubscriptionStmt`/`AlterSubscriptionStmt`/`DropSubscriptionStmt`
-  shape PostgreSQL's grammar allows (multiple publications, `SERVER`-form
-  `CREATE SUBSCRIPTION`, etc.);
+- multiple publications remain genuinely unsupported (rejected, not
+  worked around) -- fixing that for real would mean changing
+  `initial_sync.rs`'s SQL-equality publication match and the wire
+  protocol's `publication_names` construction, in the actual shipped
+  worker code, not just this extension;
 - `ENABLE` cannot restart a subscription created before this extension's
   `pending_cleanup` tracking existed (no recorded conninfo to reconnect
-  with) -- it raises a clear error in that case rather than guessing;
-- `LAKE_DESTINATION_SCHEMA` is hardcoded to `public`, with no way to
-  override it per subscription; and
+  with) -- it raises a clear error in that case rather than guessing; and
 - the monitoring views omit cumulative row counters, as noted above.
 
 Promoting this from prototype to something operators could actually rely
@@ -517,4 +548,5 @@ on would mean deciding how far to take it: keep it as an optional,
 separately-installed convenience layer over the existing SQL-function
 control plane (low risk, purely additive), or make it the documented,
 primary way to configure a subscription (bigger commitment: it would need
-the grammar-shape review above).
+real multi-publication support in the worker binaries themselves, not just
+this extension).

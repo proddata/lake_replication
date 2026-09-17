@@ -43,8 +43,24 @@
  * to the source and rediscover its address; a subscription created
  * before that tracking existed cannot be restarted this way.
  *
+ * CREATE SUBSCRIPTION naming more than one publication is rejected with a
+ * clear error rather than silently applying only the first: this
+ * project's own worker binaries only support exactly one publication
+ * end to end (lake-replication-initial-sync matches a single publication
+ * name by SQL equality against pg_publication_tables, and the wire
+ * protocol's publication_names option is populated from the same single
+ * value), so accepting the statement and quietly dropping the rest would
+ * be a silent correctness bug, not a convenience. (PostgreSQL 18's
+ * CreateSubscriptionStmt also has no SERVER-form -- that grammar exists
+ * only in newer/devel PostgreSQL branches, not the pinned version this
+ * project builds against, so it is not a gap here at all.)
+ *
+ * WITH (lake_target_schema = '...') overrides the default destination
+ * schema ("public") that lake-replication-initial-sync creates missing
+ * Iceberg tables in. Only read at CREATE time -- irrelevant on ENABLE's
+ * restart, since only initial sync (never respawned there) uses it.
+ *
  * Known limitations, in addition to the ones noted inline below:
- * - LAKE_DESTINATION_SCHEMA is hardcoded to "public".
  * - the worker binaries are expected at /usr/local/bin/lake-replication-*;
  *   nothing here builds or installs them (see tests/subscription_sugar/probe.py).
  */
@@ -257,7 +273,7 @@ static char **
 build_worker_env(int64 subscriptionId, const char *slotName,
 				 const char *publicationName, const char *sourceDatabase,
 				 const char *destinationDatabase, const char *sourceAddress,
-				 const char *destinationAddress)
+				 const char *destinationAddress, const char *destinationSchema)
 {
 	char	  **envp = palloc(15 * sizeof(char *));
 	int			i = 0;
@@ -266,7 +282,7 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	envp[i++] = psprintf("LAKE_PUBLICATION=%s", publicationName);
 	envp[i++] = psprintf("LAKE_SUBSCRIPTION_ID=%lld", (long long) subscriptionId);
 	envp[i++] = pstrdup("LAKE_DISCOVER_PUBLICATION=1");
-	envp[i++] = pstrdup("LAKE_DESTINATION_SCHEMA=public");
+	envp[i++] = psprintf("LAKE_DESTINATION_SCHEMA=%s", destinationSchema);
 	envp[i++] = pstrdup("LAKE_CREATE_TABLES_USING_ICEBERG=1");
 	envp[i++] = pstrdup("LAKE_TYPE_MAPPING_VERSION=1");
 	envp[i++] = psprintf("LAKE_SOURCE_ADDRESS=%s", sourceAddress);
@@ -400,7 +416,8 @@ static void
 spawn_workers(int64 subscriptionId, const char *slotName,
 			 const char *publicationName, const char *sourceDatabase,
 			 const char *destinationDatabase, const char *sourceAddress,
-			 const char *destinationAddress, bool spawnInitialSync)
+			 const char *destinationAddress, const char *destinationSchema,
+			 bool spawnInitialSync)
 {
 	char	  **envp;
 	char	   *supervisorPath;
@@ -412,7 +429,7 @@ spawn_workers(int64 subscriptionId, const char *slotName,
 
 	envp = build_worker_env(subscriptionId, slotName, publicationName,
 							sourceDatabase, destinationDatabase,
-							sourceAddress, destinationAddress);
+							sourceAddress, destinationAddress, destinationSchema);
 	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
 	supervisorArgv[0] = supervisorPath;
 	supervisorArgv[1] = NULL;
@@ -465,11 +482,22 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	char	   *destinationDatabase;
 	char	   *sourceAddress;
 	char	   *destinationAddress;
+	char	   *destinationSchema;
 	char	   *slotName;
 	int64		subscriptionId;
 
+	if (list_length(stmt->publication) != 1)
+		ereport(ERROR,
+				(errmsg("lake_subscription_sugar: CREATE SUBSCRIPTION \"%s\" names "
+						"%d publications, but this project's worker binaries only "
+						"support exactly one (lake-replication-initial-sync matches "
+						"a single publication name by equality; see initial_sync.rs)",
+						stmt->subname, list_length(stmt->publication))));
 	pubname = strVal(linitial(stmt->publication));
 	slotName = psprintf("%s_slot", stmt->subname);
+	destinationSchema = get_string_option(stmt->options, "lake_target_schema");
+	if (destinationSchema == NULL)
+		destinationSchema = "public";
 
 	SPI_connect();
 
@@ -508,7 +536,7 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 
 	spawn_workers(subscriptionId, slotName, pubname, sourceDatabase,
 				 destinationDatabase, sourceAddress, destinationAddress,
-				 true /* spawnInitialSync */ );
+				 destinationSchema, true /* spawnInitialSync */ );
 
 	SPI_finish();
 }
@@ -674,9 +702,17 @@ handle_enable_subscription(const char *subname, int64 subscriptionId)
 							 &timeline, &sourceDatabase, &sourceAddress);
 	discover_destination(&destinationDatabase, &destinationAddress);
 
+	/*
+	 * LAKE_DESTINATION_SCHEMA is only read by lake-replication-initial-sync
+	 * (to decide where to auto-create missing Iceberg destinations); the
+	 * ongoing receiver/publisher cycle the supervisor drives never reads
+	 * it, since by then every relation already has a destination_relation
+	 * recorded. Since ENABLE never respawns initial sync, the value
+	 * passed here is inert -- "public" is as good as any other placeholder.
+	 */
 	spawn_workers(subscriptionId, slotName, publicationName, sourceDatabase,
 				 destinationDatabase, sourceAddress, destinationAddress,
-				 false /* spawnInitialSync */ );
+				 "public", false /* spawnInitialSync */ );
 }
 
 static void

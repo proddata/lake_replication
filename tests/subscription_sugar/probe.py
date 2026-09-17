@@ -230,6 +230,76 @@ def main():
         install_migrations()
         postmaster_start = value("analytics", "SELECT pg_postmaster_start_time()")
 
+        # This project's worker binaries only support exactly one
+        # publication end to end (initial-sync matches a single name by
+        # SQL equality); a multi-publication CREATE SUBSCRIPTION must be
+        # rejected outright, not silently truncated to the first one.
+        value("application", f"""
+            CREATE TABLE public.{TABLE}_mp1 (id int PRIMARY KEY);
+            CREATE TABLE public.{TABLE}_mp2 (id int PRIMARY KEY);
+            CREATE PUBLICATION {PUBLICATION}_mp1 FOR TABLE public.{TABLE}_mp1;
+            CREATE PUBLICATION {PUBLICATION}_mp2 FOR TABLE public.{TABLE}_mp2;
+        """)
+        result = sql("analytics", f"""
+            CREATE SUBSCRIPTION {SUBSCRIPTION}_mp
+              CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
+              PUBLICATION {PUBLICATION}_mp1, {PUBLICATION}_mp2
+              WITH (lake_target = 'iceberg');
+        """, check_result=False)
+        check("multi-publication CREATE SUBSCRIPTION is rejected outright, "
+              "not silently truncated to the first publication",
+              result.returncode != 0 and "only support exactly one"
+              in (result.stdout + result.stderr), True)
+        check("the rejected multi-publication statement left no control-plane row behind",
+              value("analytics", f"""
+                  SELECT count(*) FROM lake_replication.subscriptions
+                   WHERE subscription_name='{SUBSCRIPTION}_mp'
+              """), "0")
+        sql("application", f"""
+            DROP PUBLICATION {PUBLICATION}_mp1;
+            DROP PUBLICATION {PUBLICATION}_mp2;
+            DROP TABLE public.{TABLE}_mp1;
+            DROP TABLE public.{TABLE}_mp2;
+        """)
+
+        # WITH (lake_target_schema = '...') overrides the default "public"
+        # destination schema initial sync creates missing Iceberg tables in.
+        schema_table = f"{TABLE}_schema"
+        schema_publication = f"{PUBLICATION}_schema"
+        schema_subscription = f"{SUBSCRIPTION}_schema"
+        schema_target = f"{RUN}_target"
+        value("application", f"""
+            CREATE TABLE public.{schema_table} (id bigint PRIMARY KEY);
+            CREATE PUBLICATION {schema_publication} FOR TABLE public.{schema_table};
+        """)
+        value("analytics", f"CREATE SCHEMA {schema_target}")
+        sql("analytics", f"""
+            CREATE SUBSCRIPTION {schema_subscription}
+              CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
+              PUBLICATION {schema_publication}
+              WITH (lake_target = 'iceberg', lake_target_schema = '{schema_target}');
+        """)
+        schema_subscription_id = int(value("analytics", f"""
+            SELECT subscription_id FROM lake_replication.subscriptions
+             WHERE subscription_name='{schema_subscription}'
+        """))
+        check("lake_target_schema routes the destination table into the "
+              "named schema, not the public default",
+              wait_for("analytics", f"""
+                  SELECT c.relkind::text || ':' || s.srvname
+                    FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+                    LEFT JOIN pg_foreign_table ft ON ft.ftrelid=c.oid
+                    LEFT JOIN pg_foreign_server s ON s.oid=ft.ftserver
+                   WHERE n.nspname='{schema_target}' AND c.relname='{schema_table}'
+              """, "f:pg_lake_iceberg", timeout=10), "f:pg_lake_iceberg")
+        sql("analytics", f"DROP SUBSCRIPTION {schema_subscription}")
+        force_delete_subscription(schema_subscription_id)
+        sql("analytics", f"DROP SCHEMA {schema_target} CASCADE")
+        sql("application", f"""
+            DROP PUBLICATION {schema_publication};
+            DROP TABLE public.{schema_table};
+        """)
+
         # One real subscription, start to finish: CREATE SUBSCRIPTION alone
         # both registers it in this project's own control plane (not
         # PostgreSQL's) and starts real replication -- initial copy of the

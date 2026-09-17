@@ -1,6 +1,24 @@
 {
-  "run": "subsug_20260917_065541",
+  "run": "subsug_20260917_074543",
   "checks": [
+    {
+      "name": "multi-publication CREATE SUBSCRIPTION is rejected outright, not silently truncated to the first publication",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "the rejected multi-publication statement left no control-plane row behind",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "lake_target_schema routes the destination table into the named schema, not the public default",
+      "passed": true,
+      "actual": "f:pg_lake_iceberg",
+      "expected": "f:pg_lake_iceberg"
+    },
     {
       "name": "hook logs interception before routing to the control plane",
       "passed": true,
@@ -16,8 +34,8 @@
     {
       "name": "our own control plane received a real subscription row",
       "passed": true,
-      "actual": "subsug_20260917_065541_sub_slot:{subsug_20260917_065541_pub}",
-      "expected": "subsug_20260917_065541_sub_slot:{subsug_20260917_065541_pub}"
+      "actual": "subsug_20260917_074543_sub_slot:{subsug_20260917_074543_pub}",
+      "expected": "subsug_20260917_074543_sub_slot:{subsug_20260917_074543_pub}"
     },
     {
       "name": "real source identity was discovered via dblink, not stubbed",
