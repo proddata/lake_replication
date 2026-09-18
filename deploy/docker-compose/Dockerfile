@@ -42,11 +42,24 @@ RUN cmake --build duckdb_pglake/build/release -j${BUILD_JOBS} \
 RUN apt-get install -y --no-install-recommends libselinux1-dev libpam0g-dev libnuma-dev \
     && make install-pgduck_server DUCKDB_BUILD_USE_CACHE=1 NCORES=${BUILD_JOBS} \
        with_llvm=no LDFLAGS="-L$(pg_config --pkglibdir)"
-COPY patches/pg-lake-lab-crash-points.patch /tmp/pg-lake-lab-crash-points.patch
+COPY deploy/docker-compose/patches/pg-lake-lab-crash-points.patch /tmp/pg-lake-lab-crash-points.patch
 RUN git apply --check /tmp/pg-lake-lab-crash-points.patch \
     && git apply /tmp/pg-lake-lab-crash-points.patch \
     && make -C pg_lake_table -j${BUILD_JOBS} install with_llvm=no
 RUN ldconfig
+
+# lake_subscription_sugar must exist on disk before the first postmaster
+# startup: shared_preload_libraries (see compose.yml) refuses to start if a
+# listed library is missing, and adding it there only takes effect on a
+# restart, not a bare CREATE EXTENSION -- see Milestone 27's addendum.
+# tests/subscription_sugar/probe.py rebuilds and reinstalls this from the
+# current working tree on every run (for fast iteration without a full
+# image rebuild) and restarts postgres itself to pick that up; this baked-in
+# copy only needs to be correct as of the last `make lab-build`.
+COPY extensions/lake_subscription_sugar /tmp/lake_subscription_sugar
+RUN make -C /tmp/lake_subscription_sugar all install \
+    && rm -rf /tmp/lake_subscription_sugar
+
 LABEL org.opencontainers.image.source="https://github.com/Snowflake-Labs/pg_lake" \
       org.opencontainers.image.revision=${PG_LAKE_REV}
 WORKDIR /lab

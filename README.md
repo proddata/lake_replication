@@ -205,6 +205,42 @@ deletion-queue file retention — already covers destination tables this project
 creates, with no additional maintenance logic of its own. See
 [the Milestone 25 notes](docs/milestone-25.md).
 
+Milestone 26 confirms, by reading the pinned `pg_lake` source and reproducing
+it live against a real self-hosted Iceberg REST catalog, that a
+REST-catalog-backed destination table's commit-callback catalog POST runs
+strictly after PostgreSQL's own commit and is best-effort on failure, with no
+retry queue or durable failure record anywhere in `pg_lake` -- so this
+project cannot trust a durable checkpoint to mean a REST catalog agrees, and
+would need its own read-back verification for that destination mode. Tracked
+as a known, deliberately deferred defect, not scheduled for beta: beta
+targets `pg_lake`'s local catalog only. See
+[the Milestone 26 notes](docs/milestone-26.md) and
+[the beta readiness plan](docs/beta-readiness.md).
+
+Milestone 27 hardens `lake_subscription_sugar`'s control surface for beta:
+`CREATE/ALTER/DROP SUBSCRIPTION ... WITH (lake_target = 'iceberg')` now
+requires superuser or membership in a new `lake_replication_admin` role,
+worker log paths are configurable instead of hardcoded to `/tmp`, and
+`pending_cleanup` carries an explicit `REVOKE ALL FROM PUBLIC`. It also
+surfaces a real constraint for beta install docs: `dblink` refuses
+non-superuser use unless the source's auth method actually verifies a
+password, so a non-superuser can only drive this against a SCRAM-authenticated
+source. See [the Milestone 27 notes](docs/milestone-27.md).
+
+Milestone 28 closes the process-supervision gap Milestone 27 left open:
+a single, permanently-running launcher background worker (registered via
+`shared_preload_libraries`, the same PostgreSQL mechanism `pg_cron` uses)
+starts and supervises each subscription's replication worker as a genuine
+background worker, restarting it automatically on a crash (verified: a
+`kill -9`'d supervisor is replaced within about a second, with zero
+disruption to the rest of the database) and terminating it cleanly on
+`DROP`/`DISABLE`. Building it surfaced and fixed a real bug along the way:
+`execve()`-ing the worker binary directly into the background worker made
+an ordinary application error look exactly like a crash to PostgreSQL,
+which reacted by tearing down the entire cluster -- see
+[the Milestone 28 notes](docs/milestone-28.md) for the fix and the real
+(not estimated) deployment cost.
+
 Authentication settings are `LAKE_SOURCE_USER`, `LAKE_SOURCE_PASSWORD`,
 `LAKE_DESTINATION_USER`, and `LAKE_DESTINATION_PASSWORD`. `LAKE_USER` remains a
 backward-compatible username fallback. Passwords are not logged and remote
@@ -221,8 +257,10 @@ them. Rebuilding the image does not reinitialize existing databases. Avoid using
 this Compose project for unrelated data: failure experiments target it.
 
 See [the feasibility report](docs/feasibility.md) for evidence, limitations, and
-remaining experiments, and [the dependency inventory](docs/dependencies.md) for
-source and licensing notes. `make check` runs offline probe-classification tests
+remaining experiments, [the dependency inventory](docs/dependencies.md) for
+source and licensing notes, and [the beta readiness plan](docs/beta-readiness.md)
+for the ordered workstreams and distribution model needed to ship this as a
+separate artifact installed next to an existing `pg_lake`. `make check` runs offline probe-classification tests
 and validates Python syntax and Compose configuration; it does not run integration
 tests.
 

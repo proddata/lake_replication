@@ -3,7 +3,8 @@ services:
   postgres:
     image: pg-lake-replication-lab:8180647-pg18
     build:
-      context: .
+      context: ../..
+      dockerfile: deploy/docker-compose/Dockerfile
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
       PGDATA: /var/lib/postgresql/18/docker
@@ -18,7 +19,11 @@ services:
       - -c
       - logical_decoding_work_mem=64kB
       - -c
-      - shared_preload_libraries=pg_extension_base
+      - max_worker_processes=24
+      - -c
+      - shared_preload_libraries=pg_extension_base,lake_subscription_sugar
+      - -c
+      - lake_subscription_sugar.database_name=analytics
       - -c
       - pg_lake_engine.host=host=/var/run/pgduck port=5332
       - -c

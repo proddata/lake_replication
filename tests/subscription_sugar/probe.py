@@ -95,14 +95,37 @@ def build_and_install_extension(cid):
         if result.returncode:
             raise RuntimeError(result.stderr.strip())
 
-    # Installed and activated the way pg_lake itself ships: CREATE
-    # EXTENSION once (no shared_preload_libraries, no manual LOAD per
-    # statement), with session_preload_libraries making the
-    # ProcessUtility_hook active for every future session to this database.
+    # session_preload_libraries makes the ProcessUtility_hook active for
+    # every future session to this database, matching how pg_lake itself
+    # ships (CREATE EXTENSION once, no manual LOAD per statement).
     sql("analytics", "DROP EXTENSION IF EXISTS lake_subscription_sugar CASCADE")
     sql("analytics", "CREATE EXTENSION lake_subscription_sugar")
     sql("analytics", "ALTER DATABASE analytics SET session_preload_libraries "
                      "= 'lake_subscription_sugar'")
+
+    # The launcher background worker (lake_subscription_sugar_launcher_main)
+    # -- the only thing that actually starts a supervisor OS process, see
+    # Milestone 27's addendum -- is registered via shared_preload_libraries
+    # (already set in compose.yml's command, along with
+    # lake_subscription_sugar.database_name and a raised
+    # max_worker_processes) at postmaster startup. A bare `make install`
+    # above replaces the .so on disk but does not make the already-running
+    # postmaster load the new code -- that needs a restart, exactly the
+    # one-time cost a real install documents too.
+    restart_postgres_and_wait()
+
+
+def restart_postgres_and_wait(timeout=60):
+    result = command(COMPOSE + ["restart", "postgres"], timeout=timeout)
+    if result.returncode:
+        raise RuntimeError(result.stderr.strip())
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if command(COMPOSE + ["exec", "-T", "postgres", "pg_isready",
+                              "-U", "postgres", "-d", "analytics"]).returncode == 0:
+            return
+        time.sleep(0.5)
+    raise RuntimeError("postgres did not become ready again after restart")
 
 
 def wait_for(database, statement, expected, timeout=15):
@@ -325,8 +348,10 @@ def main():
         """)
         check("hook logs interception before routing to the control plane",
               "lake_subscription_sugar: intercepted" in (result.stdout + result.stderr), True)
-        check("CREATE SUBSCRIPTION reports that it started the workers",
-              "starting initial sync and the supervisor" in (result.stdout + result.stderr),
+        check("CREATE SUBSCRIPTION reports that it started initial sync and "
+              "recorded the supervisor's launch configuration",
+              "starting initial sync" in (result.stdout + result.stderr)
+              and "recorded launch configuration" in (result.stdout + result.stderr),
               True)
 
         subscription_id = int(value("analytics", f"""

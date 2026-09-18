@@ -7,12 +7,22 @@
  * - CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg') is claimed by
  *   this hook. The source system identity is discovered for real, via
  *   dblink against the statement's own CONNECTION string, then handed to
- *   lake_replication.create_subscription(). It then spawns
- *   lake-replication-initial-sync and lake-replication-supervisor as
- *   detached OS processes (fork+execve, never a shell) so replication
- *   actually starts, the way native CREATE SUBSCRIPTION would spawn its
- *   own walreceiver/apply worker -- this project just does it with its own
- *   binaries instead of core's.
+ *   lake_replication.create_subscription(). lake-replication-initial-sync
+ *   is spawned directly, as a detached one-shot OS process (fork+execve,
+ *   never a shell) -- see spawn_initial_sync. The long-running supervisor
+ *   is not spawned directly at all: this statement only records the
+ *   subscription's launch configuration (record_worker_launch_config); a
+ *   separate, permanently-running launcher background worker
+ *   (lake_subscription_sugar_launcher_main, registered via
+ *   shared_preload_libraries -- see _PG_init) notices the new
+ *   configuration on its own and starts the supervisor as a genuine
+ *   PostgreSQL background worker it supervises directly, the way native
+ *   CREATE SUBSCRIPTION would spawn its own walreceiver/apply worker under
+ *   the postmaster -- this project just does it with its own binary
+ *   instead of core's, and by way of one extra indirection (the launcher)
+ *   rather than the postmaster spawning it straight from this statement.
+ *   See the big comment above lake_subscription_sugar_launcher_main for
+ *   why that indirection is required, not just convenient.
  * - ALTER/DROP SUBSCRIPTION are claimed only when `subname` matches a
  *   subscription this hook already created (looked up by name in
  *   lake_replication.subscriptions); anything else falls through
@@ -20,9 +30,11 @@
  *   the source-side replication slot for real (via a second dblink
  *   connection, using conninfo recorded at CREATE time in this
  *   extension's own lake_subscription_sugar.pending_cleanup table -- see
- *   drop_source_slot), signals the running supervisor to stop
- *   cooperatively, then SIGTERMs its pid only as a backstop, and tears
- *   down the control-plane rows.
+ *   drop_source_slot), deletes the worker_launch_config row (the
+ *   launcher's authoritative signal to stop and permanently retire that
+ *   supervisor), and tears down the control-plane rows -- all as one fast
+ *   statement that never waits for the actual OS process to exit; the
+ *   launcher does that asynchronously.
  *
  * LAKE_SOURCE_ADDRESS is the real host:port the CONNECTION string's own
  * dblink connection used to reach the source (inet_server_addr()/
@@ -36,12 +48,34 @@
  * standard_ProcessUtility (or the next hook) unmodified.
  *
  * ALTER SUBSCRIPTION ... ENABLE restarts a stopped subscription by
- * respawning only the supervisor (not initial sync, which already ran
- * once and is not safe to blindly re-run against a table that may
- * already be streaming) -- see handle_enable_subscription. It requires
- * this extension's own pending_cleanup row from CREATE time to reconnect
- * to the source and rediscover its address; a subscription created
- * before that tracking existed cannot be restarted this way.
+ * flipping worker_launch_config.desired_state back to 'running' -- see
+ * handle_enable_subscription. The launcher notices and registers a fresh
+ * supervisor (initial sync is never re-run here regardless, since it
+ * already ran once and is not safe to blindly re-run against a table that
+ * may already be streaming). No dblink round trip needed: source_address
+ * and everything else the supervisor needs were already recorded
+ * durably in worker_launch_config at CREATE SUBSCRIPTION time. A
+ * subscription created before that tracking existed cannot be restarted
+ * this way.
+ *
+ * Requiring shared_preload_libraries and a configured
+ * lake_subscription_sugar.database_name (see _PG_init) is a real
+ * departure from how this extension used to work (CREATE EXTENSION plus
+ * session_preload_libraries, no server restart, no extra GUC): a
+ * BackgroundWorkerHandle from RegisterDynamicBackgroundWorker is only
+ * valid inside the backend that obtained it, so nothing can reconstruct
+ * one later, in a different session, to stop a worker it did not start
+ * itself. The only way to manage a worker across the CREATE SUBSCRIPTION
+ * session that starts it and a much later, different DROP SUBSCRIPTION
+ * session is a single process that outlives both and keeps every handle
+ * in its own memory for as long as it might need one -- hence the
+ * launcher, and hence it has to be registered once, at postmaster
+ * startup, the only time PostgreSQL allows a *static* background worker
+ * registration (RegisterBackgroundWorker, as opposed to the *dynamic*
+ * RegisterDynamicBackgroundWorker the launcher itself uses for each
+ * supervisor). Without lake_subscription_sugar.database_name set, CREATE
+ * SUBSCRIPTION still records launch configuration correctly, but no
+ * launcher exists to ever act on it -- see the GUC's own description.
  *
  * CREATE SUBSCRIPTION naming more than one publication is rejected with a
  * clear error rather than silently applying only the first: this
@@ -63,6 +97,43 @@
  * Known limitations, in addition to the ones noted inline below:
  * - the worker binaries are expected at /usr/local/bin/lake-replication-*;
  *   nothing here builds or installs them (see tests/subscription_sugar/probe.py).
+ *
+ * Authorization: every statement this hook claims (CREATE/ALTER/DROP
+ * SUBSCRIPTION ... WITH (lake_target = 'iceberg')) requires the calling
+ * role to be superuser or a member of the lake_replication_admin role this
+ * extension's install script creates -- see RequireAuthorized. Without
+ * this, any role that could load the extension and issue the statement
+ * would get dblink-based access to whatever source the CONNECTION string
+ * names, and the ability to spawn OS processes as this backend's user, at
+ * whatever privilege the SPI calls below run with (invoker rights: this
+ * hook runs inline in the calling backend, not as SECURITY DEFINER).
+ *
+ * Credential handling: the CONNECTION string is stored verbatim (see
+ * record_pending_cleanup) so DROP SUBSCRIPTION can later drop the
+ * source-side slot; if it embeds a password, that password is stored too,
+ * the same tradeoff PostgreSQL's own pg_subscription.subconninfo makes.
+ * pending_cleanup carries no PUBLIC grants (see the extension's --1.0.sql),
+ * matching how subconninfo is protected.
+ *
+ * A superuser caller can omit the password from CONNECTION entirely and
+ * let dblink's underlying libpq connection resolve it from a ~/.pgpass
+ * file (or PGPASSFILE) or a connection service file belonging to the OS
+ * user running this PostgreSQL instance -- dblink imposes no restriction
+ * on a superuser caller. A non-superuser lake_replication_admin member
+ * cannot do this: dblink's own dblink_security_check refuses any
+ * non-superuser connection unless PQconnectionUsedPassword() reports the
+ * server actually verified a password (or GSSAPI-delegated credentials)
+ * during the handshake -- a password merely present in the string is not
+ * enough, and "trust"/"peer" auth on the source never satisfies this
+ * check no matter what the string contains. In practice this means a
+ * non-superuser can only use this hook against a source that requires
+ * real password authentication (e.g. SCRAM, see Milestone 22), and the
+ * password for it necessarily ends up stored in pending_cleanup.
+ *
+ * Worker stdout/stderr go to lake_subscription_sugar.log_directory
+ * (default /tmp), one file per subscription per worker; SUSET so an
+ * unprivileged session cannot redirect a spawned worker's log output
+ * before calling CREATE SUBSCRIPTION.
  */
 #include "postgres.h"
 #include "access/xact.h"
@@ -74,7 +145,15 @@
 #include "commands/defrem.h"
 #include "executor/spi.h"
 #include "utils/builtins.h"
+#include "utils/acl.h"
+#include "utils/guc.h"
+#include "utils/hsearch.h"
+#include "utils/memutils.h"
+#include "miscadmin.h"
 #include "lib/stringinfo.h"
+#include "postmaster/bgworker.h"
+#include "storage/latch.h"
+#include "storage/ipc.h"
 
 #include <fcntl.h>
 #include <signal.h>
@@ -85,8 +164,74 @@
 PG_MODULE_MAGIC;
 
 #define WORKER_BIN_DIR "/usr/local/bin"
+#define ADMIN_ROLE_NAME "lake_replication_admin"
 
 static ProcessUtility_hook_type prev_ProcessUtility = NULL;
+static char *LogDirectory = "/tmp";
+static char *LauncherDatabaseName = NULL;
+static int	LauncherNaptimeMs = 1000;
+
+/*
+ * TrackedWorker maps a subscription_id to the BackgroundWorkerHandle the
+ * launcher itself obtained by registering that subscription's supervisor.
+ * A BackgroundWorkerHandle is only meaningful to the backend that created
+ * it (see the launcher-vs-handle-lifetime note above
+ * lake_subscription_sugar_launcher_main) -- this table, kept in the
+ * launcher's own long-lived memory, is what makes DROP/ALTER SUBSCRIPTION
+ * from an entirely different, later session able to stop a supervisor the
+ * launcher started possibly hours earlier: that later session never touches
+ * a handle at all, it only ever writes a row to worker_launch_config for
+ * the launcher to notice.
+ */
+typedef struct TrackedWorker
+{
+	int64		subscriptionId;
+	BackgroundWorkerHandle *handle;
+	bool		seenThisCycle;
+}			TrackedWorker;
+
+static volatile sig_atomic_t LauncherGotSigterm = false;
+
+static void
+LauncherSigtermHandler(SIGNAL_ARGS)
+{
+	LauncherGotSigterm = true;
+	SetLatch(MyLatch);
+}
+
+/*
+ * bgw_function_name entry points, looked up by dlsym() in a freshly forked
+ * postmaster child that has not run this file's other code at all -- both
+ * need external linkage and PGDLLEXPORT despite this translation unit
+ * otherwise building with -fvisibility=hidden, and a prototype here keeps
+ * -Wmissing-prototypes happy since neither is declared in any header.
+ */
+extern PGDLLEXPORT void lake_subscription_sugar_launcher_main(Datum main_arg);
+extern PGDLLEXPORT void lake_subscription_sugar_worker_main(Datum main_arg);
+
+/*
+ * RequireAuthorized raises an error unless the current role is superuser
+ * or a member of ADMIN_ROLE_NAME. Called at the top of every CREATE/ALTER/
+ * DROP SUBSCRIPTION handler this hook claims, before anything else (dblink
+ * connection, SPI writes, or spawning a process) happens.
+ */
+static void
+RequireAuthorized(const char *action)
+{
+	Oid			adminRoleOid;
+
+	if (superuser())
+		return;
+
+	adminRoleOid = get_role_oid(ADMIN_ROLE_NAME, true);
+	if (OidIsValid(adminRoleOid) && is_member_of_role(GetUserId(), adminRoleOid))
+		return;
+
+	ereport(ERROR,
+			(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
+			 errmsg("must be superuser or a member of \"%s\" to %s",
+					ADMIN_ROLE_NAME, action)));
+}
 
 static char *
 get_string_option(List *options, const char *name)
@@ -292,16 +437,414 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	envp[i++] = pstrdup("LAKE_USER=postgres");
 
 	/*
-	 * Keep each supervisor cycle short so a stop request (checked only
-	 * between cycles) is noticed quickly -- DROP SUBSCRIPTION waits for a
-	 * clean exit before it dares fall back to a signal (see
-	 * handle_drop_subscription for why a signal is dangerous here).
+	 * Keep each supervisor cycle short so a cooperative stop request
+	 * (checked only between cycles) is noticed quickly and the supervisor
+	 * has a chance to call report_service_stopped() and exit(0) cleanly
+	 * before the launcher's own TerminateBackgroundWorker backstop (see
+	 * lake_subscription_sugar_launcher_main) arrives.
 	 */
 	envp[i++] = pstrdup("LAKE_RECEIVER_IDLE_TIMEOUT_MS=200");
 	envp[i++] = pstrdup("LAKE_SUPERVISOR_POLL_MS=100");
 	envp[i++] = NULL;
 	Assert(i == 15);
 	return envp;
+}
+
+/*
+ * lake_subscription_sugar_worker_main is the bgw_function_name every
+ * per-subscription supervisor background worker runs. Deliberately thin:
+ * connect to the database named in bgw_extra, look up this subscription's
+ * non-secret launch configuration (recorded once at CREATE SUBSCRIPTION
+ * time -- see worker_launch_config in --1.0.sql), then execve() into the
+ * real lake-replication-supervisor binary, replacing this process's image
+ * entirely. From that point on the postmaster is supervising the real
+ * supervisor binary directly, under this same PID: bgw_restart_time (set
+ * by the launcher at registration) makes the postmaster restart it
+ * automatically if it ever exits non-zero or dies by signal, with no code
+ * here or in the launcher needing to notice or react.
+ *
+ * No SPI writes happen here, and a lookup failure just logs and exits --
+ * this process is a background worker the postmaster itself launched, so
+ * an uncaught ERROR here is reported as this worker's own crash (and
+ * triggers the same automatic restart as any other failure) rather than
+ * being surfaced to any waiting SQL session.
+ */
+void
+lake_subscription_sugar_worker_main(Datum main_arg)
+{
+	int64		subscriptionId = DatumGetInt64(main_arg);
+	char		dbname[BGW_EXTRALEN];
+	char	   *slotName = NULL;
+	char	   *publicationName = NULL;
+	char	   *sourceDatabase = NULL;
+	char	   *destinationDatabase = NULL;
+	char	   *sourceAddress = NULL;
+	char	   *destinationAddress = NULL;
+	char	   *destinationSchema = NULL;
+	char	  **envp;
+	char	   *supervisorPath;
+	char	   *supervisorArgv[2];
+	char	   *supervisorLog;
+	int			logFd;
+	int			fd;
+
+	BackgroundWorkerUnblockSignals();
+
+	memcpy(dbname, MyBgworkerEntry->bgw_extra, BGW_EXTRALEN);
+	dbname[BGW_EXTRALEN - 1] = '\0';
+
+	BackgroundWorkerInitializeConnection(dbname, NULL, 0);
+
+	StartTransactionCommand();
+	SPI_connect();
+	PushActiveSnapshot(GetTransactionSnapshot());
+
+	if (SPI_execute(psprintf(
+			"SELECT slot_name, publication_name, source_database, "
+			"destination_database, source_address, destination_address, "
+			"destination_schema FROM lake_subscription_sugar.worker_launch_config "
+			"WHERE subscription_id = %lld", (long long) subscriptionId),
+			true, 1) == SPI_OK_SELECT && SPI_processed == 1)
+	{
+		/* Copied into TopMemoryContext: SPI_finish() below frees SPI's own context. */
+		slotName = MemoryContextStrdup(TopMemoryContext,
+			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1));
+		publicationName = MemoryContextStrdup(TopMemoryContext,
+			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2));
+		sourceDatabase = MemoryContextStrdup(TopMemoryContext,
+			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 3));
+		destinationDatabase = MemoryContextStrdup(TopMemoryContext,
+			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 4));
+		sourceAddress = MemoryContextStrdup(TopMemoryContext,
+			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 5));
+		destinationAddress = MemoryContextStrdup(TopMemoryContext,
+			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 6));
+		destinationSchema = MemoryContextStrdup(TopMemoryContext,
+			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 7));
+	}
+
+	SPI_finish();
+	PopActiveSnapshot();
+	CommitTransactionCommand();
+
+	if (slotName == NULL)
+	{
+		/*
+		 * proc_exit(0), deliberately, not 1 -- see the fork/waitpid block
+		 * below for why this bgworker must never report a non-zero exit
+		 * to Postgres for an ordinary, expected condition.
+		 */
+		elog(WARNING, "lake_subscription_sugar worker: no launch configuration "
+			 "for subscription_id=%lld; exiting", (long long) subscriptionId);
+		proc_exit(0);
+	}
+
+	envp = build_worker_env(subscriptionId, slotName, publicationName,
+							sourceDatabase, destinationDatabase, sourceAddress,
+							destinationAddress, destinationSchema);
+	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
+	supervisorArgv[0] = supervisorPath;
+	supervisorArgv[1] = NULL;
+	supervisorLog = psprintf("%s/lake_sugar_%lld_supervisor.log",
+							 LogDirectory, (long long) subscriptionId);
+
+	/*
+	 * Fork a child to exec the real supervisor binary into, rather than
+	 * execve()-ing it directly into this bgworker process, and always
+	 * report a clean exit(0) to Postgres ourselves afterward no matter
+	 * what the child actually did. This is not optional hygiene: exec()
+	 * would make the supervisor binary's own raw exit status become this
+	 * background worker's exit status as far as the postmaster is
+	 * concerned, and PostgreSQL treats ANY non-zero (or signaled) bgworker
+	 * exit as a potential shared-memory-corrupting crash -- the same
+	 * response as a real segfault: it terminates every other backend and
+	 * reinitializes shared memory. lake-replication-supervisor calls
+	 * `std::process::exit(1)` on perfectly ordinary conditions (e.g. losing
+	 * a duplicate-supervisor race after its predecessor was killed -- see
+	 * Milestone 13's fencing), so exec()-ing it directly was observed to
+	 * take down the entire cluster on a single killed worker, not just
+	 * that one subscription. The launcher, not Postgres's own
+	 * bgw_restart_time, is what decides whether and when to start a
+	 * replacement after this process exits -- see the liveness check in
+	 * lake_subscription_sugar_launcher_main -- which is also why the
+	 * supervisor's own dynamic registration uses BGW_NEVER_RESTART: letting
+	 * Postgres additionally restart based on exit status would be redundant
+	 * with, and could race, the launcher's own decision.
+	 */
+	{
+		pid_t		child = fork();
+
+		if (child < 0)
+		{
+			elog(WARNING, "lake_subscription_sugar worker: fork failed: %m");
+			proc_exit(0);
+		}
+
+		if (child == 0)
+		{
+			/*
+			 * Between fork() and execve() only async-signal-safe calls are
+			 * allowed -- no more SPI, no more elog -- matching the same
+			 * discipline spawn_detached already uses.
+			 */
+			for (fd = 3; fd < 256; fd++)
+				close(fd);
+
+			logFd = open(supervisorLog, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			if (logFd >= 0)
+			{
+				dup2(logFd, STDOUT_FILENO);
+				dup2(logFd, STDERR_FILENO);
+				close(logFd);
+			}
+
+			execve(supervisorPath, supervisorArgv, envp);
+			_exit(127);
+		}
+
+		{
+			int			status;
+
+			if (waitpid(child, &status, 0) < 0)
+				elog(WARNING, "lake_subscription_sugar worker: waitpid failed: %m");
+			else if (WIFSIGNALED(status))
+				elog(WARNING, "lake_subscription_sugar worker: supervisor for "
+					 "subscription_id=%lld terminated by signal %d",
+					 (long long) subscriptionId, WTERMSIG(status));
+			else if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+				elog(WARNING, "lake_subscription_sugar worker: supervisor for "
+					 "subscription_id=%lld exited with status %d",
+					 (long long) subscriptionId, WEXITSTATUS(status));
+		}
+	}
+
+	proc_exit(0);
+}
+
+/*
+ * lake_subscription_sugar_launcher_main is the single, long-lived
+ * background worker registered via shared_preload_libraries (see
+ * _PG_init) that owns every dynamic per-subscription supervisor worker
+ * this extension starts. It is the only thing in this extension that ever
+ * calls RegisterDynamicBackgroundWorker or TerminateBackgroundWorker --
+ * see the TrackedWorker comment for why that has to be true: a
+ * BackgroundWorkerHandle is only valid inside the backend that obtained
+ * it, so managing a worker across the CREATE SUBSCRIPTION session that
+ * started it and a much later, entirely different DROP SUBSCRIPTION
+ * session requires exactly one process that outlives both and remembers
+ * every handle for as long as it might need to stop one.
+ *
+ * Each cycle: read every row of worker_launch_config in the configured
+ * database, start a fresh supervisor for any row not yet tracked with
+ * desired_state = 'running', and TerminateBackgroundWorker anything
+ * tracked whose row is now gone or has desired_state = 'stopped'. Sleeps
+ * for lake_subscription_sugar.launcher_naptime_ms between cycles.
+ */
+void
+lake_subscription_sugar_launcher_main(Datum main_arg)
+{
+	HASHCTL		hashCtl;
+	HTAB	   *tracked;
+
+	pqsignal(SIGTERM, LauncherSigtermHandler);
+	BackgroundWorkerUnblockSignals();
+
+	if (LauncherDatabaseName == NULL || LauncherDatabaseName[0] == '\0')
+	{
+		ereport(LOG,
+				(errmsg("lake_subscription_sugar launcher: "
+						"lake_subscription_sugar.database_name is not set; "
+						"exiting without managing any workers")));
+		proc_exit(0);
+	}
+
+	BackgroundWorkerInitializeConnection(LauncherDatabaseName, NULL, 0);
+
+	memset(&hashCtl, 0, sizeof(hashCtl));
+	hashCtl.keysize = sizeof(int64);
+	hashCtl.entrysize = sizeof(TrackedWorker);
+	tracked = hash_create("lake_subscription_sugar tracked workers", 64,
+						  &hashCtl, HASH_ELEM | HASH_BLOBS);
+
+	ereport(LOG,
+			(errmsg("lake_subscription_sugar launcher: watching database \"%s\"",
+					LauncherDatabaseName)));
+
+	while (!LauncherGotSigterm)
+	{
+		PG_TRY();
+		{
+			HASH_SEQ_STATUS seqStatus;
+			TrackedWorker *entry;
+			int			ret;
+			uint64		row;
+
+			/* Reset the seen marker; anything still false after this cycle's
+			 * scan below no longer has a worker_launch_config row at all. */
+			hash_seq_init(&seqStatus, tracked);
+			while ((entry = (TrackedWorker *) hash_seq_search(&seqStatus)) != NULL)
+				entry->seenThisCycle = false;
+
+			StartTransactionCommand();
+			SPI_connect();
+			PushActiveSnapshot(GetTransactionSnapshot());
+
+			ret = SPI_execute(
+				"SELECT subscription_id, destination_database, desired_state "
+				"FROM lake_subscription_sugar.worker_launch_config", true, 0);
+
+			if (ret == SPI_OK_SELECT)
+			{
+				for (row = 0; row < SPI_processed; row++)
+				{
+					bool		isnull;
+					int64		subscriptionId = DatumGetInt64(
+						SPI_getbinval(SPI_tuptable->vals[row], SPI_tuptable->tupdesc,
+									 1, &isnull));
+					char	   *destinationDatabase = SPI_getvalue(
+						SPI_tuptable->vals[row], SPI_tuptable->tupdesc, 2);
+					char	   *desiredState = SPI_getvalue(
+						SPI_tuptable->vals[row], SPI_tuptable->tupdesc, 3);
+					bool		found;
+
+					entry = (TrackedWorker *) hash_search(tracked, &subscriptionId,
+														  HASH_FIND, &found);
+
+					if (found)
+					{
+						pid_t		workerPid;
+						BgwHandleStatus liveness = GetBackgroundWorkerPid(
+							entry->handle, &workerPid);
+
+						/*
+						 * BGWH_STOPPED means the worker process is gone --
+						 * either it crashed or (see
+						 * lake_subscription_sugar_worker_main) it always
+						 * exits cleanly regardless, by design, precisely so
+						 * that decision belongs to this launcher and not to
+						 * Postgres's own bgw_restart_time. Forget the stale
+						 * handle so the branch below registers a fresh one
+						 * this same cycle if still wanted.
+						 */
+						if (liveness == BGWH_STOPPED)
+						{
+							hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+							found = false;
+						}
+					}
+
+					if (strcmp(desiredState, "running") == 0)
+					{
+						if (found)
+							entry->seenThisCycle = true;
+						else
+						{
+							BackgroundWorker worker;
+							BackgroundWorkerHandle *handle;
+
+							memset(&worker, 0, sizeof(worker));
+							snprintf(worker.bgw_name, BGW_MAXLEN,
+									"lake_subscription_sugar supervisor %lld",
+									(long long) subscriptionId);
+							snprintf(worker.bgw_type, BGW_MAXLEN,
+									"lake_subscription_sugar supervisor");
+							worker.bgw_flags = BGWORKER_SHMEM_ACCESS |
+								BGWORKER_BACKEND_DATABASE_CONNECTION;
+							worker.bgw_start_time = BgWorkerStart_RecoveryFinished;
+
+							/*
+							 * Never Postgres's own restart: this launcher's
+							 * own liveness check above is what restarts a
+							 * dead supervisor, every launcher_naptime_ms --
+							 * see the fork/waitpid comment in
+							 * lake_subscription_sugar_worker_main for why
+							 * bgw_restart_time must not also be in play here.
+							 */
+							worker.bgw_restart_time = BGW_NEVER_RESTART;
+							snprintf(worker.bgw_library_name, BGW_MAXLEN,
+									"lake_subscription_sugar");
+							snprintf(worker.bgw_function_name, BGW_MAXLEN,
+									"lake_subscription_sugar_worker_main");
+							worker.bgw_main_arg = Int64GetDatum(subscriptionId);
+							strlcpy(worker.bgw_extra, destinationDatabase,
+									BGW_EXTRALEN);
+							worker.bgw_notify_pid = 0;
+
+							if (RegisterDynamicBackgroundWorker(&worker, &handle))
+							{
+								entry = (TrackedWorker *) hash_search(
+									tracked, &subscriptionId, HASH_ENTER, NULL);
+								entry->subscriptionId = subscriptionId;
+								entry->handle = handle;
+								entry->seenThisCycle = true;
+								ereport(LOG,
+										(errmsg("lake_subscription_sugar launcher: "
+												"started supervisor for "
+												"subscription_id=%lld",
+												(long long) subscriptionId)));
+							}
+							else
+								ereport(WARNING,
+										(errmsg("lake_subscription_sugar launcher: "
+												"no free background worker slot for "
+												"subscription_id=%lld (max_worker_processes "
+												"too low?)", (long long) subscriptionId)));
+						}
+					}
+					else if (found)
+					{
+						TerminateBackgroundWorker(entry->handle);
+						hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+						ereport(LOG,
+								(errmsg("lake_subscription_sugar launcher: stopped "
+										"supervisor for subscription_id=%lld "
+										"(desired_state = stopped)",
+										(long long) subscriptionId)));
+					}
+				}
+			}
+
+			SPI_finish();
+			PopActiveSnapshot();
+			CommitTransactionCommand();
+
+			/* Sweep anything not seen this cycle: its row was dropped outright. */
+			hash_seq_init(&seqStatus, tracked);
+			while ((entry = (TrackedWorker *) hash_seq_search(&seqStatus)) != NULL)
+			{
+				if (!entry->seenThisCycle)
+				{
+					int64		subscriptionId = entry->subscriptionId;
+
+					TerminateBackgroundWorker(entry->handle);
+					hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+					ereport(LOG,
+							(errmsg("lake_subscription_sugar launcher: stopped "
+									"supervisor for subscription_id=%lld "
+									"(worker_launch_config row is gone)",
+									(long long) subscriptionId)));
+				}
+			}
+		}
+		PG_CATCH();
+		{
+			ErrorData  *edata = CopyErrorData();
+
+			FlushErrorState();
+			AbortCurrentTransaction();
+			ereport(WARNING,
+					(errmsg("lake_subscription_sugar launcher: cycle failed: %s",
+							edata->message)));
+			FreeErrorData(edata);
+		}
+		PG_END_TRY();
+
+		(void) WaitLatch(MyLatch, WL_LATCH_SET | WL_TIMEOUT | WL_EXIT_ON_PM_DEATH,
+						 LauncherNaptimeMs, 0);
+		ResetLatch(MyLatch);
+	}
+
+	proc_exit(0);
 }
 
 /*
@@ -359,26 +902,62 @@ drop_source_slot(int64 subscriptionId)
 
 	if (conninfo != NULL && slotName != NULL)
 	{
-		{
-			char	   *slotLiteral = quote_literal_cstr(slotName);
-			char	   *innerQuery = psprintf(
-				"DO $lake_sugar_drop_slot$ BEGIN "
-				"IF EXISTS (SELECT 1 FROM pg_replication_slots WHERE slot_name = %s) "
-				"THEN PERFORM pg_drop_replication_slot(%s); END IF; "
-				"END $lake_sugar_drop_slot$",
-				slotLiteral, slotLiteral);
-			StringInfoData buf;
+		char	   *slotLiteral = quote_literal_cstr(slotName);
+		char	   *innerQuery = psprintf(
+			"DO $lake_sugar_drop_slot$ BEGIN "
+			"IF EXISTS (SELECT 1 FROM pg_replication_slots WHERE slot_name = %s) "
+			"THEN PERFORM pg_drop_replication_slot(%s); END IF; "
+			"END $lake_sugar_drop_slot$",
+			slotLiteral, slotLiteral);
+		StringInfoData buf;
+		MemoryContext oldContext = CurrentMemoryContext;
+		bool		dropped = false;
+		int			attempt;
 
-			initStringInfo(&buf);
-			appendStringInfo(&buf, "SELECT dblink_exec(%s, %s)",
-							 quote_literal_cstr(conninfo),
-							 quote_literal_cstr(innerQuery));
-			if (SPI_execute(buf.data, false, 0) < 0)
-				ereport(WARNING,
-						(errmsg("lake_subscription_sugar: could not drop "
-								"source-side slot \"%s\"; it is left behind",
-								slotName)));
+		initStringInfo(&buf);
+		appendStringInfo(&buf, "SELECT dblink_exec(%s, %s)",
+						 quote_literal_cstr(conninfo),
+						 quote_literal_cstr(innerQuery));
+
+		/*
+		 * The receiver may still hold this slot open for up to a couple of
+		 * hundred ms after the cooperative stop request above: it only
+		 * notices desired_state on its own poll interval
+		 * (LAKE_SUPERVISOR_POLL_MS / LAKE_RECEIVER_IDLE_TIMEOUT_MS, see
+		 * build_worker_env), and handle_drop_subscription no longer waits
+		 * for the supervisor process to actually exit before reaching here
+		 * (see the comment there). pg_drop_replication_slot raises a real
+		 * ERROR while the slot is still active, not a mere warning, so
+		 * retrying needs a subtransaction (the standard PL/pgSQL-EXCEPTION-
+		 * style pattern) to survive that ERROR without aborting the whole
+		 * DROP SUBSCRIPTION statement.
+		 */
+		for (attempt = 0; attempt < 20 && !dropped; attempt++)
+		{
+			if (attempt > 0)
+				pg_usleep(300000); /* 300ms; up to ~6s total */
+
+			BeginInternalSubTransaction("lake_subscription_sugar_drop_slot");
+			PG_TRY();
+			{
+				SPI_execute(buf.data, false, 0);
+				ReleaseCurrentSubTransaction();
+				dropped = true;
+			}
+			PG_CATCH();
+			{
+				RollbackAndReleaseCurrentSubTransaction();
+				FlushErrorState();
+			}
+			PG_END_TRY();
+			MemoryContextSwitchTo(oldContext);
 		}
+
+		if (!dropped)
+			ereport(WARNING,
+					(errmsg("lake_subscription_sugar: could not drop "
+							"source-side slot \"%s\" after retrying for ~6s; "
+							"it is left behind", slotName)));
 	}
 
 	SPI_execute(psprintf(
@@ -406,23 +985,21 @@ discover_destination(char **outDatabase, char **outAddress)
 }
 
 /*
- * spawn_workers fire-and-forgets lake-replication-supervisor (and, when
- * `spawnInitialSync`, lake-replication-initial-sync too) as detached
- * processes for `subscriptionId`. Shared by CREATE (which always needs
- * initial sync) and ALTER ... ENABLE (which only needs to restart the
- * supervisor, since initial sync already ran once at CREATE time).
+ * spawn_initial_sync fire-and-forgets lake-replication-initial-sync as a
+ * detached, one-shot process for `subscriptionId`. Only ever called once,
+ * at CREATE SUBSCRIPTION time: unlike the long-running supervisor (see
+ * record_worker_launch_config, which is what actually starts that one, by
+ * way of the launcher), a one-shot initial copy is not safe to blindly
+ * re-run against a table that may already be streaming, so it stays on
+ * this simpler detached-fork path rather than being made restartable.
  */
 static void
-spawn_workers(int64 subscriptionId, const char *slotName,
-			 const char *publicationName, const char *sourceDatabase,
-			 const char *destinationDatabase, const char *sourceAddress,
-			 const char *destinationAddress, const char *destinationSchema,
-			 bool spawnInitialSync)
+spawn_initial_sync(int64 subscriptionId, const char *slotName,
+				   const char *publicationName, const char *sourceDatabase,
+				   const char *destinationDatabase, const char *sourceAddress,
+				   const char *destinationAddress, const char *destinationSchema)
 {
 	char	  **envp;
-	char	   *supervisorPath;
-	char	   *supervisorArgv[2];
-	char	   *supervisorLog;
 	char	   *initialSyncPath;
 	char	   *initialSyncArgv[2];
 	char	   *initialSyncLog;
@@ -430,44 +1007,64 @@ spawn_workers(int64 subscriptionId, const char *slotName,
 	envp = build_worker_env(subscriptionId, slotName, publicationName,
 							sourceDatabase, destinationDatabase,
 							sourceAddress, destinationAddress, destinationSchema);
-	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
-	supervisorArgv[0] = supervisorPath;
-	supervisorArgv[1] = NULL;
-	supervisorLog = psprintf("/tmp/lake_sugar_%lld_supervisor.log",
-							 (long long) subscriptionId);
+	initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
+	initialSyncArgv[0] = initialSyncPath;
+	initialSyncArgv[1] = NULL;
+	initialSyncLog = psprintf("%s/lake_sugar_%lld_initial_sync.log",
+							  LogDirectory, (long long) subscriptionId);
 
-	if (spawnInitialSync)
-	{
-		initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
-		initialSyncArgv[0] = initialSyncPath;
-		initialSyncArgv[1] = NULL;
-		initialSyncLog = psprintf("/tmp/lake_sugar_%lld_initial_sync.log",
-								  (long long) subscriptionId);
+	ereport(NOTICE,
+			(errmsg("lake_subscription_sugar: starting initial sync for "
+					"subscription_id=%lld (log: %s)",
+					(long long) subscriptionId, initialSyncLog)));
 
-		ereport(NOTICE,
-				(errmsg("lake_subscription_sugar: starting initial sync and the "
-						"supervisor for subscription_id=%lld (logs: %s, %s)",
-						(long long) subscriptionId, initialSyncLog, supervisorLog)));
+	/*
+	 * Fire-and-forget: the supervisor the launcher starts (see
+	 * record_worker_launch_config) already reports "paused" and keeps
+	 * waiting for as long as the subscription's state is not yet
+	 * 'streaming', so it running concurrently with initial sync (rather
+	 * than waiting for initial sync to finish first) mirrors how native
+	 * logical replication's tablesync and apply workers overlap.
+	 */
+	spawn_detached(initialSyncPath, initialSyncArgv, envp, initialSyncLog);
+}
 
-		/*
-		 * Fire-and-forget both: the supervisor's own poll loop already
-		 * reports "paused" and keeps waiting for as long as the
-		 * subscription's state is not yet 'streaming', so starting it
-		 * concurrently with initial sync (rather than waiting for initial
-		 * sync to finish first) mirrors how native logical replication's
-		 * tablesync and apply workers overlap.
-		 */
-		spawn_detached(initialSyncPath, initialSyncArgv, envp, initialSyncLog);
-	}
-	else
-	{
-		ereport(NOTICE,
-				(errmsg("lake_subscription_sugar: restarting the supervisor for "
-						"subscription_id=%lld (log: %s)",
-						(long long) subscriptionId, supervisorLog)));
-	}
-
-	spawn_detached(supervisorPath, supervisorArgv, envp, supervisorLog);
+/*
+ * record_worker_launch_config writes (or, for ALTER ... ENABLE,
+ * overwrites) this subscription's non-secret launch configuration into
+ * lake_subscription_sugar.worker_launch_config with desired_state =
+ * 'running'. This is the only thing that actually starts the supervisor:
+ * the launcher background worker (lake_subscription_sugar_launcher_main)
+ * polls this table and reacts, typically within
+ * lake_subscription_sugar.launcher_naptime_ms. Must be called with SPI
+ * already connected.
+ */
+static void
+record_worker_launch_config(int64 subscriptionId, const char *slotName,
+							const char *publicationName, const char *sourceDatabase,
+							const char *destinationDatabase, const char *sourceAddress,
+							const char *destinationAddress, const char *destinationSchema)
+{
+	SPI_execute(psprintf(
+		"INSERT INTO lake_subscription_sugar.worker_launch_config "
+		"(subscription_id, slot_name, publication_name, source_database, "
+		"destination_database, source_address, destination_address, "
+		"destination_schema, desired_state) "
+		"VALUES (%lld, %s, %s, %s, %s, %s, %s, %s, 'running') "
+		"ON CONFLICT (subscription_id) DO UPDATE SET "
+		"slot_name = EXCLUDED.slot_name, "
+		"publication_name = EXCLUDED.publication_name, "
+		"source_database = EXCLUDED.source_database, "
+		"destination_database = EXCLUDED.destination_database, "
+		"source_address = EXCLUDED.source_address, "
+		"destination_address = EXCLUDED.destination_address, "
+		"destination_schema = EXCLUDED.destination_schema, "
+		"desired_state = 'running'",
+		(long long) subscriptionId,
+		quote_literal_cstr(slotName), quote_literal_cstr(publicationName),
+		quote_literal_cstr(sourceDatabase), quote_literal_cstr(destinationDatabase),
+		quote_literal_cstr(sourceAddress), quote_literal_cstr(destinationAddress),
+		quote_literal_cstr(destinationSchema)), false, 0);
 }
 
 static void
@@ -485,6 +1082,8 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	char	   *destinationSchema;
 	char	   *slotName;
 	int64		subscriptionId;
+
+	RequireAuthorized("CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')");
 
 	if (list_length(stmt->publication) != 1)
 		ereport(ERROR,
@@ -533,33 +1132,34 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	}
 
 	record_pending_cleanup(subscriptionId, stmt->conninfo, slotName);
+	record_worker_launch_config(subscriptionId, slotName, pubname, sourceDatabase,
+								destinationDatabase, sourceAddress, destinationAddress,
+								destinationSchema);
 
-	spawn_workers(subscriptionId, slotName, pubname, sourceDatabase,
-				 destinationDatabase, sourceAddress, destinationAddress,
-				 destinationSchema, true /* spawnInitialSync */ );
+	spawn_initial_sync(subscriptionId, slotName, pubname, sourceDatabase,
+					  destinationDatabase, sourceAddress, destinationAddress,
+					  destinationSchema);
+
+	ereport(NOTICE,
+			(errmsg("lake_subscription_sugar: recorded launch configuration for "
+					"subscription_id=%lld; the launcher will start its supervisor "
+					"within lake_subscription_sugar.launcher_naptime_ms",
+					(long long) subscriptionId)));
 
 	SPI_finish();
 }
 
 static void
-handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId,
-						 bool isTopLevel)
+handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId)
 {
 	StringInfoData buf;
-	pid_t		supervisorPid = -1;
+
+	RequireAuthorized("DROP SUBSCRIPTION");
 
 	ereport(NOTICE,
 			(errmsg("lake_subscription_sugar: intercepted DROP SUBSCRIPTION \"%s\"; "
 					"tearing down lake_replication control-plane state instead of "
 					"native apply", stmt->subname)));
-
-	/*
-	 * What follows commits a write partway through this statement (see
-	 * below), the same technique pg_lake's own VACUUM (ICEBERG) uses. That
-	 * is only safe as the sole statement in its own transaction, exactly
-	 * like VACUUM -- hence the same guard VACUUM uses.
-	 */
-	PreventInTransactionBlock(isTopLevel, "DROP SUBSCRIPTION");
 
 	if (!ActiveSnapshotSet())
 		PushActiveSnapshot(GetTransactionSnapshot());
@@ -567,69 +1167,27 @@ handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId,
 	SPI_connect();
 
 	/*
-	 * Ask the running supervisor to stop cooperatively (it polls
+	 * Ask the running supervisor to stop cooperatively first (it polls
 	 * desired_state and, on noticing 'stopped', calls
-	 * report_service_stopped() and exits cleanly -- exit(0), no signal).
-	 * This matters in this exact container: PostgreSQL runs as PID 1 here
-	 * (no separate init), so a detached grandchild that later dies BY
-	 * SIGNAL is reparented straight onto the postmaster, which logs it as
-	 * an "untracked child ... terminated by signal" and restarts the
-	 * entire cluster out of caution -- a clean exit(0) does not trigger
-	 * that. So the SIGTERM below is a last resort for a supervisor that
-	 * ignored the cooperative stop, not the normal path.
+	 * report_service_stopped() and exits cleanly -- exit(0), no signal,
+	 * which matters in a container where PostgreSQL runs as PID 1: a
+	 * process that later dies BY SIGNAL there is reparented straight onto
+	 * the postmaster, which can restart the entire cluster out of
+	 * caution). Deleting the worker_launch_config row below is the
+	 * authoritative stop signal, though, not this: the launcher
+	 * (lake_subscription_sugar_launcher_main) notices the row is gone
+	 * within its own next cycle and calls TerminateBackgroundWorker
+	 * regardless of whether the cooperative stop above finished in time.
+	 * Unlike the old fork/exec design, this statement never waits for the
+	 * worker process to actually exit -- the launcher does that
+	 * asynchronously, which is also why this no longer needs
+	 * PreventInTransactionBlock: there is no partial commit to protect.
 	 */
 	SPI_execute(psprintf("SELECT lake_replication.request_service_stop(%lld)",
 						  (long long) subscriptionId), false, 0);
-	if (SPI_execute(psprintf("SELECT supervisor_pid FROM lake_replication.service_status "
-							  "WHERE subscription_id = %lld", (long long) subscriptionId),
-					true, 1) == SPI_OK_SELECT && SPI_processed == 1)
-	{
-		bool		isnull;
-		Datum		value = SPI_getbinval(SPI_tuptable->vals[0], SPI_tuptable->tupdesc,
-											  1, &isnull);
-
-		if (!isnull)
-			supervisorPid = (pid_t) DatumGetInt64(value);
-	}
-	SPI_finish();
-
-	/*
-	 * Commit the stop request now, in its own transaction, so the
-	 * supervisor's separate connection can actually see desired_state =
-	 * 'stopped' -- it cannot while this statement's own transaction is
-	 * still open, no matter how long the poll loop below waits.
-	 */
-	PopActiveSnapshot();
-	CommitTransactionCommand();
-	StartTransactionCommand();
-	PushActiveSnapshot(GetTransactionSnapshot());
-
-	if (supervisorPid > 0)
-	{
-		int			waited;
-		bool		exited = false;
-
-		for (waited = 0; waited < 120; waited++)
-		{
-			/* kill(pid, 0) only checks existence; it never signals. */
-			if (kill(supervisorPid, 0) != 0)
-			{
-				exited = true;
-				break;
-			}
-			usleep(50000);		/* 50ms; up to 6s total */
-		}
-		if (!exited)
-		{
-			ereport(WARNING,
-					(errmsg("lake_subscription_sugar: supervisor pid %d did not "
-							"stop on its own within 6s; sending SIGTERM as a "
-							"last resort", (int) supervisorPid)));
-			kill(supervisorPid, SIGTERM);
-		}
-	}
-
-	SPI_connect();
+	SPI_execute(psprintf(
+		"DELETE FROM lake_subscription_sugar.worker_launch_config "
+		"WHERE subscription_id = %lld", (long long) subscriptionId), false, 0);
 
 	drop_source_slot(subscriptionId);
 
@@ -657,67 +1215,38 @@ handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId,
 
 /*
  * handle_enable_subscription restarts replication for a subscription that
- * was previously disabled: only the supervisor is respawned (not initial
- * sync, which already ran once at CREATE time and is not safe to blindly
- * re-run against a table that may already be streaming). Requires this
- * extension's own pending_cleanup row from CREATE time to reconnect to
- * the source and rediscover its address; a subscription created before
- * that tracking existed cannot be restarted this way.
+ * was previously disabled: flips worker_launch_config.desired_state back
+ * to 'running'. The launcher notices within its own next cycle and
+ * registers a fresh supervisor -- a genuinely new OS process, since
+ * ALTER ... DISABLE had the launcher TerminateBackgroundWorker the old
+ * one, which permanently retires that registration (see
+ * lake_subscription_sugar_launcher_main). No dblink round trip and no
+ * source rediscovery needed here any more: source_address and every other
+ * value the supervisor needs were already recorded durably in
+ * worker_launch_config at CREATE SUBSCRIPTION time, and initial sync is
+ * never re-run on ENABLE regardless, so nothing here depends on the
+ * source being reachable right now.
  */
 static void
 handle_enable_subscription(const char *subname, int64 subscriptionId)
 {
-	char	   *slotName;
-	char	   *publicationName;
-	char	   *conninfo;
-	char	   *systemIdentifier;
-	char	   *databaseOid;
-	char	   *timeline;
-	char	   *sourceDatabase;
-	char	   *sourceAddress;
-	char	   *destinationDatabase;
-	char	   *destinationAddress;
-
 	if (SPI_execute(psprintf(
-			"SELECT slot_name, array_to_string(publication_names, ',') "
-			"FROM lake_replication.subscriptions WHERE subscription_id = %lld",
-			(long long) subscriptionId), true, 1) != SPI_OK_SELECT || SPI_processed != 1)
-		elog(ERROR, "lake_subscription_sugar: could not look up subscription %lld",
-			 (long long) subscriptionId);
-	slotName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
-	publicationName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2);
-
-	if (SPI_execute(psprintf(
-			"SELECT source_conninfo FROM lake_subscription_sugar.pending_cleanup "
-			"WHERE subscription_id = %lld", (long long) subscriptionId),
-			true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+			"UPDATE lake_subscription_sugar.worker_launch_config "
+			"SET desired_state = 'running' WHERE subscription_id = %lld",
+			(long long) subscriptionId), false, 0) != SPI_OK_UPDATE ||
+		SPI_processed != 1)
 		ereport(ERROR,
 				(errmsg("lake_subscription_sugar: cannot restart \"%s\": no "
-						"recorded source connection info for subscription_id=%lld "
-						"(it predates this extension's pending_cleanup tracking)",
-						subname, (long long) subscriptionId)));
-	conninfo = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
-
-	discover_source_identity(conninfo, &systemIdentifier, &databaseOid,
-							 &timeline, &sourceDatabase, &sourceAddress);
-	discover_destination(&destinationDatabase, &destinationAddress);
-
-	/*
-	 * LAKE_DESTINATION_SCHEMA is only read by lake-replication-initial-sync
-	 * (to decide where to auto-create missing Iceberg destinations); the
-	 * ongoing receiver/publisher cycle the supervisor drives never reads
-	 * it, since by then every relation already has a destination_relation
-	 * recorded. Since ENABLE never respawns initial sync, the value
-	 * passed here is inert -- "public" is as good as any other placeholder.
-	 */
-	spawn_workers(subscriptionId, slotName, publicationName, sourceDatabase,
-				 destinationDatabase, sourceAddress, destinationAddress,
-				 "public", false /* spawnInitialSync */ );
+						"recorded launch configuration for subscription_id=%lld "
+						"(it predates this extension's worker_launch_config "
+						"tracking)", subname, (long long) subscriptionId)));
 }
 
 static void
 handle_alter_subscription(AlterSubscriptionStmt *stmt, int64 subscriptionId)
 {
+	RequireAuthorized("ALTER SUBSCRIPTION");
+
 	SPI_connect();
 
 	if (stmt->kind == ALTER_SUBSCRIPTION_ENABLED)
@@ -731,6 +1260,18 @@ handle_alter_subscription(AlterSubscriptionStmt *stmt, int64 subscriptionId)
 							"\"%s\" DISABLE; requesting a graceful stop", stmt->subname)));
 			SPI_execute(psprintf("SELECT lake_replication.request_service_stop(%lld)",
 								  (long long) subscriptionId), false, 0);
+			/*
+			 * Authoritative stop signal for the launcher (see
+			 * handle_drop_subscription for why this, not the cooperative
+			 * request above, is what actually guarantees the process goes
+			 * away): the launcher's next cycle sees desired_state <>
+			 * 'running' for a tracked subscription and calls
+			 * TerminateBackgroundWorker on it.
+			 */
+			SPI_execute(psprintf(
+				"UPDATE lake_subscription_sugar.worker_launch_config "
+				"SET desired_state = 'stopped' WHERE subscription_id = %lld",
+				(long long) subscriptionId), false, 0);
 		}
 		else
 		{
@@ -783,8 +1324,7 @@ lake_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
 
 		if (subscriptionId >= 0)
 		{
-			handle_drop_subscription(stmt, subscriptionId,
-									 context == PROCESS_UTILITY_TOPLEVEL);
+			handle_drop_subscription(stmt, subscriptionId);
 			return;
 		}
 	}
@@ -815,6 +1355,90 @@ lake_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
 void
 _PG_init(void)
 {
+	DefineCustomStringVariable("lake_subscription_sugar.log_directory",
+							   "Directory spawned worker processes' stdout/stderr are redirected to.",
+							   NULL,
+							   &LogDirectory,
+							   "/tmp",
+							   PGC_SUSET,
+							   0,
+							   NULL, NULL, NULL);
+
+	/*
+	 * PGC_POSTMASTER: only meaningful to the launcher this same _PG_init
+	 * call registers below (a static background worker, started once at
+	 * postmaster startup, requiring shared_preload_libraries), so reading
+	 * it later or in a different session would be misleading.
+	 */
+	/*
+	 * PGC_SIGHUP, not PGC_POSTMASTER: this value only ever actually takes
+	 * effect at the launcher's own startup (registered below, once, at
+	 * postmaster start), so PGC_POSTMASTER would describe its real-world
+	 * behavior more precisely -- but a value set via ALTER SYSTEM before
+	 * this library has ever been loaded is held as a generic placeholder
+	 * until some DefineCustom*Variable call gives it a real type and
+	 * context, and PostgreSQL refuses to promote a placeholder into a
+	 * PGC_POSTMASTER variable at this point in startup ("cannot create
+	 * PGC_POSTMASTER variables after startup"), only into PGC_SIGHUP or
+	 * lower. PGC_SIGHUP is otherwise inert here: reloading does not make
+	 * the already-running launcher re-read it.
+	 */
+	DefineCustomStringVariable("lake_subscription_sugar.database_name",
+							   "Database the launcher background worker connects to and manages "
+							   "subscriptions in. Must name the database lake_subscription_sugar "
+							   "and lake_replication are installed in. Unset: the launcher exits "
+							   "immediately at startup and manages nothing (CREATE SUBSCRIPTION "
+							   "still records launch configuration, but no supervisor ever starts). "
+							   "Only takes effect at postmaster startup, despite the PGC_SIGHUP "
+							   "context -- see the comment above this call.",
+							   NULL,
+							   &LauncherDatabaseName,
+							   NULL,
+							   PGC_SIGHUP,
+							   0,
+							   NULL, NULL, NULL);
+
+	DefineCustomIntVariable("lake_subscription_sugar.launcher_naptime_ms",
+							"How often the launcher polls worker_launch_config for "
+							"subscriptions to start or stop.",
+							NULL,
+							&LauncherNaptimeMs,
+							1000, 50, 60000,
+							PGC_SIGHUP,
+							0,
+							NULL, NULL, NULL);
+
+	/*
+	 * RegisterBackgroundWorker (the *static* registration API, as opposed
+	 * to RegisterDynamicBackgroundWorker) is only legal while
+	 * shared_preload_libraries is being processed at postmaster startup --
+	 * calling it later, e.g. when a regular backend LOADs this library via
+	 * session_preload_libraries or CREATE EXTENSION, would itself be an
+	 * error. Guard on that explicitly: everything above (the ProcessUtility
+	 * hook, the GUCs) still needs to work when loaded the ordinary way,
+	 * with no launcher at all -- CREATE SUBSCRIPTION still records launch
+	 * configuration in that case, it just never starts running until a
+	 * launcher (from a properly configured shared_preload_libraries
+	 * instance) notices it.
+	 */
+	if (process_shared_preload_libraries_in_progress)
+	{
+		BackgroundWorker worker;
+
+		memset(&worker, 0, sizeof(worker));
+		snprintf(worker.bgw_name, BGW_MAXLEN, "lake_subscription_sugar launcher");
+		snprintf(worker.bgw_type, BGW_MAXLEN, "lake_subscription_sugar launcher");
+		worker.bgw_flags = BGWORKER_SHMEM_ACCESS | BGWORKER_BACKEND_DATABASE_CONNECTION;
+		worker.bgw_start_time = BgWorkerStart_RecoveryFinished;
+		worker.bgw_restart_time = 5;
+		snprintf(worker.bgw_library_name, BGW_MAXLEN, "lake_subscription_sugar");
+		snprintf(worker.bgw_function_name, BGW_MAXLEN,
+				"lake_subscription_sugar_launcher_main");
+		worker.bgw_main_arg = (Datum) 0;
+		worker.bgw_notify_pid = 0;
+		RegisterBackgroundWorker(&worker);
+	}
+
 	prev_ProcessUtility = ProcessUtility_hook;
 	ProcessUtility_hook = lake_ProcessUtility;
 }
