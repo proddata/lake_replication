@@ -232,3 +232,14 @@ whether native `CREATE SUBSCRIPTION` could ever target an Iceberg destination
 directly, why it cannot today, and prototype `CREATE SUBSCRIPTION`-shaped
 syntax as a thin wrapper over this project's own control plane instead. See
 [the native-subscription spike notes](docs/native-subscription-spike.md).
+
+## Local PoC / demo stack
+
+`deploy/poc/` is a separate, self-contained Compose stack for manually
+demoing this project end to end: source and destination databases, the
+replication workers running continuously (not just invoked by test probes),
+and a small two-pane web console for driving both sides. Run `make poc-build`
+then `make poc-up` and open <http://127.0.0.1:8080>. See
+[`deploy/poc/README.md`](deploy/poc/README.md) for the full walkthrough. This
+is a demo convenience (trust auth, loopback-only, no TLS), not a production
+deployment.

@@ -4,8 +4,9 @@ PATRONI_COMPOSE = docker compose -p pg-lake-replication-patroni-lab -f deploy/pa
 SLOT_LOSS_COMPOSE = docker compose -p pg-lake-replication-slot-loss-lab -f deploy/slot-loss/compose.yml
 SCRAM_COMPOSE = docker compose -p pg-lake-replication-scram-lab -f deploy/scram/compose.yml
 TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compose.yml
+POC_COMPOSE = docker compose -p pg-lake-replication-poc -f deploy/poc/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test subscription-sugar-test check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test subscription-sugar-test poc-build poc-up poc-logs poc-stop poc-down check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -105,6 +106,18 @@ lab-logs:
 	$(COMPOSE) logs --no-color --tail 200
 lab-stop:
 	$(COMPOSE) stop
+
+poc-build:
+	$(POC_COMPOSE) build
+poc-up:
+	$(POC_COMPOSE) up -d --wait --wait-timeout 180
+	@echo "Demo console: http://127.0.0.1:8080"
+poc-logs:
+	$(POC_COMPOSE) logs --no-color --tail 200 -f
+poc-stop:
+	$(POC_COMPOSE) stop
+poc-down:
+	$(POC_COMPOSE) down -v
 check:
 	python3 -m py_compile tests/replication/probe.py
 	python3 -m py_compile tests/crash/probe.py
@@ -140,3 +153,4 @@ check:
 	$(SLOT_LOSS_COMPOSE) config --quiet
 	AUTH_LAB_ADMIN_PASSWORD=check AUTH_LAB_SOURCE_PASSWORD=check $(SCRAM_COMPOSE) config --quiet
 	TLS_LAB_ADMIN_PASSWORD=check TLS_LAB_SOURCE_PASSWORD=check $(TLS_COMPOSE) config --quiet
+	$(POC_COMPOSE) config --quiet

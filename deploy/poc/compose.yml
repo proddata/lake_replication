@@ -1,0 +1,136 @@
+name: pg-lake-replication-poc
+services:
+  postgres:
+    image: pg-lake-replication-poc:8180647-pg18
+    build:
+      context: ../..
+      dockerfile: deploy/poc/Dockerfile
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: analytics
+      PGDATA: /var/lib/postgresql/18/docker
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_replication_slots=16
+      - -c
+      - max_wal_senders=16
+      - -c
+      - logical_decoding_work_mem=64kB
+      - -c
+      - max_worker_processes=24
+      - -c
+      - shared_preload_libraries=pg_extension_base,lake_subscription_sugar
+      - -c
+      - lake_subscription_sugar.database_name=analytics
+      - -c
+      - pg_lake_engine.host=host=/var/run/pgduck port=5332
+      - -c
+      - pg_lake_iceberg.default_location_prefix=s3://lake-poc/iceberg
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - pgduck-socket:/var/run/pgduck
+      - ./init/10-init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+      - ../../migrations/0001_journal.sql:/docker-entrypoint-initdb.d/20-journal.sql:ro
+      - ../../migrations/0002_transport.sql:/docker-entrypoint-initdb.d/21-transport.sql:ro
+      - ../../migrations/0003_publisher.sql:/docker-entrypoint-initdb.d/22-publisher.sql:ro
+      - ../../migrations/0004_mutations.sql:/docker-entrypoint-initdb.d/23-mutations.sql:ro
+      - ../../migrations/0005_streaming.sql:/docker-entrypoint-initdb.d/24-streaming.sql:ro
+      - ../../migrations/0006_initial_sync.sql:/docker-entrypoint-initdb.d/25-initial-sync.sql:ro
+      - ../../migrations/0007_multi_table_sync.sql:/docker-entrypoint-initdb.d/26-multi-table-sync.sql:ro
+      - ../../migrations/0008_type_contracts.sql:/docker-entrypoint-initdb.d/27-type-contracts.sql:ro
+      - ../../migrations/0009_schema_evolution.sql:/docker-entrypoint-initdb.d/28-schema-evolution.sql:ro
+      - ../../migrations/0010_rebuild_promotion.sql:/docker-entrypoint-initdb.d/29-rebuild-promotion.sql:ro
+      - ../../migrations/0011_supervisor.sql:/docker-entrypoint-initdb.d/30-supervisor.sql:ro
+      - ../../migrations/0012_service_reconnect.sql:/docker-entrypoint-initdb.d/31-service-reconnect.sql:ro
+      - ../../migrations/0013_source_continuity.sql:/docker-entrypoint-initdb.d/32-source-continuity.sql:ro
+      - ../../migrations/0014_source_endpoints.sql:/docker-entrypoint-initdb.d/33-source-endpoints.sql:ro
+      - ../../migrations/0015_journal_maintenance.sql:/docker-entrypoint-initdb.d/34-journal-maintenance.sql:ro
+      - ../../extensions/lake_subscription_sugar/monitoring_views.sql:/docker-entrypoint-initdb.d/38-monitoring-views.sql:ro
+      - ./init/40-subscription-sugar.sql:/docker-entrypoint-initdb.d/40-subscription-sugar.sql:ro
+      - ./init/50-demo.sql:/docker-entrypoint-initdb.d/50-demo.sql:ro
+    ports:
+      - "127.0.0.1:55435:5432"
+    depends_on:
+      pgduck:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD-SHELL, "psql -h 127.0.0.1 -U postgres -d analytics -Atc \"SELECT count(*) FROM pg_extension WHERE extname='lake_subscription_sugar'\" | grep -qx 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 60
+    shm_size: 256mb
+  pgduck:
+    image: pg-lake-replication-poc:8180647-pg18
+    user: postgres
+    entrypoint: [bash, /lab/pgduck.sh]
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - pgduck-socket:/var/run/pgduck
+      - ../docker-compose/pgduck.sh:/lab/pgduck.sh:ro
+      - ./pgduck.sql:/lab/pgduck.sql:ro
+    depends_on:
+      storage-init:
+        condition: service_completed_successfully
+      permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, psql, -h, /var/run/pgduck, -p, '5332', -U, postgres, -d, postgres, -c, SELECT 1]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+  permissions:
+    image: pg-lake-replication-poc:8180647-pg18
+    user: root
+    entrypoint: [chown, postgres:postgres, /var/run/pgduck]
+    volumes:
+      - pgduck-socket:/var/run/pgduck
+  storage:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: lake-poc
+      MINIO_ROOT_PASSWORD: local-poc-only
+    ports:
+      - "127.0.0.1:55436:9001"
+    volumes:
+      - objects:/data
+  storage-init:
+    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3
+    depends_on:
+      - storage
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        for attempt in $$(seq 1 60); do
+          if mc alias set poc http://storage:9000 lake-poc local-poc-only; then
+            mc mb --ignore-existing poc/lake-poc
+            exit 0
+          fi
+          sleep 1
+        done
+        exit 1
+  webui:
+    build:
+      context: ./webui
+    environment:
+      LAKE_SOURCE_HOST: postgres
+      LAKE_SOURCE_PORT: "5432"
+      LAKE_SOURCE_DATABASE: application
+      LAKE_SOURCE_USER: postgres
+      LAKE_DESTINATION_HOST: postgres
+      LAKE_DESTINATION_PORT: "5432"
+      LAKE_DESTINATION_DATABASE: analytics
+      LAKE_DESTINATION_USER: postgres
+      PORT: "3000"
+    ports:
+      - "127.0.0.1:8080:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  pgdata:
+  pgduck-socket:
+  objects:
