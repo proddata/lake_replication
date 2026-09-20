@@ -47,6 +47,7 @@ make supervisor-test
 make source-continuity-test
 make source-endpoints-test
 make iceberg-maintenance-test
+make lake-replication-extension-test
 make failover-test
 make patroni-test
 make slot-loss-test
@@ -240,6 +241,13 @@ an ordinary application error look exactly like a crash to PostgreSQL,
 which reacted by tearing down the entire cluster -- see
 [the Milestone 28 notes](docs/milestone-28.md) for the fix and the real
 (not estimated) deployment cost.
+
+Milestone 29 packages the destination control schema as a versioned PostgreSQL
+extension and produces a checksummed, reproducible native installation bundle
+containing both extensions and the four release worker binaries, without
+bundling PostgreSQL or pg_lake. The exact exported artifact passes install,
+extension-load, and native-link smoke checks against PostgreSQL 18. See
+[the Milestone 29 notes](docs/milestone-29.md).
 
 Authentication settings are `LAKE_SOURCE_USER`, `LAKE_SOURCE_PASSWORD`,
 `LAKE_DESTINATION_USER`, and `LAKE_DESTINATION_PASSWORD`. `LAKE_USER` remains a

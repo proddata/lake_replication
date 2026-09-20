@@ -3,4 +3,6 @@ __pycache__/
 *.pyc
 .env
 target/
+extensions/lake_replication/lake_replication--*.sql
+dist/
 .cargo-linux-build/

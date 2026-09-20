@@ -1,0 +1,45 @@
+{
+  "archive_sha256": "d3a89ad0046b9c462bc74861de8c11c019e059ce4fdb8a6972a2e7076076ab36",
+  "checks": [
+    {
+      "actual": true,
+      "expected": true,
+      "name": "release archive produced",
+      "passed": true
+    },
+    {
+      "actual": "0f7764021e0d81267c1195c67dec5fb4117057be-dirty",
+      "expected": "0f7764021e0d81267c1195c67dec5fb4117057be-dirty",
+      "name": "source revision recorded",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "all bundle checksums",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "installer selected PostgreSQL 18",
+      "passed": true
+    },
+    {
+      "actual": "lake_replication:0.1.0,lake_subscription_sugar:1.0",
+      "expected": "lake_replication:0.1.0,lake_subscription_sugar:1.0",
+      "name": "packaged extensions load",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "packaged native files link",
+      "passed": true
+    }
+  ],
+  "database": "lake_bundle_20260920_152332",
+  "passed": true,
+  "run": "install_20260920_152332",
+  "target_architecture": "arm64"
+}

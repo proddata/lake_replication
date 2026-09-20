@@ -33,7 +33,9 @@ independently against an existing `pg_lake`-enabled PostgreSQL:
    `ALTER EXTENSION lake_replication UPDATE` is how a beta customer moves
    between releases -- the same mechanism `pg_lake` itself and every other
    real Postgres extension uses. This is a mechanical but non-trivial
-   conversion: every migration was written to run once, forward-only,
+   conversion. The initial `0.1.0` base extension is now generated from the
+   ordered migrations by `extensions/lake_replication`; every migration was
+   written to run once, forward-only,
    inside `docker-entrypoint-initdb.d`; converting to extension-versioned
    upgrade scripts means auditing each one for idempotency and ordering
    assumptions.
@@ -174,11 +176,19 @@ logging in the worker binaries is a prerequisite.
 ### 3. Packaging and supply chain
 
 - Convert `migrations/*.sql` into a versioned `lake_replication` extension
-  as described above.
+  as described above. **In progress:** the generated `0.1.0` base extension,
+  PGXS packaging, transaction-wrapper validation, and a clean install/drop/
+  recreate integration probe are implemented; upgrade-fixture, artifact, and
+  external-instance tests remain.
 - Cross-compile and publish the four worker binaries per supported
   platform; stop requiring a Rust toolchain on the target host (today's
   `tests/subscription_sugar/probe.py` cross-build-via-`rust:bookworm`
   fallback is a test convenience, not a distribution mechanism).
+  **In progress:** `deploy/install` now produces a native-platform filesystem
+  bundle containing release worker binaries and both extensions, with a
+  PostgreSQL 18/pg_lake/architecture-checking installer and an exact-artifact
+  install/link/load smoke probe. Multi-architecture publication, signing, and
+  isolated clean-host coverage remain.
 - Pin and record exact versions the way `docs/dependencies.md` already
   starts to (it flags this as unfinished: no SBOM, no locked transitive
   dependencies, no automated license check in CI). A beta release needs
