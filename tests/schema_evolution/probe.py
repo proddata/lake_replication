@@ -134,7 +134,8 @@ def main():
         receiver = worker("lake-replication-receiver", subscription_id,
                           LAKE_MAX_TRANSACTIONS="1")
         check("receiver stages the transaction after additive reconciliation",
-              receiver.stdout.startswith("staged xid=") and "changes=2" in receiver.stdout,
+              '"event":"transaction_staged"' in receiver.stdout
+              and "staged xid=" in receiver.stdout and "changes=2" in receiver.stdout,
               True)
         check("nullable appended column creates one ready assigned version",
               value("analytics", f"""

@@ -1,5 +1,7 @@
+use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
+use std::io::{self, Write};
 use std::path::Path;
 use std::process::{Command, Output};
 use std::thread;
@@ -13,7 +15,13 @@ enum CycleError {
 
 fn main() {
     if let Err(error) = run() {
-        eprintln!("lake-replication-supervisor: {error}");
+        log_event(
+            "supervisor",
+            "ERROR",
+            "process_failed",
+            &error.to_string(),
+            &[],
+        );
         std::process::exit(1);
     }
 }
@@ -47,7 +55,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         let (desired_state, subscription_state) = service_state(&mut destination, &config)?;
         if desired_state == "stopped" {
             stop(&mut destination, &config)?;
-            println!("graceful stop requested");
+            log_event(
+                "supervisor",
+                "INFO",
+                "stopped",
+                "graceful stop requested",
+                &[("subscription_id", config.subscription_id.to_string())],
+            );
             return Ok(());
         }
         if subscription_state != "streaming" {
@@ -105,13 +119,30 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                         delay.as_millis()
                     ),
                 )?;
-                eprintln!(
-                    "worker cycle failed; retrying in {}ms: {error}",
-                    delay.as_millis()
+                log_event(
+                    "supervisor",
+                    "WARN",
+                    "cycle_failed",
+                    &format!(
+                        "worker cycle failed; retrying in {}ms: {error}",
+                        delay.as_millis()
+                    ),
+                    &[
+                        ("subscription_id", config.subscription_id.to_string()),
+                        ("retry_in_ms", delay.as_millis().to_string()),
+                        ("consecutive_failures", consecutive_failures.to_string()),
+                        ("error", error.clone()),
+                    ],
                 );
                 if wait_for_retry_or_stop(&config, &mut destination, delay)? {
                     stop(&mut destination, &config)?;
-                    println!("graceful stop requested during backoff");
+                    log_event(
+                        "supervisor",
+                        "INFO",
+                        "stopped",
+                        "graceful stop requested during backoff",
+                        &[("subscription_id", config.subscription_id.to_string())],
+                    );
                     return Ok(());
                 }
             }
@@ -141,7 +172,13 @@ fn control_query(
             Ok(rows) => return Ok(rows),
             Err(WireError::Io(error)) => {
                 let connection_error = format!("destination control connection lost: {error}");
-                eprintln!("{connection_error}");
+                log_event(
+                    "supervisor",
+                    "WARN",
+                    "destination_connection_lost",
+                    &connection_error,
+                    &[("subscription_id", config.subscription_id.to_string())],
+                );
                 let mut failures = 0_u32;
                 loop {
                     let delay = retry_delay(config.base_backoff, config.max_backoff, failures);
@@ -150,9 +187,19 @@ fn control_query(
                     let mut replacement = match config.connect() {
                         Ok(client) => client,
                         Err(error) => {
-                            eprintln!(
-                                "destination reconnect failed; retrying in {}ms: {error}",
-                                delay.as_millis()
+                            log_event(
+                                "supervisor",
+                                "WARN",
+                                "destination_reconnect_failed",
+                                &format!(
+                                    "destination reconnect failed; retrying in {}ms: {error}",
+                                    delay.as_millis()
+                                ),
+                                &[
+                                    ("subscription_id", config.subscription_id.to_string()),
+                                    ("retry_in_ms", delay.as_millis().to_string()),
+                                    ("error", error.to_string()),
+                                ],
                             );
                             continue;
                         }
@@ -167,9 +214,19 @@ fn control_query(
                             .into());
                         }
                         Err(error) => {
-                            eprintln!(
-                                "destination reconnect lock check failed; retrying in {}ms: {error}",
-                                delay.as_millis()
+                            log_event(
+                                "supervisor",
+                                "WARN",
+                                "destination_lock_check_failed",
+                                &format!(
+                                    "destination reconnect lock check failed; retrying in {}ms: {error}",
+                                    delay.as_millis()
+                                ),
+                                &[
+                                    ("subscription_id", config.subscription_id.to_string()),
+                                    ("retry_in_ms", delay.as_millis().to_string()),
+                                    ("error", error.to_string()),
+                                ],
                             );
                             continue;
                         }
@@ -181,11 +238,26 @@ fn control_query(
                     )) {
                         Ok(_) => {
                             *destination = replacement;
-                            println!("destination control connection restored");
+                            log_event(
+                                "supervisor",
+                                "INFO",
+                                "destination_connection_restored",
+                                "destination control connection restored",
+                                &[("subscription_id", config.subscription_id.to_string())],
+                            );
                             break;
                         }
                         Err(WireError::Io(error)) => {
-                            eprintln!("destination reconnect was interrupted: {error}");
+                            log_event(
+                                "supervisor",
+                                "WARN",
+                                "destination_reconnect_interrupted",
+                                &format!("destination reconnect was interrupted: {error}"),
+                                &[
+                                    ("subscription_id", config.subscription_id.to_string()),
+                                    ("error", error.to_string()),
+                                ],
+                            );
                         }
                         Err(error) => return Err(error.into()),
                     }
@@ -234,6 +306,7 @@ struct SourceObservation {
     conflicting: bool,
     failover: bool,
     confirmed_lsn: u64,
+    current_lsn: u64,
 }
 
 fn source_preflight(destination: &mut Client, config: &Config) -> Result<String, CycleError> {
@@ -267,12 +340,13 @@ fn source_preflight(destination: &mut Client, config: &Config) -> Result<String,
                     destination,
                     config,
                     &format!(
-                        "SELECT lake_replication.report_source_healthy({}, {}, {}, {}, {}::pg_lsn, {}, {})",
+                        "SELECT lake_replication.report_source_healthy({}, {}, {}, {}, {}::pg_lsn, {}::pg_lsn, {}, {})",
                         config.subscription_id,
                         observation.system_identifier,
                         observation.database_oid,
                         observation.timeline,
                         sql_literal(&format_lsn(observation.confirmed_lsn)),
+                        sql_literal(&format_lsn(observation.current_lsn)),
                         sql_literal(address),
                         sql_literal(&candidate_errors.join(" | "))
                     ),
@@ -321,7 +395,7 @@ fn inspect_source_candidate(
     }
     let timeline_rows = source
         .simple_query(
-            "SELECT (('x' || substr(pg_walfile_name(pg_current_wal_flush_lsn()), 1, 8))::bit(32)::bigint)::text",
+            "SELECT (('x' || substr(pg_walfile_name(pg_current_wal_flush_lsn()), 1, 8))::bit(32)::bigint)::text, pg_current_wal_flush_lsn()::text",
         )
         .map_err(source_query_error)?;
     let timeline = parse_cycle(cycle_field(
@@ -331,6 +405,14 @@ fn inspect_source_candidate(
         0,
         "observed timeline",
     )?)?;
+    let current_lsn = parse_lsn(cycle_field(
+        timeline_rows
+            .first()
+            .ok_or_else(|| CycleError::Fatal("source timeline query returned no row".into()))?,
+        1,
+        "source current LSN",
+    )?)
+    .map_err(CycleError::Fatal)?;
     let slot_rows = source
         .simple_query(&format!(
             "SELECT plugin::text, slot_type, database::text, temporary::text, active::text, wal_status, invalidation_reason, conflicting::text, failover::text, COALESCE(confirmed_flush_lsn, '0/0')::text FROM pg_replication_slots WHERE slot_name={}",
@@ -358,6 +440,7 @@ fn inspect_source_candidate(
         failover: parse_bool(cycle_field(slot, 8, "slot failover")?)?,
         confirmed_lsn: parse_lsn(cycle_field(slot, 9, "slot confirmed LSN")?)
             .map_err(CycleError::Fatal)?,
+        current_lsn,
     };
     let history = if observation.timeline > expected.timeline {
         let history_rows = source
@@ -558,6 +641,12 @@ fn run_cycle(
 
 fn ensure_success(worker: &str, output: &Output) -> Result<(), String> {
     if output.status.success() {
+        // Command::output captures child streams. Forward successful JSON-lines
+        // records so receiver and publisher events reach the supervisor's log.
+        let _ = io::stdout().write_all(&output.stdout);
+        let _ = io::stdout().flush();
+        let _ = io::stderr().write_all(&output.stderr);
+        let _ = io::stderr().flush();
         return Ok(());
     }
     let stderr = String::from_utf8_lossy(&output.stderr);
@@ -869,6 +958,7 @@ mod tests {
             conflicting: false,
             failover: false,
             confirmed_lsn: 0x100,
+            current_lsn: 0x180,
         }
     }
 

@@ -1,0 +1,47 @@
+{
+  "date": "2026-09-22",
+  "scope": "G5 observability implementation validation without starting the integration lab",
+  "checks": [
+    {
+      "name": "repository check suite",
+      "passed": true,
+      "actual": "make check completed; 23 Rust unit tests and 6 probe-classification tests passed",
+      "expected": "zero failures"
+    },
+    {
+      "name": "structured error event",
+      "passed": true,
+      "actual": "receiver process_failed output parsed as JSON with timestamp, severity, component, event, pid, and message",
+      "expected": "valid stable JSON-lines envelope"
+    },
+    {
+      "name": "fresh catalog migration install",
+      "passed": true,
+      "actual": "migrations 0001 through 0016 applied with psql ON_ERROR_STOP to disposable PostgreSQL 14.24 catalog",
+      "expected": "all SQL definitions install from an empty catalog"
+    },
+    {
+      "name": "startup classification",
+      "passed": true,
+      "actual": "degraded:replication is starting:256:0",
+      "expected": "starting is not reported healthy; source and journal lag are derived"
+    },
+    {
+      "name": "running classification",
+      "passed": true,
+      "actual": "healthy:true",
+      "expected": "streaming/running with a current heartbeat is healthy"
+    },
+    {
+      "name": "long-form metrics",
+      "passed": true,
+      "actual": "12:1",
+      "expected": "12 samples and subscription_healthy=1"
+    }
+  ],
+  "limitations": [
+    "This was a catalog-level SQL validation on local PostgreSQL 14.24, not the target PostgreSQL 18 plus pg_lake integration image.",
+    "Updated PostgreSQL 18 extension and supervisor integration probes are implemented but intentionally not run because the project lab was not restarted."
+  ],
+  "status": "passed_with_integration_pending"
+}

@@ -128,7 +128,8 @@ def main():
         """)
         first_output = receive(subscription_id)
         check("first live transaction decoded and staged",
-              first_output.startswith("staged xid=") and "changes=1" in first_output,
+              '"event":"transaction_staged"' in first_output
+              and "staged xid=" in first_output and "changes=1" in first_output,
               True)
         first_checkpoint = value("analytics", f"""
             SELECT staged_lsn FROM lake_replication.checkpoints
@@ -160,7 +161,8 @@ def main():
         """)
         second_output = receive(subscription_id)
         check("fresh process resumes with a complete source transaction",
-              second_output.startswith("staged xid=") and "changes=2" in second_output,
+              '"event":"transaction_staged"' in second_output
+              and "staged xid=" in second_output and "changes=2" in second_output,
               True)
         final_checkpoint = value("analytics", f"""
             SELECT staged_lsn FROM lake_replication.checkpoints

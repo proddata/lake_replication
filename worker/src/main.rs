@@ -1,4 +1,5 @@
 use lake_replication_worker::journal::{Operation, StagedTransaction, TransactionAssembler};
+use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::pgoutput::{
     self, Cell, IdentityKind, IdentityTuple, Message, Relation, TupleFormat,
 };
@@ -13,7 +14,13 @@ const KEEPALIVE_LENGTH: usize = 18;
 
 fn main() {
     if let Err(error) = run() {
-        eprintln!("lake-replication-receiver: {error}");
+        log_event(
+            "receiver",
+            "ERROR",
+            "process_failed",
+            &error.to_string(),
+            &[],
+        );
         std::process::exit(1);
     }
 }
@@ -63,6 +70,18 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         config.publication.replace('\'', "''"),
     );
     source.start_replication(&command)?;
+    log_event(
+        "receiver",
+        "INFO",
+        "replication_started",
+        "logical replication stream started",
+        &[
+            ("subscription_id", config.subscription_id.to_string()),
+            ("slot", config.slot.clone()),
+            ("publication", config.publication.clone()),
+            ("start_lsn", format_lsn(start_lsn)),
+        ],
+    );
 
     let mut assembler = TransactionAssembler::default();
     let mut streamed = HashMap::<u32, TransactionAssembler>::new();
@@ -77,7 +96,16 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 if config.idle_timeout_ms > 0
                     && matches!(error.kind(), ErrorKind::WouldBlock | ErrorKind::TimedOut) =>
             {
-                println!("receiver idle timeout after {}ms", config.idle_timeout_ms);
+                log_event(
+                    "receiver",
+                    "INFO",
+                    "idle_timeout",
+                    &format!("receiver idle timeout after {}ms", config.idle_timeout_ms),
+                    &[
+                        ("subscription_id", config.subscription_id.to_string()),
+                        ("idle_timeout_ms", config.idle_timeout_ms.to_string()),
+                    ],
+                );
                 return Ok(());
             }
             Err(error) => return Err(error.into()),
@@ -165,9 +193,19 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                             );
                         }
                         active_stream = Some(start.xid);
-                        println!(
-                            "stream segment xid={} first={}",
-                            start.xid, start.first_segment
+                        log_event(
+                            "receiver",
+                            "INFO",
+                            "stream_segment_started",
+                            &format!(
+                                "stream segment xid={} first={}",
+                                start.xid, start.first_segment
+                            ),
+                            &[
+                                ("subscription_id", config.subscription_id.to_string()),
+                                ("xid", start.xid.to_string()),
+                                ("first_segment", start.first_segment.to_string()),
+                            ],
                         );
                     }
                     Message::StreamStop => {
@@ -196,7 +234,16 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                             return Err(format!("abort for unknown XID {}", abort.xid).into());
                         }
                         abort_stream(&mut destination, config.subscription_id, abort.xid)?;
-                        println!("discarded streamed xid={}", abort.xid);
+                        log_event(
+                            "receiver",
+                            "INFO",
+                            "stream_transaction_aborted",
+                            &format!("discarded streamed xid={}", abort.xid),
+                            &[
+                                ("subscription_id", config.subscription_id.to_string()),
+                                ("xid", abort.xid.to_string()),
+                            ],
+                        );
                     }
                     Message::StreamCommit(stream_commit) => {
                         if active_stream == Some(stream_commit.xid) {
@@ -216,11 +263,23 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                             transaction.end_lsn,
                         )?;
                         committed += 1;
-                        println!(
-                            "staged streamed xid={} end_lsn={} changes={}",
-                            transaction.xid,
-                            format_lsn(transaction.end_lsn),
-                            change_count
+                        log_event(
+                            "receiver",
+                            "INFO",
+                            "transaction_staged",
+                            &format!(
+                                "staged streamed xid={} end_lsn={} changes={}",
+                                transaction.xid,
+                                format_lsn(transaction.end_lsn),
+                                change_count
+                            ),
+                            &[
+                                ("subscription_id", config.subscription_id.to_string()),
+                                ("xid", transaction.xid.to_string()),
+                                ("end_lsn", format_lsn(transaction.end_lsn)),
+                                ("changes", change_count.to_string()),
+                                ("streamed", "true".to_owned()),
+                            ],
                         );
                         if committed >= config.max_transactions {
                             return Ok(());
@@ -243,11 +302,23 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                             transaction.end_lsn,
                         )?;
                         committed += 1;
-                        println!(
-                            "staged xid={} end_lsn={} changes={}",
-                            transaction.xid,
-                            format_lsn(transaction.end_lsn),
-                            transaction.changes.len()
+                        log_event(
+                            "receiver",
+                            "INFO",
+                            "transaction_staged",
+                            &format!(
+                                "staged xid={} end_lsn={} changes={}",
+                                transaction.xid,
+                                format_lsn(transaction.end_lsn),
+                                transaction.changes.len()
+                            ),
+                            &[
+                                ("subscription_id", config.subscription_id.to_string()),
+                                ("xid", transaction.xid.to_string()),
+                                ("end_lsn", format_lsn(transaction.end_lsn)),
+                                ("changes", transaction.changes.len().to_string()),
+                                ("streamed", "false".to_owned()),
+                            ],
                         );
                         if committed >= config.max_transactions {
                             return Ok(());

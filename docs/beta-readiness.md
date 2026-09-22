@@ -157,22 +157,21 @@ full writeups.
   take effect -- exactly the tradeoff flagged when this option was chosen
   over shelling out to `systemctl`, now paid and working rather than
   estimated.
-- **Error surfacing.** Failures still mostly land in per-subscription log
-  files and `lake_replication.service_status.last_error`, with no alerting
-  path. See observability, below.
+- **Error surfacing -- implemented, integration evidence pending.** Workers emit
+  JSON-lines events, and the SQL operator interface classifies health and
+  exports long-form numeric metrics. See [the operations guide](operations.md).
 
 ### 2. Observability
 
-`crunchy_iceberg.stat_subscription[_rel]` (in
-`extensions/lake_subscription_sugar/monitoring_views.sql`) is explicitly
-"Experiment only" and SQL-view-based -- fine for demoing, not sufficient for
-an on-call engineer. Beta needs the service-status/health data already
-tracked in `lake_replication.service_status` exported as real metrics
-(Prometheus-style `/metrics` endpoint on the supervisor, or push to whatever
-the customer's stack expects) covering at minimum: subscription state,
-consecutive failures, receiver/publisher cycle counts, replication lag
-(current LSN vs. source), and last error. Structured (not println!)
-logging in the worker binaries is a prerequisite.
+`lake_replication.subscription_status` now classifies each subscription as
+healthy, degraded, critical, or intentionally stopped and exposes heartbeat
+age, source-to-Iceberg lag, durable-journal lag, retries, cycle counts, and the
+last failure. `lake_replication.metrics` exports the numeric subset as
+long-form SQL rows suitable for PostgreSQL exporters. Every worker emits
+JSON-lines events with stable component, severity, event, process, and
+subscription fields. Suggested alerts and incident triage are documented in
+[the operations guide](operations.md). The remaining beta work is to run and
+retain the updated integration probes against the packaged build.
 
 ### 3. Packaging and supply chain
 

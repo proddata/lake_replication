@@ -265,7 +265,8 @@ def main():
 
         receiver_output = receive(subscription_id)
         check("one concurrent source transaction is staged after the snapshot",
-              receiver_output.startswith("staged xid=") and "changes=3" in receiver_output,
+              '"event":"transaction_staged"' in receiver_output
+              and "staged xid=" in receiver_output and "changes=3" in receiver_output,
               True)
         check("snapshot and pgoutput use one canonical schema version",
               value("analytics", f"""

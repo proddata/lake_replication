@@ -225,8 +225,8 @@ def main():
                  GROUP BY published_lsn, staged_lsn
               """), "true:3")
         check("publisher restart reconciles as a successful no-op",
-              worker("lake-replication-publisher", subscription_id),
-              "no staged transactions")
+              '"event":"queue_empty"' in
+              worker("lake-replication-publisher", subscription_id), True)
 
         EVIDENCE["final_state"] = json.loads(value("analytics", f"""
             SELECT json_build_object(

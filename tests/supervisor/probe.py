@@ -175,6 +175,27 @@ def main():
         """, lambda item: item == "running:0:1:true:true:0:0:true")
         check("durable health reports recovery, worker cycles, and drained queue",
               health, "running:0:1:true:true:0:0:true")
+        operator_status = value("analytics", f"""
+            SELECT health_state || ':' ||
+                   (heartbeat_age_seconds >= 0)::text || ':' ||
+                   (source_lag_bytes >= 0)::text || ':' ||
+                   journal_lag_bytes || ':' ||
+                   (last_failure_at IS NOT NULL)::text
+              FROM lake_replication.subscription_status
+             WHERE subscription_id={subscription_id}
+        """)
+        check("operator status classifies recovery and exposes lag",
+              operator_status, "healthy:true:true:0:true")
+        metrics = value("analytics", f"""
+            SELECT count(*) || ':' ||
+                   (max(value) FILTER (
+                       WHERE metric='lake_replication_subscription_healthy'
+                   ))::bigint
+              FROM lake_replication.metrics
+             WHERE subscription_id={subscription_id}
+        """)
+        check("long-form metrics expose every subscription sample",
+              metrics, "12:1")
 
         control_pid = value("analytics", f"""
             SELECT pid FROM pg_stat_activity

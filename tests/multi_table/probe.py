@@ -212,7 +212,8 @@ def main():
         receiver = worker("lake-replication-receiver", subscription_id,
                           LAKE_MAX_TRANSACTIONS="1")
         check("one concurrent transaction emits only the two eligible changes",
-              receiver.startswith("staged xid=") and "changes=2" in receiver, True)
+              '"event":"transaction_staged"' in receiver
+              and "staged xid=" in receiver and "changes=2" in receiver, True)
         worker("lake-replication-publisher", subscription_id,
                LAKE_BATCH_MAX_TRANSACTIONS="10", LAKE_BATCH_MAX_ROWS="100",
                LAKE_BATCH_MAX_BYTES="8388608")

@@ -5,5 +5,6 @@
 //! callers must not acknowledge WAL until the decoded transaction is durable.
 
 pub mod journal;
+pub mod logging;
 pub mod pgoutput;
 pub mod wire;

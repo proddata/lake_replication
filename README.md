@@ -191,15 +191,16 @@ Inspect service state on the destination:
 
 ```sql
 SELECT subscription_name,
+       health_state,
+       health_reason,
        subscription_state,
        service_state,
-       heartbeat_at,
+       heartbeat_age_seconds,
+       source_lag_bytes,
+       journal_lag_bytes,
        consecutive_failures,
-       staged_transactions,
-       received_lsn,
-       published_lsn,
        last_error
-FROM lake_replication.service_health;
+FROM lake_replication.subscription_status;
 ```
 
 Then insert a row on the source and query its Iceberg counterpart on the
@@ -227,15 +228,16 @@ DROP SUBSCRIPTION orders_to_lake;
 
 Useful first checks are:
 
-- `lake_replication.service_health` for state, heartbeat, retries, failures,
-  cycle counts, queue depth, checkpoints, and source continuity;
+- `lake_replication.subscription_status` for classified health, lag, retries,
+  failures, cycle counts, queue depth, checkpoints, and source continuity;
+- `lake_replication.metrics` for long-form numeric samples consumable by a
+  PostgreSQL metrics exporter;
 - PostgreSQL's server log for launcher/background-worker events; and
 - the configured `lake_subscription_sugar.log_directory` for per-subscription
   worker output.
 
-The complete operator runbook and metrics/alerting interface are release-gate
-work in progress. Do not treat the current status view as a finished monitoring
-contract.
+See the [operations guide](docs/operations.md) for metric names, suggested alert
+thresholds, structured log fields, and the first-response checklist.
 
 ## Beta limitations
 
@@ -253,8 +255,8 @@ contract.
   where the worker's local connection is authorized without an injected
   password.
 - Compatibility has been validated against one pg_lake revision. Clean-host,
-  upgrade/rollback, extended compatibility, observability, and release-candidate
-  soak gates remain open.
+  upgrade/rollback, extended compatibility, observability integration, and
+  release-candidate soak gates remain open.
 - No signed GitHub prerelease has been published yet. Source checkouts and CI
   artifacts are development outputs until `v0.1.0-beta.1` is released.
 
@@ -300,6 +302,7 @@ and [historical evidence](docs/) before running individual lab targets.
 - [Beta release gates](BETA-RELEASE.md)
 - [Compatibility contract](deploy/install/COMPATIBILITY.md)
 - [Bundle and installer details](deploy/install/README.md)
+- [Operations, metrics, logs, and alerts](docs/operations.md)
 - [Local demo](deploy/poc/README.md)
 - [Feasibility and correctness report](docs/feasibility.md)
 - [Dependency and license inventory](docs/dependencies.md)

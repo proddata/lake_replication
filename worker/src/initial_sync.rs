@@ -1,3 +1,4 @@
+use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
 use std::thread;
@@ -5,7 +6,13 @@ use std::time::Duration;
 
 fn main() {
     if let Err(error) = run() {
-        eprintln!("lake-replication-initial-sync: {error}");
+        log_event(
+            "initial_sync",
+            "ERROR",
+            "process_failed",
+            &error.to_string(),
+            &[],
+        );
         std::process::exit(1);
     }
 }
@@ -95,11 +102,22 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         ))?;
     }
 
-    println!(
-        "snapshot={} consistent_lsn={} tables={}",
-        snapshot_name,
-        consistent_lsn,
-        plans.len()
+    log_event(
+        "initial_sync",
+        "INFO",
+        "snapshot_acquired",
+        &format!(
+            "snapshot={} consistent_lsn={} tables={}",
+            snapshot_name,
+            consistent_lsn,
+            plans.len()
+        ),
+        &[
+            ("subscription_id", config.subscription_id.to_string()),
+            ("snapshot", snapshot_name.clone()),
+            ("consistent_lsn", consistent_lsn.clone()),
+            ("tables", plans.len().to_string()),
+        ],
     );
     if config.pause_after_snapshot_ms > 0 {
         thread::sleep(Duration::from_millis(config.pause_after_snapshot_ms));
@@ -131,12 +149,24 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     ))?;
     let completed = single_value(&completed, "finish_initial_sync_group")?;
     source.simple_query("COMMIT")?;
-    println!(
-        "initial copy ready tables={} rows={}/{} consistent_lsn={}",
-        plans.len(),
-        completed,
-        total_rows,
-        consistent_lsn
+    log_event(
+        "initial_sync",
+        "INFO",
+        "initial_copy_completed",
+        &format!(
+            "initial copy ready tables={} rows={}/{} consistent_lsn={}",
+            plans.len(),
+            completed,
+            total_rows,
+            consistent_lsn
+        ),
+        &[
+            ("subscription_id", config.subscription_id.to_string()),
+            ("tables", plans.len().to_string()),
+            ("tables_completed", completed.to_owned()),
+            ("rows", total_rows.to_string()),
+            ("consistent_lsn", consistent_lsn.clone()),
+        ],
     );
     Ok(())
 }
@@ -214,7 +244,17 @@ fn copy_table(
             &mut pending_bytes,
         )?;
     }
-    println!("copied table={} rows={copied}", plan.source.sql());
+    log_event(
+        "initial_sync",
+        "INFO",
+        "table_copied",
+        &format!("copied table={} rows={copied}", plan.source.sql()),
+        &[
+            ("subscription_id", config.subscription_id.to_string()),
+            ("table", plan.source.sql()),
+            ("rows", copied.to_string()),
+        ],
+    );
     Ok(copied)
 }
 
@@ -362,7 +402,17 @@ fn stage_rows(
     *copied += rows.len() as u64;
     rows.clear();
     *pending_bytes = 0;
-    println!("staged initial rows={copied}");
+    log_event(
+        "initial_sync",
+        "INFO",
+        "copy_chunk_staged",
+        &format!("staged initial rows={copied}"),
+        &[
+            ("subscription_id", config.subscription_id.to_string()),
+            ("relation_id", relation_id.to_string()),
+            ("rows_copied", copied.to_string()),
+        ],
+    );
     if config.pause_after_chunk_ms > 0 {
         thread::sleep(Duration::from_millis(config.pause_after_chunk_ms));
     }

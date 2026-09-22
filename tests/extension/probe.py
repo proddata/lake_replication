@@ -79,6 +79,20 @@ def main():
             sql("SELECT count(*) FROM lake_replication.type_mappings"),
             "13",
         )
+        check(
+            "operator status and metrics views installed",
+            sql("""
+                SELECT to_regclass('lake_replication.subscription_status') IS NOT NULL
+                       AND to_regclass('lake_replication.metrics') IS NOT NULL
+                       AND EXISTS (
+                           SELECT 1 FROM information_schema.columns
+                            WHERE table_schema='lake_replication'
+                              AND table_name='subscription_status'
+                              AND column_name='source_lag_bytes'
+                       )
+            """),
+            "t",
+        )
         member_count = int(sql("""
             SELECT count(*)
               FROM pg_depend d

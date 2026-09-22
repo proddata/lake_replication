@@ -1,9 +1,16 @@
+use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::wire::{Client, TlsConfig, address_is_loopback};
 use std::env;
 
 fn main() {
     if let Err(error) = run() {
-        eprintln!("lake-replication-publisher: {error}");
+        log_event(
+            "publisher",
+            "ERROR",
+            "process_failed",
+            &error.to_string(),
+            &[],
+        );
         std::process::exit(1);
     }
 }
@@ -35,7 +42,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         ))?;
         let Some(row) = rows.first() else {
             if published_batches == 0 {
-                println!("no staged transactions");
+                log_event(
+                    "publisher",
+                    "INFO",
+                    "queue_empty",
+                    "no staged transactions",
+                    &[("subscription_id", config.subscription_id.to_string())],
+                );
             }
             return Ok(());
         };
@@ -56,14 +69,25 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             sql_literal(last_lsn),
         ))?;
         let result = result.first().ok_or("publisher returned no batch")?;
-        println!(
-            "published batch={} lsn={} transactions={} rows={}/{} bytes={}",
-            field(result, 0, "batch_id")?,
-            field(result, 1, "published_lsn")?,
-            transaction_count,
-            field(result, 2, "inserted_rows")?,
-            planned_rows,
-            byte_count,
+        let batch_id = field(result, 0, "batch_id")?;
+        let published_lsn = field(result, 1, "published_lsn")?;
+        let inserted_rows = field(result, 2, "inserted_rows")?;
+        log_event(
+            "publisher",
+            "INFO",
+            "batch_published",
+            &format!(
+                "published batch={batch_id} lsn={published_lsn} transactions={transaction_count} rows={inserted_rows}/{planned_rows} bytes={byte_count}"
+            ),
+            &[
+                ("subscription_id", config.subscription_id.to_string()),
+                ("batch_id", batch_id.to_owned()),
+                ("published_lsn", published_lsn.to_owned()),
+                ("transactions", transaction_count.to_owned()),
+                ("inserted_rows", inserted_rows.to_owned()),
+                ("planned_rows", planned_rows.to_owned()),
+                ("bytes", byte_count.to_owned()),
+            ],
         );
         published_batches += 1;
     }
