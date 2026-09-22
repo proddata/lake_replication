@@ -563,8 +563,20 @@ fn ancestor_fork_lsn(history: &str, ancestor: u32) -> Result<Option<u64>, String
 fn source_query_error(error: WireError) -> CycleError {
     match error {
         WireError::Io(_) => CycleError::Retry(format!("source connection failed: {error}")),
+        WireError::Server(ref message) if retryable_source_sqlstate(message) => {
+            CycleError::Retry(format!("source connection rejected: {error}"))
+        }
         _ => CycleError::Fatal(format!("source inspection failed: {error}")),
     }
+}
+
+fn retryable_source_sqlstate(message: &str) -> bool {
+    let code = message
+        .split_ascii_whitespace()
+        .find_map(|field| field.strip_prefix("C="));
+    code.is_some_and(|code| {
+        code.starts_with("08") || matches!(code, "53300" | "57P01" | "57P02" | "57P03")
+    })
 }
 
 fn cycle_field<'a>(
@@ -975,6 +987,26 @@ mod tests {
         assert_eq!(retry_delay(base, cap, 0), Duration::from_millis(100));
         assert_eq!(retry_delay(base, cap, 1), Duration::from_millis(200));
         assert_eq!(retry_delay(base, cap, 2), cap);
+    }
+
+    #[test]
+    fn transient_source_server_rejections_are_retried() {
+        for code in ["08006", "53300", "57P01", "57P02", "57P03"] {
+            let error = source_query_error(WireError::Server(format!(
+                "S=FATAL C={code} M=source is temporarily unavailable"
+            )));
+            assert!(matches!(error, CycleError::Retry(_)), "SQLSTATE {code}");
+        }
+    }
+
+    #[test]
+    fn permanent_source_server_errors_remain_fatal() {
+        for code in ["28000", "28P01", "42501", "55000"] {
+            let error = source_query_error(WireError::Server(format!(
+                "S=FATAL C={code} M=source configuration is invalid"
+            )));
+            assert!(matches!(error, CycleError::Fatal(_)), "SQLSTATE {code}");
+        }
     }
 
     #[test]
