@@ -77,8 +77,9 @@ the installed pg_lake source revision cannot be determined from pg_config.
 Before creating subscriptions:
 1. Add lake_subscription_sugar to shared_preload_libraries.
 2. Set lake_subscription_sugar.database_name to the destination database.
-3. Restart PostgreSQL.
-4. Run CREATE EXTENSION lake_replication; and CREATE EXTENSION lake_subscription_sugar;
+3. For SCRAM/TLS, set lake_subscription_sugar.credential_file to an owner-only file.
+4. Restart PostgreSQL.
+5. Run CREATE EXTENSION lake_replication; and CREATE EXTENSION lake_subscription_sugar;
 
 Removing these files later does not remove database objects. Use PostgreSQL's
 DROP EXTENSION commands separately only when you intend to delete them.

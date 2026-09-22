@@ -4,6 +4,7 @@
 //! this crate's first slice. The decoder accepts payloads emitted by `pgoutput`;
 //! callers must not acknowledge WAL until the decoded transaction is durable.
 
+pub mod credentials;
 pub mod journal;
 pub mod logging;
 pub mod pgoutput;

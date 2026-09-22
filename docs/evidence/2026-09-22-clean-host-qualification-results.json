@@ -1,0 +1,24 @@
+{
+  "archive": "pg_lake_replication-0.1.0.tar.gz",
+  "archive_sha256": "68b81dcabfe2f0bfd24db1ebd26ffa53427e6b3d12ba114456934d82d38eb950",
+  "architecture": "arm64",
+  "checks": [
+    {"name": "release archive checksum", "passed": true},
+    {"name": "archive-installed extensions load", "passed": true},
+    {"name": "initial copy reaches the artifact-installed destination", "passed": true},
+    {"name": "subscription becomes healthy", "passed": true},
+    {"name": "all documented metrics are exported", "passed": true, "actual": 12},
+    {"name": "live insert and update replicate", "passed": true},
+    {"name": "disable reaches stopped state", "passed": true},
+    {"name": "enable catches up changes made while stopped", "passed": true},
+    {"name": "destination is ready after container restart", "passed": true},
+    {"name": "launcher resumes replication after restart", "passed": true},
+    {"name": "structured worker logs emitted", "passed": true, "records": 35},
+    {"name": "credential values absent from worker logs", "passed": true},
+    {"name": "drop removes the source replication slot", "passed": true},
+    {"name": "uninstaller removes only project program files", "passed": true}
+  ],
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "source_revision": "1749d2cf784f426869b5baeb4f17935b860e839f-dirty",
+  "status": "passed"
+}

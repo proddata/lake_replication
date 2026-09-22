@@ -136,10 +136,29 @@ Append `lake_subscription_sugar` to any existing
 shared_preload_libraries = 'pg_extension_base,lake_subscription_sugar'
 lake_subscription_sugar.database_name = 'analytics'
 lake_subscription_sugar.log_directory = '/var/log/postgresql/pg_lake_replication'
+lake_subscription_sugar.credential_file = '/etc/pg_lake_replication/worker.env'
 ```
 
 The exact existing preload list depends on the pg_lake installation; preserve
 all of its entries when appending `lake_subscription_sugar`.
+
+Create the credential file as a regular, non-symlink file readable only by the
+PostgreSQL operating-system user (`0600`):
+
+```text
+LAKE_SOURCE_USER=lake_source
+LAKE_SOURCE_PASSWORD=replace-me
+LAKE_SOURCE_TLS_MODE=verify-full
+LAKE_SOURCE_TLS_ROOT_CERT=/etc/ssl/certs/source-ca.pem
+LAKE_DESTINATION_USER=lake_worker
+LAKE_DESTINATION_PASSWORD=replace-me-too
+LAKE_DESTINATION_TLS_MODE=disable
+```
+
+Environment variables explicitly set for a manually launched worker override
+the file. Launcher-managed workers receive only the file path; credentials are
+not copied into worker-launch metadata or structured logs. A PostgreSQL restart
+is currently required after changing the configured path or rotating values.
 
 Create the log directory with ownership and permissions suitable for the
 PostgreSQL operating-system user, then restart PostgreSQL. In the destination
@@ -247,13 +266,12 @@ thresholds, structured log fields, and the first-response checklist.
   catalog update occurs after PostgreSQL commit and does not provide the
   durable reconciliation contract this project requires.
 - Only one publication is accepted per subscription.
-- The SQL convenience launcher currently starts workers as database user
-  `postgres` and does not inject a per-subscription password. Although the
-  worker binaries support SCRAM and certificate-verified TLS, secure secret
-  delivery through `CREATE SUBSCRIPTION` is not yet a supported deployment
-  path. The quick start is therefore for co-located evaluation environments
-  where the worker's local connection is authorized without an injected
-  password.
+- The launcher currently uses one instance-wide credential file for all managed
+  subscriptions. Per-subscription secret selection and reload without a
+  PostgreSQL restart are not yet supported. The source password may also appear
+  in the protected `lake_subscription_sugar.pending_cleanup` table when it is
+  embedded in `CREATE SUBSCRIPTION ... CONNECTION`, matching PostgreSQL's own
+  subscription-conninfo tradeoff.
 - Compatibility has been validated against one pg_lake revision. Clean-host,
   upgrade/rollback, extended compatibility, observability integration, and
   release-candidate soak gates remain open.

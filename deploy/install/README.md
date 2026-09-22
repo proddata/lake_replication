@@ -27,8 +27,33 @@ The bundle installs:
 - the `lake_replication` SQL extension; and
 - the `lake_subscription_sugar` extension and shared library.
 
+For launcher-managed SCRAM/TLS connections, set
+`lake_subscription_sugar.credential_file` to an absolute path owned by the
+PostgreSQL operating-system user with mode `0600`. Supported `KEY=value`
+entries are the source/destination user, password, TLS mode, root certificate,
+and optional TLS server name variables documented in the main README. Symlinks,
+group/other permissions, duplicate keys, unknown keys, and files larger than
+64 KiB are rejected before a network connection is attempted.
+
 It does not edit `postgresql.conf`, restart PostgreSQL, create extensions in a
 database, or remove data. Those remain explicit operator actions.
+
+## Removal
+
+Disable or drop managed subscriptions first, remove
+`lake_subscription_sugar` from `shared_preload_libraries`, and stop PostgreSQL
+before removing its shared library. From the unpacked bundle, run:
+
+```sh
+sudo ./uninstall.sh
+```
+
+The uninstaller removes only the four executables and the extension program,
+control, and SQL files. It intentionally preserves PostgreSQL configuration,
+roles, extension objects, replication slots, Iceberg tables, object-storage
+data, credentials, and logs. Use `DROP EXTENSION` separately only when database
+objects should also be deleted. Reinstalling the same archive restores the
+program files.
 
 ## Release artifacts
 

@@ -1,3 +1,4 @@
+use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::journal::{Operation, StagedTransaction, TransactionAssembler};
 use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::pgoutput::{
@@ -359,18 +360,19 @@ struct Config {
 
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
+        let settings = Settings::from_env()?;
         let legacy_user = value("LAKE_USER", "postgres");
         let source_address = value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434");
         let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
         Ok(Self {
-            source_tls: tls_config("LAKE_SOURCE", &[&source_address])?,
-            destination_tls: tls_config("LAKE_DESTINATION", &[&destination_address])?,
+            source_tls: tls_config(&settings, "LAKE_SOURCE", &[&source_address])?,
+            destination_tls: tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?,
             source_address,
             destination_address,
-            source_user: value("LAKE_SOURCE_USER", &legacy_user),
-            source_password: env::var("LAKE_SOURCE_PASSWORD").ok(),
-            destination_user: value("LAKE_DESTINATION_USER", &legacy_user),
-            destination_password: env::var("LAKE_DESTINATION_PASSWORD").ok(),
+            source_user: settings.value("LAKE_SOURCE_USER", &legacy_user),
+            source_password: settings.optional("LAKE_SOURCE_PASSWORD"),
+            destination_user: settings.value("LAKE_DESTINATION_USER", &legacy_user),
+            destination_password: settings.optional("LAKE_DESTINATION_PASSWORD"),
             source_database: value("LAKE_SOURCE_DATABASE", "application"),
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
             slot: required("LAKE_SLOT")?,
@@ -385,6 +387,7 @@ impl Config {
 }
 
 fn tls_config(
+    settings: &Settings,
     prefix: &str,
     addresses: &[&str],
 ) -> Result<Option<TlsConfig>, Box<dyn std::error::Error>> {
@@ -393,11 +396,14 @@ fn tls_config(
     } else {
         "verify-full"
     };
-    match value(&format!("{prefix}_TLS_MODE"), default_mode).as_str() {
+    match settings
+        .value(&format!("{prefix}_TLS_MODE"), default_mode)
+        .as_str()
+    {
         "disable" => Ok(None),
         "verify-full" => Ok(Some(TlsConfig::verify_full(
-            required(&format!("{prefix}_TLS_ROOT_CERT"))?,
-            env::var(format!("{prefix}_TLS_SERVER_NAME")).ok(),
+            settings.required(&format!("{prefix}_TLS_ROOT_CERT"))?,
+            settings.optional(&format!("{prefix}_TLS_SERVER_NAME")),
         ))),
         mode => Err(format!(
             "unsupported {prefix}_TLS_MODE {mode}; expected disable or verify-full"

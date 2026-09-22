@@ -40,7 +40,8 @@ COPY --from=extension-builder \
     /src/extensions/lake_replication/lake_replication.control \
     /src/extensions/lake_replication/lake_replication--0.1.0.sql \
     payload/extension/
-COPY deploy/install/install.sh deploy/install/README.md deploy/install/COMPATIBILITY.md ./
+COPY deploy/install/install.sh deploy/install/uninstall.sh \
+     deploy/install/README.md deploy/install/COMPATIBILITY.md ./
 COPY LICENSE ./
 RUN printf '%s\n' "$VERSION" > VERSION \
     && printf '%s\n' "$REVISION" > SOURCE_REVISION \

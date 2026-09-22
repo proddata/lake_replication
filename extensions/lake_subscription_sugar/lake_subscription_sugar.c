@@ -134,6 +134,11 @@
  * (default /tmp), one file per subscription per worker; SUSET so an
  * unprivileged session cannot redirect a spawned worker's log output
  * before calling CREATE SUBSCRIPTION.
+ *
+ * Launcher-managed workers read connection users, passwords, and TLS settings
+ * from lake_subscription_sugar.credential_file when configured. Only the path
+ * is passed through execve(); the Rust workers enforce a regular, non-symlink,
+ * owner-only file and never write its values to launch metadata or logs.
  */
 #include "postgres.h"
 #include "access/xact.h"
@@ -169,7 +174,21 @@ PG_MODULE_MAGIC;
 static ProcessUtility_hook_type prev_ProcessUtility = NULL;
 static char *LogDirectory = "/tmp";
 static char *LauncherDatabaseName = NULL;
+static char *CredentialFile = NULL;
 static int	LauncherNaptimeMs = 1000;
+
+static bool
+check_credential_file(char **newValue, void **extra, GucSource source)
+{
+	(void) extra;
+	(void) source;
+	if (*newValue != NULL && (*newValue)[0] != '\0' && (*newValue)[0] != '/')
+	{
+		GUC_check_errdetail("lake_subscription_sugar.credential_file must be an absolute path");
+		return false;
+	}
+	return true;
+}
 
 /*
  * TrackedWorker maps a subscription_id to the BackgroundWorkerHandle the
@@ -420,7 +439,7 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 				 const char *destinationDatabase, const char *sourceAddress,
 				 const char *destinationAddress, const char *destinationSchema)
 {
-	char	  **envp = palloc(15 * sizeof(char *));
+	char	  **envp = palloc(16 * sizeof(char *));
 	int			i = 0;
 
 	envp[i++] = psprintf("LAKE_SLOT=%s", slotName);
@@ -445,8 +464,10 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	 */
 	envp[i++] = pstrdup("LAKE_RECEIVER_IDLE_TIMEOUT_MS=200");
 	envp[i++] = pstrdup("LAKE_SUPERVISOR_POLL_MS=100");
+	if (CredentialFile != NULL && CredentialFile[0] != '\0')
+		envp[i++] = psprintf("LAKE_CREDENTIAL_FILE=%s", CredentialFile);
 	envp[i++] = NULL;
-	Assert(i == 15);
+	Assert(i <= 16);
 	return envp;
 }
 
@@ -1409,6 +1430,18 @@ _PG_init(void)
 							   PGC_SIGHUP,
 							   0,
 							   NULL, NULL, NULL);
+
+	DefineCustomStringVariable("lake_subscription_sugar.credential_file",
+							   "Absolute path to the owner-only worker credential file. "
+							   "The file may provide source/destination users, passwords, "
+							   "and TLS settings. Only takes effect for launcher workers "
+							   "after PostgreSQL restart.",
+							   NULL,
+							   &CredentialFile,
+							   NULL,
+							   PGC_SIGHUP,
+							   0,
+							   check_credential_file, NULL, NULL);
 
 	DefineCustomIntVariable("lake_subscription_sugar.launcher_naptime_ms",
 							"How often the launcher polls worker_launch_config for "

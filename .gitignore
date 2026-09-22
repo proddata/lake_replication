@@ -1,4 +1,5 @@
 .lab/
+.qualification/
 __pycache__/
 *.pyc
 .env

@@ -164,6 +164,7 @@ dependencies = [
 name = "lake-replication-worker"
 version = "0.1.0"
 dependencies = [
+ "libc",
  "postgres-protocol",
  "rustls",
  "rustls-pemfile",

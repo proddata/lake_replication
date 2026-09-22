@@ -1,0 +1,21 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+USER root
+COPY bundle.tar.gz /tmp/pg_lake_replication-bundle.tar.gz
+RUN mkdir /tmp/pg_lake_replication-bundle \
+    && mkdir -p /qualification \
+    && tar -xzf /tmp/pg_lake_replication-bundle.tar.gz \
+           -C /tmp/pg_lake_replication-bundle --strip-components=1 \
+    && cd /tmp/pg_lake_replication-bundle \
+    && sha256sum -c --quiet SHA256SUMS \
+    && ./install.sh \
+    && install -m 0755 uninstall.sh /qualification/uninstall.sh \
+    && rm -rf /tmp/pg_lake_replication-bundle \
+                 /tmp/pg_lake_replication-bundle.tar.gz
+
+COPY destination-init.sql /docker-entrypoint-initdb.d/20-qualification.sql
+COPY pgduck.sh pgduck.sql /qualification/
+RUN chmod 0755 /qualification/pgduck.sh
+
+WORKDIR /qualification

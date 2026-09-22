@@ -9,7 +9,7 @@ COPY Cargo.toml Cargo.lock ./
 COPY worker ./worker
 RUN cargo build --release --bins
 
-FROM postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af
+FROM postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af AS pg-lake-base
 ARG PG_LAKE_REV=8180647d4535fdb1ed223f92f301ba6094a8ec3e
 ARG BUILD_JOBS=2
 RUN apt-get update && apt-get install -y --no-install-recommends \

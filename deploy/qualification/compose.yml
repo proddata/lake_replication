@@ -1,0 +1,152 @@
+name: pg-lake-replication-qualification
+
+services:
+  source:
+    image: ${QUALIFICATION_SOURCE_IMAGE:?set QUALIFICATION_SOURCE_IMAGE}
+    environment:
+      POSTGRES_DB: application
+      POSTGRES_PASSWORD: ${QUAL_ADMIN_PASSWORD:?set QUAL_ADMIN_PASSWORD}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      QUAL_SOURCE_PASSWORD: ${QUAL_SOURCE_PASSWORD:?set QUAL_SOURCE_PASSWORD}
+      PGDATA: /var/lib/postgresql/18/data
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_replication_slots=8
+      - -c
+      - max_wal_senders=8
+      - -c
+      - password_encryption=scram-sha-256
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d application"]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+    volumes:
+      - source-data:/var/lib/postgresql/18/data
+
+  credentials-init:
+    image: ${QUALIFICATION_DESTINATION_IMAGE:?set QUALIFICATION_DESTINATION_IMAGE}
+    user: root
+    entrypoint: [/bin/sh, -ec]
+    environment:
+      QUAL_SOURCE_PASSWORD: ${QUAL_SOURCE_PASSWORD:?set QUAL_SOURCE_PASSWORD}
+      QUAL_DESTINATION_PASSWORD: ${QUAL_ADMIN_PASSWORD:?set QUAL_ADMIN_PASSWORD}
+    command:
+      - |
+        install -d -o postgres -g postgres -m 0700 /credentials
+        install -d -o postgres -g postgres -m 0700 /worker-logs
+        umask 077
+        printf '%s\n' \
+          'LAKE_SOURCE_USER=lake_source' \
+          "LAKE_SOURCE_PASSWORD=$${QUAL_SOURCE_PASSWORD}" \
+          'LAKE_SOURCE_TLS_MODE=disable' \
+          'LAKE_DESTINATION_USER=postgres' \
+          "LAKE_DESTINATION_PASSWORD=$${QUAL_DESTINATION_PASSWORD}" \
+          'LAKE_DESTINATION_TLS_MODE=disable' \
+          > /credentials/worker.env
+        chown postgres:postgres /credentials/worker.env
+        chmod 0600 /credentials/worker.env
+    volumes:
+      - credentials:/credentials
+      - worker-logs:/worker-logs
+
+  destination:
+    image: ${QUALIFICATION_DESTINATION_IMAGE:?set QUALIFICATION_DESTINATION_IMAGE}
+    environment:
+      POSTGRES_DB: analytics
+      POSTGRES_PASSWORD: ${QUAL_ADMIN_PASSWORD:?set QUAL_ADMIN_PASSWORD}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      PGDATA: /var/lib/postgresql/18/data
+    command:
+      - postgres
+      - -c
+      - max_worker_processes=24
+      - -c
+      - shared_preload_libraries=pg_extension_base,lake_subscription_sugar
+      - -c
+      - lake_subscription_sugar.database_name=analytics
+      - -c
+      - lake_subscription_sugar.credential_file=/credentials/worker.env
+      - -c
+      - lake_subscription_sugar.log_directory=/worker-logs
+      - -c
+      - pg_lake_engine.host=host=/var/run/pgduck port=5332
+      - -c
+      - pg_lake_iceberg.default_location_prefix=s3://lake-qualification/iceberg
+    depends_on:
+      credentials-init:
+        condition: service_completed_successfully
+      pgduck:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d analytics"]
+      interval: 2s
+      timeout: 3s
+      retries: 90
+    shm_size: 256mb
+    volumes:
+      - destination-data:/var/lib/postgresql/18/data
+      - pgduck-socket:/var/run/pgduck
+      - credentials:/credentials:ro
+      - worker-logs:/worker-logs
+
+  pgduck:
+    image: ${QUALIFICATION_DESTINATION_IMAGE:?set QUALIFICATION_DESTINATION_IMAGE}
+    user: postgres
+    entrypoint: [/qualification/pgduck.sh]
+    depends_on:
+      storage-init:
+        condition: service_completed_successfully
+      socket-permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, psql, -h, /var/run/pgduck, -p, '5332', -U, postgres, -d, postgres, -c, SELECT 1]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+    volumes:
+      - destination-data:/var/lib/postgresql/18/data
+      - pgduck-socket:/var/run/pgduck
+
+  socket-permissions:
+    image: ${QUALIFICATION_DESTINATION_IMAGE:?set QUALIFICATION_DESTINATION_IMAGE}
+    user: root
+    entrypoint: [chown, postgres:postgres, /var/run/pgduck]
+    volumes:
+      - pgduck-socket:/var/run/pgduck
+
+  storage:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: lake-qualification
+      MINIO_ROOT_PASSWORD: qualification-object-secret
+    volumes:
+      - object-data:/data
+
+  storage-init:
+    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3
+    depends_on:
+      - storage
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        for attempt in $$(seq 1 60); do
+          if mc alias set qualification http://storage:9000 lake-qualification qualification-object-secret; then
+            mc mb --ignore-existing qualification/lake-qualification
+            exit 0
+          fi
+          sleep 1
+        done
+        exit 1
+
+volumes:
+  source-data:
+  destination-data:
+  pgduck-socket:
+  credentials:
+  worker-logs:
+  object-data:
