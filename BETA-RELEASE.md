@@ -3,9 +3,9 @@
 Target: `v0.1.0-beta.1`
 
 Status: **not releasable yet**. The artifact, clean-host qualification,
-operations/observability contract, and operator documentation exist, but the
-second-architecture installation, a full recovery drill, security review,
-soak, and the first signed prerelease still need evidence.
+operations/observability contract, and operator documentation exist, but a
+full recovery drill, security review, soak, and the first signed prerelease
+still need evidence.
 
 This file is the release control document. Historical `docs/milestone-*.md`
 files remain the engineering evidence journal; new beta work updates the gates
@@ -17,8 +17,8 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PASS | Required checks pass on the release commit in GitHub | GitHub Actions [`check` and `bundle` run 35690455931](https://github.com/proddata/pg_lake_replication/actions/runs/35690455931) passed on `7aa744e`; the uploaded bundle artifact was downloaded and inspected independently. |
-| G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Both architectures build locally and in remote CI. Run 35690455931 exported amd64 and arm64 archives; both downloaded checksums passed and their embedded `TARGETARCH` values matched. The exact arm64 bundle passes all eight install/load/link assertions; clean-host installation of both remote archives remains. See [release evidence](docs/evidence/2026-09-22-multiarch-release-results.json) and [install evidence](docs/evidence/2026-09-22-install-bundle-results.json). |
+| G0. Remote CI | PASS | Required checks pass on the release commit in GitHub | GitHub Actions [run 35765895316](https://github.com/proddata/pg_lake_replication/actions/runs/35765895316) passed `check`, multi-architecture bundle construction, and the manually retained amd64 qualification lane on `8c72a79`. Ordinary pushes and pull requests keep qualification manual because rebuilding pinned pg_lake dominates its runtime. |
+| G1. Installable artifacts | PASS | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Both architectures build in remote CI with verified external checksums and embedded `TARGETARCH` metadata. The exact arm64 archive passes the install/load/link and full clean-host probes; run 35765895316 independently qualified the exported amd64 archive through all 27 checks. See [release evidence](docs/evidence/2026-09-22-multiarch-release-results.json), [install evidence](docs/evidence/2026-09-22-install-bundle-results.json), and [qualification instructions](deploy/qualification/README.md). |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The artifact-only arm64 run passed checksum/install, SCRAM credentials, initial/live replication, disable/enable, restart recovery, observability, secret-free logs, slot cleanup, and removal without mounting repository source into the running hosts. See [qualification instructions](deploy/qualification/README.md) and [evidence](docs/evidence/2026-09-22-clean-host-qualification-results.json). The second-architecture archive remains tracked by G1. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Existing laboratory correctness/crash evidence passes. Define and run one RC soak using the packaged binaries. |
 | G4. Compatibility range | PASS | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | The same archive from `55822ef` passed all 27 artifact-only checks against pg_lake 3.6 commits `8180647d4535fdb1ed223f92f301ba6094a8ec3e` and `f609ecb17891383f021aebb0e249fe2994ed57bb`, twelve days apart on one ancestry path. See the shipped [compatibility matrix](deploy/install/COMPATIBILITY.md) and [evidence](docs/evidence/2026-09-22-pg-lake-compatibility-results.json). |
@@ -38,9 +38,9 @@ intentional non-goal for this beta.
 
 ## Execution order
 
-1. Qualify the second-architecture archive for G1.
-2. Close G6 supply-chain review and complete the G7 physical/object-store recovery drill.
-3. Run the G3 release-candidate soak from the packaged build.
+1. Close G6 supply-chain review and complete the G7 physical/object-store recovery drill.
+2. Run the G3 release-candidate soak from the packaged build.
+3. Manually run the clean-host qualification on the final release commit.
 4. Publish and independently verify G9; record final evidence directly here.
 
 The scope is frozen to these gates. New feature work is deferred unless it

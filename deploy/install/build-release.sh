@@ -6,6 +6,7 @@ root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
 version=${VERSION:-0.1.0-beta.1}
 output=${1:-$root/dist/release}
 revision=${REVISION:-$(git -C "$root" rev-parse HEAD)}
+arches=${ARCHES:-"amd64 arm64"}
 
 if [ -n "$(git -C "$root" status --porcelain --untracked-files=normal)" ] \
    && [ "${ALLOW_DIRTY:-0}" != 1 ]; then
@@ -25,7 +26,14 @@ sha256_file() {
     fi
 }
 
-for arch in amd64 arm64; do
+for arch in $arches; do
+    case "$arch" in
+        amd64|arm64) ;;
+        *)
+            echo "unsupported release architecture: $arch" >&2
+            exit 1
+            ;;
+    esac
     stage="$work/$arch"
     mkdir -p "$stage"
     PLATFORM="linux/$arch" VERSION="$version" REVISION="$revision" \

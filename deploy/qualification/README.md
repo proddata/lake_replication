@@ -40,6 +40,12 @@ Result JSON and captured logs are written under `.qualification/`. The probe
 always removes its containers and volumes; it does not start, stop, or modify
 the development lab.
 
+The GitHub Actions CI workflow intentionally does not run this expensive build
+for ordinary pushes or pull requests. To qualify the amd64 artifact remotely,
+open the **CI** workflow in GitHub Actions and choose **Run workflow**. A manual
+run builds both release artifacts and runs `qualify-amd64` after the amd64
+bundle is available.
+
 ## pg_lake compatibility lane
 
 The same artifact-only probe can build and qualify disposable hosts at the two

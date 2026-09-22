@@ -4,6 +4,11 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -20,24 +25,41 @@ jobs:
       - name: Check
         run: make check
 
-  bundle:
+  bundle-amd64:
+    name: bundle (amd64)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4
       - uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
-      - name: Build amd64 and arm64 bundles
-        run: make install-bundles
+      - name: Build amd64 bundle
+        run: ARCHES=amd64 make install-bundles
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: install-bundles
+          name: install-bundle-amd64
           path: |
-            dist/release/*.tar.gz
-            dist/release/*.sha256
+            dist/release/*-linux-amd64.tar.gz
+            dist/release/*-linux-amd64.tar.gz.sha256
+          if-no-files-found: error
+
+  bundle-arm64:
+    name: bundle (arm64)
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+      - name: Build arm64 bundle natively
+        run: ARCHES=arm64 make install-bundles
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: install-bundle-arm64
+          path: |
+            dist/release/*-linux-arm64.tar.gz
+            dist/release/*-linux-arm64.tar.gz.sha256
           if-no-files-found: error
 
   qualify-amd64:
-    needs: [check, bundle]
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: [check, bundle-amd64]
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -45,7 +67,7 @@ jobs:
       - name: Download release bundles
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: install-bundles
+          name: install-bundle-amd64
           path: dist/release
       - name: Qualify amd64 archive on PostgreSQL 18 with pg_lake
         env:

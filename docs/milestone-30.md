@@ -14,7 +14,11 @@ requires the release tag, Rust worker version, and `lake_replication` extension
 version to agree.
 
 The pull-request/main CI workflow runs the existing full check target and
-builds both distributable archives. The tag workflow additionally:
+builds both distributable archives in parallel on native amd64 and arm64
+runners. Superseded runs for the same event and ref are cancelled. The
+expensive clean-host pg_lake qualification is an explicit `workflow_dispatch`
+release-gate operation rather than a per-push job. The tag workflow
+additionally:
 
 - generates an SPDX JSON SBOM for each extracted artifact with Syft;
 - creates per-artifact and aggregate SHA-256 manifests;
