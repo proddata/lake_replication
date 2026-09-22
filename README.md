@@ -1,5 +1,9 @@
 # pg_lake_replication
 
+Release work is tracked in [BETA-RELEASE.md](BETA-RELEASE.md); numbered
+milestones are retained as implementation evidence rather than the active
+release plan.
+
 An early feasibility project for replicating PostgreSQL heap tables into
 `pg_lake` Iceberg tables. The requirements are in [project_brief.md](project_brief.md).
 The current prototype includes initial snapshot synchronization, a logical

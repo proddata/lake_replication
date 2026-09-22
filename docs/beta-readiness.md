@@ -1,8 +1,9 @@
 # Beta readiness plan
 
-Status: planning document, not a completed milestone. It sets the scope and
-order for turning the current lab/PoC prototype into something a design
-partner can install next to their own `pg_lake` and run unattended. See
+Status: background design document. Active release execution and pass/fail
+status now live in [the beta release gate](../BETA-RELEASE.md). This document
+sets the scope and rationale for turning the current lab/PoC prototype into
+something a design partner can install next to their own `pg_lake` and run unattended. See
 [the feasibility report](feasibility.md) for the evidence this plan is
 reacting to, and [milestones 1 through 25](milestone-1.md) for what already
 works end to end.
