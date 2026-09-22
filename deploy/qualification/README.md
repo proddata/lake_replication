@@ -9,6 +9,8 @@ The probe checks:
 
 - the external archive checksum and its embedded checksums;
 - installation and extension loading on a fresh destination;
+- in-place extension upgrade from the installable development baseline with
+  retained control state and no advertised SQL downgrade;
 - SCRAM authentication using an owner-only worker credential file;
 - initial copy, live insert/update, disable/enable catch-up, and restart
   recovery;
@@ -28,7 +30,7 @@ To qualify an already downloaded native archive, keep its adjacent
 `.sha256` file and select it explicitly:
 
 ```sh
-QUALIFICATION_ARCHIVE=/path/to/pg_lake_replication-0.1.0-linux-arm64.tar.gz \
+QUALIFICATION_ARCHIVE=/path/to/pg_lake_replication-0.1.0-beta.1-linux-arm64.tar.gz \
   make qualification-test
 ```
 

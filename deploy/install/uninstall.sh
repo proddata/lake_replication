@@ -30,8 +30,12 @@ for file in \
     "$destination_root$library_dir/lake_subscription_sugar.so" \
     "$destination_root$shared_extension_dir/lake_subscription_sugar.control" \
     "$destination_root$shared_extension_dir/lake_subscription_sugar--1.0.sql" \
+    "$destination_root$shared_extension_dir/lake_subscription_sugar--1.1.sql" \
+    "$destination_root$shared_extension_dir/lake_subscription_sugar--1.0--1.1.sql" \
     "$destination_root$shared_extension_dir/lake_replication.control" \
-    "$destination_root$shared_extension_dir/lake_replication--0.1.0.sql"
+    "$destination_root$shared_extension_dir/lake_replication--0.1.0.sql" \
+    "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.1.sql" \
+    "$destination_root$shared_extension_dir/lake_replication--0.1.0--0.1.0-beta.1.sql"
 do
     if [ -e "$file" ]; then
         rm -f -- "$file"

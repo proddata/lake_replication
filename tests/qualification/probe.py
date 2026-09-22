@@ -22,7 +22,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-VERSION = os.environ.get("VERSION", "0.1.0")
+VERSION = os.environ.get("VERSION", "0.1.0-beta.1")
 RUN = datetime.now(timezone.utc).strftime("qualification_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".qualification" / RUN
 COMPOSE_FILE = ROOT / "deploy/qualification/compose.yml"
@@ -286,11 +286,200 @@ test -f "$(pg_config --pkglibdir)/lake_subscription_sugar.so"
 test ! -e /usr/local/bin/lake-replication-supervisor
 test ! -e "$(pg_config --pkglibdir)/lake_subscription_sugar.so"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication.control"
+test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.1.sql"
+test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0--0.1.0-beta.1.sql"
 test -e "$(pg_config --sharedir)/extension/pg_lake.control"
 printf 'uninstall-verified\\n'
 """,
     )
     check("uninstaller removes only project program files", "uninstall-verified" in result.stdout, True)
+
+
+def verify_upgrade_contract():
+    database = "upgrade_contract"
+    restore_database = "upgrade_restore"
+    dump_path = "/tmp/lake-upgrade-contract.dump"
+    compose("exec", "-T", "destination", "createdb", "-U", "postgres", database)
+    try:
+        sql(
+            "destination",
+            database,
+            "CREATE EXTENSION pg_lake CASCADE; "
+            "CREATE EXTENSION lake_replication VERSION '0.1.0'; "
+            "CREATE EXTENSION lake_subscription_sugar VERSION '1.0' CASCADE;",
+        )
+        subscription_id = sql(
+            "destination",
+            database,
+            "SELECT lake_replication.create_subscription("
+            "9001, 1234, 1, 'upgrade_fixture', 'upgrade_slot', "
+            "ARRAY['upgrade_pub']);",
+        )
+        sql(
+            "destination",
+            database,
+            f"SELECT lake_replication.start_service({subscription_id}, 4242); "
+            "UPDATE lake_replication.subscriptions SET state='streaming' "
+            f"WHERE subscription_id={subscription_id}; "
+            "UPDATE lake_replication.checkpoints "
+            "SET received_lsn='0/10', staged_lsn='0/10', "
+            "published_lsn='0/10', acknowledged_lsn='0/10' "
+            f"WHERE subscription_id={subscription_id};",
+        )
+        sql(
+            "destination",
+            database,
+            f"INSERT INTO lake_subscription_sugar.pending_cleanup "
+            "(subscription_id, source_conninfo, source_slot_name) VALUES "
+            f"({subscription_id}, 'host=source dbname=application', 'upgrade_slot'); "
+            "INSERT INTO lake_subscription_sugar.worker_launch_config "
+            "(subscription_id, slot_name, publication_name, source_database, "
+            "destination_database, source_address, destination_address, "
+            "destination_schema) VALUES "
+            f"({subscription_id}, 'upgrade_slot', 'upgrade_pub', 'application', "
+            "'upgrade_contract', 'source:5432', '/var/run/postgresql:5432', 'public');",
+        )
+        check(
+            "development baseline excludes beta observability schema",
+            sql(
+                "destination",
+                database,
+                "SELECT extversion || ':' || "
+                "(to_regclass('lake_replication.subscription_status') IS NULL) "
+                "FROM pg_extension WHERE extname='lake_replication'",
+            ),
+            "0.1.0:true",
+        )
+        sql(
+            "destination",
+            database,
+            "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1'; "
+            "ALTER EXTENSION lake_subscription_sugar UPDATE TO '1.1';",
+        )
+        check(
+            "extension upgrades in place and preserves control-plane state",
+            sql(
+                "destination",
+                database,
+                "SELECT e.extversion || ':' || s.subscription_name || ':' || "
+                "c.published_lsn || ':' || st.health_state "
+                "FROM pg_extension e "
+                "JOIN lake_replication.subscriptions s ON true "
+                "JOIN lake_replication.checkpoints c USING (subscription_id) "
+                "JOIN lake_replication.subscription_status st USING (subscription_id) "
+                "WHERE e.extname='lake_replication' "
+                "AND s.subscription_name='upgrade_fixture'",
+            ),
+            "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+        )
+        check(
+            "upgrade registers durable extension state for logical backup",
+            sql(
+                "destination",
+                database,
+                "SELECT "
+                "(SELECT cardinality(extconfig) FROM pg_extension "
+                "WHERE extname='lake_replication') || ':' || "
+                "(SELECT extversion || ':' || cardinality(extconfig) "
+                "FROM pg_extension WHERE extname='lake_subscription_sugar') || ':' || "
+                "(SELECT count(*) FROM lake_subscription_sugar.worker_launch_config)",
+            ),
+            "16:1.1:2:1",
+        )
+        logical_dump = compose(
+            "exec",
+            "-T",
+            "destination",
+            "pg_dump",
+            "-U",
+            "postgres",
+            "--data-only",
+            database,
+        ).stdout
+        check(
+            "logical backup contains durable state but not regenerated seed mappings",
+            "COPY lake_replication.subscriptions" in logical_dump
+            and "COPY lake_subscription_sugar.worker_launch_config" in logical_dump
+            and "COPY lake_replication.type_mappings" not in logical_dump,
+            True,
+        )
+        compose(
+            "exec",
+            "-T",
+            "destination",
+            "pg_dump",
+            "-U",
+            "postgres",
+            "--format=custom",
+            f"--file={dump_path}",
+            database,
+        )
+        compose(
+            "exec", "-T", "destination", "createdb", "-U", "postgres", restore_database
+        )
+        for section in ("pre-data", "data", "post-data"):
+            restore_args = [
+                "exec",
+                "-T",
+                "destination",
+                "pg_restore",
+                "--exit-on-error",
+                f"--section={section}",
+            ]
+            if section == "data":
+                restore_args.append("--disable-triggers")
+            restore_args.extend(
+                ["-U", "postgres", "--dbname", restore_database, dump_path]
+            )
+            compose(*restore_args)
+        check(
+            "logical backup restores extension versions and durable control state",
+            sql(
+                "destination",
+                restore_database,
+                "SELECT "
+                "(SELECT extversion FROM pg_extension "
+                "WHERE extname='lake_replication') || ':' || "
+                "(SELECT extversion FROM pg_extension "
+                "WHERE extname='lake_subscription_sugar') || ':' || "
+                "(SELECT count(*) FROM lake_replication.subscriptions) || ':' || "
+                "(SELECT count(*) FROM lake_subscription_sugar.worker_launch_config)",
+            ),
+            "0.1.0-beta.1:1.1:1:1",
+        )
+        check(
+            "no unsupported SQL downgrade path is advertised",
+            sql(
+                "destination",
+                database,
+                "SELECT count(*) FROM pg_extension_update_paths('lake_replication') "
+                "WHERE source='0.1.0-beta.1' AND target='0.1.0' "
+                "AND path IS NOT NULL",
+            ),
+            "0",
+        )
+    finally:
+        for disposable_database in (restore_database, database):
+            compose(
+                "exec",
+                "-T",
+                "destination",
+                "dropdb",
+                "--if-exists",
+                "-U",
+                "postgres",
+                disposable_database,
+                check_result=False,
+            )
+        compose(
+            "exec",
+            "-T",
+            "destination",
+            "rm",
+            "-f",
+            dump_path,
+            check_result=False,
+        )
 
 
 def exercise_replication():
@@ -448,8 +637,9 @@ def main():
                 "FROM pg_extension WHERE extname IN "
                 "('lake_replication', 'lake_subscription_sugar')",
             ),
-            "lake_replication:0.1.0,lake_subscription_sugar:1.0",
+            "lake_replication:0.1.0-beta.1,lake_subscription_sugar:1.1",
         )
+        verify_upgrade_contract()
         exercise_replication()
         verify_uninstaller()
         EVIDENCE["status"] = "passed"

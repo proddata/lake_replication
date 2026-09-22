@@ -1,5 +1,5 @@
 # lake_replication extension
 comment = 'Durable external logical replication from PostgreSQL heap tables to pg_lake Iceberg tables'
-default_version = '0.1.0'
+default_version = '0.1.0-beta.1'
 relocatable = false
 requires = 'pg_lake'

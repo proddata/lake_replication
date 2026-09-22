@@ -38,6 +38,16 @@ group/other permissions, duplicate keys, unknown keys, and files larger than
 It does not edit `postgresql.conf`, restart PostgreSQL, create extensions in a
 database, or remove data. Those remain explicit operator actions.
 
+For an existing installation, disable subscriptions and take the coordinated
+PostgreSQL/object-store backup described in the bundled `UPGRADE.md` before
+replacing files. After installing this bundle, upgrade the database objects
+with:
+
+```sql
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1';
+ALTER EXTENSION lake_subscription_sugar UPDATE TO '1.1';
+```
+
 ## Removal
 
 Disable or drop managed subscriptions first, remove
@@ -69,7 +79,7 @@ dirty source tree so its recorded revision is unambiguous. For a local test of
 uncommitted packaging changes, opt in explicitly with
 `ALLOW_DIRTY=1 make install-bundles`.
 
-Pushing a version tag such as `v0.1.0` runs the release workflow. The tag must
+Pushing a version tag such as `v0.1.0-beta.1` runs the release workflow. The tag must
 match the worker and SQL-extension versions. The workflow builds both bundles,
 generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
 keylessly signs every archive, SBOM, and checksum manifest with Sigstore

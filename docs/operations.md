@@ -184,5 +184,5 @@ LSNs, and database error details.
 - Lag is measured in WAL bytes, not wall-clock seconds.
 - The 30-second heartbeat classification is fixed in the initial extension
   version. Exporters may apply a stricter threshold.
-- Upgrade, rollback, backup, and uninstall procedures are tracked separately in
-  the [beta release gate](../BETA-RELEASE.md).
+- [Upgrade, backup, and rollback procedures](upgrade-and-rollback.md) are
+  documented separately; uninstall instructions ship inside each bundle.

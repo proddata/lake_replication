@@ -60,7 +60,10 @@ def main():
 
         shared = "/usr/share/postgresql/18/extension"
         for filename in [
-            "lake_replication.control", "lake_replication--0.1.0.sql",
+            "lake_replication.control",
+            "lake_replication--0.1.0.sql",
+            "lake_replication--0.1.0-beta.1.sql",
+            "lake_replication--0.1.0--0.1.0-beta.1.sql",
         ]:
             command([
                 "docker", "cp", str(EXTENSION / filename),
@@ -72,7 +75,7 @@ def main():
         check(
             "extension version",
             sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),
-            "0.1.0",
+            "0.1.0-beta.1",
         )
         check(
             "all type mappings installed",
@@ -132,6 +135,8 @@ def main():
                 "docker", "exec", "-u", "root", container, "rm", "-f",
                 "/usr/share/postgresql/18/extension/lake_replication.control",
                 "/usr/share/postgresql/18/extension/lake_replication--0.1.0.sql",
+                "/usr/share/postgresql/18/extension/lake_replication--0.1.0-beta.1.sql",
+                "/usr/share/postgresql/18/extension/lake_replication--0.1.0--0.1.0-beta.1.sql",
             ], check=False)
         EVIDENCE["passed"] = exit_code == 0
         (RESULTS / "results.json").write_text(

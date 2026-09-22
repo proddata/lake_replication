@@ -113,8 +113,8 @@ bundle from a clean checkout:
 
 ```sh
 make install-bundle
-tar -xzf dist/pg_lake_replication-0.1.0.tar.gz -C /tmp
-cd /tmp/pg_lake_replication-0.1.0
+tar -xzf dist/pg_lake_replication-0.1.0-beta.1.tar.gz -C /tmp
+cd /tmp/pg_lake_replication-0.1.0-beta.1
 sudo ./install.sh
 ```
 
@@ -256,7 +256,9 @@ Useful first checks are:
   worker output.
 
 See the [operations guide](docs/operations.md) for metric names, suggested alert
-thresholds, structured log fields, and the first-response checklist.
+thresholds, structured log fields, and the first-response checklist. Before
+changing an installed version, follow the coordinated
+[upgrade, backup, and rollback procedure](docs/upgrade-and-rollback.md).
 
 ## Beta limitations
 
@@ -272,8 +274,8 @@ thresholds, structured log fields, and the first-response checklist.
   in the protected `lake_subscription_sugar.pending_cleanup` table when it is
   embedded in `CREATE SUBSCRIPTION ... CONNECTION`, matching PostgreSQL's own
   subscription-conninfo tradeoff.
-- Compatibility has been validated against one pg_lake revision. Clean-host,
-  upgrade/rollback, extended compatibility, observability integration, and
+- Compatibility has been validated against one pg_lake revision. Extended
+  compatibility, recovery-drill, observability failure-path, security, and
   release-candidate soak gates remain open.
 - No signed GitHub prerelease has been published yet. Source checkouts and CI
   artifacts are development outputs until `v0.1.0-beta.1` is released.

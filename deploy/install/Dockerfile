@@ -22,7 +22,7 @@ RUN make -C /src/extensions/lake_subscription_sugar all \
 
 FROM debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251 AS assembler
 ARG TARGETARCH
-ARG VERSION=0.1.0
+ARG VERSION=0.1.0-beta.1
 ARG REVISION=unknown
 WORKDIR /bundle/pg_lake_replication-${VERSION}
 COPY --from=worker-builder \
@@ -37,11 +37,16 @@ COPY --from=extension-builder \
 COPY --from=extension-builder \
     /src/extensions/lake_subscription_sugar/lake_subscription_sugar.control \
     /src/extensions/lake_subscription_sugar/lake_subscription_sugar--1.0.sql \
+    /src/extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql \
+    /src/extensions/lake_subscription_sugar/lake_subscription_sugar--1.0--1.1.sql \
     /src/extensions/lake_replication/lake_replication.control \
     /src/extensions/lake_replication/lake_replication--0.1.0.sql \
+    /src/extensions/lake_replication/lake_replication--0.1.0-beta.1.sql \
+    /src/extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql \
     payload/extension/
 COPY deploy/install/install.sh deploy/install/uninstall.sh \
      deploy/install/README.md deploy/install/COMPATIBILITY.md ./
+COPY docs/upgrade-and-rollback.md UPGRADE.md
 COPY LICENSE ./
 RUN printf '%s\n' "$VERSION" > VERSION \
     && printf '%s\n' "$REVISION" > SOURCE_REVISION \
@@ -57,7 +62,7 @@ RUN cd /bundle \
        > pg_lake_replication-${VERSION}.tar.gz.sha256
 
 FROM scratch AS bundle
-ARG VERSION=0.1.0
+ARG VERSION=0.1.0-beta.1
 COPY --from=assembler /bundle/pg_lake_replication-${VERSION} /pg_lake_replication-${VERSION}
 COPY --from=assembler /bundle/pg_lake_replication-${VERSION}.tar.gz /pg_lake_replication-${VERSION}.tar.gz
 COPY --from=assembler /bundle/pg_lake_replication-${VERSION}.tar.gz.sha256 /pg_lake_replication-${VERSION}.tar.gz.sha256

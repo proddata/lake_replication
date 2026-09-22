@@ -34,8 +34,9 @@ independently against an existing `pg_lake`-enabled PostgreSQL:
    `ALTER EXTENSION lake_replication UPDATE` is how a beta customer moves
    between releases -- the same mechanism `pg_lake` itself and every other
    real Postgres extension uses. This is a mechanical but non-trivial
-   conversion. The initial `0.1.0` base extension is now generated from the
-   ordered migrations by `extensions/lake_replication`; every migration was
+   conversion. The `0.1.0-beta.1` base extension and its explicit upgrade from
+   the frozen `0.1.0` development baseline are generated from the ordered
+   migrations by `extensions/lake_replication`; every migration was
    written to run once, forward-only,
    inside `docker-entrypoint-initdb.d`; converting to extension-versioned
    upgrade scripts means auditing each one for idempotency and ordering
@@ -176,10 +177,11 @@ retain the updated integration probes against the packaged build.
 ### 3. Packaging and supply chain
 
 - Convert `migrations/*.sql` into a versioned `lake_replication` extension
-  as described above. **In progress:** the generated `0.1.0` base extension,
-  PGXS packaging, transaction-wrapper validation, and a clean install/drop/
-  recreate integration probe are implemented; upgrade-fixture, artifact, and
-  external-instance tests remain.
+  as described above. **In progress:** the generated `0.1.0-beta.1` base,
+  explicit `0.1.0` upgrade path, PGXS packaging, transaction-wrapper
+  validation, clean install/drop/recreate probe, and artifact-only clean-host
+  upgrade/backup/restore checks are implemented. A real beta-to-beta upgrade
+  and coordinated physical/object-store recovery drill remain.
 - Cross-compile and publish the four worker binaries per supported
   platform; stop requiring a Rust toolchain on the target host (today's
   `tests/subscription_sugar/probe.py` cross-build-via-`rust:bookworm`

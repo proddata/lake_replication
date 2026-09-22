@@ -141,16 +141,20 @@ mod tests {
     use std::fs;
     use std::io::Write;
     use std::os::unix::fs::OpenOptionsExt;
+    use std::sync::atomic::{AtomicU64, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
+
+    static NEXT_FILE_ID: AtomicU64 = AtomicU64::new(0);
 
     fn credential_file(mode: u32, contents: &str) -> std::path::PathBuf {
         let path = env::temp_dir().join(format!(
-            "pg-lake-credentials-{}-{}",
+            "pg-lake-credentials-{}-{}-{}",
             std::process::id(),
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .unwrap()
-                .as_nanos()
+                .as_nanos(),
+            NEXT_FILE_ID.fetch_add(1, Ordering::Relaxed)
         ));
         let mut file = OpenOptions::new()
             .write(true)

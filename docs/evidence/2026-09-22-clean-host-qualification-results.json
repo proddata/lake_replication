@@ -1,10 +1,17 @@
 {
-  "archive": "pg_lake_replication-0.1.0.tar.gz",
-  "archive_sha256": "68b81dcabfe2f0bfd24db1ebd26ffa53427e6b3d12ba114456934d82d38eb950",
+  "archive": "pg_lake_replication-0.1.0-beta.1.tar.gz",
+  "archive_sha256": "9c7a8629cf02ee81cb8c1c2d9df899534de379e16bf59023a1e839a2c68a2a26",
   "architecture": "arm64",
   "checks": [
     {"name": "release archive checksum", "passed": true},
-    {"name": "archive-installed extensions load", "passed": true},
+    {"name": "archive architecture matches qualification host", "passed": true},
+    {"name": "archive-installed extensions load", "passed": true, "actual": "lake_replication:0.1.0-beta.1,lake_subscription_sugar:1.1"},
+    {"name": "development baseline excludes beta observability schema", "passed": true},
+    {"name": "extension upgrades in place and preserves control-plane state", "passed": true},
+    {"name": "upgrade registers durable extension state for logical backup", "passed": true, "actual": "16:1.1:2:1"},
+    {"name": "logical backup contains durable state but not regenerated seed mappings", "passed": true},
+    {"name": "logical backup restores extension versions and durable control state", "passed": true, "actual": "0.1.0-beta.1:1.1:1:1"},
+    {"name": "no unsupported SQL downgrade path is advertised", "passed": true},
     {"name": "initial copy reaches the artifact-installed destination", "passed": true},
     {"name": "subscription becomes healthy", "passed": true},
     {"name": "all documented metrics are exported", "passed": true, "actual": 12},
@@ -13,12 +20,12 @@
     {"name": "enable catches up changes made while stopped", "passed": true},
     {"name": "destination is ready after container restart", "passed": true},
     {"name": "launcher resumes replication after restart", "passed": true},
-    {"name": "structured worker logs emitted", "passed": true, "records": 35},
+    {"name": "structured worker logs emitted", "passed": true, "records": 31},
     {"name": "credential values absent from worker logs", "passed": true},
     {"name": "drop removes the source replication slot", "passed": true},
     {"name": "uninstaller removes only project program files", "passed": true}
   ],
   "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
-  "source_revision": "1749d2cf784f426869b5baeb4f17935b860e839f-dirty",
+  "source_revision": "b3cd67ef623ebd6e6839d9225f9341184cee9dbc-dirty",
   "status": "passed"
 }

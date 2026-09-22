@@ -17,11 +17,14 @@ Then, in the pg_lake-enabled destination database:
 CREATE EXTENSION lake_replication;
 ```
 
-The generated `lake_replication--0.1.0.sql` is build output. Each numbered
-migration keeps its transaction wrapper for the laboratory's legacy installer;
-the generator validates and removes only that outer wrapper because PostgreSQL
-runs an extension installation in its own transaction.
+The generated SQL files are build output. The `0.1.0` development baseline is
+frozen at migrations 0001-0015, the `0.1.0-beta.1` base contains migrations
+0001-0016, and the explicit `0.1.0--0.1.0-beta.1` path contains only migration
+0016. Each numbered migration keeps its transaction wrapper for the
+laboratory's legacy installer; the generator validates and removes only that
+outer wrapper because PostgreSQL runs extension installation and upgrades in
+their own transaction.
 
-Future releases must add a new base version and an explicit
-`lake_replication--OLD--NEW.sql` upgrade script. Released migration contents
-must never be edited in place.
+Every future release must add a new base version and explicit forward upgrade
+scripts from supported versions. Released migration contents and generated
+version boundaries must never be edited in place.

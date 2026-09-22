@@ -2,9 +2,10 @@
 
 Target: `v0.1.0-beta.1`
 
-Status: **not releasable yet**. The artifact and release machinery exist, but
-observability integration evidence, clean-host qualification, compatibility
-range, upgrade/rollback, and the first signed prerelease still need evidence.
+Status: **not releasable yet**. The artifact, clean-host qualification, and
+operator documentation exist, but observability failure-path evidence,
+compatibility range, a full recovery drill, security review, soak, and the
+first signed prerelease still need evidence.
 
 This file is the release control document. Historical `docs/milestone-*.md`
 files remain the engineering evidence journal; new beta work updates the gates
@@ -23,9 +24,9 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 | G4. Compatibility range | PARTIAL | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | The shipped matrix currently records only pg_lake 3.6 commit `8180647d4535fdb1ed223f92f301ba6094a8ec3e`. Add a second-revision CI lane. |
 | G5. Operations and observability | PARTIAL | Operators can detect unhealthy subscriptions, lag, retries, and last failure without reading ad-hoc files | Structured JSON worker logs, `subscription_status`, long-form SQL `metrics`, source/journal lag, alert examples, and a first-response guide are implemented. `make check` and disposable-catalog validation pass; run the updated PostgreSQL 18 supervisor/extension probes before marking this gate `PASS`. See [operations](docs/operations.md) and [evidence](docs/evidence/2026-09-22-observability-results.json). |
 | G6. Supply-chain and security review | PARTIAL | Published files have checksums, SBOMs, signatures, vulnerability results, and an approved runtime license inventory with no unresolved high-severity finding | Tag workflow generates SPDX SBOMs and keyless signatures. Add artifact vulnerability scanning, automated license policy, and review of shipped Debian/Rust dependencies. |
-| G7. Upgrade and rollback | NOT STARTED | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | Add the first extension upgrade fixture and package-level upgrade/rollback probe. Database downgrades are not promised; document recovery boundaries. |
-| G8. Operator documentation | PARTIAL | A new operator can install, configure, verify, monitor, troubleshoot, upgrade, and remove the beta from published documentation alone | The README covers evaluation and installation, the operations guide covers monitoring, alerts, logs, and first response, and the bundle documents its conservative file-only uninstaller. Add backup and upgrade/rollback procedures. |
-| G9. Signed prerelease publication | NOT STARTED | GitHub prerelease `v0.1.0-beta.1` is published and independently verified from downloaded assets on a non-build machine | Align worker/extension/artifact versions with the prerelease tag, mark the GitHub release as a prerelease, publish, verify checksums/Sigstore identities/SBOMs, and install the downloaded artifact. |
+| G7. Upgrade and rollback | PARTIAL | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | The artifact ships explicit `0.1.0` to `0.1.0-beta.1` and subscription-control `1.0` to `1.1` paths, registers durable tables for logical backup, and the clean-host lane verifies retained state, real `pg_dump` inclusion, and no SQL downgrade. Complete a physical PostgreSQL/object-store recovery drill and a real beta-to-beta upgrade. See [procedure](docs/upgrade-and-rollback.md) and [evidence](docs/evidence/2026-09-22-clean-host-qualification-results.json). |
+| G8. Operator documentation | PASS | A new operator can install, configure, verify, monitor, troubleshoot, upgrade, and remove the beta from published documentation alone | The README covers evaluation, install, configuration, verification, and lifecycle; the operations guide covers monitoring, alerts, logs, and first response; the shipped bundle includes backup/upgrade/rollback and conservative uninstall procedures. |
+| G9. Signed prerelease publication | PARTIAL | GitHub prerelease `v0.1.0-beta.1` is published and independently verified from downloaded assets on a non-build machine | Worker, primary extension, and artifact versions now match `0.1.0-beta.1`, and prerelease tags create GitHub prereleases. Publish, then verify checksums, Sigstore identities, SBOMs, and installation from downloaded assets. |
 
 ## Release decision
 
@@ -39,8 +40,8 @@ intentional non-goal for this beta.
 
 1. Capture G5 integration evidence without weakening the monitoring contract.
 2. Qualify the second-architecture archive for G1 and build the G4 second-revision compatibility lane.
-3. Implement G7 upgrade/rollback and finish G8 operator documentation.
-4. Close G6 supply-chain review and run the G3 release-candidate soak.
+3. Close G6 supply-chain review and complete the G7 physical/object-store recovery drill.
+4. Run the G3 release-candidate soak from the packaged build.
 5. Publish and independently verify G9; record final evidence directly here.
 
 The scope is frozen to these gates. New feature work is deferred unless it

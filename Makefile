@@ -161,6 +161,11 @@ check:
 	python3 -m py_compile tests/install/probe.py
 	python3 -m py_compile tests/qualification/probe.py
 	$(MAKE) -C extensions/lake_replication generate
+	$(MAKE) -C extensions/lake_subscription_sugar lake_subscription_sugar--1.1.sql
+	! grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0.sql
+	grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
+	grep -q 'pg_extension_config_dump' extensions/lake_replication/lake_replication--0.1.0-beta.1.sql
+	grep -q 'pg_extension_config_dump' extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace
