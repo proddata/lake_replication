@@ -247,7 +247,7 @@ def worker_logs():
     ).stdout
 
 
-def verify_structured_logs(logs):
+def verify_structured_logs(logs, required_events=()):
     records = []
     for line in logs.splitlines():
         line = line.strip()
@@ -261,12 +261,19 @@ def verify_structured_logs(logs):
             raise AssertionError(f"worker log lacks required fields: {record}")
         records.append(record)
     check("structured worker logs emitted", bool(records), True)
+    observed_events = {record["event"] for record in records}
+    check(
+        "structured failure and recovery events emitted",
+        set(required_events).issubset(observed_events),
+        True,
+    )
     check(
         "credential values absent from worker logs",
         ADMIN_PASSWORD not in logs and SOURCE_PASSWORD not in logs,
         True,
     )
     EVIDENCE["worker_log_records"] = len(records)
+    EVIDENCE["worker_log_events"] = sorted(observed_events)
     (RESULTS / "worker.jsonl").write_text(logs)
 
 
@@ -600,7 +607,80 @@ CREATE SUBSCRIPTION orders_to_lake
         ),
         "after-restart",
     )
-    verify_structured_logs(worker_logs())
+    compose("stop", "source", timeout=120)
+    check(
+        "source outage becomes observable retry state",
+        wait_for(
+            "destination",
+            "analytics",
+            "SELECT health_state || ':' || service_state || ':' || "
+            "(consecutive_failures > 0)::text || ':' || "
+            "(total_failures > 0)::text || ':' || "
+            "(next_retry_at IS NOT NULL)::text || ':' || "
+            "(last_failure_at IS NOT NULL)::text || ':' || "
+            "coalesce(last_error LIKE 'no safe writable source endpoint:%', false)::text "
+            "FROM lake_replication.subscription_status "
+            "WHERE subscription_name='orders_to_lake'",
+            "degraded:backoff:true:true:true:true:true",
+            timeout=60,
+        ),
+        "degraded:backoff:true:true:true:true:true",
+    )
+    check(
+        "retry metrics mark the subscription unhealthy",
+        sql(
+            "destination",
+            "analytics",
+            "SELECT "
+            "(max(value) FILTER (WHERE metric='lake_replication_subscription_healthy'))::bigint "
+            "|| ':' || "
+            "(max(value) FILTER (WHERE metric='lake_replication_consecutive_failures') > 0)::text "
+            "|| ':' || "
+            "(max(value) FILTER (WHERE metric='lake_replication_failures_total') > 0)::text "
+            "FROM lake_replication.metrics WHERE subscription_name='orders_to_lake'",
+        ),
+        "0:true:true",
+    )
+    compose("start", "source", timeout=120)
+    check(
+        "source is ready after outage",
+        wait_for("source", "application", "SELECT 1", "1", timeout=60),
+        "1",
+    )
+    check(
+        "subscription recovers while retaining last-failure evidence",
+        wait_for(
+            "destination",
+            "analytics",
+            "SELECT health_state || ':' || service_state || ':' || "
+            "consecutive_failures || ':' || "
+            "(total_failures > 0)::text || ':' || "
+            "(last_failure_at IS NOT NULL)::text || ':' || "
+            "coalesce(last_error LIKE 'no safe writable source endpoint:%', false)::text "
+            "FROM lake_replication.subscription_status "
+            "WHERE subscription_name='orders_to_lake'",
+            "healthy:running:0:true:true:true",
+            timeout=90,
+        ),
+        "healthy:running:0:true:true:true",
+    )
+    sql(
+        "source",
+        "application",
+        "INSERT INTO public.orders (id, note) VALUES (5, 'after-source-outage')",
+    )
+    check(
+        "replication resumes after source outage",
+        wait_for(
+            "destination",
+            "analytics",
+            "SELECT note FROM public.orders WHERE id=5",
+            "after-source-outage",
+            timeout=90,
+        ),
+        "after-source-outage",
+    )
+    verify_structured_logs(worker_logs(), required_events=("cycle_failed",))
     sql("destination", "analytics", "DROP SUBSCRIPTION orders_to_lake")
     check(
         "drop removes the source replication slot",

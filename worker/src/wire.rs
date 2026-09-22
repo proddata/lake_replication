@@ -8,7 +8,9 @@ use std::io::{self, Read, Write};
 use std::net::{IpAddr, TcpStream, ToSocketAddrs};
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, Instant};
+
+const CONNECT_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Clone, Debug)]
 pub struct TlsConfig {
@@ -136,7 +138,7 @@ impl Client {
         application_name: &str,
         password: Option<&str>,
     ) -> Result<Self, Error> {
-        let stream = TcpStream::connect(address)?;
+        let stream = connect_tcp(address, CONNECT_TIMEOUT)?;
         stream.set_nodelay(true)?;
         Self::startup(
             Transport::Plain(stream),
@@ -157,7 +159,7 @@ impl Client {
         password: Option<&str>,
         tls: Option<&TlsConfig>,
     ) -> Result<Self, Error> {
-        let stream = TcpStream::connect(address)?;
+        let stream = connect_tcp(address, CONNECT_TIMEOUT)?;
         stream.set_nodelay(true)?;
         let stream = match tls {
             None => Transport::Plain(stream),
@@ -431,6 +433,40 @@ impl Client {
     }
 }
 
+fn connect_tcp(address: impl ToSocketAddrs, timeout: Duration) -> io::Result<TcpStream> {
+    let started = Instant::now();
+    let mut last_error = None;
+    let mut resolved = false;
+
+    for address in address.to_socket_addrs()? {
+        resolved = true;
+        let Some(remaining) = timeout.checked_sub(started.elapsed()) else {
+            break;
+        };
+        if remaining.is_zero() {
+            break;
+        }
+        match TcpStream::connect_timeout(&address, remaining) {
+            Ok(stream) => return Ok(stream),
+            Err(error) => last_error = Some(error),
+        }
+    }
+
+    if let Some(error) = last_error {
+        return Err(error);
+    }
+    if resolved {
+        return Err(io::Error::new(
+            io::ErrorKind::TimedOut,
+            format!("database connection exceeded {timeout:?}"),
+        ));
+    }
+    Err(io::Error::new(
+        io::ErrorKind::InvalidInput,
+        "database address resolved to no endpoints",
+    ))
+}
+
 fn tls_stream(
     mut stream: TcpStream,
     address: &str,
@@ -619,6 +655,21 @@ fn postgres_now_micros() -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::net::SocketAddr;
+
+    #[test]
+    fn enforces_the_overall_connection_budget() {
+        let address: SocketAddr = "192.0.2.1:5432".parse().unwrap();
+        let error = connect_tcp(&[address][..], Duration::ZERO).unwrap_err();
+        assert_eq!(error.kind(), io::ErrorKind::TimedOut);
+    }
+
+    #[test]
+    fn rejects_an_address_with_no_resolved_endpoints() {
+        let addresses: [SocketAddr; 0] = [];
+        let error = connect_tcp(&addresses[..], Duration::from_secs(1)).unwrap_err();
+        assert_eq!(error.kind(), io::ErrorKind::InvalidInput);
+    }
 
     #[test]
     fn parses_postgresql_sasl_mechanism_lists() {
