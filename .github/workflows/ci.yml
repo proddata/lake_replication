@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Select Rust 1.85
         run: |
-          rustup toolchain install 1.85 --profile minimal
+          rustup toolchain install 1.85 --profile minimal --component rustfmt
           rustup default 1.85
       - name: Check
         run: make check
