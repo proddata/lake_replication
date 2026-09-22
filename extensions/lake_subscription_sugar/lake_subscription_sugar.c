@@ -828,7 +828,19 @@ lake_subscription_sugar_launcher_main(Datum main_arg)
 		}
 		PG_CATCH();
 		{
-			ErrorData  *edata = CopyErrorData();
+			ErrorData  *edata;
+			MemoryContext oldContext;
+
+			/*
+			 * The transaction abort below deletes its memory context, while
+			 * FlushErrorState deletes ErrorContext.  Copy into the launcher's
+			 * long-lived context before either operation so the diagnostic does
+			 * not become a dangling pointer (and crash the postmaster when the
+			 * extension schema has not been created yet).
+			 */
+			oldContext = MemoryContextSwitchTo(TopMemoryContext);
+			edata = CopyErrorData();
+			MemoryContextSwitchTo(oldContext);
 
 			FlushErrorState();
 			AbortCurrentTransaction();

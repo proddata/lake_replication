@@ -1,0 +1,15 @@
+{
+  "checks": [
+    {"name": "release archive produced", "passed": true},
+    {"name": "compatibility matrix shipped", "passed": true},
+    {"name": "source revision recorded", "passed": true, "actual": "346af1ce60e4ed246430cbdb7126fd8f417717d1-dirty"},
+    {"name": "all bundle checksums", "passed": true},
+    {"name": "installer selected PostgreSQL 18", "passed": true},
+    {"name": "installer reports validated pg_lake revision", "passed": true},
+    {"name": "packaged extensions load", "passed": true, "actual": "lake_replication:0.1.0,lake_subscription_sugar:1.0"},
+    {"name": "packaged native files link", "passed": true}
+  ],
+  "database": "lake_bundle_20260922_050914",
+  "passed": true,
+  "run": "install_20260922_050914"
+}
