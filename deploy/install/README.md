@@ -50,3 +50,8 @@ generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
 keylessly signs every archive, SBOM, and checksum manifest with Sigstore
 Cosign, and publishes them in a GitHub release. All third-party workflow
 actions are pinned to immutable commit SHAs.
+
+The bundle and GitHub release both include `COMPATIBILITY.md`. It distinguishes
+the supported beta target from the exact configuration already validated; in
+particular, the recorded pg_lake commit is evidence, not an exact-revision
+installation gate.

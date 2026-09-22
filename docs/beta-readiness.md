@@ -204,7 +204,10 @@ logging in the worker binaries is a prerequisite.
   `pg_lake` revision range x OS/glibc target) with every release, and add a
   CI job that installs the packaged extension against at least one
   `pg_lake` build the release was not developed against, to catch silent
-  incompatibilities early.
+  incompatibilities early. **In progress:** the bundle and release now ship a
+  conservative matrix distinguishing supported targets from the exact tested
+  configuration. A second pg_lake revision in CI is still required before a
+  revision range can be claimed.
 
 ### 4. Compatibility testing beyond the pinned lab SHA
 

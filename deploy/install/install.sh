@@ -70,6 +70,10 @@ cat <<EOF
 Installed pg_lake_replication $(cat "$script_dir/VERSION") for $postgres_version
 from source revision $(cat "$script_dir/SOURCE_REVISION").
 
+Compatibility was validated against pg_lake 3.6 at commit
+8180647d4535fdb1ed223f92f301ba6094a8ec3e. See COMPATIBILITY.md in the bundle;
+the installed pg_lake source revision cannot be determined from pg_config.
+
 Before creating subscriptions:
 1. Add lake_subscription_sugar to shared_preload_libraries.
 2. Set lake_subscription_sugar.database_name to the destination database.

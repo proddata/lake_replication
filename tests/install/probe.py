@@ -57,6 +57,13 @@ def main():
         command([str(ROOT / "deploy/install/build-bundle.sh"), str(RESULTS / "dist")])
         archive = RESULTS / "dist/pg_lake_replication-0.1.0.tar.gz"
         check("release archive produced", archive.is_file(), True)
+        compatibility = (BUNDLE / "COMPATIBILITY.md").read_text()
+        check(
+            "compatibility matrix shipped",
+            "8180647d4535fdb1ed223f92f301ba6094a8ec3e" in compatibility
+            and "REST-catalog-backed destination tables are unsupported" in compatibility,
+            True,
+        )
         expected_revision = command(["git", "rev-parse", "HEAD"]).stdout.strip()
         if command(["git", "status", "--porcelain"]).stdout.strip():
             expected_revision += "-dirty"
@@ -86,6 +93,11 @@ def main():
         check(
             "installer selected PostgreSQL 18",
             "for PostgreSQL 18." in installed.stdout or "for PostgreSQL 18 " in installed.stdout,
+            True,
+        )
+        check(
+            "installer reports validated pg_lake revision",
+            "8180647d4535fdb1ed223f92f301ba6094a8ec3e" in installed.stdout,
             True,
         )
 

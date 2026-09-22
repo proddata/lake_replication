@@ -38,14 +38,15 @@ jobs:
             "$SYFT" "dir:$unpacked" -o "spdx-json=${archive%.tar.gz}.spdx.json"
             rm -rf "$unpacked"
           done
-          sha256sum dist/release/*.tar.gz dist/release/*.spdx.json \
+          cp deploy/install/COMPATIBILITY.md dist/release/COMPATIBILITY.md
+          sha256sum dist/release/*.tar.gz dist/release/*.spdx.json dist/release/COMPATIBILITY.md \
             > dist/release/SHA256SUMS
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
         with:
           cosign-release: v3.0.6
       - name: Sign release files
         run: |
-          for file in dist/release/*.tar.gz dist/release/*.tar.gz.sha256 dist/release/*.spdx.json dist/release/SHA256SUMS; do
+          for file in dist/release/*.tar.gz dist/release/*.tar.gz.sha256 dist/release/*.spdx.json dist/release/COMPATIBILITY.md dist/release/SHA256SUMS; do
             cosign sign-blob --yes --bundle "$file.sigstore.json" "$file"
           done
       - name: Create GitHub release and upload assets
