@@ -3,8 +3,8 @@
 Target: `v0.1.0-beta.1`
 
 Status: **not releasable yet**. The artifact and release machinery exist, but
-remote CI, operator observability, clean-host qualification, compatibility
-range, upgrade/rollback, and the first signed prerelease still need evidence.
+operator observability, clean-host qualification, compatibility range,
+upgrade/rollback, and the first signed prerelease still need evidence.
 
 This file is the release control document. Historical `docs/milestone-*.md`
 files remain the engineering evidence journal; new beta work updates the gates
@@ -16,8 +16,8 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | `make check` passes locally. Push the current commits and require the `check` and `bundle` jobs on `main`. |
-| G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Both architectures build and validate locally; the exact arm64 bundle passes all eight install/load/link assertions. Remote artifact build remains. See [release evidence](docs/evidence/2026-09-22-multiarch-release-results.json) and [install evidence](docs/evidence/2026-09-22-install-bundle-results.json). |
+| G0. Remote CI | PASS | Required checks pass on the release commit in GitHub | GitHub Actions [`check` and `bundle` run 35690455931](https://github.com/proddata/pg_lake_replication/actions/runs/35690455931) passed on `7aa744e`; the uploaded bundle artifact was downloaded and inspected independently. |
+| G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Both architectures build locally and in remote CI. Run 35690455931 exported amd64 and arm64 archives; both downloaded checksums passed and their embedded `TARGETARCH` values matched. The exact arm64 bundle passes all eight install/load/link assertions; clean-host installation of both remote archives remains. See [release evidence](docs/evidence/2026-09-22-multiarch-release-results.json) and [install evidence](docs/evidence/2026-09-22-install-bundle-results.json). |
 | G2. Clean-host qualification | NOT STARTED | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | Build a disposable clean-host fixture that does not mount or compile this repository. Test install, configuration, restart, replication, and removal. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Existing laboratory correctness/crash evidence passes. Define and run one RC soak using the packaged binaries. |
 | G4. Compatibility range | PARTIAL | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | The shipped matrix currently records only pg_lake 3.6 commit `8180647d4535fdb1ed223f92f301ba6094a8ec3e`. Add a second-revision CI lane. |
@@ -37,12 +37,11 @@ intentional non-goal for this beta.
 
 ## Execution order
 
-1. Push the current packaging and hardening commits; make remote CI required.
-2. Implement G5 observability, because an unattended beta must be diagnosable.
-3. Build G2 clean-host and G4 second-revision compatibility lanes.
-4. Implement G7 upgrade/rollback and finish G8 operator documentation.
-5. Close G6 supply-chain review and run the G3 release-candidate soak.
-6. Publish and independently verify G9; record final evidence directly here.
+1. Implement G5 observability, because an unattended beta must be diagnosable.
+2. Build G2 clean-host and G4 second-revision compatibility lanes.
+3. Implement G7 upgrade/rollback and finish G8 operator documentation.
+4. Close G6 supply-chain review and run the G3 release-candidate soak.
+5. Publish and independently verify G9; record final evidence directly here.
 
 The scope is frozen to these gates. New feature work is deferred unless it
 closes a gate or fixes a release-blocking defect.

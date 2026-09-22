@@ -1,295 +1,310 @@
 # pg_lake_replication
 
-Release work is tracked in [BETA-RELEASE.md](BETA-RELEASE.md); numbered
-milestones are retained as implementation evidence rather than the active
-release plan.
+[![CI](https://github.com/proddata/pg_lake_replication/actions/workflows/ci.yml/badge.svg)](https://github.com/proddata/pg_lake_replication/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-PostgreSQL-blue.svg)](LICENSE)
 
-An early feasibility project for replicating PostgreSQL heap tables into
-`pg_lake` Iceberg tables. The requirements are in [project_brief.md](project_brief.md).
-The current prototype includes initial snapshot synchronization, a logical
-replication receiver, a micro-batch publisher, and a supervising service loop;
-it is not a production service or PostgreSQL extension yet.
+Logical replication from ordinary PostgreSQL tables into
+[pg_lake](https://github.com/Snowflake-Labs/pg_lake) Iceberg tables.
 
-Initial lab result: PostgreSQL 18 rejects native Iceberg subscription targets
-with SQLSTATE `42809`. Direct Iceberg SQL, basic crash recovery, and the heap
-subscription control passed. Ten separate inserts produced ten snapshots/files
-versus one for a batch. Precise local-catalog crash probes also passed and expose
-the expected ambiguous-success window after commit. See the feasibility report
-for evidence, scope, and remaining gates.
+`pg_lake_replication` runs beside an existing PostgreSQL 18 + pg_lake
+installation. It takes an initial snapshot, consumes logical replication,
+stages source transactions durably, and publishes bounded micro-batches into
+Iceberg tables. A PostgreSQL extension provides familiar
+`CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')` lifecycle commands.
 
-## Milestone 0 laboratory
+> [!WARNING]
+> This project is approaching its first beta and is not production-ready yet.
+> The release gates, remaining work, and evidence are tracked in
+> [BETA-RELEASE.md](BETA-RELEASE.md). The supported beta target is pg_lake's
+> local PostgreSQL catalog; REST catalogs are not supported.
 
-The lab builds pinned upstream `pg_lake` against PostgreSQL 18 and runs one
-cluster with separate `application` and `analytics` databases, `pgduck_server`,
-and MinIO. PostgreSQL is published only on loopback port `55434` for the Rust
-receiver integration probe. Commands run through Docker Compose.
-The credentials and trust authentication are exclusively for this isolated lab.
+## Why this exists
 
-Prerequisites: Docker Compose, Python 3, Make, internet access, and disk space
-for a C/C++ development image. The initial build compiles DuckDB and Azure SDK
-dependencies and can take a substantial amount of time. Compilation defaults
-to two jobs to limit memory use.
+PostgreSQL's built-in logical-replication apply worker cannot write directly to
+a pg_lake Iceberg foreign table. This project provides a separate replication
+path designed for that boundary while retaining PostgreSQL-native setup and
+control commands.
 
-```sh
-make lab-build
-make lab-up
-make lab-test
-make lab-crash-test
-make journal-test
-make journal-maintenance-test
-make transport-test
-make publisher-test
-make mutations-test
-make streaming-test
-make toast-test
-make initial-sync-test
-make multi-table-test
-make auto-schema-test
-make schema-evolution-test
-make rebuild-test
-make supervisor-test
-make source-continuity-test
-make source-endpoints-test
-make iceberg-maintenance-test
-make lake-replication-extension-test
-make failover-test
-make patroni-test
-make slot-loss-test
-make scram-test
-make tls-test
-make lab-logs
-make lab-stop
+It currently supports:
+
+- initial snapshot copy followed by continuous logical replication;
+- `INSERT`, `UPDATE`, `DELETE`, primary-key changes, and `TRUNCATE`;
+- transaction-aware, row- and byte-bounded Iceberg micro-batches;
+- publication table discovery, column lists, and row filters;
+- automatic creation of missing Iceberg destination tables;
+- safe nullable-column additions and fail-closed incompatible schema changes;
+- crash recovery, idempotent replay, and ambiguous-commit reconciliation;
+- supervisor restart, retry, health state, and journal retention;
+- source continuity checks and ordered failover endpoints; and
+- PostgreSQL 18 packages for Linux amd64 and arm64.
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Source PostgreSQL heap tables] -->|publication + logical slot| B[Receiver]
+    B -->|durable source transactions| C[(lake_replication journal)]
+    C --> D[Publisher]
+    D -->|bounded SQL batches| E[pg_lake Iceberg tables]
+    F[Supervisor] -. starts, retries, and monitors .-> B
+    F -. starts, retries, and monitors .-> D
+    G[CREATE / ALTER / DROP SUBSCRIPTION] --> F
 ```
 
-`lab-test` creates uniquely named test schemas and preserves tables and evidence
-under `.lab/probe_*/`. It stops and removes its own subscriptions and source
-slots after probing. Exit status 0 means the implemented basic probes passed;
-2 means native replication was blocked; 1 means a test or environment failed.
-None of these results alone establishes replication correctness.
+The destination PostgreSQL database contains the control schema and journal.
+The four installed executables perform initial copy, receive WAL, publish
+batches, and supervise the service. `lake_subscription_sugar` intercepts only
+subscriptions marked with `lake_target = 'iceberg'`; normal PostgreSQL
+subscriptions continue through PostgreSQL unchanged.
 
-The probe covers direct inserts, updates, deletes, large values, rollback,
-transaction visibility to another PostgreSQL session, backend termination
-before commit, PostgreSQL SIGKILL/restart after a catalog-plus-checkpoint commit,
-and truncate. It compares ten separate commits with one batch, verifies a
-heap-to-heap replication control, then attempts both native initial copy and
-native apply into Iceberg without initial copy. Metadata JSON and file
-inventories are captured between direct operations. Native mutation checks run
-only if the first row reaches the destination.
+## Compatibility
 
-`lab-crash-test` uses development-image-only instrumentation to terminate a
-backend immediately before upload completion, immediately after upload
-completion but before PostgreSQL commit, and from the post-commit callback.
-Each crash makes the postmaster terminate and recover all server child processes.
-Do not use the image or these probes with data you need to keep.
+| Component | Beta target | Validated configuration |
+|---|---|---|
+| PostgreSQL | 18.x | 18.6 |
+| pg_lake | 3.6, local PostgreSQL catalog | commit `8180647d4535fdb1ed223f92f301ba6094a8ec3e` |
+| Operating system | Linux with Debian 12-compatible glibc | Debian 12 build images |
+| Architecture | amd64, arm64 | native release archives for both |
+| Object storage | S3-compatible storage supported by pg_lake | MinIO in the integration lab |
 
-Milestone 1 has started with a destination journal migration and a
-dependency-free Rust pgoutput decoder. `journal-test` exercises durable staging,
-idempotent and conflicting replays, LSN acknowledgement bounds, atomic local
-Iceberg publication, and post-commit reconciliation. See
-[the Milestone 1 notes](docs/milestone-1.md). On a new lab volume the journal
-migration is installed automatically; `make journal-install` is available for
-an existing volume that predates it.
+The pg_lake commit above is a validated point, not a claim that every adjacent
+revision is compatible. See the complete
+[compatibility contract](deploy/install/COMPATIBILITY.md).
 
-Milestone 2 adds a dependency-free PostgreSQL wire client and one-shot receiver.
-`transport-test` creates a real pgoutput publication and slot, stages source
-transactions, confirms the slot advances only to the durable journal position,
-restarts the receiver, and cleans up its source objects. See
-[the Milestone 2 notes](docs/milestone-2.md).
+## Quick start
 
-Milestone 3 closes the insert-only path from source heap tables through the
-durable journal into Iceberg. `publisher-test` proves deterministic
-micro-batching, source transaction boundaries, snapshot reduction, and recovery
-from an ambiguous post-commit connection loss. See
-[the Milestone 3 notes](docs/milestone-3.md).
+The following walkthrough assumes a source database named `application` and a
+pg_lake-enabled destination database named `analytics`. It is intended for a
+disposable evaluation environment; review the [beta limitations](#beta-limitations)
+before using real data.
 
-Milestone 4 extends the live path to UPDATE, DELETE, primary-key changes, and
-TRUNCATE. Mutation application requires an identity that matches exactly one
-destination row and otherwise rolls the batch back. See
-[the Milestone 4 notes](docs/milestone-4.md).
+### 1. Prepare the source
 
-Milestone 5 adds protocol-v4 streamed transactions with durable per-segment
-spill, commit/abort handling, and mid-stream receiver restart recovery. The lab
-uses PostgreSQL's immediate-streaming developer setting to make segment coverage
-deterministic. See [the Milestone 5 notes](docs/milestone-5.md).
+The source must have logical replication enabled and be reachable from the
+destination host. Set appropriate capacity for the expected subscriptions and
+restart the source after changing these server settings:
 
-Milestone 6 validates true external TOAST values and unchanged-TOAST update
-semantics through Iceberg, including external, inline, and NULL transitions. See
-[the Milestone 6 notes](docs/milestone-6.md).
+```conf
+wal_level = logical
+max_replication_slots = 10
+max_wal_senders = 10
+```
 
-Milestone 7 adds a slot-exported snapshot copy with durable table progress,
-atomic Iceberg replacement and checkpoint initialization, explicit failed-copy
-rebuilds, and WAL catch-up for writes committed during the copy. See
-[the Milestone 7 notes](docs/milestone-7.md).
+Then create a table and one publication:
 
-Milestone 8 replaces in-memory snapshot materialization with PostgreSQL COPY
-streaming and row/byte-bounded durable chunks, including robust framing for
-escaped and multibyte text. See [the Milestone 8 notes](docs/milestone-8.md).
+```sql
+-- Run in the source database: application
+CREATE TABLE public.orders (
+    id bigint PRIMARY KEY,
+    customer text NOT NULL,
+    total numeric(12, 2) NOT NULL,
+    updated_at timestamptz NOT NULL DEFAULT now()
+);
 
-Milestone 9 discovers effective publication tables, column lists, and row
-filters, then atomically cuts over every table at one shared snapshot boundary.
-See [the Milestone 9 notes](docs/milestone-9.md).
+CREATE PUBLICATION orders_pub FOR TABLE public.orders;
+```
 
-Milestone 10 adds versioned source type contracts, automatic creation of missing
-Iceberg destinations, and fail-fast validation of pre-created tables. See
-[the Milestone 10 notes](docs/milestone-10.md).
+Updates and deletes require a usable replica identity, normally a primary key.
 
-Milestone 11 reconciles live pgoutput relation versions, automatically appends
-safe nullable columns, and pauses incompatible changes before their WAL is
-staged or acknowledged. See [the Milestone 11 notes](docs/milestone-11.md).
+### 2. Install beside PostgreSQL and pg_lake
 
-Milestone 12 adds an operator-controlled replacement subscription: a new slot
-and shadow Iceberg snapshot catch up before an atomic table promotion, while the
-paused table and slot remain intact until verified cleanup. See
-[the Milestone 12 notes](docs/milestone-12.md).
+The first signed prerelease is not published yet. Until it is, build the native
+bundle from a clean checkout:
 
-Milestone 13 adds a long-running supervisor around bounded receiver and publisher
-cycles, with exponential retry, duplicate-process fencing, durable health and
-queue reporting, subscription-aware pausing, and SQL-controlled graceful stop.
-See [the Milestone 13 notes](docs/milestone-13.md).
+```sh
+make install-bundle
+tar -xzf dist/pg_lake_replication-0.1.0.tar.gz -C /tmp
+cd /tmp/pg_lake_replication-0.1.0
+sudo ./install.sh
+```
 
-Milestone 14 keeps an established supervisor alive across destination control
-connection loss, safely reacquires subscription ownership, records reconnection
-telemetry, and resumes replication. See
-[the Milestone 14 notes](docs/milestone-14.md).
+The installer verifies the bundle, PostgreSQL major version, pg_lake and
+`dblink` availability, and CPU architecture before copying anything. It
+installs four executables under `/usr/local/bin` plus the two PostgreSQL
+extensions. It does not change PostgreSQL configuration or database objects.
 
-Milestone 15 validates the source system/database identity, logical slot safety,
-durable checkpoint boundary, and timeline ancestry before every receiver cycle,
-failing closed without consuming WAL when continuity cannot be proven. See
-[the Milestone 15 notes](docs/milestone-15.md).
+To build release-style archives for both supported architectures instead, run
+`make install-bundles`; the results are written to `dist/release/`.
 
-Milestone 16 selects a safe writable source from ordered PostgreSQL endpoints,
-routes receiver cycles to it, records endpoint switches and candidate failures,
-and treats election-time unavailability as retryable. See
-[the Milestone 16 notes](docs/milestone-16.md).
+### 3. Configure the destination server
 
-Milestone 17 proves the data path across a real PostgreSQL 18 physical standby
-promotion using synchronized failover logical slots, promotion fencing, current
-timeline discovery, and exact continuation on the promoted node. See
-[the Milestone 17 notes](docs/milestone-17.md).
+Append `lake_subscription_sugar` to any existing
+`shared_preload_libraries` value and choose the pg_lake destination database:
 
-Milestone 18 adds a pinned Patroni/etcd laboratory and proves automatic
-promotion after an unplanned leader process loss, including worker endpoint
-rediscovery and exact continuation on the synchronized logical slot. See
-[the Milestone 18 notes](docs/milestone-18.md).
+```conf
+# postgresql.conf
+shared_preload_libraries = 'pg_extension_base,lake_subscription_sugar'
+lake_subscription_sugar.database_name = 'analytics'
+lake_subscription_sugar.log_directory = '/var/log/postgresql/pg_lake_replication'
+```
 
-Milestone 19 rejoins the divergent former primary with `pg_rewind`,
-resynchronizes its logical failover slot, and proves a second automatic
-promotion across timeline 3 without rebuilding the subscription. See
-[the Milestone 19 notes](docs/milestone-19.md).
+The exact existing preload list depends on the pg_lake installation; preserve
+all of its entries when appending `lake_subscription_sugar`.
 
-Milestone 20 adds a coordinated planned-switchover procedure and rolling
-replica maintenance: drain the logical receiver, verify the synchronized
-candidate, switch through Patroni, resume from the durable checkpoint, and
-restart the demoted replica without changing the active source. See
-[the Milestone 20 notes](docs/milestone-20.md).
+Create the log directory with ownership and permissions suitable for the
+PostgreSQL operating-system user, then restart PostgreSQL. In the destination
+database, install the extensions and activate the SQL hook for future sessions:
 
-Milestone 21 forces PostgreSQL to invalidate an inactive logical slot after its
-required WAL is removed, then proves that the supervisor fails closed before
-receiver launch without advancing checkpoints or silently skipping source data.
-See [the Milestone 21 notes](docs/milestone-21.md).
+```sql
+-- Run in the pg_lake-enabled destination database: analytics
+CREATE EXTENSION lake_replication;
+CREATE EXTENSION lake_subscription_sugar CASCADE;
 
-Milestone 22 adds PostgreSQL SCRAM-SHA-256 authentication to every worker
-connection, separates source and destination credentials, and validates initial
-copy plus logical streaming with a non-superuser, read-only replication role.
-See [the Milestone 22 notes](docs/milestone-22.md).
+ALTER DATABASE analytics
+    SET session_preload_libraries = 'lake_subscription_sugar';
+```
 
-Milestone 23 adds strict certificate-verified PostgreSQL TLS, defaults every
-non-loopback endpoint to `verify-full`, rejects untrusted and name-mismatched
-certificates, and proves initial copy plus logical streaming over the encrypted
-connection. See [the Milestone 23 notes](docs/milestone-23.md).
+Reconnect after changing `session_preload_libraries`. Subscription management
+requires superuser or membership in the extension-created admin role:
 
-Milestone 24 bounds the durable staging journal with per-subscription retention,
-incremental cleanup, automatic supervisor scheduling, and SQL maintenance
-telemetry. Cleanup is limited by both the published and source-acknowledged LSNs
-and never removes staged or ambiguous publishing work. See
-[the Milestone 24 notes](docs/milestone-24.md).
+```sql
+GRANT lake_replication_admin TO replication_operator;
+```
 
-Milestone 25 validates that the pinned `pg_lake` revision's own Iceberg storage
-maintenance — manual and automatic `VACUUM`, per-table snapshot retention, and
-deletion-queue file retention — already covers destination tables this project
-creates, with no additional maintenance logic of its own. See
-[the Milestone 25 notes](docs/milestone-25.md).
+### 4. Create an Iceberg subscription
 
-Milestone 26 confirms, by reading the pinned `pg_lake` source and reproducing
-it live against a real self-hosted Iceberg REST catalog, that a
-REST-catalog-backed destination table's commit-callback catalog POST runs
-strictly after PostgreSQL's own commit and is best-effort on failure, with no
-retry queue or durable failure record anywhere in `pg_lake` -- so this
-project cannot trust a durable checkpoint to mean a REST catalog agrees, and
-would need its own read-back verification for that destination mode. Tracked
-as a known, deliberately deferred defect, not scheduled for beta: beta
-targets `pg_lake`'s local catalog only. See
-[the Milestone 26 notes](docs/milestone-26.md) and
-[the beta readiness plan](docs/beta-readiness.md).
+Run this in `analytics`:
 
-Milestone 27 hardens `lake_subscription_sugar`'s control surface for beta:
-`CREATE/ALTER/DROP SUBSCRIPTION ... WITH (lake_target = 'iceberg')` now
-requires superuser or membership in a new `lake_replication_admin` role,
-worker log paths are configurable instead of hardcoded to `/tmp`, and
-`pending_cleanup` carries an explicit `REVOKE ALL FROM PUBLIC`. It also
-surfaces a real constraint for beta install docs: `dblink` refuses
-non-superuser use unless the source's auth method actually verifies a
-password, so a non-superuser can only drive this against a SCRAM-authenticated
-source. See [the Milestone 27 notes](docs/milestone-27.md).
+```sql
+CREATE SUBSCRIPTION orders_to_lake
+  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
+  PUBLICATION orders_pub
+  WITH (lake_target = 'iceberg');
+```
 
-Milestone 28 closes the process-supervision gap Milestone 27 left open:
-a single, permanently-running launcher background worker (registered via
-`shared_preload_libraries`, the same PostgreSQL mechanism `pg_cron` uses)
-starts and supervises each subscription's replication worker as a genuine
-background worker, restarting it automatically on a crash (verified: a
-`kill -9`'d supervisor is replaced within about a second, with zero
-disruption to the rest of the database) and terminating it cleanly on
-`DROP`/`DISABLE`. Building it surfaced and fixed a real bug along the way:
-`execve()`-ing the worker binary directly into the background worker made
-an ordinary application error look exactly like a crash to PostgreSQL,
-which reacted by tearing down the entire cluster -- see
-[the Milestone 28 notes](docs/milestone-28.md) for the fix and the real
-(not estimated) deployment cost.
+The command discovers the publication, creates corresponding
+`USING iceberg` tables in `public`, performs the initial copy, and starts the
+supervisor. Use `lake_target_schema` to select another destination schema:
 
-Milestone 29 packages the destination control schema as a versioned PostgreSQL
-extension and produces a checksummed, reproducible native installation bundle
-containing both extensions and the four release worker binaries, without
-bundling PostgreSQL or pg_lake. The exact exported artifact passes install,
-extension-load, and native-link smoke checks against PostgreSQL 18. See
-[the Milestone 29 notes](docs/milestone-29.md).
+```sql
+CREATE SUBSCRIPTION orders_to_lake
+  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
+  PUBLICATION orders_pub
+  WITH (lake_target = 'iceberg', lake_target_schema = 'warehouse');
+```
 
-Authentication settings are `LAKE_SOURCE_USER`, `LAKE_SOURCE_PASSWORD`,
-`LAKE_DESTINATION_USER`, and `LAKE_DESTINATION_PASSWORD`. `LAKE_USER` remains a
-backward-compatible username fallback. Passwords are not logged and remote
-connections default to certificate-verified TLS.
+Exactly one publication is supported per subscription in the current beta.
 
-TLS settings use `LAKE_SOURCE_TLS_MODE`, `LAKE_SOURCE_TLS_ROOT_CERT`, and the
-optional `LAKE_SOURCE_TLS_SERVER_NAME`; replace `SOURCE` with `DESTINATION` for
-the destination connection. Supported modes are only `disable` and
-`verify-full`. Loopback defaults to `disable`; all other addresses default to
-`verify-full` and require an explicit root certificate.
+### 5. Verify replication
 
-The lab retains PostgreSQL and object data in named volumes. `lab-stop` preserves
-them. Rebuilding the image does not reinitialize existing databases. Avoid using
-this Compose project for unrelated data: failure experiments target it.
+Inspect service state on the destination:
 
-See [the feasibility report](docs/feasibility.md) for evidence, limitations, and
-remaining experiments, [the dependency inventory](docs/dependencies.md) for
-source and licensing notes, and [the beta readiness plan](docs/beta-readiness.md)
-for the ordered workstreams and distribution model needed to ship this as a
-separate artifact installed next to an existing `pg_lake`. `make check` runs offline probe-classification tests
-and validates Python syntax and Compose configuration; it does not run integration
-tests.
+```sql
+SELECT subscription_name,
+       subscription_state,
+       service_state,
+       heartbeat_at,
+       consecutive_failures,
+       staged_transactions,
+       received_lsn,
+       published_lsn,
+       last_error
+FROM lake_replication.service_health;
+```
 
-`make native-subscription-spike-test` and `make subscription-sugar-test` are
-architecture spikes, not part of the replication path above: they check
-whether native `CREATE SUBSCRIPTION` could ever target an Iceberg destination
-directly, why it cannot today, and prototype `CREATE SUBSCRIPTION`-shaped
-syntax as a thin wrapper over this project's own control plane instead. See
-[the native-subscription spike notes](docs/native-subscription-spike.md).
+Then insert a row on the source and query its Iceberg counterpart on the
+destination:
 
-## Local PoC / demo stack
+```sql
+-- application
+INSERT INTO public.orders (id, customer, total)
+VALUES (1, 'Ada', 42.00);
 
-`deploy/poc/` is a separate, self-contained Compose stack for manually
-demoing this project end to end: source and destination databases, the
-replication workers running continuously (not just invoked by test probes),
-and a small two-pane web console for driving both sides. Run `make poc-build`
-then `make poc-up` and open <http://127.0.0.1:8080>. See
-[`deploy/poc/README.md`](deploy/poc/README.md) for the full walkthrough. This
-is a demo convenience (trust auth, loopback-only, no TLS), not a production
-deployment.
+-- analytics
+SELECT * FROM public.orders WHERE id = 1;
+```
+
+## Operating subscriptions
+
+The familiar lifecycle commands are routed to this project's control plane for
+subscriptions created with `lake_target = 'iceberg'`:
+
+```sql
+ALTER SUBSCRIPTION orders_to_lake DISABLE;
+ALTER SUBSCRIPTION orders_to_lake ENABLE;
+DROP SUBSCRIPTION orders_to_lake;
+```
+
+Useful first checks are:
+
+- `lake_replication.service_health` for state, heartbeat, retries, failures,
+  cycle counts, queue depth, checkpoints, and source continuity;
+- PostgreSQL's server log for launcher/background-worker events; and
+- the configured `lake_subscription_sugar.log_directory` for per-subscription
+  worker output.
+
+The complete operator runbook and metrics/alerting interface are release-gate
+work in progress. Do not treat the current status view as a finished monitoring
+contract.
+
+## Beta limitations
+
+- PostgreSQL 18 and pg_lake 3.6 with the local PostgreSQL catalog are the only
+  current targets. PostgreSQL 16, 17, and 19 are not supported.
+- REST-catalog destinations are intentionally unsupported because pg_lake's
+  catalog update occurs after PostgreSQL commit and does not provide the
+  durable reconciliation contract this project requires.
+- Only one publication is accepted per subscription.
+- The SQL convenience launcher currently starts workers as database user
+  `postgres` and does not inject a per-subscription password. Although the
+  worker binaries support SCRAM and certificate-verified TLS, secure secret
+  delivery through `CREATE SUBSCRIPTION` is not yet a supported deployment
+  path. The quick start is therefore for co-located evaluation environments
+  where the worker's local connection is authorized without an injected
+  password.
+- Compatibility has been validated against one pg_lake revision. Clean-host,
+  upgrade/rollback, extended compatibility, observability, and release-candidate
+  soak gates remain open.
+- No signed GitHub prerelease has been published yet. Source checkouts and CI
+  artifacts are development outputs until `v0.1.0-beta.1` is released.
+
+For the complete current decision record, see
+[BETA-RELEASE.md](BETA-RELEASE.md).
+
+## Try the local demo
+
+The repository includes a self-contained Compose demonstration with source and
+destination databases, pg_lake, object storage, continuously running workers,
+and a small SQL console:
+
+```sh
+make poc-build
+make poc-up
+```
+
+Open <http://127.0.0.1:8080>. The initial build compiles pg_lake and can take a
+while. This stack uses loopback-only trust authentication and no TLS; it is a
+demo, not a deployment template. See the [demo walkthrough](deploy/poc/README.md).
+
+Stop it while keeping its data with `make poc-stop`, or remove its containers
+and volumes with `make poc-down`.
+
+## Development
+
+Requirements for repository checks are Docker with Compose, Rust 1.85, Python
+3, and Make.
+
+```sh
+make check                 # formatting and offline/static checks
+make install-bundle        # native installable archive
+make install-bundle-test   # test the exact exported archive in the lab
+```
+
+The integration lab contains correctness, crash, schema, failover, TLS, SCRAM,
+slot-loss, and maintenance probes. It builds a large development image and is
+kept separate from the quick start. See the [feasibility report](docs/feasibility.md)
+and [historical evidence](docs/) before running individual lab targets.
+
+## Documentation
+
+- [Beta release gates](BETA-RELEASE.md)
+- [Compatibility contract](deploy/install/COMPATIBILITY.md)
+- [Bundle and installer details](deploy/install/README.md)
+- [Local demo](deploy/poc/README.md)
+- [Feasibility and correctness report](docs/feasibility.md)
+- [Dependency and license inventory](docs/dependencies.md)
+- [Why native PostgreSQL apply cannot target Iceberg](docs/native-subscription-spike.md)
+
+## License
+
+This project is licensed under the [PostgreSQL License](LICENSE).
