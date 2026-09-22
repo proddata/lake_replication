@@ -20,7 +20,7 @@ services:
       - -c
       - password_encryption=scram-sha-256
     healthcheck:
-      test: [CMD-SHELL, "pg_isready -U postgres -d application"]
+      test: [CMD-SHELL, "pg_isready -h 127.0.0.1 -U postgres -d application"]
       interval: 2s
       timeout: 3s
       retries: 60
@@ -82,7 +82,14 @@ services:
       pgduck:
         condition: service_healthy
     healthcheck:
-      test: [CMD-SHELL, "pg_isready -U postgres -d analytics"]
+      test:
+        - CMD-SHELL
+        - >-
+          pg_isready -h 127.0.0.1 -U postgres -d analytics
+          && psql -XAt -U postgres -d analytics
+          -c "SELECT count(*) = 3 FROM pg_extension WHERE extname IN
+          ('pg_lake', 'lake_replication', 'lake_subscription_sugar')"
+          | grep -qx t
       interval: 2s
       timeout: 3s
       retries: 90
