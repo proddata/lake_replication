@@ -5,7 +5,7 @@
     {
       "name": "repository check suite",
       "passed": true,
-      "actual": "make check completed; 28 Rust unit tests and 6 probe-classification tests passed",
+      "actual": "make check completed; 30 Rust unit tests and 6 probe-classification tests passed",
       "expected": "zero failures"
     },
     {
@@ -41,7 +41,7 @@
     {
       "name": "exact packaged qualification",
       "passed": true,
-      "actual": "27 of 27 checks passed for arm64 archive 517f9fc37e30e69f9d6ae1f8ae807c04c2006f956399b4e1640a2d592b21226f from source revision f7f309781b3de5e436d7e22d08cadd7a55f57ab5",
+      "actual": "27 of 27 checks passed for arm64 archive eadcdd387b055eb3367be341b8d47a15635b00f2384feba97765075c61796537 from source revision 42ae08ce9eca86214e000a02aa33ff6852209895",
       "expected": "archive-installed PostgreSQL 18 plus pg_lake validation"
     },
     {

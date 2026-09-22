@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-22",
+  "archive": "pg_lake_replication-0.1.0-beta.1.tar.gz",
+  "archive_sha256": "eadcdd387b055eb3367be341b8d47a15635b00f2384feba97765075c61796537",
+  "architecture": "arm64",
+  "source_revision": "42ae08ce9eca86214e000a02aa33ff6852209895",
+  "postgresql": "18.6",
+  "pg_lake_extension_version": "3.6",
+  "revisions": [
+    {
+      "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "commit_date": "2026-09-10",
+      "run": "qualification_20260922_162640",
+      "checks_passed": 27,
+      "checks_total": 27,
+      "status": "passed"
+    },
+    {
+      "revision": "f609ecb17891383f021aebb0e249fe2994ed57bb",
+      "commit_date": "2026-09-22",
+      "run": "qualification_20260922_162713",
+      "checks_passed": 27,
+      "checks_total": 27,
+      "status": "passed"
+    }
+  ],
+  "range_basis": "the earlier revision is an ancestor of the later revision; the same unchanged archive passed the full suite at both endpoints",
+  "coverage": [
+    "checksum, architecture, install, and extension loading",
+    "development-to-beta upgrade and logical backup restore",
+    "initial and live replication",
+    "disable, enable, and destination restart recovery",
+    "SQL status and all 12 documented metrics",
+    "source outage backoff, retained failure evidence, and automatic recovery",
+    "structured failure logging and credential redaction",
+    "slot cleanup and conservative uninstall"
+  ],
+  "status": "passed"
+}
