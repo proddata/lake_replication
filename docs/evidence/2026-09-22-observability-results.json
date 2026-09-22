@@ -41,7 +41,7 @@
     {
       "name": "exact packaged qualification",
       "passed": true,
-      "actual": "27 of 27 checks passed for arm64 archive eadcdd387b055eb3367be341b8d47a15635b00f2384feba97765075c61796537 from source revision 42ae08ce9eca86214e000a02aa33ff6852209895",
+      "actual": "27 of 27 checks passed for arm64 archive 5c6edd17ef48dfe733567fa68f4bb58a7fe16f6ccbea430bff5c07b93ba755d6 from source revision 55822ef5b68bd4d50fe4b4999413202e94cc1bb9",
       "expected": "archive-installed PostgreSQL 18 plus pg_lake validation"
     },
     {

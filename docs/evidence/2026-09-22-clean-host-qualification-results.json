@@ -1,6 +1,6 @@
 {
   "archive": "pg_lake_replication-0.1.0-beta.1.tar.gz",
-  "archive_sha256": "eadcdd387b055eb3367be341b8d47a15635b00f2384feba97765075c61796537",
+  "archive_sha256": "5c6edd17ef48dfe733567fa68f4bb58a7fe16f6ccbea430bff5c07b93ba755d6",
   "architecture": "arm64",
   "checks": [
     {"name": "release archive checksum", "passed": true},
@@ -32,8 +32,8 @@
     {"name": "uninstaller removes only project program files", "passed": true}
   ],
   "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
-  "run": "qualification_20260922_162640",
-  "source_revision": "42ae08ce9eca86214e000a02aa33ff6852209895",
+  "run": "qualification_20260922_163006",
+  "source_revision": "55822ef5b68bd4d50fe4b4999413202e94cc1bb9",
   "worker_log_events": [
     "batch_published",
     "copy_chunk_staged",

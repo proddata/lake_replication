@@ -1,16 +1,16 @@
 {
   "date": "2026-09-22",
   "archive": "pg_lake_replication-0.1.0-beta.1.tar.gz",
-  "archive_sha256": "eadcdd387b055eb3367be341b8d47a15635b00f2384feba97765075c61796537",
+  "archive_sha256": "5c6edd17ef48dfe733567fa68f4bb58a7fe16f6ccbea430bff5c07b93ba755d6",
   "architecture": "arm64",
-  "source_revision": "42ae08ce9eca86214e000a02aa33ff6852209895",
+  "source_revision": "55822ef5b68bd4d50fe4b4999413202e94cc1bb9",
   "postgresql": "18.6",
   "pg_lake_extension_version": "3.6",
   "revisions": [
     {
       "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
       "commit_date": "2026-09-10",
-      "run": "qualification_20260922_162640",
+      "run": "qualification_20260922_163006",
       "checks_passed": 27,
       "checks_total": 27,
       "status": "passed"
@@ -18,7 +18,7 @@
     {
       "revision": "f609ecb17891383f021aebb0e249fe2994ed57bb",
       "commit_date": "2026-09-22",
-      "run": "qualification_20260922_162713",
+      "run": "qualification_20260922_163033",
       "checks_passed": 27,
       "checks_total": 27,
       "status": "passed"
