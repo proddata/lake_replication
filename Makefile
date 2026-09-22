@@ -6,7 +6,7 @@ SCRAM_COMPOSE = docker compose -p pg-lake-replication-scram-lab -f deploy/scram/
 TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compose.yml
 POC_COMPOSE = docker compose -p pg-lake-replication-poc -f deploy/poc/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test subscription-sugar-test lake-replication-extension lake-replication-extension-test install-bundle install-bundle-test poc-build poc-up poc-logs poc-stop poc-down check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test subscription-sugar-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test poc-build poc-up poc-logs poc-stop poc-down check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -103,11 +103,13 @@ native-subscription-spike-test:
 subscription-sugar-test:
 	python3 tests/subscription_sugar/probe.py
 lake-replication-extension:
-	$(MAKE) -C extensions/lake_replication
+	$(MAKE) -C extensions/lake_replication generate
 lake-replication-extension-test:
 	python3 tests/extension/probe.py
 install-bundle:
 	./deploy/install/build-bundle.sh
+install-bundles:
+	./deploy/install/build-release.sh
 install-bundle-test:
 	python3 tests/install/probe.py
 lab-logs:
@@ -154,7 +156,7 @@ check:
 	python3 -m py_compile tests/subscription_sugar/probe.py
 	python3 -m py_compile tests/extension/probe.py
 	python3 -m py_compile tests/install/probe.py
-	$(MAKE) -C extensions/lake_replication
+	$(MAKE) -C extensions/lake_replication generate
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace

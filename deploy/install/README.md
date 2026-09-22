@@ -29,3 +29,24 @@ The bundle installs:
 
 It does not edit `postgresql.conf`, restart PostgreSQL, create extensions in a
 database, or remove data. Those remain explicit operator actions.
+
+## Release artifacts
+
+Build both supported Linux architectures with Docker Buildx and QEMU:
+
+```sh
+make install-bundles
+```
+
+This produces architecture-qualified archives and checksum files under
+`dist/release/` for `linux-amd64` and `linux-arm64`. A release build refuses a
+dirty source tree so its recorded revision is unambiguous. For a local test of
+uncommitted packaging changes, opt in explicitly with
+`ALLOW_DIRTY=1 make install-bundles`.
+
+Pushing a version tag such as `v0.1.0` runs the release workflow. The tag must
+match the worker and SQL-extension versions. The workflow builds both bundles,
+generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
+keylessly signs every archive, SBOM, and checksum manifest with Sigstore
+Cosign, and publishes them in a GitHub release. All third-party workflow
+actions are pinned to immutable commit SHAs.

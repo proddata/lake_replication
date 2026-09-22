@@ -184,17 +184,22 @@ logging in the worker binaries is a prerequisite.
   platform; stop requiring a Rust toolchain on the target host (today's
   `tests/subscription_sugar/probe.py` cross-build-via-`rust:bookworm`
   fallback is a test convenience, not a distribution mechanism).
-  **In progress:** `deploy/install` now produces a native-platform filesystem
-  bundle containing release worker binaries and both extensions, with a
-  PostgreSQL 18/pg_lake/architecture-checking installer and an exact-artifact
-  install/link/load smoke probe. Multi-architecture publication, signing, and
-  isolated clean-host coverage remain.
+  **In progress:** `deploy/install` now produces amd64 and arm64 Linux
+  filesystem bundles containing release worker binaries and both extensions,
+  with a PostgreSQL 18/pg_lake/architecture-checking installer and an
+  exact-artifact install/link/load smoke probe. Tag-driven GitHub automation
+  generates SPDX SBOMs and SHA-256 manifests, keylessly signs every published
+  file, and creates the release. The first real tagged release and isolated
+  clean-host coverage remain.
 - Pin and record exact versions the way `docs/dependencies.md` already
   starts to (it flags this as unfinished: no SBOM, no locked transitive
   dependencies, no automated license check in CI). A beta release needs
   that closed out for every dependency that ships in the release artifact
   -- not the lab/lab-only dependencies like MinIO or the crash-injection
-  patch, which never leave the lab.
+  patch, which never leave the lab. **Partially done:** release workflow
+  dependencies are commit-SHA pinned and each architecture gets an SPDX JSON
+  SBOM; locking Debian packages and automated license-policy enforcement
+  remain.
 - Publish the compatibility matrix (PostgreSQL major version x validated
   `pg_lake` revision range x OS/glibc target) with every release, and add a
   CI job that installs the packaged extension against at least one

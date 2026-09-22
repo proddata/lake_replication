@@ -1,0 +1,47 @@
+{
+  "run_date": "2026-09-22",
+  "source_revision": "bb74776276cec3a737199871657783dd474d6180",
+  "test_build_dirty": true,
+  "release_version": "0.1.0",
+  "result": "pass",
+  "artifacts": [
+    {
+      "file": "pg_lake_replication-0.1.0-linux-amd64.tar.gz",
+      "target_arch": "amd64",
+      "size_bytes": 4262940,
+      "sha256": "c1975b00bcbd6fdbda66be50afe7e42ab6fef3bcda9f9d015c83ff1bc0d0e403",
+      "native_objects": "x86-64 ELF"
+    },
+    {
+      "file": "pg_lake_replication-0.1.0-linux-arm64.tar.gz",
+      "target_arch": "arm64",
+      "size_bytes": 3996109,
+      "sha256": "4bb80b9b5de510372cfd97bcf00fb963ff12f63a5d492a73341f2b7e23fdca54",
+      "native_objects": "AArch64 ELF"
+    }
+  ],
+  "checks": {
+    "dirty_tree_refusal": "pass",
+    "tag_version_match_v0.1.0": "pass",
+    "external_archive_checksums": "pass",
+    "embedded_payload_checksums": "pass",
+    "target_arch_metadata": "pass",
+    "native_object_architectures": "pass",
+    "shell_syntax": "pass",
+    "workflow_yaml_parse": "pass",
+    "make_check": "pass",
+    "git_diff_check": "pass"
+  },
+  "commands": [
+    "./deploy/install/build-release.sh /tmp/pg-lake-release-refusal-test",
+    "./deploy/install/check-release-version.sh v0.1.0",
+    "ALLOW_DIRTY=1 ./deploy/install/build-release.sh /tmp/pg-lake-release-multiarch",
+    "shasum -a 256 -c *.sha256",
+    "shasum -a 256 -c SHA256SUMS",
+    "file payload/bin/* payload/lib/*",
+    "sh -n deploy/install/*.sh extensions/lake_replication/build-extension-sql.sh",
+    "ruby YAML.load_file on both workflow files",
+    "make check",
+    "git diff --check"
+  ]
+}
