@@ -39,3 +39,19 @@ time. Later runs reuse that image unless `QUALIFICATION_REBUILD_BASE=1` is set.
 Result JSON and captured logs are written under `.qualification/`. The probe
 always removes its containers and volumes; it does not start, stop, or modify
 the development lab.
+
+## pg_lake compatibility lane
+
+The same artifact-only probe can build and qualify disposable hosts at the two
+exact pg_lake 3.6 revisions selected for the beta compatibility range:
+
+```sh
+QUALIFICATION_ARCHIVE=/absolute/path/to/pg_lake_replication-0.1.0-beta.1.tar.gz \
+  make compatibility-test
+```
+
+The defaults are commits `8180647d4535fdb1ed223f92f301ba6094a8ec3e` and
+`f609ecb17891383f021aebb0e249fe2994ed57bb`. Override them only with two or
+more distinct full commit SHAs via the space-separated
+`COMPATIBILITY_PG_LAKE_REVISIONS` variable. A base image is cached separately
+for each revision; the first run of a new revision is therefore expensive.

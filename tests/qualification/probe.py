@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import secrets
 import shutil
 import subprocess
@@ -26,7 +27,14 @@ VERSION = os.environ.get("VERSION", "0.1.0-beta.1")
 RUN = datetime.now(timezone.utc).strftime("qualification_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".qualification" / RUN
 COMPOSE_FILE = ROOT / "deploy/qualification/compose.yml"
-PG_LAKE_REVISION = "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+PG_LAKE_REVISION = os.environ.get(
+    "QUALIFICATION_PG_LAKE_REVISION",
+    "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+)
+if not re.fullmatch(r"[0-9a-f]{40}", PG_LAKE_REVISION):
+    raise RuntimeError(
+        "QUALIFICATION_PG_LAKE_REVISION must be a full lowercase commit SHA"
+    )
 PROJECT = f"pg-lake-replication-{RUN.replace('_', '-')}"
 SOURCE_IMAGE = f"pg-lake-replication-qualification-source:{RUN}"
 DESTINATION_IMAGE = f"pg-lake-replication-qualification-destination:{RUN}"

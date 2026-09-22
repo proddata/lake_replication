@@ -7,7 +7,7 @@ TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compos
 POC_COMPOSE = docker compose -p pg-lake-replication-poc -f deploy/poc/compose.yml
 QUALIFICATION_COMPOSE = docker compose -f deploy/qualification/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test subscription-sugar-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test poc-build poc-up poc-logs poc-stop poc-down check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test subscription-sugar-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -115,6 +115,8 @@ install-bundle-test:
 	python3 tests/install/probe.py
 qualification-test:
 	python3 tests/qualification/probe.py
+compatibility-test:
+	python3 tests/qualification/compatibility.py
 lab-logs:
 	$(COMPOSE) logs --no-color --tail 200
 lab-stop:
@@ -160,6 +162,7 @@ check:
 	python3 -m py_compile tests/extension/probe.py
 	python3 -m py_compile tests/install/probe.py
 	python3 -m py_compile tests/qualification/probe.py
+	python3 -m py_compile tests/qualification/compatibility.py
 	$(MAKE) -C extensions/lake_replication generate
 	$(MAKE) -C extensions/lake_subscription_sugar lake_subscription_sugar--1.1.sql
 	! grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0.sql
