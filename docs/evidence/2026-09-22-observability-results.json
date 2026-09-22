@@ -1,11 +1,11 @@
 {
   "date": "2026-09-22",
-  "scope": "G5 observability implementation validation without starting the integration lab",
+  "scope": "G5 observability validation from the exact installable beta archive on disposable PostgreSQL 18 plus pg_lake hosts",
   "checks": [
     {
       "name": "repository check suite",
       "passed": true,
-      "actual": "make check completed; 23 Rust unit tests and 6 probe-classification tests passed",
+      "actual": "make check completed; 28 Rust unit tests and 6 probe-classification tests passed",
       "expected": "zero failures"
     },
     {
@@ -37,11 +37,31 @@
       "passed": true,
       "actual": "12:1",
       "expected": "12 samples and subscription_healthy=1"
+    },
+    {
+      "name": "exact packaged qualification",
+      "passed": true,
+      "actual": "27 of 27 checks passed for arm64 archive 517f9fc37e30e69f9d6ae1f8ae807c04c2006f956399b4e1640a2d592b21226f from source revision f7f309781b3de5e436d7e22d08cadd7a55f57ab5",
+      "expected": "archive-installed PostgreSQL 18 plus pg_lake validation"
+    },
+    {
+      "name": "source outage detection",
+      "passed": true,
+      "actual": "degraded:backoff:true:true:true:true:true and retry metrics 0:true:true",
+      "expected": "unhealthy state, counters, retry deadline, failure time, and error are observable"
+    },
+    {
+      "name": "source recovery",
+      "passed": true,
+      "actual": "healthy:running:0:true:true:true followed by replicated row after-source-outage",
+      "expected": "automatic recovery retains failure evidence and resumes replication"
+    },
+    {
+      "name": "failure event and credential redaction",
+      "passed": true,
+      "actual": "cycle_failed present among 39 structured records; generated source and destination passwords absent",
+      "expected": "structured failure evidence without secrets"
     }
   ],
-  "limitations": [
-    "This was a catalog-level SQL validation on local PostgreSQL 14.24, not the target PostgreSQL 18 plus pg_lake integration image.",
-    "Updated PostgreSQL 18 extension and supervisor integration probes are implemented but intentionally not run because the project lab was not restarted."
-  ],
-  "status": "passed_with_integration_pending"
+  "status": "passed"
 }

@@ -2,8 +2,8 @@
 
 Target: `v0.1.0-beta.1`
 
-Status: **not releasable yet**. The artifact, clean-host qualification, and
-operator documentation exist, but observability failure-path evidence,
+Status: **not releasable yet**. The artifact, clean-host qualification,
+operations/observability contract, and operator documentation exist, but the
 compatibility range, a full recovery drill, security review, soak, and the
 first signed prerelease still need evidence.
 
@@ -22,7 +22,7 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The artifact-only arm64 run passed checksum/install, SCRAM credentials, initial/live replication, disable/enable, restart recovery, observability, secret-free logs, slot cleanup, and removal without mounting repository source into the running hosts. See [qualification instructions](deploy/qualification/README.md) and [evidence](docs/evidence/2026-09-22-clean-host-qualification-results.json). The second-architecture archive remains tracked by G1. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Existing laboratory correctness/crash evidence passes. Define and run one RC soak using the packaged binaries. |
 | G4. Compatibility range | PARTIAL | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | The shipped matrix currently records only pg_lake 3.6 commit `8180647d4535fdb1ed223f92f301ba6094a8ec3e`. Add a second-revision CI lane. |
-| G5. Operations and observability | PARTIAL | Operators can detect unhealthy subscriptions, lag, retries, and last failure without reading ad-hoc files | Structured JSON worker logs, `subscription_status`, long-form SQL `metrics`, source/journal lag, alert examples, and a first-response guide are implemented. `make check` and disposable-catalog validation pass; run the updated PostgreSQL 18 supervisor/extension probes before marking this gate `PASS`. See [operations](docs/operations.md) and [evidence](docs/evidence/2026-09-22-observability-results.json). |
+| G5. Operations and observability | PASS | Operators can detect unhealthy subscriptions, lag, retries, and last failure without reading ad-hoc files | The exact archive from `f7f3097` passed packaged PostgreSQL 18 validation of all 12 metrics, an injected source outage, bounded backoff, retained failure state, automatic recovery, resumed replication, structured `cycle_failed` logging, and credential redaction. See [operations](docs/operations.md), [observability evidence](docs/evidence/2026-09-22-observability-results.json), and [qualification evidence](docs/evidence/2026-09-22-clean-host-qualification-results.json). |
 | G6. Supply-chain and security review | PARTIAL | Published files have checksums, SBOMs, signatures, vulnerability results, and an approved runtime license inventory with no unresolved high-severity finding | Tag workflow generates SPDX SBOMs and keyless signatures. Add artifact vulnerability scanning, automated license policy, and review of shipped Debian/Rust dependencies. |
 | G7. Upgrade and rollback | PARTIAL | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | The artifact ships explicit `0.1.0` to `0.1.0-beta.1` and subscription-control `1.0` to `1.1` paths, registers durable tables for logical backup, and the clean-host lane verifies retained state, real `pg_dump` inclusion, and no SQL downgrade. Complete a physical PostgreSQL/object-store recovery drill and a real beta-to-beta upgrade. See [procedure](docs/upgrade-and-rollback.md) and [evidence](docs/evidence/2026-09-22-clean-host-qualification-results.json). |
 | G8. Operator documentation | PASS | A new operator can install, configure, verify, monitor, troubleshoot, upgrade, and remove the beta from published documentation alone | The README covers evaluation, install, configuration, verification, and lifecycle; the operations guide covers monitoring, alerts, logs, and first response; the shipped bundle includes backup/upgrade/rollback and conservative uninstall procedures. |
@@ -38,11 +38,10 @@ intentional non-goal for this beta.
 
 ## Execution order
 
-1. Capture G5 integration evidence without weakening the monitoring contract.
-2. Qualify the second-architecture archive for G1 and build the G4 second-revision compatibility lane.
-3. Close G6 supply-chain review and complete the G7 physical/object-store recovery drill.
-4. Run the G3 release-candidate soak from the packaged build.
-5. Publish and independently verify G9; record final evidence directly here.
+1. Qualify the second-architecture archive for G1 and build the G4 second-revision compatibility lane.
+2. Close G6 supply-chain review and complete the G7 physical/object-store recovery drill.
+3. Run the G3 release-candidate soak from the packaged build.
+4. Publish and independently verify G9; record final evidence directly here.
 
 The scope is frozen to these gates. New feature work is deferred unless it
 closes a gate or fixes a release-blocking defect.

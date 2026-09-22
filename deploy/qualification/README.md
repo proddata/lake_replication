@@ -14,8 +14,8 @@ The probe checks:
 - SCRAM authentication using an owner-only worker credential file;
 - initial copy, live insert/update, disable/enable catch-up, and restart
   recovery;
-- the SQL status/metrics contract and structured logs without credential
-  values; and
+- the SQL status/metrics contract, source-outage backoff and recovery, resumed
+  replication, and structured failure logs without credential values; and
 - removal of project executables and extension program files while preserving
   pg_lake.
 

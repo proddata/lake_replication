@@ -1,6 +1,6 @@
 {
   "archive": "pg_lake_replication-0.1.0-beta.1.tar.gz",
-  "archive_sha256": "9c7a8629cf02ee81cb8c1c2d9df899534de379e16bf59023a1e839a2c68a2a26",
+  "archive_sha256": "517f9fc37e30e69f9d6ae1f8ae807c04c2006f956399b4e1640a2d592b21226f",
   "architecture": "arm64",
   "checks": [
     {"name": "release archive checksum", "passed": true},
@@ -20,12 +20,31 @@
     {"name": "enable catches up changes made while stopped", "passed": true},
     {"name": "destination is ready after container restart", "passed": true},
     {"name": "launcher resumes replication after restart", "passed": true},
-    {"name": "structured worker logs emitted", "passed": true, "records": 31},
+    {"name": "source outage becomes observable retry state", "passed": true, "actual": "degraded:backoff:true:true:true:true:true"},
+    {"name": "retry metrics mark the subscription unhealthy", "passed": true, "actual": "0:true:true"},
+    {"name": "source is ready after outage", "passed": true},
+    {"name": "subscription recovers while retaining last-failure evidence", "passed": true, "actual": "healthy:running:0:true:true:true"},
+    {"name": "replication resumes after source outage", "passed": true},
+    {"name": "structured worker logs emitted", "passed": true, "records": 39},
+    {"name": "structured failure and recovery events emitted", "passed": true, "actual": "cycle_failed"},
     {"name": "credential values absent from worker logs", "passed": true},
     {"name": "drop removes the source replication slot", "passed": true},
     {"name": "uninstaller removes only project program files", "passed": true}
   ],
   "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
-  "source_revision": "b3cd67ef623ebd6e6839d9225f9341184cee9dbc-dirty",
+  "run": "qualification_20260922_155050",
+  "source_revision": "f7f309781b3de5e436d7e22d08cadd7a55f57ab5",
+  "worker_log_events": [
+    "batch_published",
+    "copy_chunk_staged",
+    "cycle_failed",
+    "idle_timeout",
+    "initial_copy_completed",
+    "replication_started",
+    "snapshot_acquired",
+    "stopped",
+    "table_copied",
+    "transaction_staged"
+  ],
   "status": "passed"
 }
