@@ -126,9 +126,10 @@ def main():
 
         value("application", f"""
             ALTER TABLE public.{TABLE} ADD COLUMN extra text;
+            ALTER TABLE public.{TABLE} ADD COLUMN price numeric(10,2);
             BEGIN;
-            UPDATE public.{TABLE} SET note='11', extra='added-online' WHERE id=1;
-            INSERT INTO public.{TABLE} VALUES (3, '30', 'new-row');
+            UPDATE public.{TABLE} SET note='11', extra='added-online', price=12.34 WHERE id=1;
+            INSERT INTO public.{TABLE} VALUES (3, '30', 'new-row', 56.78);
             COMMIT
         """)
         receiver = worker("lake-replication-receiver", subscription_id,
@@ -144,20 +145,22 @@ def main():
                                         AND destination_relation IS NOT NULL)
                   FROM lake_replication.relations WHERE subscription_id={subscription_id}
               """), "2:2:1")
-        check("Iceberg destination gains the mapped nullable column",
+        check("Iceberg destination gains mapped nullable columns",
               value("analytics", f"""
-                SELECT attname || ':' || format_type(atttypid,atttypmod) || ':' || attnotnull
+                SELECT string_agg(attname || ':' || format_type(atttypid,atttypmod) ||
+                                  ':' || attnotnull, ',' ORDER BY attnum)
                   FROM pg_attribute WHERE attrelid='{RUN}.target'::regclass
-                   AND attname='extra'
-              """), "extra:text:false")
+                   AND attname IN ('extra', 'price')
+              """), "extra:text:false,price:numeric(10,2):false")
         worker("lake-replication-publisher", subscription_id,
                LAKE_BATCH_MAX_TRANSACTIONS="10", LAKE_BATCH_MAX_ROWS="100",
                LAKE_BATCH_MAX_BYTES="8388608")
         check("additive change and new rows publish with old rows preserved",
               value("analytics", f"""
-                SELECT string_agg(id || ':' || note || ':' || coalesce(extra,'NULL'),
+                SELECT string_agg(id || ':' || note || ':' || coalesce(extra,'NULL') ||
+                                  ':' || coalesce(price::text,'NULL'),
                                   ',' ORDER BY id) FROM {RUN}.target
-              """), "1:11:added-online,2:20:NULL,3:30:new-row")
+              """), "1:11:added-online:12.34,2:20:NULL:NULL,3:30:new-row:56.78")
         safe_checkpoint = value("analytics", f"""
             SELECT staged_lsn FROM lake_replication.checkpoints
              WHERE subscription_id={subscription_id}
@@ -165,7 +168,7 @@ def main():
 
         value("application", f"""
             ALTER TABLE public.{TABLE} ALTER COLUMN note TYPE bigint USING note::bigint;
-            INSERT INTO public.{TABLE} VALUES (4, 40, 'must-wait')
+            INSERT INTO public.{TABLE} VALUES (4, 40, 'must-wait', 90.12)
         """)
         rejected = worker("lake-replication-receiver", subscription_id,
                           check_result=False, LAKE_MAX_TRANSACTIONS="1")
@@ -195,11 +198,13 @@ def main():
         check("prior Iceberg schema and data remain readable after pause",
               value("analytics", f"""
                 SELECT format_type(a.atttypid,a.atttypmod) || ':' ||
-                       (SELECT string_agg(id || ':' || note || ':' || coalesce(extra,'NULL'),
+                       (SELECT string_agg(id || ':' || note || ':' || coalesce(extra,'NULL') ||
+                                          ':' || coalesce(price::text,'NULL'),
                                           ',' ORDER BY id) FROM {RUN}.target)
                   FROM pg_attribute a WHERE a.attrelid='{RUN}.target'::regclass
                    AND a.attname='note'
-              """), "text:1:11:added-online,2:20:NULL,3:30:new-row")
+              """),
+              "text:1:11:added-online:12.34,2:20:NULL:NULL,3:30:new-row:56.78")
 
         EVIDENCE["final_state"] = json.loads(value("analytics", f"""
             SELECT json_build_object(

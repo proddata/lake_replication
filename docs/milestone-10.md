@@ -57,6 +57,11 @@ pg_lake documents writable Iceberg creation through standard
 
 ## Remaining boundaries
 
+Update: migration 0017 subsequently added lossless `numeric(p,s)` support up
+to Iceberg precision 38 plus bounded/unbounded `varchar` and bounded `char`.
+The original milestone boundaries below remain the historical state at the
+time of its evidence run.
+
 - Mapping version 1 intentionally covers a conservative fixed set. Numeric
   precision/scale, varchar/char typmods, arrays, enums, domains, composites,
   geometry, and custom types need explicit policies and tests.

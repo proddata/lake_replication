@@ -388,6 +388,17 @@ def verify_upgrade_contract():
             "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
         )
         check(
+            "extension upgrade installs common parameterized type resolution",
+            sql(
+                "destination",
+                database,
+                "SELECT lake_replication.resolve_destination_type(1, 'numeric(12,2)') "
+                "|| ':' || lake_replication.resolve_destination_type("
+                "1, 'character varying(32)')",
+            ),
+            "numeric(12,2):character varying(32)",
+        )
+        check(
             "upgrade registers durable extension state for logical backup",
             sql(
                 "destination",
@@ -524,6 +535,21 @@ CREATE SUBSCRIPTION orders_to_lake
         "initial",
     )
     check(
+        "common parameterized types retain schema and values",
+        sql(
+            "destination",
+            "analytics",
+            "SELECT (SELECT string_agg(attname || ':' || "
+            "format_type(atttypid,atttypmod), ',' ORDER BY attnum) "
+            "FROM pg_attribute WHERE attrelid='public.orders'::regclass "
+            "AND attname IN ('amount','code','region','label')) || ':' || "
+            "amount::text || ':' || code || ':' || region || ':' || label "
+            "FROM public.orders WHERE id=1",
+        ),
+        "amount:numeric(12,2),code:character varying(32),region:character(2),"
+        "label:character varying:42.50:initial-sku:DE:initial-label",
+    )
+    check(
         "subscription becomes healthy",
         wait_for(
             "destination",
@@ -549,19 +575,45 @@ CREATE SUBSCRIPTION orders_to_lake
     sql(
         "source",
         "application",
-        "INSERT INTO public.orders (id, note) VALUES (2, 'streamed'); "
-        "UPDATE public.orders SET note='initial-updated' WHERE id=1;",
+        "INSERT INTO public.orders (id, note, amount, code, region, label) "
+        "VALUES (2, 'streamed', 99.99, 'streamed-sku', 'US', 'streamed-label'); "
+        "UPDATE public.orders SET note='initial-updated', amount=43.75, "
+        "code='updated-sku', label='updated-label' WHERE id=1;",
     )
     check(
         "live insert and update replicate",
         wait_for(
             "destination",
             "analytics",
-            "SELECT string_agg(id || '=' || note, ',' ORDER BY id) FROM public.orders",
-            "1=initial-updated,2=streamed",
+            "SELECT string_agg(id || '=' || note || ':' || amount::text || ':' || "
+            "code || ':' || region || ':' || label, ',' ORDER BY id) FROM public.orders",
+            "1=initial-updated:43.75:updated-sku:DE:updated-label,"
+            "2=streamed:99.99:streamed-sku:US:streamed-label",
             timeout=60,
         ),
-        "1=initial-updated,2=streamed",
+        "1=initial-updated:43.75:updated-sku:DE:updated-label,"
+        "2=streamed:99.99:streamed-sku:US:streamed-label",
+    )
+    sql(
+        "source",
+        "application",
+        "ALTER TABLE public.orders ADD COLUMN discount numeric(6,2); "
+        "UPDATE public.orders SET discount=1.25 WHERE id=1;",
+    )
+    check(
+        "nullable parameterized column is added and replicated online",
+        wait_for(
+            "destination",
+            "analytics",
+            "SELECT format_type(a.atttypid,a.atttypmod) || ':' || "
+            "(SELECT string_agg(id || '=' || coalesce(discount::text,'NULL'), "
+            "',' ORDER BY id) FROM public.orders) "
+            "FROM pg_attribute a WHERE a.attrelid='public.orders'::regclass "
+            "AND a.attname='discount'",
+            "numeric(6,2):1=1.25,2=NULL",
+            timeout=60,
+        ),
+        "numeric(6,2):1=1.25,2=NULL",
     )
     sql("destination", "analytics", "ALTER SUBSCRIPTION orders_to_lake DISABLE")
     check(

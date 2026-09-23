@@ -1,0 +1,37 @@
+{
+  "run": "qualification_20260923_024435",
+  "status": "passed",
+  "archive": "pg_lake_replication-0.1.0-beta.1.tar.gz",
+  "archive_sha256": "9a9746035c12eacb63834545971fe2084908040bb40e8db72e0f5409b298ac16",
+  "architecture": "arm64",
+  "source_revision": "1da30240a13cc81eef94da4f4d59010b618dacca-dirty",
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "check_count": 30,
+  "failed_checks": [],
+  "feature_checks": [
+    {
+      "name": "extension upgrade installs common parameterized type resolution",
+      "actual": "numeric(12,2):character varying(32)",
+      "expected": "numeric(12,2):character varying(32)",
+      "passed": true
+    },
+    {
+      "name": "common parameterized types retain schema and values",
+      "actual": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "expected": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "passed": true
+    },
+    {
+      "name": "live insert and update replicate",
+      "actual": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "expected": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "passed": true
+    },
+    {
+      "name": "nullable parameterized column is added and replicated online",
+      "actual": "numeric(6,2):1=1.25,2=NULL",
+      "expected": "numeric(6,2):1=1.25,2=NULL",
+      "passed": true
+    }
+  ]
+}

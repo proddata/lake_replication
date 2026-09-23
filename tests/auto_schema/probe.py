@@ -106,10 +106,13 @@ def main():
                 id bigint PRIMARY KEY,
                 note text NOT NULL,
                 enabled boolean,
-                happened_at timestamp with time zone NOT NULL);
+                happened_at timestamp with time zone NOT NULL,
+                amount numeric(12,2) NOT NULL,
+                code character varying(12),
+                region character(2));
             INSERT INTO public.{GOOD} VALUES
-                (1, 'automatic', true, '2026-09-14 12:34:56+00'),
-                (2, 'nullable', NULL, '2026-09-14 13:00:00+00');
+                (1, 'automatic', true, '2026-09-14 12:34:56+00', 42.50, 'sku-1', 'DE'),
+                (2, 'nullable', NULL, '2026-09-14 13:00:00+00', 7.00, NULL, 'US');
             CREATE PUBLICATION {GOOD_PUB} FOR TABLE public.{GOOD};
             CREATE TABLE public.{BAD} (id bigint PRIMARY KEY, note text NOT NULL);
             INSERT INTO public.{BAD} VALUES (1, 'must-not-copy');
@@ -145,26 +148,47 @@ def main():
                   FROM pg_attribute WHERE attrelid='{RUN}.{GOOD}'::regclass
                    AND attnum > 0 AND NOT attisdropped
               """),
-              "id:bigint,note:text,enabled:boolean,happened_at:timestamp with time zone")
+              "id:bigint,note:text,enabled:boolean,happened_at:timestamp with time zone,"
+              "amount:numeric(12,2),code:character varying(12),region:character(2)")
         check("automatic DDL preserves source NOT NULL contracts",
               value("analytics", f"""
                 SELECT string_agg(attname || ':' || attnotnull, ',' ORDER BY attnum)
                   FROM pg_attribute WHERE attrelid='{RUN}.{GOOD}'::regclass
                    AND attnum > 0 AND NOT attisdropped
-              """), "id:true,note:true,enabled:false,happened_at:true")
+              """),
+              "id:true,note:true,enabled:false,happened_at:true,amount:true,"
+              "code:false,region:false")
         check("initial rows populate the automatically created Iceberg table",
               value("analytics", f"""
                 SELECT string_agg(id || ':' || note || ':' || coalesce(enabled::text,'NULL') ||
-                                  ':' || happened_at::text, ',' ORDER BY id)
+                                  ':' || happened_at::text || ':' || amount::text || ':' ||
+                                  coalesce(code, 'NULL') || ':' || region, ',' ORDER BY id)
                   FROM {RUN}.{GOOD}
               """),
-              "1:automatic:true:2026-09-14 12:34:56+00,2:nullable:NULL:2026-09-14 13:00:00+00")
-        check("relation records mapping version one and four contracts",
+              "1:automatic:true:2026-09-14 12:34:56+00:42.50:sku-1:DE,"
+              "2:nullable:NULL:2026-09-14 13:00:00+00:7.00:NULL:US")
+        check("relation records mapping version one and seven contracts",
               value("analytics", f"""
                 SELECT mapping_version || ':' || jsonb_array_length(columns)
                   FROM lake_replication.relation_type_contracts
                  WHERE subscription_id={good_subscription}
-              """), "1:4")
+              """), "1:7")
+        check("parameterized types resolve without widening or truncation",
+              value("analytics", """
+                SELECT string_agg(source_type || '=' ||
+                       lake_replication.resolve_destination_type(1, source_type),
+                       ',' ORDER BY source_type)
+                  FROM (VALUES ('numeric(12,2)'), ('character varying(12)'),
+                               ('character(2)')) AS supported(source_type)
+              """),
+              "character varying(12)=character varying(12),"
+              "character(2)=character(2),numeric(12,2)=numeric(12,2)")
+        check("unsafe or deferred parameterized types remain unsupported",
+              value("analytics", """
+                SELECT lake_replication.resolve_destination_type(1, 'numeric') IS NULL
+                   AND lake_replication.resolve_destination_type(1, 'numeric(39,2)') IS NULL
+                   AND lake_replication.resolve_destination_type(1, 'integer[]') IS NULL
+              """), "t")
         check("mapping catalog exposes the supported version",
               value("analytics", """
                 SELECT count(*) || ':' || bool_and(mapping_version=1)

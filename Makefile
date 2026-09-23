@@ -166,7 +166,12 @@ check:
 	$(MAKE) -C extensions/lake_replication generate
 	$(MAKE) -C extensions/lake_subscription_sugar lake_subscription_sugar--1.1.sql
 	! grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0.sql
+	! grep -q '0017_common_parameterized_types.sql' extensions/lake_replication/lake_replication--0.1.0.sql
 	grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
+	grep -q '0017_common_parameterized_types.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
+	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.register_type_contract' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
+	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.ensure_iceberg_destination' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
+	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.reconcile_relation_schema' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'pg_extension_config_dump' extensions/lake_replication/lake_replication--0.1.0-beta.1.sql
 	grep -q 'pg_extension_config_dump' extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'

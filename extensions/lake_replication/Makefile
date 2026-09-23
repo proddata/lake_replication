@@ -3,8 +3,10 @@ BASELINE_VERSION = 0.1.0
 EXTVERSION = 0.1.0-beta.1
 MIGRATIONS = $(sort $(wildcard ../../migrations/[0-9][0-9][0-9][0-9]_*.sql))
 EXTENSION_METADATA = extension-config-dump.sql
-UPGRADE_SOURCES = ../../migrations/0016_observability.sql $(EXTENSION_METADATA)
-BASELINE_MIGRATIONS = $(filter-out ../../migrations/0016_observability.sql,$(MIGRATIONS))
+UPGRADE_MIGRATIONS = ../../migrations/0016_observability.sql \
+	../../migrations/0017_common_parameterized_types.sql
+UPGRADE_SOURCES = $(UPGRADE_MIGRATIONS) $(EXTENSION_METADATA)
+BASELINE_MIGRATIONS = $(filter-out $(UPGRADE_MIGRATIONS),$(MIGRATIONS))
 BASELINE_SQL = $(EXTENSION)--$(BASELINE_VERSION).sql
 CURRENT_SQL = $(EXTENSION)--$(EXTVERSION).sql
 UPGRADE_SQL = $(EXTENSION)--$(BASELINE_VERSION)--$(EXTVERSION).sql

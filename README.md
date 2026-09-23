@@ -268,6 +268,10 @@ changing an installed version, follow the coordinated
   catalog update occurs after PostgreSQL commit and does not provide the
   durable reconciliation contract this project requires.
 - Only one publication is accepted per subscription.
+- Mapping version 1 supports common scalar types plus bounded Iceberg decimals,
+  `varchar`, and `char`. Unconstrained or over-precision numerics, arrays,
+  enums, domains, generated columns, and custom types remain fail-closed; see
+  the [feature boundaries](docs/feature-gaps.md).
 - The launcher currently uses one instance-wide credential file for all managed
   subscriptions. Per-subscription secret selection and reload without a
   PostgreSQL restart are not yet supported. The source password may also appear
@@ -326,6 +330,7 @@ and [historical evidence](docs/) before running individual lab targets.
 - [Local demo](deploy/poc/README.md)
 - [Feasibility and correctness report](docs/feasibility.md)
 - [Dependency and license inventory](docs/dependencies.md)
+- [Beta feature boundaries](docs/feature-gaps.md)
 - [Why native PostgreSQL apply cannot target Iceberg](docs/native-subscription-spike.md)
 
 ## License
