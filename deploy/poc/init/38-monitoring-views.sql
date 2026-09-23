@@ -1,5 +1,5 @@
--- Experiment only, not part of the shipped replication path (see
--- docs/native-subscription-spike.md). Mirrors Crunchy Data Warehouse's
+-- PoC-only compatibility views, not part of the shipped replication path.
+-- Mirrors Crunchy Data Warehouse's
 -- documented crunchy_iceberg.stat_subscription / stat_subscription_rel
 -- views, built entirely over this project's existing
 -- lake_replication.subscriptions/batches/relations/transactions/changes

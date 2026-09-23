@@ -7,7 +7,7 @@ TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compos
 POC_COMPOSE = docker compose -p pg-lake-replication-poc -f deploy/poc/compose.yml
 QUALIFICATION_COMPOSE = docker compose -f deploy/qualification/compose.yml
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test subscription-sugar-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
 lab-build:
 	$(COMPOSE) build
 lab-up:
@@ -45,21 +45,7 @@ lab-crash-test:
 	python3 tests/crash/probe.py
 
 journal-install:
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0001_journal.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0002_transport.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0003_publisher.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0004_mutations.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0005_streaming.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0006_initial_sync.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0007_multi_table_sync.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0008_type_contracts.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0009_schema_evolution.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0010_rebuild_promotion.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0011_supervisor.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0012_service_reconnect.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0013_source_continuity.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0014_source_endpoints.sql
-	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -f - < migrations/0015_journal_maintenance.sql
+	$(COMPOSE) exec -T postgres psql -X -v ON_ERROR_STOP=1 -U postgres -d analytics -c 'CREATE EXTENSION IF NOT EXISTS dblink; CREATE EXTENSION IF NOT EXISTS lake_replication;'
 
 journal-test:
 	python3 tests/journal/probe.py
@@ -101,8 +87,8 @@ iceberg-maintenance-test:
 	python3 tests/iceberg_maintenance/probe.py
 native-subscription-spike-test:
 	python3 tests/native_subscription_spike/probe.py
-subscription-sugar-test:
-	python3 tests/subscription_sugar/probe.py
+postgres-integration-test:
+	python3 tests/postgres_integration/probe.py
 lake-replication-extension:
 	$(MAKE) -C extensions/lake_replication generate
 lake-replication-extension-test:
@@ -158,24 +144,24 @@ check:
 	python3 -m py_compile tests/journal_maintenance/probe.py
 	python3 -m py_compile tests/iceberg_maintenance/probe.py
 	python3 -m py_compile tests/native_subscription_spike/probe.py
-	python3 -m py_compile tests/subscription_sugar/probe.py
+	python3 -m py_compile tests/postgres_integration/probe.py
 	python3 -m py_compile tests/extension/probe.py
 	python3 -m py_compile tests/install/probe.py
 	python3 -m py_compile tests/qualification/probe.py
 	python3 -m py_compile tests/qualification/compatibility.py
 	$(MAKE) -C extensions/lake_replication generate
-	$(MAKE) -C extensions/lake_subscription_sugar lake_subscription_sugar--1.1.sql
 	! grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0.sql
 	! grep -q '0017_common_parameterized_types.sql' extensions/lake_replication/lake_replication--0.1.0.sql
+	! grep -q '0018_postgres_integration.sql' extensions/lake_replication/lake_replication--0.1.0.sql
 	grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q '0017_common_parameterized_types.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
+	grep -q '0018_postgres_integration.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.register_type_contract' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.ensure_iceberg_destination' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.reconcile_relation_schema' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'pg_extension_config_dump' extensions/lake_replication/lake_replication--0.1.0-beta.1.sql
-	grep -q 'pg_extension_config_dump' extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql
-	grep -q 'ADD COLUMN credential_file text' extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql
-	grep -q 'ADD COLUMN config_generation bigint' extensions/lake_subscription_sugar/lake_subscription_sugar--1.0--1.1.sql
+	grep -q 'CREATE TABLE lake_replication.worker_launch_config' extensions/lake_replication/lake_replication--0.1.0-beta.1.sql
+	grep -q "LOAD 'lake_replication'" extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace

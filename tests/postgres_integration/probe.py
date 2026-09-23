@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Architecture spike: builds and loads extensions/lake_subscription_sugar
+"""Integration coverage for the unified lake_replication PostgreSQL extension
 inside the running lab's PostgreSQL container, then proves that
 `CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')`,
 `ALTER SUBSCRIPTION ... DISABLE`, and `DROP SUBSCRIPTION` are all
@@ -19,7 +19,7 @@ real crash this probe caught during development, where SIGTERM-ing a
 detached worker in this container (PostgreSQL runs as PID 1 here) made the
 postmaster treat it as a crash and restart the whole cluster.
 
-Not part of the shipped replication path. Requires the lab's PostgreSQL
+This exercises the shipped replication path. Requires the lab's PostgreSQL
 image (it ships pg_config/gcc/make and the matching server headers to
 compile a PGXS extension in place; see the Dockerfile), and either a Linux
 host or a working `docker run rust:bookworm` fallback to cross-build the
@@ -34,7 +34,7 @@ import time
 
 
 ROOT = Path(__file__).resolve().parents[2]
-EXT_DIR = ROOT / "extensions" / "lake_subscription_sugar"
+EXT_DIR = ROOT / "extensions" / "lake_replication"
 COMPOSE = ["docker", "compose", "-p", "pg-lake-replication-lab",
            "-f", str(ROOT / "deploy/docker-compose/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("subsug_%Y%m%d_%H%M%S")
@@ -82,15 +82,19 @@ def container_id():
 
 
 def build_and_install_extension(cid):
-    command(["docker", "exec", cid, "mkdir", "-p", "/tmp/lake_subscription_sugar"])
-    for name in ("lake_subscription_sugar.c", "Makefile", "lake_subscription_sugar.control",
-                 "lake_subscription_sugar--1.0.sql"):
-        result = command(["docker", "cp", str(EXT_DIR / name),
-                          f"{cid}:/tmp/lake_subscription_sugar/{name}"])
+    remote_root = f"/tmp/{RUN}"
+    command(["docker", "exec", cid, "mkdir", "-p",
+             f"{remote_root}/extensions/lake_replication", f"{remote_root}/migrations"])
+    for source, destination in (
+        (EXT_DIR, f"{remote_root}/extensions/lake_replication"),
+        (ROOT / "migrations", f"{remote_root}/migrations"),
+    ):
+        result = command(["docker", "cp", f"{source}/.", f"{cid}:{destination}"])
         if result.returncode:
             raise RuntimeError(result.stderr.strip())
     for target in ("all", "install"):
-        result = command(["docker", "exec", "-w", "/tmp/lake_subscription_sugar", cid,
+        result = command(["docker", "exec", "-w",
+                          f"{remote_root}/extensions/lake_replication", cid,
                           "make", target])
         if result.returncode:
             raise RuntimeError(result.stderr.strip())
@@ -98,16 +102,16 @@ def build_and_install_extension(cid):
     # session_preload_libraries makes the ProcessUtility_hook active for
     # every future session to this database, matching how pg_lake itself
     # ships (CREATE EXTENSION once, no manual LOAD per statement).
-    sql("analytics", "DROP EXTENSION IF EXISTS lake_subscription_sugar CASCADE")
-    sql("analytics", "CREATE EXTENSION lake_subscription_sugar")
+    sql("analytics", "DROP EXTENSION IF EXISTS lake_replication CASCADE")
+    sql("analytics", "CREATE EXTENSION lake_replication")
     sql("analytics", "ALTER DATABASE analytics SET session_preload_libraries "
-                     "= 'lake_subscription_sugar'")
+                     "= 'lake_replication'")
 
-    # The launcher background worker (lake_subscription_sugar_launcher_main)
+    # The launcher background worker (lake_replication_launcher_main)
     # -- the only thing that actually starts a supervisor OS process, see
     # Milestone 27's addendum -- is registered via shared_preload_libraries
     # (already set in compose.yml's command, along with
-    # lake_subscription_sugar.database_name and a raised
+    # lake_replication.database_name and a raised
     # max_worker_processes) at postmaster startup. A bare `make install`
     # above replaces the .so on disk but does not make the already-running
     # postmaster load the new code -- that needs a restart, exactly the
@@ -198,7 +202,7 @@ def install_migrations():
     if installed != "t":
         for migration in sorted((ROOT / "migrations").glob("*.sql")):
             sql("analytics", migration.read_text())
-    sql("analytics", (EXT_DIR / "monitoring_views.sql").read_text())
+    sql("analytics", (ROOT / "deploy/poc/init/38-monitoring-views.sql").read_text())
 
 
 def force_delete_subscription(subscription_id):
@@ -347,7 +351,7 @@ def main():
               WITH (lake_target = 'iceberg');
         """)
         check("hook logs interception before routing to the control plane",
-              "lake_subscription_sugar: intercepted" in (result.stdout + result.stderr), True)
+              "lake_replication: intercepted" in (result.stdout + result.stderr), True)
         check("CREATE SUBSCRIPTION reports that it started initial sync and "
               "recorded the supervisor's launch configuration",
               "starting initial sync" in (result.stdout + result.stderr)
@@ -482,7 +486,7 @@ def main():
               """), "0")
         check("this extension's own pending_cleanup bookkeeping row is gone too",
               value("analytics", f"""
-                  SELECT count(*) FROM lake_subscription_sugar.pending_cleanup
+                  SELECT count(*) FROM lake_replication.pending_cleanup
                    WHERE subscription_id={subscription_id}
               """), "0")
         subscription_id = None

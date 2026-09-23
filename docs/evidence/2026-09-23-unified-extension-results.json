@@ -1,0 +1,55 @@
+{
+  "run": "qualification_20260923_034800",
+  "status": "passed",
+  "archive": "pg_lake_replication-0.1.0-beta.1.tar.gz",
+  "archive_sha256": "cea8526a329f3ed29b498751b13635690b93a4cd36d520c5573913c3a528d10f",
+  "architecture": "arm64",
+  "source_revision": "e744c55a7faa2a83d72d850c1ea4f24a148ff710-dirty",
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "check_count": 36,
+  "failed_checks": [],
+  "feature_checks": [
+    {
+      "name": "archive-installed extensions load",
+      "actual": "lake_replication:0.1.0-beta.1",
+      "expected": "lake_replication:0.1.0-beta.1",
+      "passed": true
+    },
+    {
+      "name": "extension upgrades in place and preserves control-plane state",
+      "actual": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "expected": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "passed": true
+    },
+    {
+      "name": "logical backup restores extension versions and durable control state",
+      "actual": "0.1.0-beta.1:1:1",
+      "expected": "0.1.0-beta.1:1:1",
+      "passed": true
+    },
+    {
+      "name": "credential rotation replaces the subscription supervisor",
+      "actual": "/credentials/worker-rotated.env:2:true:running",
+      "expected": "/credentials/worker-rotated.env:2:true:running",
+      "passed": true
+    },
+    {
+      "name": "credential selection can return to the original file",
+      "actual": "/credentials/worker.env:3:true:running",
+      "expected": "/credentials/worker.env:3:true:running",
+      "passed": true
+    },
+    {
+      "name": "credential values absent from worker logs",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "uninstaller removes only project program files",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    }
+  ]
+}

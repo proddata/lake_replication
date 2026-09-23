@@ -1,6 +1,6 @@
 # PoC/demo image: same pg_lake build as the milestone lab, without the
 # lab-only crash-injection patch, plus this project's own worker binaries
-# and the lake_subscription_sugar CREATE-SUBSCRIPTION wrapper baked in.
+# and the lake_replication CREATE-SUBSCRIPTION wrapper baked in.
 # Not hardened for production; see deploy/poc/README.md.
 
 FROM rust:bookworm AS worker-builder
@@ -59,9 +59,10 @@ LABEL org.opencontainers.image.source="https://github.com/Snowflake-Labs/pg_lake
 # This project's own control-plane wrapper: CREATE/ALTER/DROP SUBSCRIPTION
 # ... WITH (lake_target = 'iceberg') spawns the worker binaries below and
 # routes to lake_replication.* instead of native logical replication.
-COPY extensions/lake_subscription_sugar /tmp/lake_subscription_sugar
-RUN make -C /tmp/lake_subscription_sugar all install \
-    && rm -rf /tmp/lake_subscription_sugar
+COPY migrations /migrations
+COPY extensions/lake_replication /tmp/lake_replication
+RUN make -C /tmp/lake_replication all install \
+    && rm -rf /tmp/lake_replication
 
 COPY --from=worker-builder \
     /src/target/release/lake-replication-receiver \

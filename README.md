@@ -53,7 +53,7 @@ flowchart LR
 
 The destination PostgreSQL database contains the control schema and journal.
 The four installed executables perform initial copy, receive WAL, publish
-batches, and supervise the service. `lake_subscription_sugar` intercepts only
+batches, and supervise the service. `lake_replication` intercepts only
 subscriptions marked with `lake_target = 'iceberg'`; normal PostgreSQL
 subscriptions continue through PostgreSQL unchanged.
 
@@ -128,19 +128,19 @@ To build release-style archives for both supported architectures instead, run
 
 ### 3. Configure the destination server
 
-Append `lake_subscription_sugar` to any existing
+Append `lake_replication` to any existing
 `shared_preload_libraries` value and choose the pg_lake destination database:
 
 ```conf
 # postgresql.conf
-shared_preload_libraries = 'pg_extension_base,lake_subscription_sugar'
-lake_subscription_sugar.database_name = 'analytics'
-lake_subscription_sugar.log_directory = '/var/log/postgresql/pg_lake_replication'
-lake_subscription_sugar.credential_file = '/etc/pg_lake_replication/worker.env'
+shared_preload_libraries = 'pg_extension_base,lake_replication'
+lake_replication.database_name = 'analytics'
+lake_replication.log_directory = '/var/log/postgresql/pg_lake_replication'
+lake_replication.credential_file = '/etc/pg_lake_replication/worker.env'
 ```
 
 The exact existing preload list depends on the pg_lake installation; preserve
-all of its entries when appending `lake_subscription_sugar`.
+all of its entries when appending `lake_replication`.
 
 Create the credential file as a regular, non-symlink file readable only by the
 PostgreSQL operating-system user (`0600`):
@@ -167,11 +167,10 @@ database, install the extensions and activate the SQL hook for future sessions:
 
 ```sql
 -- Run in the pg_lake-enabled destination database: analytics
+CREATE EXTENSION dblink;
 CREATE EXTENSION lake_replication;
-CREATE EXTENSION lake_subscription_sugar CASCADE;
 
-ALTER DATABASE analytics
-    SET session_preload_libraries = 'lake_subscription_sugar';
+ALTER DATABASE analytics SET session_preload_libraries = 'lake_replication';
 ```
 
 Reconnect after changing `session_preload_libraries`. Subscription management
@@ -266,7 +265,7 @@ Useful first checks are:
 - `lake_replication.metrics` for long-form numeric samples consumable by a
   PostgreSQL metrics exporter;
 - PostgreSQL's server log for launcher/background-worker events; and
-- the configured `lake_subscription_sugar.log_directory` for per-subscription
+- the configured `lake_replication.log_directory` for per-subscription
   worker output.
 
 See the [operations guide](docs/operations.md) for metric names, suggested alert
@@ -288,7 +287,7 @@ changing an installed version, follow the coordinated
   the [feature boundaries](docs/feature-gaps.md).
 - Each subscription may select and reload its own owner-only credential file.
   The source password may still appear in the protected
-  `lake_subscription_sugar.pending_cleanup` table when it is embedded in
+  `lake_replication.pending_cleanup` table when it is embedded in
   `CREATE SUBSCRIPTION ... CONNECTION`, matching PostgreSQL's own
   subscription-conninfo tradeoff.
 - Compatibility has been validated against one pg_lake revision. Extended

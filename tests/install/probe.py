@@ -104,23 +104,23 @@ def main():
         compose("exec", "-T", "postgres", "createdb", "-U", "postgres", DATABASE)
         sql("""
             CREATE EXTENSION pg_lake CASCADE;
+            CREATE EXTENSION dblink;
             CREATE EXTENSION lake_replication;
-            CREATE EXTENSION lake_subscription_sugar CASCADE;
         """)
         check(
-            "packaged extensions load",
+            "packaged extension loads",
             sql("""
                 SELECT string_agg(extname || ':' || extversion, ',' ORDER BY extname)
                   FROM pg_extension
-                 WHERE extname IN ('lake_replication', 'lake_subscription_sugar')
+                 WHERE extname = 'lake_replication'
             """),
-            "lake_replication:0.1.0-beta.1,lake_subscription_sugar:1.1",
+            "lake_replication:0.1.0-beta.1",
         )
         links = command([
             "docker", "exec", container, "sh", "-ec",
             "for binary in /usr/local/bin/lake-replication-*; do "
             "test -x \"$binary\"; ldd \"$binary\" >/dev/null; done; "
-            "ldd /usr/lib/postgresql/18/lib/lake_subscription_sugar.so >/dev/null",
+            "ldd /usr/lib/postgresql/18/lib/lake_replication.so >/dev/null",
         ])
         check("packaged native files link", links.returncode, 0)
         exit_code = 0

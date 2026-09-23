@@ -79,6 +79,22 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         } else {
             run_cycle(&config, &receiver, &publisher, &mut destination)
         };
+        if cycle.is_err()
+            && config.config_generation > 0
+            && launch_config_replaced(&mut destination, &config)?
+        {
+            log_event(
+                "supervisor",
+                "INFO",
+                "configuration_replaced",
+                "launch configuration was replaced; discarding the obsolete cycle result",
+                &[
+                    ("subscription_id", config.subscription_id.to_string()),
+                    ("config_generation", config.config_generation.to_string()),
+                ],
+            );
+            return Ok(());
+        }
         match cycle {
             Ok((receiver_cycles, publisher_cycles)) => {
                 consecutive_failures = 0;
@@ -149,6 +165,25 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
+}
+
+fn launch_config_replaced(
+    destination: &mut Client,
+    config: &Config,
+) -> Result<bool, Box<dyn std::error::Error>> {
+    let rows = control_query(
+        destination,
+        config,
+        &format!(
+            "SELECT config_generation::text FROM lake_replication.worker_launch_config WHERE subscription_id={}",
+            config.subscription_id
+        ),
+    )?;
+    let Some(row) = rows.first() else {
+        return Ok(true);
+    };
+    let current: i64 = field(row, 0, "launch configuration generation")?.parse()?;
+    Ok(current != config.config_generation)
 }
 
 fn acquire_supervisor_lock(
@@ -780,6 +815,7 @@ struct Config {
     destination_database: String,
     slot: String,
     subscription_id: i64,
+    config_generation: i64,
     poll_interval: Duration,
     receiver_idle_timeout: Duration,
     base_backoff: Duration,
@@ -811,6 +847,7 @@ impl Config {
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
             slot: required("LAKE_SLOT")?,
             subscription_id: required("LAKE_SUBSCRIPTION_ID")?.parse()?,
+            config_generation: value("LAKE_CONFIG_GENERATION", "0").parse()?,
             poll_interval: milliseconds("LAKE_SUPERVISOR_POLL_MS", "250")?,
             receiver_idle_timeout: milliseconds("LAKE_RECEIVER_IDLE_TIMEOUT_MS", "1000")?,
             base_backoff: milliseconds("LAKE_SUPERVISOR_BASE_BACKOFF_MS", "1000")?,
@@ -823,6 +860,7 @@ impl Config {
             || config.base_backoff.is_zero()
             || config.max_backoff < config.base_backoff
             || config.publisher_max_batches == 0
+            || config.config_generation < 0
         {
             return Err("supervisor timing and batch limits must be positive and ordered".into());
         }

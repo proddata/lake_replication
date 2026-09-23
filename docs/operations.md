@@ -131,7 +131,7 @@ WHERE health_state = 'critical'
 
 Every Rust worker writes one JSON object per line. Informational events go to
 stdout; warnings and errors go to stderr. The subscription launcher redirects
-both streams to its configured `lake_subscription_sugar.log_directory`.
+both streams to its configured `lake_replication.log_directory`.
 
 Each record has stable common fields:
 

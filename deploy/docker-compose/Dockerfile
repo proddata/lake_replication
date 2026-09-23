@@ -48,17 +48,18 @@ RUN git apply --check /tmp/pg-lake-lab-crash-points.patch \
     && make -C pg_lake_table -j${BUILD_JOBS} install with_llvm=no
 RUN ldconfig
 
-# lake_subscription_sugar must exist on disk before the first postmaster
+# lake_replication must exist on disk before the first postmaster
 # startup: shared_preload_libraries (see compose.yml) refuses to start if a
 # listed library is missing, and adding it there only takes effect on a
 # restart, not a bare CREATE EXTENSION -- see Milestone 27's addendum.
-# tests/subscription_sugar/probe.py rebuilds and reinstalls this from the
+# tests/postgres_integration/probe.py rebuilds and reinstalls this from the
 # current working tree on every run (for fast iteration without a full
 # image rebuild) and restarts postgres itself to pick that up; this baked-in
 # copy only needs to be correct as of the last `make lab-build`.
-COPY extensions/lake_subscription_sugar /tmp/lake_subscription_sugar
-RUN make -C /tmp/lake_subscription_sugar all install \
-    && rm -rf /tmp/lake_subscription_sugar
+COPY migrations /migrations
+COPY extensions/lake_replication /tmp/lake_replication
+RUN make -C /tmp/lake_replication all install \
+    && rm -rf /tmp/lake_replication
 
 LABEL org.opencontainers.image.source="https://github.com/Snowflake-Labs/pg_lake" \
       org.opencontainers.image.revision=${PG_LAKE_REV}

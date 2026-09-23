@@ -27,6 +27,7 @@ for file in \
     "$destination_root$worker_dir/lake-replication-publisher" \
     "$destination_root$worker_dir/lake-replication-initial-sync" \
     "$destination_root$worker_dir/lake-replication-supervisor" \
+    "$destination_root$library_dir/lake_replication.so" \
     "$destination_root$library_dir/lake_subscription_sugar.so" \
     "$destination_root$shared_extension_dir/lake_subscription_sugar.control" \
     "$destination_root$shared_extension_dir/lake_subscription_sugar--1.0.sql" \
@@ -48,7 +49,8 @@ Removed pg_lake_replication program and extension files.
 
 PostgreSQL configuration, roles, extension objects, replication slots, Iceberg
 tables, object-storage data, and credential/log files were not changed. Stop or
-drop subscriptions and remove lake_subscription_sugar from preload settings
+drop subscriptions and remove lake_replication (and the legacy
+lake_subscription_sugar name, if present) from preload settings
 before restarting PostgreSQL without the shared library. Use DROP EXTENSION
 only when you separately intend to remove database objects.
 EOF

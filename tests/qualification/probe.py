@@ -304,10 +304,10 @@ def verify_uninstaller():
         "-ec",
         """
 test -x /usr/local/bin/lake-replication-supervisor
-test -f "$(pg_config --pkglibdir)/lake_subscription_sugar.so"
+test -f "$(pg_config --pkglibdir)/lake_replication.so"
 /qualification/uninstall.sh
 test ! -e /usr/local/bin/lake-replication-supervisor
-test ! -e "$(pg_config --pkglibdir)/lake_subscription_sugar.so"
+test ! -e "$(pg_config --pkglibdir)/lake_replication.so"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication.control"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.1.sql"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0--0.1.0-beta.1.sql"
@@ -328,8 +328,8 @@ def verify_upgrade_contract():
             "destination",
             database,
             "CREATE EXTENSION pg_lake CASCADE; "
-            "CREATE EXTENSION lake_replication VERSION '0.1.0'; "
-            "CREATE EXTENSION lake_subscription_sugar VERSION '1.0' CASCADE;",
+            "CREATE EXTENSION dblink; "
+            "CREATE EXTENSION lake_replication VERSION '0.1.0';",
         )
         subscription_id = sql(
             "destination",
@@ -349,19 +349,6 @@ def verify_upgrade_contract():
             "published_lsn='0/10', acknowledged_lsn='0/10' "
             f"WHERE subscription_id={subscription_id};",
         )
-        sql(
-            "destination",
-            database,
-            f"INSERT INTO lake_subscription_sugar.pending_cleanup "
-            "(subscription_id, source_conninfo, source_slot_name) VALUES "
-            f"({subscription_id}, 'host=source dbname=application', 'upgrade_slot'); "
-            "INSERT INTO lake_subscription_sugar.worker_launch_config "
-            "(subscription_id, slot_name, publication_name, source_database, "
-            "destination_database, source_address, destination_address, "
-            "destination_schema) VALUES "
-            f"({subscription_id}, 'upgrade_slot', 'upgrade_pub', 'application', "
-            "'upgrade_contract', 'source:5432', '/var/run/postgresql:5432', 'public');",
-        )
         check(
             "development baseline excludes beta observability schema",
             sql(
@@ -376,8 +363,20 @@ def verify_upgrade_contract():
         sql(
             "destination",
             database,
-            "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1'; "
-            "ALTER EXTENSION lake_subscription_sugar UPDATE TO '1.1';",
+            "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1';",
+        )
+        sql(
+            "destination",
+            database,
+            f"INSERT INTO lake_replication.pending_cleanup "
+            "(subscription_id, source_conninfo, source_slot_name) VALUES "
+            f"({subscription_id}, 'host=source dbname=application', 'upgrade_slot'); "
+            "INSERT INTO lake_replication.worker_launch_config "
+            "(subscription_id, slot_name, publication_name, source_database, "
+            "destination_database, source_address, destination_address, "
+            "destination_schema) VALUES "
+            f"({subscription_id}, 'upgrade_slot', 'upgrade_pub', 'application', "
+            "'upgrade_contract', 'source:5432', '/var/run/postgresql:5432', 'public');",
         )
         check(
             "extension upgrades in place and preserves control-plane state",
@@ -412,7 +411,7 @@ def verify_upgrade_contract():
                 "destination",
                 database,
                 "SELECT (credential_file IS NULL)::text || ':' || config_generation "
-                "FROM lake_subscription_sugar.worker_launch_config "
+                "FROM lake_replication.worker_launch_config "
                 f"WHERE subscription_id={subscription_id}",
             ),
             "true:1",
@@ -425,11 +424,9 @@ def verify_upgrade_contract():
                 "SELECT "
                 "(SELECT cardinality(extconfig) FROM pg_extension "
                 "WHERE extname='lake_replication') || ':' || "
-                "(SELECT extversion || ':' || cardinality(extconfig) "
-                "FROM pg_extension WHERE extname='lake_subscription_sugar') || ':' || "
-                "(SELECT count(*) FROM lake_subscription_sugar.worker_launch_config)",
+                "(SELECT count(*) FROM lake_replication.worker_launch_config)",
             ),
-            "16:1.1:2:1",
+            "18:1",
         )
         logical_dump = compose(
             "exec",
@@ -444,7 +441,7 @@ def verify_upgrade_contract():
         check(
             "logical backup contains durable state but not regenerated seed mappings",
             "COPY lake_replication.subscriptions" in logical_dump
-            and "COPY lake_subscription_sugar.worker_launch_config" in logical_dump
+            and "COPY lake_replication.worker_launch_config" in logical_dump
             and "COPY lake_replication.type_mappings" not in logical_dump,
             True,
         )
@@ -485,12 +482,10 @@ def verify_upgrade_contract():
                 "SELECT "
                 "(SELECT extversion FROM pg_extension "
                 "WHERE extname='lake_replication') || ':' || "
-                "(SELECT extversion FROM pg_extension "
-                "WHERE extname='lake_subscription_sugar') || ':' || "
                 "(SELECT count(*) FROM lake_replication.subscriptions) || ':' || "
-                "(SELECT count(*) FROM lake_subscription_sugar.worker_launch_config)",
+                "(SELECT count(*) FROM lake_replication.worker_launch_config)",
             ),
-            "0.1.0-beta.1:1.1:1:1",
+            "0.1.0-beta.1:1:1",
         )
         check(
             "no unsupported SQL downgrade path is advertised",
@@ -549,7 +544,7 @@ CREATE SUBSCRIPTION orders_to_lake
             "destination",
             "analytics",
             "SELECT credential_file || ':' || config_generation "
-            "FROM lake_subscription_sugar.worker_launch_config c "
+            "FROM lake_replication.worker_launch_config c "
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
         ),
@@ -570,7 +565,7 @@ CREATE SUBSCRIPTION orders_to_lake
             "destination",
             "analytics",
             "SELECT credential_file || ':' || config_generation "
-            "FROM lake_subscription_sugar.worker_launch_config c "
+            "FROM lake_replication.worker_launch_config c "
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
         )
@@ -694,7 +689,7 @@ CREATE SUBSCRIPTION orders_to_lake
             "analytics",
             "SELECT c.credential_file || ':' || c.config_generation || ':' || "
             f"(ss.supervisor_pid <> {previous_supervisor})::text || ':' || ss.state "
-            "FROM lake_subscription_sugar.worker_launch_config c "
+            "FROM lake_replication.worker_launch_config c "
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "JOIN lake_replication.service_status ss USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
@@ -745,7 +740,7 @@ CREATE SUBSCRIPTION orders_to_lake
             "analytics",
             "SELECT c.credential_file || ':' || c.config_generation || ':' || "
             f"(ss.supervisor_pid <> {rotated_supervisor})::text || ':' || ss.state "
-            "FROM lake_subscription_sugar.worker_launch_config c "
+            "FROM lake_replication.worker_launch_config c "
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "JOIN lake_replication.service_status ss USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
@@ -908,15 +903,15 @@ def main():
         compose("up", "-d", "--wait", "--wait-timeout", "300", timeout=600)
         started = True
         check(
-            "archive-installed extensions load",
+            "archive-installed extension loads",
             sql(
                 "destination",
                 "analytics",
                 "SELECT string_agg(extname || ':' || extversion, ',' ORDER BY extname) "
                 "FROM pg_extension WHERE extname IN "
-                "('lake_replication', 'lake_subscription_sugar')",
+                "('lake_replication')",
             ),
-            "lake_replication:0.1.0-beta.1,lake_subscription_sugar:1.1",
+            "lake_replication:0.1.0-beta.1",
         )
         verify_upgrade_contract()
         exercise_replication()

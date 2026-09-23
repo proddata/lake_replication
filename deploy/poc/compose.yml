@@ -22,9 +22,9 @@ services:
       - -c
       - max_worker_processes=24
       - -c
-      - shared_preload_libraries=pg_extension_base,lake_subscription_sugar
+      - shared_preload_libraries=pg_extension_base,lake_replication
       - -c
-      - lake_subscription_sugar.database_name=analytics
+      - lake_replication.database_name=analytics
       - -c
       - pg_lake_engine.host=host=/var/run/pgduck port=5332
       - -c
@@ -33,23 +33,8 @@ services:
       - pgdata:/var/lib/postgresql
       - pgduck-socket:/var/run/pgduck
       - ./init/10-init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
-      - ../../migrations/0001_journal.sql:/docker-entrypoint-initdb.d/20-journal.sql:ro
-      - ../../migrations/0002_transport.sql:/docker-entrypoint-initdb.d/21-transport.sql:ro
-      - ../../migrations/0003_publisher.sql:/docker-entrypoint-initdb.d/22-publisher.sql:ro
-      - ../../migrations/0004_mutations.sql:/docker-entrypoint-initdb.d/23-mutations.sql:ro
-      - ../../migrations/0005_streaming.sql:/docker-entrypoint-initdb.d/24-streaming.sql:ro
-      - ../../migrations/0006_initial_sync.sql:/docker-entrypoint-initdb.d/25-initial-sync.sql:ro
-      - ../../migrations/0007_multi_table_sync.sql:/docker-entrypoint-initdb.d/26-multi-table-sync.sql:ro
-      - ../../migrations/0008_type_contracts.sql:/docker-entrypoint-initdb.d/27-type-contracts.sql:ro
-      - ../../migrations/0009_schema_evolution.sql:/docker-entrypoint-initdb.d/28-schema-evolution.sql:ro
-      - ../../migrations/0010_rebuild_promotion.sql:/docker-entrypoint-initdb.d/29-rebuild-promotion.sql:ro
-      - ../../migrations/0011_supervisor.sql:/docker-entrypoint-initdb.d/30-supervisor.sql:ro
-      - ../../migrations/0012_service_reconnect.sql:/docker-entrypoint-initdb.d/31-service-reconnect.sql:ro
-      - ../../migrations/0013_source_continuity.sql:/docker-entrypoint-initdb.d/32-source-continuity.sql:ro
-      - ../../migrations/0014_source_endpoints.sql:/docker-entrypoint-initdb.d/33-source-endpoints.sql:ro
-      - ../../migrations/0015_journal_maintenance.sql:/docker-entrypoint-initdb.d/34-journal-maintenance.sql:ro
-      - ../../extensions/lake_subscription_sugar/monitoring_views.sql:/docker-entrypoint-initdb.d/38-monitoring-views.sql:ro
-      - ./init/40-subscription-sugar.sql:/docker-entrypoint-initdb.d/40-subscription-sugar.sql:ro
+      - ./init/40-lake-replication.sql:/docker-entrypoint-initdb.d/20-lake-replication.sql:ro
+      - ./init/38-monitoring-views.sql:/docker-entrypoint-initdb.d/38-monitoring-views.sql:ro
       - ./init/50-demo.sql:/docker-entrypoint-initdb.d/50-demo.sql:ro
     ports:
       - "127.0.0.1:55435:5432"
@@ -57,7 +42,7 @@ services:
       pgduck:
         condition: service_healthy
     healthcheck:
-      test: [CMD-SHELL, "psql -h 127.0.0.1 -U postgres -d analytics -Atc \"SELECT count(*) FROM pg_extension WHERE extname='lake_subscription_sugar'\" | grep -qx 1"]
+      test: [CMD-SHELL, "psql -h 127.0.0.1 -U postgres -d analytics -Atc \"SELECT count(*) FROM pg_extension WHERE extname='lake_replication'\" | grep -qx 1"]
       interval: 5s
       timeout: 3s
       retries: 60

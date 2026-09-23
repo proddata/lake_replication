@@ -11,7 +11,7 @@ Keep the previous archive and its checksum. Record the installed versions:
 ```sql
 SELECT extname, extversion
 FROM pg_extension
-WHERE extname IN ('lake_replication', 'lake_subscription_sugar')
+WHERE extname = 'lake_replication'
 ORDER BY extname;
 
 SELECT subscription_name, health_state, source_lag_bytes,
@@ -55,11 +55,10 @@ use.
 2. Stop PostgreSQL. Run the new bundle's `install.sh` as root; it replaces the
    program files but does not alter database objects.
 3. Start PostgreSQL while subscriptions remain disabled.
-4. Upgrade both extensions in the destination database:
+4. Upgrade the extension in the destination database:
 
 ```sql
 ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1';
-ALTER EXTENSION lake_subscription_sugar UPDATE TO '1.1';
 ```
 
 5. Confirm the versions and query `lake_replication.subscription_status`.
@@ -68,9 +67,8 @@ ALTER EXTENSION lake_subscription_sugar UPDATE TO '1.1';
 
 The `lake_replication` upgrade from the installable `0.1.0` development
 baseline is forward-only and preserves control-plane rows and checkpoints. It
-adds the observability contract and logical-backup registration. The
-`lake_subscription_sugar` `1.0` to `1.1` upgrade registers its durable launch
-and cleanup tables for logical backup without changing their shape.
+adds observability, the PostgreSQL launcher integration, and logical-backup
+registration in the unified `lake_replication` schema.
 
 ## Rollback
 
@@ -82,7 +80,7 @@ If the failure occurs before either `ALTER EXTENSION`, stop PostgreSQL,
 reinstall the previous archive, restore the previous configuration, and start
 PostgreSQL. The database schema has not changed.
 
-After either extension upgrade, prefer fixing forward. If rollback is required:
+After the extension upgrade, prefer fixing forward. If rollback is required:
 
 1. Stop all application and replication writes.
 2. Stop PostgreSQL.
@@ -102,6 +100,6 @@ checkpoint forward.
 ## Current evidence boundary
 
 The clean-host qualification installs only the exported archive and exercises
-the `0.1.0` to `0.1.0-beta.1` and `1.0` to `1.1` upgrade paths with retained
-control rows. A real beta-to-beta upgrade and full backup/object-store restore
-drill remain required before the upgrade gate can be considered complete.
+the unified `0.1.0` to `0.1.0-beta.1` upgrade path with retained control rows.
+A real beta-to-beta upgrade and full backup/object-store restore drill remain
+required before the upgrade gate can be considered complete.

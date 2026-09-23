@@ -20,7 +20,7 @@ lab's crash-injection patch, so it is safe to keep data in.
 | `storage` / `storage-init` | MinIO object storage for the Iceberg tables, plus its bucket |
 | `webui` | Node.js/Express + `pg`, serving the two-pane SQL console |
 
-`analytics` also has this project's `lake_subscription_sugar` extension
+`analytics` also has this project's `lake_replication` extension
 loaded, so plain `CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')`
 statements are what starts replication -- they spawn this project's own
 `lake-replication-supervisor`/`initial-sync` binaries as real OS processes
@@ -72,7 +72,7 @@ make poc-down   # stop and remove containers *and* volumes
 ## Known limitations of this demo
 
 - One publication per `CREATE SUBSCRIPTION`, matching the worker binaries'
-  current scope (see `lake_subscription_sugar.c`).
+  current scope (see `lake_replication.c`).
 - `ALTER SUBSCRIPTION ... DISABLE/ENABLE` and `DROP SUBSCRIPTION` work (they
   route to the same control plane), but there is no UI shortcut for them
   yet -- run them as plain SQL on the destination pane.

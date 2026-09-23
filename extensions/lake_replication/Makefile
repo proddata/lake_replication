@@ -1,10 +1,12 @@
 EXTENSION = lake_replication
+MODULES = lake_replication
 BASELINE_VERSION = 0.1.0
 EXTVERSION = 0.1.0-beta.1
 MIGRATIONS = $(sort $(wildcard ../../migrations/[0-9][0-9][0-9][0-9]_*.sql))
 EXTENSION_METADATA = extension-config-dump.sql
 UPGRADE_MIGRATIONS = ../../migrations/0016_observability.sql \
-	../../migrations/0017_common_parameterized_types.sql
+	../../migrations/0017_common_parameterized_types.sql \
+	../../migrations/0018_postgres_integration.sql
 UPGRADE_SOURCES = $(UPGRADE_MIGRATIONS) $(EXTENSION_METADATA)
 BASELINE_MIGRATIONS = $(filter-out $(UPGRADE_MIGRATIONS),$(MIGRATIONS))
 BASELINE_SQL = $(EXTENSION)--$(BASELINE_VERSION).sql

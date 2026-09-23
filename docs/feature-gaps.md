@@ -7,6 +7,22 @@ replication or hosted lakehouse control plane.
 
 ## Required before beta
 
+### Unified PostgreSQL integration
+
+Status: **implemented and qualified on the native arm64 artifact**. See the
+[retained qualification summary](evidence/2026-09-23-unified-extension-results.json).
+
+The former prototype split between the `lake_replication` SQL extension and a
+separate `lake_subscription_sugar` hook library has been removed. The packaged
+product now has one extension, one shared library, one schema, and one version
+boundary named `lake_replication`. Installation, upgrade, backup, launcher
+state, monitoring, and removal all follow that single lifecycle.
+
+The artifact qualification covers fresh installation, the supported `0.1.0`
+upgrade, logical dump and restore of durable state, subscription management,
+credential rotation with generation fencing, recovery, redaction, slot cleanup,
+and conservative uninstall.
+
 ### Common parameterized PostgreSQL types
 
 Status: **implemented and qualified on the native arm64 artifact**. See the

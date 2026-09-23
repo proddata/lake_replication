@@ -76,13 +76,13 @@ services:
       - -c
       - max_worker_processes=24
       - -c
-      - shared_preload_libraries=pg_extension_base,lake_subscription_sugar
+      - shared_preload_libraries=pg_extension_base,lake_replication
       - -c
-      - lake_subscription_sugar.database_name=analytics
+      - lake_replication.database_name=analytics
       - -c
-      - lake_subscription_sugar.credential_file=/credentials/worker.env
+      - lake_replication.credential_file=/credentials/worker.env
       - -c
-      - lake_subscription_sugar.log_directory=/worker-logs
+      - lake_replication.log_directory=/worker-logs
       - -c
       - pg_lake_engine.host=host=/var/run/pgduck port=5332
       - -c
@@ -98,8 +98,8 @@ services:
         - >-
           pg_isready -h 127.0.0.1 -U postgres -d analytics
           && psql -XAt -U postgres -d analytics
-          -c "SELECT count(*) = 3 FROM pg_extension WHERE extname IN
-          ('pg_lake', 'lake_replication', 'lake_subscription_sugar')"
+          -c "SELECT count(*) = 2 FROM pg_extension WHERE extname IN
+          ('pg_lake', 'lake_replication')"
           | grep -qx t
       interval: 2s
       timeout: 3s

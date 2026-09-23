@@ -13,12 +13,10 @@ FROM postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a5
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential postgresql-server-dev-18 \
     && rm -rf /var/lib/apt/lists/*
-COPY extensions/lake_subscription_sugar /src/extensions/lake_subscription_sugar
 COPY extensions/lake_replication /src/extensions/lake_replication
 COPY migrations /src/migrations
-RUN make -C /src/extensions/lake_subscription_sugar all \
-    && make -C /src/extensions/lake_replication generate \
-    && strip --strip-unneeded /src/extensions/lake_subscription_sugar/lake_subscription_sugar.so
+RUN make -C /src/extensions/lake_replication all \
+    && strip --strip-unneeded /src/extensions/lake_replication/lake_replication.so
 
 FROM debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251 AS assembler
 ARG TARGETARCH
@@ -32,13 +30,9 @@ COPY --from=worker-builder \
     /src/target/release/lake-replication-supervisor \
     payload/bin/
 COPY --from=extension-builder \
-    /src/extensions/lake_subscription_sugar/lake_subscription_sugar.so \
+    /src/extensions/lake_replication/lake_replication.so \
     payload/lib/
 COPY --from=extension-builder \
-    /src/extensions/lake_subscription_sugar/lake_subscription_sugar.control \
-    /src/extensions/lake_subscription_sugar/lake_subscription_sugar--1.0.sql \
-    /src/extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql \
-    /src/extensions/lake_subscription_sugar/lake_subscription_sugar--1.0--1.1.sql \
     /src/extensions/lake_replication/lake_replication.control \
     /src/extensions/lake_replication/lake_replication--0.1.0.sql \
     /src/extensions/lake_replication/lake_replication--0.1.0-beta.1.sql \

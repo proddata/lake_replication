@@ -24,11 +24,10 @@ tests. `PG_CONFIG` can select a specific PostgreSQL installation.
 The bundle installs:
 
 - the receiver, publisher, initial-sync, and supervisor executables;
-- the `lake_replication` SQL extension; and
-- the `lake_subscription_sugar` extension and shared library.
+- the `lake_replication` SQL extension and shared library.
 
 For launcher-managed SCRAM/TLS connections, set
-`lake_subscription_sugar.credential_file` to an absolute path owned by the
+`lake_replication.credential_file` to an absolute path owned by the
 PostgreSQL operating-system user with mode `0600`, or select an absolute path
 per subscription with `WITH (lake_credential_file = '/path/to/file')`.
 Supported `KEY=value`
@@ -52,13 +51,12 @@ with:
 
 ```sql
 ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1';
-ALTER EXTENSION lake_subscription_sugar UPDATE TO '1.1';
 ```
 
 ## Removal
 
 Disable or drop managed subscriptions first, remove
-`lake_subscription_sugar` from `shared_preload_libraries`, and stop PostgreSQL
+`lake_replication` from `shared_preload_libraries`, and stop PostgreSQL
 before removing its shared library. From the unpacked bundle, run:
 
 ```sh
