@@ -33,6 +33,7 @@ services:
     entrypoint: [/bin/sh, -ec]
     environment:
       QUAL_SOURCE_PASSWORD: ${QUAL_SOURCE_PASSWORD:?set QUAL_SOURCE_PASSWORD}
+      QUAL_ROTATED_SOURCE_PASSWORD: ${QUAL_ROTATED_SOURCE_PASSWORD:?set QUAL_ROTATED_SOURCE_PASSWORD}
       QUAL_DESTINATION_PASSWORD: ${QUAL_ADMIN_PASSWORD:?set QUAL_ADMIN_PASSWORD}
     command:
       - |
@@ -49,6 +50,16 @@ services:
           > /credentials/worker.env
         chown postgres:postgres /credentials/worker.env
         chmod 0600 /credentials/worker.env
+        printf '%s\n' \
+          'LAKE_SOURCE_USER=lake_source' \
+          "LAKE_SOURCE_PASSWORD=$${QUAL_ROTATED_SOURCE_PASSWORD}" \
+          'LAKE_SOURCE_TLS_MODE=disable' \
+          'LAKE_DESTINATION_USER=postgres' \
+          "LAKE_DESTINATION_PASSWORD=$${QUAL_DESTINATION_PASSWORD}" \
+          'LAKE_DESTINATION_TLS_MODE=disable' \
+          > /credentials/worker-rotated.env
+        chown postgres:postgres /credentials/worker-rotated.env
+        chmod 0600 /credentials/worker-rotated.env
     volumes:
       - credentials:/credentials
       - worker-logs:/worker-logs

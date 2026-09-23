@@ -190,6 +190,15 @@ check_credential_file(char **newValue, void **extra, GucSource source)
 	return true;
 }
 
+static void
+require_absolute_credential_file(const char *path)
+{
+	if (path != NULL && path[0] != '\0' && path[0] != '/')
+		ereport(ERROR,
+				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+				 errmsg("lake_credential_file must be an absolute path")));
+}
+
 /*
  * TrackedWorker maps a subscription_id to the BackgroundWorkerHandle the
  * launcher itself obtained by registering that subscription's supervisor.
@@ -205,6 +214,7 @@ check_credential_file(char **newValue, void **extra, GucSource source)
 typedef struct TrackedWorker
 {
 	int64		subscriptionId;
+	int64		configGeneration;
 	BackgroundWorkerHandle *handle;
 	bool		seenThisCycle;
 }			TrackedWorker;
@@ -437,7 +447,8 @@ static char **
 build_worker_env(int64 subscriptionId, const char *slotName,
 				 const char *publicationName, const char *sourceDatabase,
 				 const char *destinationDatabase, const char *sourceAddress,
-				 const char *destinationAddress, const char *destinationSchema)
+				 const char *destinationAddress, const char *destinationSchema,
+				 const char *credentialFile)
 {
 	char	  **envp = palloc(16 * sizeof(char *));
 	int			i = 0;
@@ -464,8 +475,8 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	 */
 	envp[i++] = pstrdup("LAKE_RECEIVER_IDLE_TIMEOUT_MS=200");
 	envp[i++] = pstrdup("LAKE_SUPERVISOR_POLL_MS=100");
-	if (CredentialFile != NULL && CredentialFile[0] != '\0')
-		envp[i++] = psprintf("LAKE_CREDENTIAL_FILE=%s", CredentialFile);
+	if (credentialFile != NULL && credentialFile[0] != '\0')
+		envp[i++] = psprintf("LAKE_CREDENTIAL_FILE=%s", credentialFile);
 	envp[i++] = NULL;
 	Assert(i <= 16);
 	return envp;
@@ -502,6 +513,7 @@ lake_subscription_sugar_worker_main(Datum main_arg)
 	char	   *sourceAddress = NULL;
 	char	   *destinationAddress = NULL;
 	char	   *destinationSchema = NULL;
+	char	   *credentialFile = NULL;
 	char	  **envp;
 	char	   *supervisorPath;
 	char	   *supervisorArgv[2];
@@ -523,7 +535,8 @@ lake_subscription_sugar_worker_main(Datum main_arg)
 	if (SPI_execute(psprintf(
 			"SELECT slot_name, publication_name, source_database, "
 			"destination_database, source_address, destination_address, "
-			"destination_schema FROM lake_subscription_sugar.worker_launch_config "
+			"destination_schema, credential_file "
+			"FROM lake_subscription_sugar.worker_launch_config "
 			"WHERE subscription_id = %lld", (long long) subscriptionId),
 			true, 1) == SPI_OK_SELECT && SPI_processed == 1)
 	{
@@ -542,6 +555,14 @@ lake_subscription_sugar_worker_main(Datum main_arg)
 			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 6));
 		destinationSchema = MemoryContextStrdup(TopMemoryContext,
 			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 7));
+		{
+			char	   *storedCredentialFile = SPI_getvalue(
+				SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 8);
+
+			if (storedCredentialFile != NULL)
+				credentialFile = MemoryContextStrdup(TopMemoryContext,
+											 storedCredentialFile);
+		}
 	}
 
 	SPI_finish();
@@ -559,10 +580,12 @@ lake_subscription_sugar_worker_main(Datum main_arg)
 			 "for subscription_id=%lld; exiting", (long long) subscriptionId);
 		proc_exit(0);
 	}
+	if (credentialFile == NULL && CredentialFile != NULL && CredentialFile[0] != '\0')
+		credentialFile = CredentialFile;
 
 	envp = build_worker_env(subscriptionId, slotName, publicationName,
 							sourceDatabase, destinationDatabase, sourceAddress,
-							destinationAddress, destinationSchema);
+							destinationAddress, destinationSchema, credentialFile);
 	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
 	supervisorArgv[0] = supervisorPath;
 	supervisorArgv[1] = NULL;
@@ -711,7 +734,8 @@ lake_subscription_sugar_launcher_main(Datum main_arg)
 			PushActiveSnapshot(GetTransactionSnapshot());
 
 			ret = SPI_execute(
-				"SELECT subscription_id, destination_database, desired_state "
+				"SELECT subscription_id, destination_database, desired_state, "
+				"config_generation "
 				"FROM lake_subscription_sugar.worker_launch_config", true, 0);
 
 			if (ret == SPI_OK_SELECT)
@@ -726,6 +750,9 @@ lake_subscription_sugar_launcher_main(Datum main_arg)
 						SPI_tuptable->vals[row], SPI_tuptable->tupdesc, 2);
 					char	   *desiredState = SPI_getvalue(
 						SPI_tuptable->vals[row], SPI_tuptable->tupdesc, 3);
+					int64		configGeneration = DatumGetInt64(
+						SPI_getbinval(SPI_tuptable->vals[row], SPI_tuptable->tupdesc,
+									 4, &isnull));
 					bool		found;
 
 					entry = (TrackedWorker *) hash_search(tracked, &subscriptionId,
@@ -751,6 +778,17 @@ lake_subscription_sugar_launcher_main(Datum main_arg)
 						{
 							hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
 							found = false;
+						}
+						else if (entry->configGeneration != configGeneration)
+						{
+							TerminateBackgroundWorker(entry->handle);
+							hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+							ereport(LOG,
+									(errmsg("lake_subscription_sugar launcher: "
+											"restarting supervisor for subscription_id=%lld "
+											"after launch configuration changed",
+											(long long) subscriptionId)));
+							continue;
 						}
 					}
 
@@ -796,6 +834,7 @@ lake_subscription_sugar_launcher_main(Datum main_arg)
 								entry = (TrackedWorker *) hash_search(
 									tracked, &subscriptionId, HASH_ENTER, NULL);
 								entry->subscriptionId = subscriptionId;
+								entry->configGeneration = configGeneration;
 								entry->handle = handle;
 								entry->seenThisCycle = true;
 								ereport(LOG,
@@ -1030,7 +1069,8 @@ static void
 spawn_initial_sync(int64 subscriptionId, const char *slotName,
 				   const char *publicationName, const char *sourceDatabase,
 				   const char *destinationDatabase, const char *sourceAddress,
-				   const char *destinationAddress, const char *destinationSchema)
+				   const char *destinationAddress, const char *destinationSchema,
+				   const char *credentialFile)
 {
 	char	  **envp;
 	char	   *initialSyncPath;
@@ -1039,7 +1079,8 @@ spawn_initial_sync(int64 subscriptionId, const char *slotName,
 
 	envp = build_worker_env(subscriptionId, slotName, publicationName,
 							sourceDatabase, destinationDatabase,
-							sourceAddress, destinationAddress, destinationSchema);
+							sourceAddress, destinationAddress, destinationSchema,
+							credentialFile);
 	initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
 	initialSyncArgv[0] = initialSyncPath;
 	initialSyncArgv[1] = NULL;
@@ -1076,14 +1117,18 @@ static void
 record_worker_launch_config(int64 subscriptionId, const char *slotName,
 							const char *publicationName, const char *sourceDatabase,
 							const char *destinationDatabase, const char *sourceAddress,
-							const char *destinationAddress, const char *destinationSchema)
+							const char *destinationAddress, const char *destinationSchema,
+							const char *credentialFile)
 {
+	char	   *credentialSql = credentialFile == NULL || credentialFile[0] == '\0'
+		? pstrdup("NULL") : quote_literal_cstr(credentialFile);
+
 	SPI_execute(psprintf(
 		"INSERT INTO lake_subscription_sugar.worker_launch_config "
 		"(subscription_id, slot_name, publication_name, source_database, "
 		"destination_database, source_address, destination_address, "
-		"destination_schema, desired_state) "
-		"VALUES (%lld, %s, %s, %s, %s, %s, %s, %s, 'running') "
+		"destination_schema, credential_file, desired_state) "
+		"VALUES (%lld, %s, %s, %s, %s, %s, %s, %s, %s, 'running') "
 		"ON CONFLICT (subscription_id) DO UPDATE SET "
 		"slot_name = EXCLUDED.slot_name, "
 		"publication_name = EXCLUDED.publication_name, "
@@ -1092,12 +1137,15 @@ record_worker_launch_config(int64 subscriptionId, const char *slotName,
 		"source_address = EXCLUDED.source_address, "
 		"destination_address = EXCLUDED.destination_address, "
 		"destination_schema = EXCLUDED.destination_schema, "
+		"credential_file = EXCLUDED.credential_file, "
+		"config_generation = "
+		"lake_subscription_sugar.worker_launch_config.config_generation + 1, "
 		"desired_state = 'running'",
 		(long long) subscriptionId,
 		quote_literal_cstr(slotName), quote_literal_cstr(publicationName),
 		quote_literal_cstr(sourceDatabase), quote_literal_cstr(destinationDatabase),
 		quote_literal_cstr(sourceAddress), quote_literal_cstr(destinationAddress),
-		quote_literal_cstr(destinationSchema)), false, 0);
+		quote_literal_cstr(destinationSchema), credentialSql), false, 0);
 }
 
 static void
@@ -1113,6 +1161,7 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	char	   *sourceAddress;
 	char	   *destinationAddress;
 	char	   *destinationSchema;
+	char	   *credentialFile;
 	char	   *slotName;
 	int64		subscriptionId;
 
@@ -1130,6 +1179,10 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	destinationSchema = get_string_option(stmt->options, "lake_target_schema");
 	if (destinationSchema == NULL)
 		destinationSchema = "public";
+	credentialFile = get_string_option(stmt->options, "lake_credential_file");
+	if (credentialFile == NULL)
+		credentialFile = CredentialFile;
+	require_absolute_credential_file(credentialFile);
 
 	SPI_connect();
 
@@ -1167,11 +1220,11 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	record_pending_cleanup(subscriptionId, stmt->conninfo, slotName);
 	record_worker_launch_config(subscriptionId, slotName, pubname, sourceDatabase,
 								destinationDatabase, sourceAddress, destinationAddress,
-								destinationSchema);
+								destinationSchema, credentialFile);
 
 	spawn_initial_sync(subscriptionId, slotName, pubname, sourceDatabase,
 					  destinationDatabase, sourceAddress, destinationAddress,
-					  destinationSchema);
+					  destinationSchema, credentialFile);
 
 	ereport(NOTICE,
 			(errmsg("lake_subscription_sugar: recorded launch configuration for "
@@ -1276,13 +1329,61 @@ handle_enable_subscription(const char *subname, int64 subscriptionId)
 }
 
 static void
+handle_credential_file_update(const char *subname, int64 subscriptionId,
+							  const char *credentialFile)
+{
+	char	   *credentialSql;
+
+	require_absolute_credential_file(credentialFile);
+	credentialSql = credentialFile[0] == '\0'
+		? pstrdup("NULL") : quote_literal_cstr(credentialFile);
+
+	/*
+	 * A cooperative stop lets the current supervisor release its advisory
+	 * lock and all connections before the launcher replaces its wrapper
+	 * process.  Incrementing config_generation is the launcher's durable
+	 * signal to start the replacement with freshly read credentials.
+	 */
+	SPI_execute(psprintf("SELECT lake_replication.request_service_stop(%lld)",
+						  (long long) subscriptionId), false, 0);
+	if (SPI_execute(psprintf(
+			"UPDATE lake_subscription_sugar.worker_launch_config "
+			"SET credential_file = %s, config_generation = config_generation + 1 "
+			"WHERE subscription_id = %lld",
+			credentialSql, (long long) subscriptionId), false, 0) != SPI_OK_UPDATE ||
+		SPI_processed != 1)
+		ereport(ERROR,
+				(errmsg("lake_subscription_sugar: cannot reload credentials for \"%s\": "
+						"no recorded launch configuration for subscription_id=%lld",
+						subname, (long long) subscriptionId)));
+
+	ereport(NOTICE,
+			(errmsg("lake_subscription_sugar: credential configuration for \"%s\" "
+					"updated; a running supervisor will be restarted", subname)));
+}
+
+static void
 handle_alter_subscription(AlterSubscriptionStmt *stmt, int64 subscriptionId)
 {
 	RequireAuthorized("ALTER SUBSCRIPTION");
 
 	SPI_connect();
 
-	if (stmt->kind == ALTER_SUBSCRIPTION_ENABLED)
+	if (stmt->kind == ALTER_SUBSCRIPTION_OPTIONS)
+	{
+		char	   *credentialFile;
+
+		if (list_length(stmt->options) != 1 ||
+			(credentialFile = get_string_option(stmt->options,
+											 "lake_credential_file")) == NULL)
+			ereport(ERROR,
+					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+					 errmsg("lake_subscription_sugar: ALTER SUBSCRIPTION SET only "
+							"supports lake_credential_file for Iceberg subscriptions")));
+		handle_credential_file_update(stmt->subname, subscriptionId,
+								  credentialFile);
+	}
+	else if (stmt->kind == ALTER_SUBSCRIPTION_ENABLED)
 	{
 		bool		enabled = get_bool_option(stmt->options, "enabled", true);
 
@@ -1432,10 +1533,10 @@ _PG_init(void)
 							   NULL, NULL, NULL);
 
 	DefineCustomStringVariable("lake_subscription_sugar.credential_file",
-							   "Absolute path to the owner-only worker credential file. "
+							   "Default absolute path to the owner-only worker credential file. "
 							   "The file may provide source/destination users, passwords, "
-							   "and TLS settings. Only takes effect for launcher workers "
-							   "after PostgreSQL restart.",
+							   "and TLS settings. A subscription may override and reload it "
+							   "with lake_credential_file.",
 							   NULL,
 							   &CredentialFile,
 							   NULL,

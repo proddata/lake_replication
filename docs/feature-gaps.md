@@ -33,10 +33,20 @@ live insert/update, nullable additive decimal evolution, extension upgrade,
 artifact-only installation, restart and outage recovery, and uninstall. The
 final release commit still needs the ordinary manual amd64 qualification gate.
 
+### Per-subscription credential rotation
+
+Status: **implemented and qualified on the native arm64 artifact**. See the
+[retained qualification summary](evidence/2026-09-23-credential-rotation-results.json).
+
+Each subscription can select an absolute owner-only credential file with
+`lake_credential_file`. Reapplying that option after an atomic secret rotation
+increments a durable launch-configuration generation, gracefully stops the
+old supervisor, and starts only that subscription again with freshly read
+credentials. The instance-wide setting remains the default for subscriptions
+that do not select a path.
+
 ## Desirable after the first beta
 
-- Per-subscription credential-file selection and credential reload without a
-  PostgreSQL restart.
 - Additional scalar types such as `time`, `time with time zone`, and
   `interval`, where pg_lake and Iceberg semantics can be preserved.
 - Arrays with an explicit element-type and nullability policy.

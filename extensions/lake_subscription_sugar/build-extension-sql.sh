@@ -15,6 +15,12 @@ trap 'rm -f "$temporary"' EXIT HUP INT TERM
     cat "$script_dir/lake_subscription_sugar--1.0.sql"
     printf '%s\n' \
         "" \
+        "ALTER TABLE lake_subscription_sugar.worker_launch_config" \
+        "    ADD COLUMN credential_file text" \
+        "        CHECK (credential_file IS NULL OR credential_file LIKE '/%')," \
+        "    ADD COLUMN config_generation bigint NOT NULL DEFAULT 1" \
+        "        CHECK (config_generation > 0);" \
+        "" \
         "SELECT pg_catalog.pg_extension_config_dump(" \
         "    'lake_subscription_sugar.pending_cleanup', '');" \
         "SELECT pg_catalog.pg_extension_config_dump(" \

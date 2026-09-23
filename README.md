@@ -156,9 +156,10 @@ LAKE_DESTINATION_TLS_MODE=disable
 ```
 
 Environment variables explicitly set for a manually launched worker override
-the file. Launcher-managed workers receive only the file path; credentials are
-not copied into worker-launch metadata or structured logs. A PostgreSQL restart
-is currently required after changing the configured path or rotating values.
+the file. This instance-wide setting is the default for subscriptions that do
+not select their own file. Launcher-managed workers receive only a file path;
+credential values are not copied into worker-launch metadata or structured
+logs.
 
 Create the log directory with ownership and permissions suitable for the
 PostgreSQL operating-system user, then restart PostgreSQL. In the destination
@@ -188,7 +189,8 @@ Run this in `analytics`:
 CREATE SUBSCRIPTION orders_to_lake
   CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
   PUBLICATION orders_pub
-  WITH (lake_target = 'iceberg');
+  WITH (lake_target = 'iceberg',
+        lake_credential_file = '/etc/pg_lake_replication/orders.env');
 ```
 
 The command discovers the publication, creates corresponding
@@ -203,6 +205,18 @@ CREATE SUBSCRIPTION orders_to_lake
 ```
 
 Exactly one publication is supported per subscription in the current beta.
+`lake_credential_file` must be an absolute path. To rotate its values or move
+the subscription to another owner-only file, replace the file atomically and
+reload just that subscription; PostgreSQL itself does not restart:
+
+```sql
+ALTER SUBSCRIPTION orders_to_lake
+  SET (lake_credential_file = '/etc/pg_lake_replication/orders.env');
+```
+
+Setting the same path is intentional: it increments the subscription's launch
+configuration generation and gracefully replaces its supervisor, which reads
+the file again before reconnecting.
 
 ### 5. Verify replication
 
@@ -272,11 +286,10 @@ changing an installed version, follow the coordinated
   `varchar`, and `char`. Unconstrained or over-precision numerics, arrays,
   enums, domains, generated columns, and custom types remain fail-closed; see
   the [feature boundaries](docs/feature-gaps.md).
-- The launcher currently uses one instance-wide credential file for all managed
-  subscriptions. Per-subscription secret selection and reload without a
-  PostgreSQL restart are not yet supported. The source password may also appear
-  in the protected `lake_subscription_sugar.pending_cleanup` table when it is
-  embedded in `CREATE SUBSCRIPTION ... CONNECTION`, matching PostgreSQL's own
+- Each subscription may select and reload its own owner-only credential file.
+  The source password may still appear in the protected
+  `lake_subscription_sugar.pending_cleanup` table when it is embedded in
+  `CREATE SUBSCRIPTION ... CONNECTION`, matching PostgreSQL's own
   subscription-conninfo tradeoff.
 - Compatibility has been validated against one pg_lake revision. Extended
   compatibility, recovery-drill, observability failure-path, security, and

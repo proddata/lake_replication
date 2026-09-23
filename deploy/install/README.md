@@ -29,11 +29,18 @@ The bundle installs:
 
 For launcher-managed SCRAM/TLS connections, set
 `lake_subscription_sugar.credential_file` to an absolute path owned by the
-PostgreSQL operating-system user with mode `0600`. Supported `KEY=value`
+PostgreSQL operating-system user with mode `0600`, or select an absolute path
+per subscription with `WITH (lake_credential_file = '/path/to/file')`.
+Supported `KEY=value`
 entries are the source/destination user, password, TLS mode, root certificate,
 and optional TLS server name variables documented in the main README. Symlinks,
 group/other permissions, duplicate keys, unknown keys, and files larger than
 64 KiB are rejected before a network connection is attempted.
+
+After atomically rotating a file, run `ALTER SUBSCRIPTION name SET
+(lake_credential_file = '/path/to/file')`. The launcher gracefully replaces
+only that subscription's supervisor, which reloads the file; PostgreSQL does
+not need to restart.
 
 It does not edit `postgresql.conf`, restart PostgreSQL, create extensions in a
 database, or remove data. Those remain explicit operator actions.

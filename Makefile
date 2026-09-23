@@ -174,6 +174,8 @@ check:
 	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.reconcile_relation_schema' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'pg_extension_config_dump' extensions/lake_replication/lake_replication--0.1.0-beta.1.sql
 	grep -q 'pg_extension_config_dump' extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql
+	grep -q 'ADD COLUMN credential_file text' extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql
+	grep -q 'ADD COLUMN config_generation bigint' extensions/lake_subscription_sugar/lake_subscription_sugar--1.0--1.1.sql
 	python3 -m unittest discover -s tests/replication -p 'test_*.py'
 	cargo fmt --all -- --check
 	cargo test --workspace
@@ -184,4 +186,4 @@ check:
 	AUTH_LAB_ADMIN_PASSWORD=check AUTH_LAB_SOURCE_PASSWORD=check $(SCRAM_COMPOSE) config --quiet
 	TLS_LAB_ADMIN_PASSWORD=check TLS_LAB_SOURCE_PASSWORD=check $(TLS_COMPOSE) config --quiet
 	$(POC_COMPOSE) config --quiet
-	QUALIFICATION_SOURCE_IMAGE=check QUALIFICATION_DESTINATION_IMAGE=check QUAL_ADMIN_PASSWORD=check QUAL_SOURCE_PASSWORD=check $(QUALIFICATION_COMPOSE) config --quiet
+	QUALIFICATION_SOURCE_IMAGE=check QUALIFICATION_DESTINATION_IMAGE=check QUAL_ADMIN_PASSWORD=check QUAL_SOURCE_PASSWORD=check QUAL_ROTATED_SOURCE_PASSWORD=check-rotated $(QUALIFICATION_COMPOSE) config --quiet

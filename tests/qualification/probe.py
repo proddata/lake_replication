@@ -41,12 +41,14 @@ DESTINATION_IMAGE = f"pg-lake-replication-qualification-destination:{RUN}"
 BASE_IMAGE = f"pg-lake-qualification-base:{PG_LAKE_REVISION[:12]}"
 ADMIN_PASSWORD = secrets.token_urlsafe(24)
 SOURCE_PASSWORD = secrets.token_urlsafe(24)
+ROTATED_SOURCE_PASSWORD = secrets.token_urlsafe(24)
 ENV = {
     **os.environ,
     "QUALIFICATION_SOURCE_IMAGE": SOURCE_IMAGE,
     "QUALIFICATION_DESTINATION_IMAGE": DESTINATION_IMAGE,
     "QUAL_ADMIN_PASSWORD": ADMIN_PASSWORD,
     "QUAL_SOURCE_PASSWORD": SOURCE_PASSWORD,
+    "QUAL_ROTATED_SOURCE_PASSWORD": ROTATED_SOURCE_PASSWORD,
 }
 EVIDENCE = {
     "run": RUN,
@@ -77,7 +79,7 @@ def compose(*args, **kwargs):
     )
 
 
-def sql(service, database, statement, *, check_result=True):
+def sql_result(service, database, statement, *, check_result=True):
     return compose(
         "exec",
         "-T",
@@ -92,6 +94,12 @@ def sql(service, database, statement, *, check_result=True):
         database,
         input=statement,
         check_result=check_result,
+    )
+
+
+def sql(service, database, statement, *, check_result=True):
+    return sql_result(
+        service, database, statement, check_result=check_result
     ).stdout.strip()
 
 
@@ -399,6 +407,17 @@ def verify_upgrade_contract():
             "numeric(12,2):character varying(32)",
         )
         check(
+            "extension upgrade adds per-subscription credential metadata",
+            sql(
+                "destination",
+                database,
+                "SELECT (credential_file IS NULL)::text || ':' || config_generation "
+                "FROM lake_subscription_sugar.worker_launch_config "
+                f"WHERE subscription_id={subscription_id}",
+            ),
+            "true:1",
+        )
+        check(
             "upgrade registers durable extension state for logical backup",
             sql(
                 "destination",
@@ -520,8 +539,43 @@ def exercise_replication():
 CREATE SUBSCRIPTION orders_to_lake
   CONNECTION '{connection}'
   PUBLICATION orders_pub
-  WITH (lake_target = 'iceberg');
+  WITH (lake_target = 'iceberg',
+        lake_credential_file = '/credentials/worker.env');
 """,
+    )
+    check(
+        "subscription records its selected credential file",
+        sql(
+            "destination",
+            "analytics",
+            "SELECT credential_file || ':' || config_generation "
+            "FROM lake_subscription_sugar.worker_launch_config c "
+            "JOIN lake_replication.subscriptions s USING (subscription_id) "
+            "WHERE s.subscription_name='orders_to_lake'",
+        ),
+        "/credentials/worker.env:1",
+    )
+    relative_path = sql_result(
+        "destination",
+        "analytics",
+        "ALTER SUBSCRIPTION orders_to_lake SET "
+        "(lake_credential_file = 'relative.env')",
+        check_result=False,
+    )
+    check(
+        "relative per-subscription credential paths are rejected without mutation",
+        relative_path.returncode != 0
+        and "must be an absolute path" in (relative_path.stdout + relative_path.stderr)
+        and sql(
+            "destination",
+            "analytics",
+            "SELECT credential_file || ':' || config_generation "
+            "FROM lake_subscription_sugar.worker_launch_config c "
+            "JOIN lake_replication.subscriptions s USING (subscription_id) "
+            "WHERE s.subscription_name='orders_to_lake'",
+        )
+        == "/credentials/worker.env:1",
+        True,
     )
     check(
         "initial copy reaches the artifact-installed destination",
@@ -614,6 +668,91 @@ CREATE SUBSCRIPTION orders_to_lake
             timeout=60,
         ),
         "numeric(6,2):1=1.25,2=NULL",
+    )
+    previous_supervisor = sql(
+        "destination",
+        "analytics",
+        "SELECT supervisor_pid FROM lake_replication.service_status ss "
+        "JOIN lake_replication.subscriptions s USING (subscription_id) "
+        "WHERE s.subscription_name='orders_to_lake'",
+    )
+    sql(
+        "source",
+        "application",
+        f"ALTER ROLE lake_source PASSWORD '{ROTATED_SOURCE_PASSWORD}'",
+    )
+    sql(
+        "destination",
+        "analytics",
+        "ALTER SUBSCRIPTION orders_to_lake SET "
+        "(lake_credential_file = '/credentials/worker-rotated.env')",
+    )
+    check(
+        "credential rotation replaces the subscription supervisor",
+        wait_for(
+            "destination",
+            "analytics",
+            "SELECT c.credential_file || ':' || c.config_generation || ':' || "
+            f"(ss.supervisor_pid <> {previous_supervisor})::text || ':' || ss.state "
+            "FROM lake_subscription_sugar.worker_launch_config c "
+            "JOIN lake_replication.subscriptions s USING (subscription_id) "
+            "JOIN lake_replication.service_status ss USING (subscription_id) "
+            "WHERE s.subscription_name='orders_to_lake'",
+            "/credentials/worker-rotated.env:2:true:running",
+            timeout=60,
+        ),
+        "/credentials/worker-rotated.env:2:true:running",
+    )
+    sql(
+        "source",
+        "application",
+        "INSERT INTO public.orders (id, note) VALUES (20, 'rotated-credential')",
+    )
+    check(
+        "replication authenticates with the rotated credential",
+        wait_for(
+            "destination",
+            "analytics",
+            "SELECT note FROM public.orders WHERE id=20",
+            "rotated-credential",
+            timeout=60,
+        ),
+        "rotated-credential",
+    )
+
+    rotated_supervisor = sql(
+        "destination",
+        "analytics",
+        "SELECT supervisor_pid FROM lake_replication.service_status ss "
+        "JOIN lake_replication.subscriptions s USING (subscription_id) "
+        "WHERE s.subscription_name='orders_to_lake'",
+    )
+    sql(
+        "source",
+        "application",
+        f"ALTER ROLE lake_source PASSWORD '{SOURCE_PASSWORD}'",
+    )
+    sql(
+        "destination",
+        "analytics",
+        "ALTER SUBSCRIPTION orders_to_lake SET "
+        "(lake_credential_file = '/credentials/worker.env')",
+    )
+    check(
+        "credential selection can return to the original file",
+        wait_for(
+            "destination",
+            "analytics",
+            "SELECT c.credential_file || ':' || c.config_generation || ':' || "
+            f"(ss.supervisor_pid <> {rotated_supervisor})::text || ':' || ss.state "
+            "FROM lake_subscription_sugar.worker_launch_config c "
+            "JOIN lake_replication.subscriptions s USING (subscription_id) "
+            "JOIN lake_replication.service_status ss USING (subscription_id) "
+            "WHERE s.subscription_name='orders_to_lake'",
+            "/credentials/worker.env:3:true:running",
+            timeout=60,
+        ),
+        "/credentials/worker.env:3:true:running",
     )
     sql("destination", "analytics", "ALTER SUBSCRIPTION orders_to_lake DISABLE")
     check(
