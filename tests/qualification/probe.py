@@ -198,6 +198,7 @@ def build_images(archive, context):
         ["docker", "image", "inspect", BASE_IMAGE], check_result=False
     ).returncode == 0
     if not base_exists or os.environ.get("QUALIFICATION_REBUILD_BASE") == "1":
+        command([sys.executable, str(ROOT / "deploy/prepare-upstream.py"), PG_LAKE_REVISION])
         command(
             [
                 "docker",

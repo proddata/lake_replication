@@ -322,6 +322,21 @@ and volumes with `make poc-down`.
 Requirements for repository checks are Docker with Compose, Rust 1.85, Python
 3, and Make.
 
+Upstream source is pinned as a Git submodule at `vendor/pg_lake`. Initialize
+it once after cloning:
+
+```sh
+git submodule update --init vendor/pg_lake
+```
+
+`make lab-build` and `make poc-build` prepare a local Git bundle and build
+from that source, without fetching the top-level pg_lake repository in Docker.
+Upstream nested dependencies and other build prerequisites still download on
+their first build. Standalone release bundles remain independent of the
+submodule and install beside the customer's existing pg_lake installation.
+See [upstream development and integration](docs/upstream-integration.md) for
+revision overrides, direct Docker builds, and the worker integration assessment.
+
 ```sh
 make check                 # formatting and offline/static checks
 make install-bundle        # native installable archive

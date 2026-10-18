@@ -17,10 +17,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev bison flex libreadline-dev zlib1g-dev libxml2-dev libxslt1-dev \
     libicu-dev libssl-dev liblz4-dev liblzma-dev libsnappy-dev libtool \
     libjansson-dev libcurl4-openssl-dev libzstd-dev zip unzip tar
+COPY .upstream/pg_lake.bundle /tmp/pg_lake.bundle
+RUN git clone /tmp/pg_lake.bundle /opt/pg_lake \
+    && git -C /opt/pg_lake checkout --detach ${PG_LAKE_REV} \
+    && git -C /opt/pg_lake remote set-url origin https://github.com/Snowflake-Labs/pg_lake.git \
+    && test "$(git -C /opt/pg_lake rev-parse HEAD)" = "${PG_LAKE_REV}" \
+    && rm /tmp/pg_lake.bundle
 WORKDIR /opt/pg_lake
-RUN git init && git remote add origin https://github.com/Snowflake-Labs/pg_lake.git \
-    && git fetch --depth 1 origin ${PG_LAKE_REV} && git checkout --detach FETCH_HEAD \
-    && test "$(git rev-parse HEAD)" = "${PG_LAKE_REV}"
 RUN git clone --depth 1 --branch 2025.10.17 https://github.com/microsoft/vcpkg.git /opt/vcpkg \
     && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
 ENV VCPKG_TOOLCHAIN_PATH=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake

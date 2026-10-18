@@ -1,0 +1,13 @@
+.git
+.lab
+.qualification
+target
+dist
+.cargo-linux-build
+**/__pycache__
+**/*.pyc
+**/.env
+.aws
+vendor
+.upstream/*
+!.upstream/pg_lake.bundle

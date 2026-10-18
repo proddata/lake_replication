@@ -6,12 +6,19 @@ SCRAM_COMPOSE = docker compose -p pg-lake-replication-scram-lab -f deploy/scram/
 TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compose.yml
 POC_COMPOSE = docker compose -p pg-lake-replication-poc -f deploy/poc/compose.yml
 QUALIFICATION_COMPOSE = docker compose -f deploy/qualification/compose.yml
+PG_LAKE_REV ?= $(shell git -C vendor/pg_lake rev-parse HEAD)
+.DEFAULT_GOAL := lab-build
+
+.PHONY: upstream-source
 
 .PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
-lab-build:
-	$(COMPOSE) build
-lab-up:
-	$(COMPOSE) up -d --wait --wait-timeout 180
+upstream-source:
+	python3 deploy/prepare-upstream.py $(PG_LAKE_REV)
+
+lab-build: upstream-source
+	PG_LAKE_REV=$(PG_LAKE_REV) $(COMPOSE) build
+lab-up: upstream-source
+	PG_LAKE_REV=$(PG_LAKE_REV) $(COMPOSE) up -d --wait --wait-timeout 180
 lab-test:
 	python3 tests/replication/probe.py
 
@@ -108,10 +115,10 @@ lab-logs:
 lab-stop:
 	$(COMPOSE) stop
 
-poc-build:
-	$(POC_COMPOSE) build
-poc-up:
-	$(POC_COMPOSE) up -d --wait --wait-timeout 180
+poc-build: upstream-source
+	PG_LAKE_REV=$(PG_LAKE_REV) $(POC_COMPOSE) build
+poc-up: upstream-source
+	PG_LAKE_REV=$(PG_LAKE_REV) $(POC_COMPOSE) up -d --wait --wait-timeout 180
 	@echo "Demo console: http://127.0.0.1:8080"
 poc-logs:
 	$(POC_COMPOSE) logs --no-color --tail 200 -f
@@ -120,6 +127,7 @@ poc-stop:
 poc-down:
 	$(POC_COMPOSE) down -v
 check:
+	python3 -m py_compile deploy/prepare-upstream.py
 	python3 -m py_compile tests/replication/probe.py
 	python3 -m py_compile tests/crash/probe.py
 	python3 -m py_compile tests/journal/probe.py

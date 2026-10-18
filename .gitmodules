@@ -1,0 +1,3 @@
+[submodule "vendor/pg_lake"]
+	path = vendor/pg_lake
+	url = https://github.com/Snowflake-Labs/pg_lake.git
