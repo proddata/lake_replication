@@ -9,6 +9,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
+DEST_DB = os.environ.get("LAKE_TEST_DESTINATION_DATABASE", "analytics")
 COMPOSE = ["docker", "compose", "-p", "lake-replication-lab",
            "-f", str(ROOT / "deploy/docker-compose/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("toast_%Y%m%d_%H%M%S")
@@ -23,6 +24,8 @@ def command(args, timeout=90, **kwargs):
 
 
 def sql(database, statement, *, check_result=True):
+    if database == "analytics":
+        database = DEST_DB
     result = command(COMPOSE + ["exec", "-T", "postgres", "psql", "-XAt",
                      "-v", "ON_ERROR_STOP=1", "-U", "postgres", "-d", database],
                      input=statement)
@@ -47,6 +50,7 @@ def check(name, actual, expected):
 def worker(binary, subscription_id, **settings):
     environment = os.environ.copy()
     environment["LAKE_SUBSCRIPTION_ID"] = str(subscription_id)
+    environment["LAKE_DESTINATION_DATABASE"] = DEST_DB
     environment.update(settings)
     result = command([str(ROOT / "target/debug" / binary)], env=environment)
     if result.returncode:

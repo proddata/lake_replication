@@ -1,8 +1,10 @@
 # Spike: could native `CREATE SUBSCRIPTION` ever target Iceberg?
 
-Status: open, redirected, actively evolving into something real. This is
-an architecture spike, not (yet) part of the shipped replication path. It
-investigates why PostgreSQL's own logical replication cannot target
+Status: archived research. The native apply experiment remains useful
+background; the syntax wrapper explored later in this document was promoted
+to the shipped `lake_replication` extension. This document records the
+chronology and may describe earlier prototype states. It investigates why
+PostgreSQL's own logical replication cannot target
 `pg_lake` Iceberg tables today, whether that is fixable without patching
 PostgreSQL itself, and what is actually worth building toward. A
 from-scratch Iceberg table access method is rejected (see "The real
@@ -11,7 +13,7 @@ evidence about Crunchy Data Warehouse's own `CREATE SUBSCRIPTION ... WITH
 (create_tables_using = 'iceberg')` (see "What Crunchy's own public docs
 suggest they actually built") points at a much cheaper design instead -- a
 `CREATE SUBSCRIPTION`-shaped syntax wrapper over this project's existing
-control plane -- which has since been built out into a working prototype
+control plane -- which has since been built out into the product
 covering the full lifecycle (create with real auto-started replication and
 real addressing, disable, enable, drop -- crash-safe, with real slot
 cleanup), Crunchy-shaped monitoring, and packaging that matches how

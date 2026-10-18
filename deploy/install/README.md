@@ -26,7 +26,14 @@ The bundle installs:
 - the receiver, publisher, initial-sync, and supervisor executables;
 - the `lake_replication` SQL extension and shared library.
 
-For launcher-managed SCRAM/TLS connections, set
+Source credentials for launcher-managed subscriptions can be supplied in the
+standard `CREATE SUBSCRIPTION ... CONNECTION` string. They are stored in an
+extension-owned table with row-level security, so `pg_read_all_data` alone
+cannot read them. Grant `lake_replication_worker` only to the login used by
+workers. The extension installer, superusers, backups, and SQL statement logs
+remain trusted; stronger at-rest secrecy requires a key outside the database.
+
+For destination authentication or source TLS settings, optionally set
 `lake_replication.credential_file` to an absolute path owned by the
 PostgreSQL operating-system user with mode `0600`, or select an absolute path
 per subscription with `WITH (lake_credential_file = '/path/to/file')`.
@@ -36,7 +43,9 @@ and optional TLS server name variables documented in the main README. Symlinks,
 group/other permissions, duplicate keys, unknown keys, and files larger than
 64 KiB are rejected before a network connection is attempted.
 
-After atomically rotating a file, run `ALTER SUBSCRIPTION name SET
+Rotate a source password using `ALTER SUBSCRIPTION name CONNECTION '...'`,
+preferably while the subscription is disabled. After atomically rotating a
+file, run `ALTER SUBSCRIPTION name SET
 (lake_credential_file = '/path/to/file')`. The launcher gracefully replaces
 only that subscription's supervisor, which reloads the file; PostgreSQL does
 not need to restart.

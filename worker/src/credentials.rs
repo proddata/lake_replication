@@ -1,5 +1,6 @@
 //! Restricted connection settings shared by launcher-managed workers.
 
+use crate::wire::{Client, TlsConfig};
 use std::collections::HashMap;
 use std::env;
 use std::fs::OpenOptions;
@@ -32,6 +33,49 @@ impl Settings {
             return Ok(Self::default());
         };
         Self::from_file(Path::new(&path))
+    }
+
+    pub fn load_subscription_source_credentials(
+        &mut self,
+        subscription_id: i64,
+        destination_address: &str,
+        destination_user: &str,
+        destination_database: &str,
+        destination_password: Option<&str>,
+        destination_tls: Option<&TlsConfig>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        if env::var("LAKE_LOAD_SOURCE_CREDENTIALS").as_deref() != Ok("1") {
+            return Ok(());
+        }
+        let mut destination = Client::connect_secure(
+            destination_address,
+            destination_user,
+            destination_database,
+            false,
+            destination_password,
+            destination_tls,
+        )?;
+        let rows = destination.simple_query(&format!(
+            "SELECT source_user, source_password FROM lake_replication.source_credentials({subscription_id})"
+        ))?;
+        let row = rows
+            .first()
+            .ok_or("subscription source credentials are unavailable")?;
+        if rows.len() != 1 || row.len() != 2 {
+            return Err("subscription source credentials have an invalid shape".into());
+        }
+        // Rows created before migration 0019 have no parsed source auth yet.
+        // Keep their existing file-based credentials until CONNECTION is reset.
+        let Some(user) = row[0].as_deref().filter(|value| !value.is_empty()) else {
+            return Ok(());
+        };
+        self.file_values
+            .insert("LAKE_SOURCE_USER".to_owned(), user.to_owned());
+        if let Some(password) = &row[1] {
+            self.file_values
+                .insert("LAKE_SOURCE_PASSWORD".to_owned(), password.to_owned());
+        }
+        Ok(())
     }
 
     fn from_file(path: &Path) -> Result<Self, Box<dyn std::error::Error>> {

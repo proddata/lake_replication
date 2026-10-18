@@ -35,8 +35,10 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         .to_owned();
     let receiver = executable_directory.join(binary_name("lake-replication-receiver"));
     let publisher = executable_directory.join(binary_name("lake-replication-publisher"));
+    let initial_sync = executable_directory.join(binary_name("lake-replication-initial-sync"));
     require_binary(&receiver)?;
     require_binary(&publisher)?;
+    require_binary(&initial_sync)?;
 
     let mut destination = config.connect()?;
     acquire_supervisor_lock(&mut destination, config.subscription_id)?;
@@ -65,13 +67,17 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             );
             return Ok(());
         }
-        if subscription_state != "streaming" {
+        let initial_sync_pending =
+            subscription_state != "streaming" && initial_copy_pending(&mut destination, &config)?;
+        if subscription_state != "streaming" && !initial_sync_pending {
             report_cycle(&mut destination, &config, "paused", 0, 0)?;
             thread::sleep(config.poll_interval);
             continue;
         }
 
-        let cycle = if injected_failures > 0 {
+        let cycle = if initial_sync_pending {
+            run_initial_sync(&initial_sync, &mut destination, &config).map(|()| (0, 0))
+        } else if injected_failures > 0 {
             injected_failures -= 1;
             Err(CycleError::Retry(
                 "lab-injected supervisor child failure".to_owned(),
@@ -101,7 +107,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 report_cycle(
                     &mut destination,
                     &config,
-                    "running",
+                    if initial_sync_pending {
+                        "paused"
+                    } else {
+                        "running"
+                    },
                     receiver_cycles,
                     publisher_cycles,
                 )?;
@@ -655,6 +665,75 @@ fn format_lsn(lsn: u64) -> String {
     format!("{:X}/{:X}", lsn >> 32, lsn & 0xffff_ffff)
 }
 
+fn initial_copy_pending(
+    destination: &mut Client,
+    config: &Config,
+) -> Result<bool, Box<dyn std::error::Error>> {
+    let rows = control_query(
+        destination,
+        config,
+        &format!(
+            "SELECT (received_lsn = '0/0' AND staged_lsn = '0/0' \
+             AND published_lsn = '0/0' AND acknowledged_lsn = '0/0')::text \
+             FROM lake_replication.checkpoints WHERE subscription_id={}",
+            config.subscription_id
+        ),
+    )?;
+    Ok(field(
+        rows.first().ok_or("checkpoint disappeared")?,
+        0,
+        "initial-copy state",
+    )? == "true")
+}
+
+fn run_initial_sync(
+    path: &Path,
+    destination: &mut Client,
+    config: &Config,
+) -> Result<(), CycleError> {
+    // Child JSON logs flow directly to the supervisor log, avoiding an
+    // unbounded output buffer during large initial copies.
+    let mut child = Command::new(path)
+        .spawn()
+        .map_err(|error| CycleError::Retry(format!("could not start initial sync: {error}")))?;
+    loop {
+        match child.try_wait() {
+            Ok(Some(status)) if status.success() => return Ok(()),
+            Ok(Some(status)) => {
+                return Err(CycleError::Retry(format!(
+                    "initial sync exited with {status}"
+                )));
+            }
+            Err(error) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(CycleError::Retry(format!(
+                    "could not monitor initial sync: {error}"
+                )));
+            }
+            Ok(None) => {}
+        }
+        match service_state(destination, config) {
+            Ok((desired, _)) if desired == "stopped" => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(CycleError::Retry(
+                    "initial sync stopped by request".to_owned(),
+                ));
+            }
+            Err(error) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(CycleError::Retry(format!(
+                    "could not check initial-sync state: {error}"
+                )));
+            }
+            _ => {}
+        }
+        thread::sleep(config.poll_interval);
+    }
+}
+
 fn run_cycle(
     config: &Config,
     receiver: &Path,
@@ -826,27 +905,40 @@ struct Config {
 
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
-        let settings = Settings::from_env()?;
+        let mut settings = Settings::from_env()?;
         let legacy_user = value("LAKE_USER", "postgres");
         let source_addresses = source_addresses()?;
         let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
+        let destination_user = settings.value("LAKE_DESTINATION_USER", &legacy_user);
+        let destination_password = settings.optional("LAKE_DESTINATION_PASSWORD");
+        let destination_tls = tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?;
+        let destination_database = value("LAKE_DESTINATION_DATABASE", "analytics");
+        let subscription_id: i64 = required("LAKE_SUBSCRIPTION_ID")?.parse()?;
+        settings.load_subscription_source_credentials(
+            subscription_id,
+            &destination_address,
+            &destination_user,
+            &destination_database,
+            destination_password.as_deref(),
+            destination_tls.as_ref(),
+        )?;
         let source_address_refs = source_addresses
             .iter()
             .map(String::as_str)
             .collect::<Vec<_>>();
         let config = Self {
             source_tls: tls_config(&settings, "LAKE_SOURCE", &source_address_refs)?,
-            destination_tls: tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?,
+            destination_tls,
             source_addresses,
             destination_address,
             source_user: settings.value("LAKE_SOURCE_USER", &legacy_user),
             source_password: settings.optional("LAKE_SOURCE_PASSWORD"),
-            destination_user: settings.value("LAKE_DESTINATION_USER", &legacy_user),
-            destination_password: settings.optional("LAKE_DESTINATION_PASSWORD"),
+            destination_user,
+            destination_password,
             source_database: value("LAKE_SOURCE_DATABASE", "application"),
-            destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
+            destination_database,
             slot: required("LAKE_SLOT")?,
-            subscription_id: required("LAKE_SUBSCRIPTION_ID")?.parse()?,
+            subscription_id,
             config_generation: value("LAKE_CONFIG_GENERATION", "0").parse()?,
             poll_interval: milliseconds("LAKE_SUPERVISOR_POLL_MS", "250")?,
             receiver_idle_timeout: milliseconds("LAKE_RECEIVER_IDLE_TIMEOUT_MS", "1000")?,

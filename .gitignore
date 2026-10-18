@@ -6,6 +6,5 @@ __pycache__/
 .env
 target/
 extensions/lake_replication/lake_replication--*.sql
-extensions/lake_subscription_sugar/lake_subscription_sugar--1.1.sql
 dist/
 .cargo-linux-build/

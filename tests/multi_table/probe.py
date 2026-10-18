@@ -10,6 +10,7 @@ import time
 
 
 ROOT = Path(__file__).resolve().parents[2]
+DEST_DB = os.environ.get("LAKE_TEST_DESTINATION_DATABASE", "analytics")
 COMPOSE = ["docker", "compose", "-p", "lake-replication-lab",
            "-f", str(ROOT / "deploy/docker-compose/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("multi_%Y%m%d_%H%M%S")
@@ -25,6 +26,8 @@ def command(args, timeout=90, **kwargs):
 
 
 def sql(database, statement, *, check_result=True):
+    if database == "analytics":
+        database = DEST_DB
     result = command(COMPOSE + ["exec", "-T", "postgres", "psql", "-XAt",
                      "-v", "ON_ERROR_STOP=1", "-U", "postgres", "-d", database],
                      input=statement)
@@ -54,6 +57,7 @@ def environment(subscription_id, **settings):
         "LAKE_SUBSCRIPTION_ID": str(subscription_id),
         "LAKE_DISCOVER_PUBLICATION": "1",
         "LAKE_DESTINATION_SCHEMA": RUN,
+        "LAKE_DESTINATION_DATABASE": DEST_DB,
     })
     result.update(settings)
     return result
@@ -154,6 +158,7 @@ def main():
             env=environment(subscription_id,
                             LAKE_OVERWRITE_DESTINATION="1",
                             LAKE_INITIAL_COPY_CHUNK_ROWS="1",
+                            LAKE_INITIAL_COPY_FAIL_ONCE_AFTER_ROWS="1",
                             LAKE_INITIAL_COPY_CHUNK_PAUSE_MS="250",
                             LAKE_INITIAL_COPY_PAUSE_MS="1200"))
         check("both discovered tables enter copying under one snapshot",
@@ -184,6 +189,8 @@ def main():
             raise RuntimeError(stderr.strip())
         check("one worker discovers and copies both tables",
               "initial copy ready tables=2 rows=4/4" in stdout, True)
+        check("one table retry preserves the shared snapshot and completes both copies",
+              '"event":"table_copy_retry"' in stderr, True)
         check("row filter and column list shape the snapshot",
               value("analytics", f"""
                 SELECT (SELECT string_agg(id::text || ':' || note, ',' ORDER BY id)

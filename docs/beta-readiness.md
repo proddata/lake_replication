@@ -122,18 +122,18 @@ full writeups.
   processes as this backend's user, with no gate at all. `RequireAuthorized()`
   now requires superuser or membership in a new `lake_replication_admin`
   role before any of that happens.
-- **Credential handling -- documented, not eliminated.** `record_pending_cleanup`
-  still stores the raw `CONNECTION` string verbatim, including any embedded
-  password -- the same tradeoff PostgreSQL's own `pg_subscription.subconninfo`
-  makes, and `pending_cleanup` now carries an explicit `REVOKE ALL FROM
-  PUBLIC` matching that table's protection. Milestone 27 also surfaced a
+- **Credential handling -- restricted, not encrypted.** The reusable
+  `CONNECTION` string and parsed credentials now live in
+  `source_connections`, with row-level security against `pg_read_all_data`.
+  `pending_cleanup` retains only the source slot name. The original SQL
+  statement, superusers, and backups remain trusted. Milestone 27 also surfaced a
   real, previously-undocumented constraint: `dblink` refuses any
   non-superuser connection unless the source's auth method actually
   verified a password during the handshake (`trust`/`peer` never counts,
   regardless of what the connection string contains) -- so a non-superuser
   `lake_replication_admin` member can only use this against a
   SCRAM-authenticated source (Milestone 22), and that password necessarily
-  ends up in `pending_cleanup`. Beta install docs should say this plainly:
+  ends up in `source_connections`. Beta install docs should say this plainly:
   SCRAM on the source whenever anyone other than a superuser will run
   `CREATE SUBSCRIPTION`.
 - **Configurable worker log paths -- done.** Hardcoded `/tmp/lake_sugar_*.log`

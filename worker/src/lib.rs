@@ -1,8 +1,6 @@
-//! Core protocol and journal types for the external replication worker.
-//!
-//! Network transport and Iceberg publication are intentionally separate from
-//! this crate's first slice. The decoder accepts payloads emitted by `pgoutput`;
-//! callers must not acknowledge WAL until the decoded transaction is durable.
+//! Shared protocol, credentials, logging, and journal types for the receiver,
+//! initial sync, publisher, and supervisor executables. The receiver must not
+//! acknowledge WAL until the decoded transaction is durable in the journal.
 
 pub mod credentials;
 pub mod journal;

@@ -51,6 +51,14 @@ services:
         chown postgres:postgres /credentials/worker.env
         chmod 0600 /credentials/worker.env
         printf '%s\n' \
+          'LAKE_SOURCE_TLS_MODE=disable' \
+          'LAKE_DESTINATION_USER=postgres' \
+          "LAKE_DESTINATION_PASSWORD=$${QUAL_DESTINATION_PASSWORD}" \
+          'LAKE_DESTINATION_TLS_MODE=disable' \
+          > /credentials/destination-only.env
+        chown postgres:postgres /credentials/destination-only.env
+        chmod 0600 /credentials/destination-only.env
+        printf '%s\n' \
           'LAKE_SOURCE_USER=lake_source' \
           "LAKE_SOURCE_PASSWORD=$${QUAL_ROTATED_SOURCE_PASSWORD}" \
           'LAKE_SOURCE_TLS_MODE=disable' \

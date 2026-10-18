@@ -22,8 +22,8 @@ CREATE EXTENSION lake_replication;
 
 The generated SQL files are build output. The `0.1.0` development baseline is
 frozen at migrations 0001-0015, the `0.1.0-beta.1` base contains migrations
-0001-0018, and the explicit `0.1.0--0.1.0-beta.1` path contains migrations
-0016-0018. Each numbered migration keeps its transaction wrapper for the
+0001-0019, and the explicit `0.1.0--0.1.0-beta.1` path contains migrations
+0016-0019. Each numbered migration keeps its transaction wrapper for the
 laboratory's legacy installer; the generator validates and removes only that
 outer wrapper because PostgreSQL runs extension installation and upgrades in
 their own transaction.

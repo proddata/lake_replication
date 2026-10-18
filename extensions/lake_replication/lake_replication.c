@@ -7,10 +7,9 @@
  * - CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg') is claimed by
  *   this hook. The source system identity is discovered for real, via
  *   dblink against the statement's own CONNECTION string, then handed to
- *   lake_replication.create_subscription(). lake-replication-initial-sync
- *   is spawned directly, as a detached one-shot OS process (fork+execve,
- *   never a shell) -- see spawn_initial_sync. The long-running supervisor
- *   is not spawned directly at all: this statement only records the
+ *   lake_replication.create_subscription(). The long-running supervisor
+ *   starts and retries initial sync after the creating transaction commits.
+ *   The supervisor is not spawned directly: this statement records the
  *   subscription's launch configuration (record_worker_launch_config); a
  *   separate, permanently-running launcher background worker
  *   (lake_replication_launcher_main, registered via
@@ -29,7 +28,7 @@
  *   unchanged, so ordinary native subscriptions keep working. DROP drops
  *   the source-side replication slot for real (via a second dblink
  *   connection, using conninfo recorded at CREATE time in this
- *   extension's own lake_replication.pending_cleanup table -- see
+ *   extension's protected lake_replication.source_connections table -- see
  *   drop_source_slot), deletes the worker_launch_config row (the
  *   launcher's authoritative signal to stop and permanently retire that
  *   supervisor), and tears down the control-plane rows -- all as one fast
@@ -50,10 +49,9 @@
  * ALTER SUBSCRIPTION ... ENABLE restarts a stopped subscription by
  * flipping worker_launch_config.desired_state back to 'running' -- see
  * handle_enable_subscription. The launcher notices and registers a fresh
- * supervisor (initial sync is never re-run here regardless, since it
- * already ran once and is not safe to blindly re-run against a table that
- * may already be streaming). No dblink round trip needed: source_address
- * and everything else the supervisor needs were already recorded
+ * supervisor. Completed subscriptions resume streaming; incomplete initial
+ * copies restart against a fresh snapshot. No dblink round trip is needed:
+ * source_address and everything else the supervisor needs were recorded
  * durably in worker_launch_config at CREATE SUBSCRIPTION time. A
  * subscription created before that tracking existed cannot be restarted
  * this way.
@@ -91,8 +89,7 @@
  *
  * WITH (lake_target_schema = '...') overrides the default destination
  * schema ("public") that lake-replication-initial-sync creates missing
- * Iceberg tables in. Only read at CREATE time -- irrelevant on ENABLE's
- * restart, since only initial sync (never respawned there) uses it.
+ * Iceberg tables in. It is stored durably for incomplete-copy recovery.
  *
  * Known limitations, in addition to the ones noted inline below:
  * - the worker binaries are expected at /usr/local/bin/lake-replication-*;
@@ -108,12 +105,12 @@
  * whatever privilege the SPI calls below run with (invoker rights: this
  * hook runs inline in the calling backend, not as SECURITY DEFINER).
  *
- * Credential handling: the CONNECTION string is stored verbatim (see
- * record_pending_cleanup) so DROP SUBSCRIPTION can later drop the
- * source-side slot; if it embeds a password, that password is stored too,
- * the same tradeoff PostgreSQL's own pg_subscription.subconninfo makes.
- * pending_cleanup carries no PUBLIC grants (see migration 0018),
- * matching how subconninfo is protected.
+ * Credential handling: the CONNECTION string is stored in source_connections
+ * for source slot cleanup. Its user and password are also extracted for the
+ * workers. Migration 0019 enables row-level security on that table because
+ * pg_read_all_data overrides ordinary table ACLs. Only the admin policy and
+ * the restricted worker getter expose its rows. The extension installer and
+ * superusers remain trusted, as with native PostgreSQL subscriptions.
  *
  * A superuser caller can omit the password from CONNECTION entirely and
  * let dblink's underlying libpq connection resolve it from a ~/.pgpass
@@ -128,17 +125,17 @@
  * check no matter what the string contains. In practice this means a
  * non-superuser can only use this hook against a source that requires
  * real password authentication (e.g. SCRAM, see Milestone 22), and the
- * password for it necessarily ends up stored in pending_cleanup.
+ * password for it necessarily ends up stored in source_connections.
  *
  * Worker stdout/stderr go to lake_replication.log_directory
- * (default /tmp), one file per subscription per worker; SUSET so an
+ * (default /tmp), one file per subscription; SUSET so an
  * unprivileged session cannot redirect a spawned worker's log output
  * before calling CREATE SUBSCRIPTION.
  *
- * Launcher-managed workers read connection users, passwords, and TLS settings
- * from lake_replication.credential_file when configured. Only the path
- * is passed through execve(); the Rust workers enforce a regular, non-symlink,
- * owner-only file and never write its values to launch metadata or logs.
+ * Launcher-managed workers fetch source credentials through the destination
+ * SQL connection and read optional destination credentials/TLS settings from
+ * lake_replication.credential_file. Only a path and subscription ID are passed
+ * through execve(); no password is placed in the worker environment.
  */
 #include "postgres.h"
 #include "access/xact.h"
@@ -149,6 +146,7 @@
 #include "nodes/pg_list.h"
 #include "commands/defrem.h"
 #include "executor/spi.h"
+#include "catalog/pg_type_d.h"
 #include "utils/builtins.h"
 #include "utils/acl.h"
 #include "utils/guc.h"
@@ -159,6 +157,7 @@
 #include "postmaster/bgworker.h"
 #include "storage/latch.h"
 #include "storage/ipc.h"
+#include <libpq-fe.h>
 
 #include <fcntl.h>
 #include <signal.h>
@@ -336,9 +335,12 @@ lake_subscription_id(const char *subname)
 static void
 discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 						 char **outDatabaseOid, char **outTimeline,
-						 char **outDatabaseName, char **outSourceAddress)
+						 char **outDatabaseName, char **outSourceAddress,
+						 char **outSourceUser)
 {
 	StringInfoData buf;
+	Oid argtypes[1] = {TEXTOID};
+	Datum values[1] = {CStringGetTextDatum(conninfo)};
 	char	   *host;
 	char	   *port;
 
@@ -347,21 +349,21 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 	appendStringInfo(&buf,
 					 "SELECT identity.system_identifier, identity.database_oid, "
 					 "identity.timeline, identity.database_name, "
-					 "identity.host, identity.port FROM dblink(%s, "
+					 "identity.host, identity.port, identity.source_user FROM dblink($1, "
 					 "'SELECT system_identifier, "
 					 "(SELECT oid FROM pg_database WHERE datname = current_database()), "
 					 "(SELECT timeline_id FROM pg_control_checkpoint()), "
 					 "current_database(), "
-					 "host(inet_server_addr()), inet_server_port() "
+					 "host(inet_server_addr()), inet_server_port(), current_user "
 					 "FROM pg_control_system()') "
 					 "AS identity(system_identifier numeric, database_oid oid, "
-					 "timeline bigint, database_name text, host text, port int)",
-					 quote_literal_cstr(conninfo));
+					 "timeline bigint, database_name text, host text, port int, source_user text)");
 
-	if (SPI_execute(buf.data, true, 0) != SPI_OK_SELECT || SPI_processed != 1)
+	if (SPI_execute_with_args(buf.data, 1, argtypes, values, NULL, true, 1) != SPI_OK_SELECT ||
+		SPI_processed != 1)
 		elog(ERROR,
 			 "lake_replication: could not discover the source identity "
-			 "via dblink for conninfo %s", conninfo);
+			 "via dblink");
 
 	*outSystemIdentifier = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
 	*outDatabaseOid = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2);
@@ -369,70 +371,13 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 	*outDatabaseName = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 4);
 	host = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 5);
 	port = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 6);
+	*outSourceUser = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 7);
 	if (host == NULL || port == NULL)
 		elog(ERROR,
-			 "lake_replication: source connection for conninfo %s did not "
+			 "lake_replication: source connection did not "
 			 "report a TCP address (inet_server_addr() is NULL for non-TCP "
-			 "connections, e.g. a unix socket)", conninfo);
+			 "connections, e.g. a unix socket)");
 	*outSourceAddress = psprintf("%s:%s", host, port);
-}
-
-/*
- * spawn_detached execve()s `path` with `argv`/`envp` (never a shell -- argv
- * elements coming from SQL identifiers must never be interpolated into a
- * command string) as a fully detached process: double-forked so the
- * grandchild is reparented to init and this backend never waits on it, in
- * its own session (setsid) so it outlives this backend's process group,
- * with stdout/stderr redirected to `logPath`.
- *
- * Between fork() and execve() the child must only call
- * async-signal-safe functions -- no more SPI, no more elog -- which is why
- * every argv/envp string is fully built before this is called.
- */
-static void
-spawn_detached(const char *path, char *const argv[], char *const envp[],
-			  const char *logPath)
-{
-	pid_t		first;
-
-	first = fork();
-	if (first < 0)
-		elog(ERROR, "lake_replication: fork failed: %m");
-
-	if (first == 0)
-	{
-		pid_t		second = fork();
-
-		if (second == 0)
-		{
-			int			logFd;
-			int			fd;
-
-			setsid();
-
-			/*
-			 * Close every inherited descriptor above stderr -- this
-			 * backend's sockets and shared-memory mappings are otherwise
-			 * still open in the child until execve() replaces the process
-			 * image, and not all of them are marked close-on-exec.
-			 */
-			for (fd = 3; fd < 256; fd++)
-				close(fd);
-
-			logFd = open(logPath, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (logFd >= 0)
-			{
-				dup2(logFd, STDOUT_FILENO);
-				dup2(logFd, STDERR_FILENO);
-				close(logFd);
-			}
-			execve(path, argv, envp);
-			_exit(127);
-		}
-		_exit(0);
-	}
-
-	waitpid(first, NULL, 0);
 }
 
 /*
@@ -448,14 +393,17 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 				 const char *publicationName, const char *sourceDatabase,
 				 const char *destinationDatabase, const char *sourceAddress,
 				 const char *destinationAddress, const char *destinationSchema,
-				 const char *credentialFile, int64 configGeneration)
+				 const char *credentialFile, int64 configGeneration,
+				 bool createSlot)
 {
-	char	  **envp = palloc(17 * sizeof(char *));
+	char	  **envp = palloc(19 * sizeof(char *));
 	int			i = 0;
 
 	envp[i++] = psprintf("LAKE_SLOT=%s", slotName);
+	envp[i++] = psprintf("LAKE_CREATE_SLOT=%d", createSlot ? 1 : 0);
 	envp[i++] = psprintf("LAKE_PUBLICATION=%s", publicationName);
 	envp[i++] = psprintf("LAKE_SUBSCRIPTION_ID=%lld", (long long) subscriptionId);
+	envp[i++] = pstrdup("LAKE_LOAD_SOURCE_CREDENTIALS=1");
 	envp[i++] = psprintf("LAKE_CONFIG_GENERATION=%lld", (long long) configGeneration);
 	envp[i++] = pstrdup("LAKE_DISCOVER_PUBLICATION=1");
 	envp[i++] = psprintf("LAKE_DESTINATION_SCHEMA=%s", destinationSchema);
@@ -479,7 +427,7 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	if (credentialFile != NULL && credentialFile[0] != '\0')
 		envp[i++] = psprintf("LAKE_CREDENTIAL_FILE=%s", credentialFile);
 	envp[i++] = NULL;
-	Assert(i <= 17);
+	Assert(i <= 19);
 	return envp;
 }
 
@@ -516,6 +464,7 @@ lake_replication_worker_main(Datum main_arg)
 	char	   *destinationSchema = NULL;
 	char	   *credentialFile = NULL;
 	int64		configGeneration = 0;
+	bool		createSlot = true;
 	char	  **envp;
 	char	   *supervisorPath;
 	char	   *supervisorArgv[2];
@@ -537,7 +486,7 @@ lake_replication_worker_main(Datum main_arg)
 	if (SPI_execute(psprintf(
 			"SELECT slot_name, publication_name, source_database, "
 			"destination_database, source_address, destination_address, "
-			"destination_schema, credential_file, config_generation "
+			"destination_schema, credential_file, config_generation, create_slot "
 			"FROM lake_replication.worker_launch_config "
 			"WHERE subscription_id = %lld", (long long) subscriptionId),
 			true, 1) == SPI_OK_SELECT && SPI_processed == 1)
@@ -573,6 +522,14 @@ lake_replication_worker_main(Datum main_arg)
 			if (isnull)
 				configGeneration = 0;
 		}
+		{
+			bool		isnull;
+
+			createSlot = DatumGetBool(SPI_getbinval(
+				SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 10, &isnull));
+			if (isnull)
+				createSlot = true;
+		}
 	}
 
 	SPI_finish();
@@ -596,7 +553,7 @@ lake_replication_worker_main(Datum main_arg)
 	envp = build_worker_env(subscriptionId, slotName, publicationName,
 							sourceDatabase, destinationDatabase, sourceAddress,
 							destinationAddress, destinationSchema, credentialFile,
-							configGeneration);
+							configGeneration, createSlot);
 	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
 	supervisorArgv[0] = supervisorPath;
 	supervisorArgv[1] = NULL;
@@ -639,8 +596,7 @@ lake_replication_worker_main(Datum main_arg)
 		{
 			/*
 			 * Between fork() and execve() only async-signal-safe calls are
-			 * allowed -- no more SPI, no more elog -- matching the same
-			 * discipline spawn_detached already uses.
+			 * allowed -- no more SPI, no more elog.
 			 */
 			for (fd = 3; fd < 256; fd++)
 				close(fd);
@@ -931,32 +887,90 @@ lake_replication_launcher_main(Datum main_arg)
 }
 
 /*
- * record_pending_cleanup writes to lake_replication.pending_cleanup
- * (owned by this extension's migration 0018, not created
- * here -- see that file) just enough -- the source conninfo and slot
- * name -- to later drop the source-side replication slot
- * lake-replication-initial-sync creates, since DropSubscriptionStmt
- * carries no conninfo of its own.
+ * The source slot name lives in pending_cleanup; the reusable connection and
+ * parsed authentication data live separately in source_connections. DROP
+ * SUBSCRIPTION needs both because its parse node carries no conninfo.
  *
- * Security note: this stores conninfo exactly as given in the original
- * CREATE SUBSCRIPTION statement, which already appears in cleartext in
- * the server log and pg_stat_activity for that statement; if a caller
- * embeds a password in CONNECTION instead of using out-of-band
- * credentials (matching how this project's own workers take
- * LAKE_SOURCE_PASSWORD from the environment, never from a connection
- * string), that password is stored here too. Must be called with SPI
- * already connected.
+ * The original CREATE/ALTER statement may appear in the server log or
+ * pg_stat_activity. Internal SPI calls use bound values, and the protected
+ * source_connections stores the conninfo for cleanup plus parsed credentials
+ * for worker reconnects. Must be called with SPI already connected.
  */
 static void
-record_pending_cleanup(int64 subscriptionId, const char *conninfo,
-					   const char *slotName)
+record_source_connection(int64 subscriptionId, const char *conninfo,
+					 const char *sourceUser, bool replace)
 {
-	SPI_execute(psprintf(
+	PQconninfoOption *options;
+	PQconninfoOption *option;
+	char *errorMessage = NULL;
+	char *password = NULL;
+	Oid argtypes[4] = {INT8OID, TEXTOID, TEXTOID, TEXTOID};
+	Datum values[4];
+	char nulls[4] = {' ', ' ', ' ', ' '};
+	int result;
+
+	options = PQconninfoParse(conninfo, &errorMessage);
+	if (options == NULL)
+	{
+		if (errorMessage != NULL)
+			PQfreemem(errorMessage);
+		ereport(ERROR, (errmsg("lake_replication: invalid source CONNECTION string")));
+	}
+	for (option = options; option->keyword != NULL; option++)
+	{
+		if (strcmp(option->keyword, "password") == 0 && option->val != NULL)
+		{
+			password = pstrdup(option->val);
+			break;
+		}
+	}
+	PQconninfoFree(options);
+	values[0] = Int64GetDatum(subscriptionId);
+	values[1] = CStringGetTextDatum(conninfo);
+	values[2] = CStringGetTextDatum(sourceUser);
+	values[3] = password == NULL ? (Datum) 0 : CStringGetTextDatum(password);
+	if (password == NULL)
+		nulls[3] = 'n';
+	if (replace)
+	{
+		result = SPI_execute_with_args(
+			"UPDATE lake_replication.source_connections SET conninfo = $2, "
+			"source_user = $3, source_password = $4 "
+			"WHERE subscription_id = $1",
+			4, argtypes, values, nulls, false, 0);
+		if (result != SPI_OK_UPDATE ||
+			SPI_processed != 1)
+			ereport(ERROR, (errmsg("lake_replication: source credential row is unavailable")));
+	}
+	else
+	{
+		result = SPI_execute_with_args(
+			"INSERT INTO lake_replication.source_connections "
+			"(subscription_id, conninfo, source_user, source_password) "
+			"VALUES ($1, $2, $3, $4)",
+			4, argtypes, values, nulls, false, 0);
+		if (result != SPI_OK_INSERT || SPI_processed != 1)
+			ereport(ERROR, (errmsg("lake_replication: could not store source credentials")));
+	}
+	if (password != NULL)
+	{
+		MemSet(password, 0, strlen(password));
+		pfree(password);
+	}
+}
+
+static void
+record_pending_cleanup(int64 subscriptionId, const char *slotName)
+{
+	Oid argtypes[2] = {INT8OID, TEXTOID};
+	Datum values[2] = {Int64GetDatum(subscriptionId), CStringGetTextDatum(slotName)};
+
+	if (SPI_execute_with_args(
 		"INSERT INTO lake_replication.pending_cleanup "
-		"(subscription_id, source_conninfo, source_slot_name) "
-		"VALUES (%lld, %s, %s)",
-		(long long) subscriptionId, quote_literal_cstr(conninfo),
-		quote_literal_cstr(slotName)), false, 0);
+		"(subscription_id, source_slot_name) VALUES ($1, $2)",
+		2, argtypes, values, NULL, false, 0) != SPI_OK_INSERT ||
+		SPI_processed != 1)
+		ereport(ERROR, (errmsg("lake_replication: could not record source slot cleanup")));
 }
 
 /*
@@ -974,8 +988,10 @@ drop_source_slot(int64 subscriptionId)
 	char	   *slotName = NULL;
 
 	if (SPI_execute(psprintf(
-			"SELECT source_conninfo, source_slot_name FROM "
-			"lake_replication.pending_cleanup WHERE subscription_id = %lld",
+			"SELECT c.conninfo, p.source_slot_name FROM "
+			"lake_replication.pending_cleanup AS p "
+			"JOIN lake_replication.source_connections AS c USING (subscription_id) "
+			"WHERE p.subscription_id = %lld",
 			(long long) subscriptionId), true, 1) == SPI_OK_SELECT
 		&& SPI_processed == 1)
 	{
@@ -993,14 +1009,16 @@ drop_source_slot(int64 subscriptionId)
 			"END $lake_replication_drop_slot$",
 			slotLiteral, slotLiteral);
 		StringInfoData buf;
+		Oid			argtypes[2] = {TEXTOID, TEXTOID};
+		Datum		values[2];
 		MemoryContext oldContext = CurrentMemoryContext;
 		bool		dropped = false;
 		int			attempt;
 
 		initStringInfo(&buf);
-		appendStringInfo(&buf, "SELECT dblink_exec(%s, %s)",
-						 quote_literal_cstr(conninfo),
-						 quote_literal_cstr(innerQuery));
+		appendStringInfoString(&buf, "SELECT dblink_exec($1, $2)");
+		values[0] = CStringGetTextDatum(conninfo);
+		values[1] = CStringGetTextDatum(innerQuery);
 
 		/*
 		 * The receiver may still hold this slot open for up to a couple of
@@ -1023,7 +1041,8 @@ drop_source_slot(int64 subscriptionId)
 			BeginInternalSubTransaction("lake_replication_drop_slot");
 			PG_TRY();
 			{
-				SPI_execute(buf.data, false, 0);
+				SPI_execute_with_args(buf.data, 2, argtypes, values, NULL,
+								  false, 0);
 				ReleaseCurrentSubTransaction();
 				dropped = true;
 			}
@@ -1045,6 +1064,9 @@ drop_source_slot(int64 subscriptionId)
 
 	SPI_execute(psprintf(
 		"DELETE FROM lake_replication.pending_cleanup "
+		"WHERE subscription_id = %lld", (long long) subscriptionId), false, 0);
+	SPI_execute(psprintf(
+		"DELETE FROM lake_replication.source_connections "
 		"WHERE subscription_id = %lld", (long long) subscriptionId), false, 0);
 }
 
@@ -1068,53 +1090,6 @@ discover_destination(char **outDatabase, char **outAddress)
 }
 
 /*
- * spawn_initial_sync fire-and-forgets lake-replication-initial-sync as a
- * detached, one-shot process for `subscriptionId`. Only ever called once,
- * at CREATE SUBSCRIPTION time: unlike the long-running supervisor (see
- * record_worker_launch_config, which is what actually starts that one, by
- * way of the launcher), a one-shot initial copy is not safe to blindly
- * re-run against a table that may already be streaming, so it stays on
- * this simpler detached-fork path rather than being made restartable.
- */
-static void
-spawn_initial_sync(int64 subscriptionId, const char *slotName,
-				   const char *publicationName, const char *sourceDatabase,
-				   const char *destinationDatabase, const char *sourceAddress,
-				   const char *destinationAddress, const char *destinationSchema,
-				   const char *credentialFile, int64 configGeneration)
-{
-	char	  **envp;
-	char	   *initialSyncPath;
-	char	   *initialSyncArgv[2];
-	char	   *initialSyncLog;
-
-	envp = build_worker_env(subscriptionId, slotName, publicationName,
-							sourceDatabase, destinationDatabase,
-							sourceAddress, destinationAddress, destinationSchema,
-							credentialFile, configGeneration);
-	initialSyncPath = pstrdup(WORKER_BIN_DIR "/lake-replication-initial-sync");
-	initialSyncArgv[0] = initialSyncPath;
-	initialSyncArgv[1] = NULL;
-	initialSyncLog = psprintf("%s/lake_replication_%lld_initial_sync.log",
-							  LogDirectory, (long long) subscriptionId);
-
-	ereport(NOTICE,
-			(errmsg("lake_replication: starting initial sync for "
-					"subscription_id=%lld (log: %s)",
-					(long long) subscriptionId, initialSyncLog)));
-
-	/*
-	 * Fire-and-forget: the supervisor the launcher starts (see
-	 * record_worker_launch_config) already reports "paused" and keeps
-	 * waiting for as long as the subscription's state is not yet
-	 * 'streaming', so it running concurrently with initial sync (rather
-	 * than waiting for initial sync to finish first) mirrors how native
-	 * logical replication's tablesync and apply workers overlap.
-	 */
-	spawn_detached(initialSyncPath, initialSyncArgv, envp, initialSyncLog);
-}
-
-/*
  * record_worker_launch_config writes (or, for ALTER ... ENABLE,
  * overwrites) this subscription's non-secret launch configuration into
  * lake_replication.worker_launch_config with desired_state =
@@ -1129,7 +1104,7 @@ record_worker_launch_config(int64 subscriptionId, const char *slotName,
 							const char *publicationName, const char *sourceDatabase,
 							const char *destinationDatabase, const char *sourceAddress,
 							const char *destinationAddress, const char *destinationSchema,
-							const char *credentialFile)
+							const char *credentialFile, bool createSlot)
 {
 	char	   *credentialSql = credentialFile == NULL || credentialFile[0] == '\0'
 		? pstrdup("NULL") : quote_literal_cstr(credentialFile);
@@ -1138,8 +1113,8 @@ record_worker_launch_config(int64 subscriptionId, const char *slotName,
 		"INSERT INTO lake_replication.worker_launch_config "
 		"(subscription_id, slot_name, publication_name, source_database, "
 		"destination_database, source_address, destination_address, "
-		"destination_schema, credential_file, desired_state) "
-		"VALUES (%lld, %s, %s, %s, %s, %s, %s, %s, %s, 'running') "
+		"destination_schema, credential_file, create_slot, desired_state) "
+		"VALUES (%lld, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'running') "
 		"ON CONFLICT (subscription_id) DO UPDATE SET "
 		"slot_name = EXCLUDED.slot_name, "
 		"publication_name = EXCLUDED.publication_name, "
@@ -1149,6 +1124,7 @@ record_worker_launch_config(int64 subscriptionId, const char *slotName,
 		"destination_address = EXCLUDED.destination_address, "
 		"destination_schema = EXCLUDED.destination_schema, "
 		"credential_file = EXCLUDED.credential_file, "
+		"create_slot = EXCLUDED.create_slot, "
 		"config_generation = "
 		"lake_replication.worker_launch_config.config_generation + 1, "
 		"desired_state = 'running'",
@@ -1156,13 +1132,15 @@ record_worker_launch_config(int64 subscriptionId, const char *slotName,
 		quote_literal_cstr(slotName), quote_literal_cstr(publicationName),
 		quote_literal_cstr(sourceDatabase), quote_literal_cstr(destinationDatabase),
 		quote_literal_cstr(sourceAddress), quote_literal_cstr(destinationAddress),
-		quote_literal_cstr(destinationSchema), credentialSql), false, 0);
+		quote_literal_cstr(destinationSchema), credentialSql,
+		createSlot ? "true" : "false"), false, 0);
 }
 
 static void
 handle_create_subscription(CreateSubscriptionStmt *stmt)
 {
 	StringInfoData buf;
+	ListCell   *lc;
 	char	   *pubname;
 	char	   *systemIdentifier;
 	char	   *databaseOid;
@@ -1170,13 +1148,32 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	char	   *sourceDatabase;
 	char	   *destinationDatabase;
 	char	   *sourceAddress;
+	char	   *sourceUser;
 	char	   *destinationAddress;
 	char	   *destinationSchema;
 	char	   *credentialFile;
 	char	   *slotName;
+	bool		createSlot;
 	int64		subscriptionId;
 
 	RequireAuthorized("CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')");
+
+	/* Do not silently accept core options that this worker path cannot honor. */
+	foreach(lc, stmt->options)
+	{
+		DefElem *def = (DefElem *) lfirst(lc);
+
+		if (strcmp(def->defname, "lake_target") != 0 &&
+			strcmp(def->defname, "lake_target_schema") != 0 &&
+			strcmp(def->defname, "lake_credential_file") != 0 &&
+			strcmp(def->defname, "create_slot") != 0 &&
+			strcmp(def->defname, "slot_name") != 0)
+			ereport(ERROR,
+					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+					 errmsg("lake_replication: CREATE SUBSCRIPTION option \"%s\" is not supported for Iceberg subscriptions",
+							def->defname),
+					 errdetail("This path performs an initial copy after the creating transaction commits.")));
+	}
 
 	if (list_length(stmt->publication) != 1)
 		ereport(ERROR,
@@ -1186,7 +1183,14 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 						"a single publication name by equality; see initial_sync.rs)",
 						stmt->subname, list_length(stmt->publication))));
 	pubname = strVal(linitial(stmt->publication));
-	slotName = psprintf("%s_slot", stmt->subname);
+	createSlot = get_bool_option(stmt->options, "create_slot", true);
+	slotName = get_string_option(stmt->options, "slot_name");
+	if (slotName == NULL)
+		slotName = stmt->subname;
+	if (pg_strcasecmp(slotName, "none") == 0)
+		ereport(ERROR,
+				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+				 errmsg("lake_replication: slot_name = NONE is not supported for Iceberg subscriptions")));
 	destinationSchema = get_string_option(stmt->options, "lake_target_schema");
 	if (destinationSchema == NULL)
 		destinationSchema = "public";
@@ -1198,15 +1202,16 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 	SPI_connect();
 
 	discover_source_identity(stmt->conninfo, &systemIdentifier, &databaseOid,
-							 &timeline, &sourceDatabase, &sourceAddress);
+							 &timeline, &sourceDatabase, &sourceAddress,
+							 &sourceUser);
 	discover_destination(&destinationDatabase, &destinationAddress);
 
 	ereport(NOTICE,
 			(errmsg("lake_replication: intercepted CREATE SUBSCRIPTION \"%s\" "
-					"(conninfo=%s, publication=%s, source system_identifier=%s "
+					"(publication=%s, source system_identifier=%s "
 					"database_oid=%s timeline=%s); routing to "
 					"lake_replication.create_subscription instead of native apply",
-					stmt->subname, stmt->conninfo, pubname,
+					stmt->subname, pubname,
 					systemIdentifier, databaseOid, timeline)));
 
 	initStringInfo(&buf);
@@ -1228,14 +1233,11 @@ handle_create_subscription(CreateSubscriptionStmt *stmt)
 													 &isnull));
 	}
 
-	record_pending_cleanup(subscriptionId, stmt->conninfo, slotName);
+	record_pending_cleanup(subscriptionId, slotName);
+	record_source_connection(subscriptionId, stmt->conninfo, sourceUser, false);
 	record_worker_launch_config(subscriptionId, slotName, pubname, sourceDatabase,
 								destinationDatabase, sourceAddress, destinationAddress,
-								destinationSchema, credentialFile);
-
-	spawn_initial_sync(subscriptionId, slotName, pubname, sourceDatabase,
-					  destinationDatabase, sourceAddress, destinationAddress,
-					  destinationSchema, credentialFile, 1);
+								destinationSchema, credentialFile, createSlot);
 
 	ereport(NOTICE,
 			(errmsg("lake_replication: recorded launch configuration for "
@@ -1320,9 +1322,10 @@ handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId)
  * lake_replication_launcher_main). No dblink round trip and no
  * source rediscovery needed here any more: source_address and every other
  * value the supervisor needs were already recorded durably in
- * worker_launch_config at CREATE SUBSCRIPTION time, and initial sync is
- * never re-run on ENABLE regardless, so nothing here depends on the
- * source being reachable right now.
+ * worker_launch_config at CREATE SUBSCRIPTION time. If initial sync did not
+ * finish before DISABLE, the restarted supervisor retries it after ENABLE;
+ * completed subscriptions only resume streaming. Nothing here depends on
+ * the source being reachable at ALTER time.
  */
 static void
 handle_enable_subscription(const char *subname, int64 subscriptionId)
@@ -1374,13 +1377,62 @@ handle_credential_file_update(const char *subname, int64 subscriptionId,
 }
 
 static void
+handle_connection_update(const char *subname, int64 subscriptionId,
+					 const char *conninfo)
+{
+	char *systemIdentifier;
+	char *databaseOid;
+	char *timeline;
+	char *sourceDatabase;
+	char *sourceAddress;
+	char *sourceUser;
+
+	discover_source_identity(conninfo, &systemIdentifier, &databaseOid,
+							 &timeline, &sourceDatabase, &sourceAddress,
+							 &sourceUser);
+	/* A new cluster or database cannot safely resume from this checkpoint. */
+	if (SPI_execute(psprintf(
+		"SELECT 1 FROM lake_replication.subscriptions AS s "
+		"JOIN lake_replication.sources AS src USING (source_id) "
+		"WHERE s.subscription_id = %lld AND src.system_identifier = %s::numeric "
+		"AND src.database_oid = %s::oid",
+		(long long) subscriptionId, systemIdentifier, databaseOid),
+		true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+		ereport(ERROR,
+				(errmsg("lake_replication: ALTER SUBSCRIPTION CONNECTION for \"%s\" "
+						"must point to the original source cluster and database",
+						subname)));
+
+	SPI_execute(psprintf("SELECT lake_replication.request_service_stop(%lld)",
+							  (long long) subscriptionId), false, 0);
+	record_source_connection(subscriptionId, conninfo, sourceUser, true);
+	if (SPI_execute(psprintf(
+		"UPDATE lake_replication.worker_launch_config "
+		"SET source_database = %s, source_address = %s, "
+		"config_generation = config_generation + 1 "
+		"WHERE subscription_id = %lld",
+		quote_literal_cstr(sourceDatabase), quote_literal_cstr(sourceAddress),
+		(long long) subscriptionId), false, 0) != SPI_OK_UPDATE ||
+		SPI_processed != 1)
+		ereport(ERROR,
+				(errmsg("lake_replication: launch configuration for \"%s\" is unavailable",
+						subname)));
+
+	ereport(NOTICE,
+				(errmsg("lake_replication: source connection for \"%s\" updated; "
+						"a running supervisor will be restarted", subname)));
+}
+
+static void
 handle_alter_subscription(AlterSubscriptionStmt *stmt, int64 subscriptionId)
 {
 	RequireAuthorized("ALTER SUBSCRIPTION");
 
 	SPI_connect();
 
-	if (stmt->kind == ALTER_SUBSCRIPTION_OPTIONS)
+	if (stmt->kind == ALTER_SUBSCRIPTION_CONNECTION)
+		handle_connection_update(stmt->subname, subscriptionId, stmt->conninfo);
+	else if (stmt->kind == ALTER_SUBSCRIPTION_OPTIONS)
 	{
 		char	   *credentialFile;
 

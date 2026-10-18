@@ -20,6 +20,7 @@ SELECT pg_catalog.pg_extension_config_dump('lake_replication.service_status', ''
 SELECT pg_catalog.pg_extension_config_dump('lake_replication.journal_maintenance_policies', '');
 SELECT pg_catalog.pg_extension_config_dump('lake_replication.journal_maintenance_status', '');
 SELECT pg_catalog.pg_extension_config_dump('lake_replication.pending_cleanup', '');
+SELECT pg_catalog.pg_extension_config_dump('lake_replication.source_connections', '');
 SELECT pg_catalog.pg_extension_config_dump('lake_replication.worker_launch_config', '');
 
 COMMIT;

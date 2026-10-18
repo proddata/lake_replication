@@ -9,6 +9,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
+DEST_DB = os.environ.get("LAKE_TEST_DESTINATION_DATABASE", "analytics")
 COMPOSE = ["docker", "compose", "-p", "lake-replication-lab",
            "-f", str(ROOT / "deploy/docker-compose/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("mutations_%Y%m%d_%H%M%S")
@@ -23,6 +24,8 @@ def command(args, **kwargs):
 
 
 def sql(database, statement, *, check_result=True):
+    if database == "analytics":
+        database = DEST_DB
     result = command(COMPOSE + ["exec", "-T", "postgres", "psql", "-XAt",
                      "-v", "ON_ERROR_STOP=1", "-U", "postgres", "-d", database],
                      input=statement)
@@ -47,6 +50,7 @@ def check(name, actual, expected):
 def worker(binary, subscription_id, **settings):
     environment = os.environ.copy()
     environment["LAKE_SUBSCRIPTION_ID"] = str(subscription_id)
+    environment["LAKE_DESTINATION_DATABASE"] = DEST_DB
     environment.update(settings)
     result = command([str(ROOT / "target/debug" / binary)], env=environment)
     if result.returncode:
@@ -190,6 +194,40 @@ def main():
                         AND staged_lsn=acknowledged_lsn)::text
                   FROM lake_replication.checkpoints WHERE subscription_id={subscription_id}
               """), "true")
+
+        value("application", f"INSERT INTO public.{TABLE} VALUES (4, 'start')")
+        receive(subscription_id)
+        publish(subscription_id)
+        value("application", f"""
+            BEGIN;
+            UPDATE public.{TABLE} SET note='first' WHERE id=4;
+            UPDATE public.{TABLE} SET note='second' WHERE id=4;
+            COMMIT;
+        """)
+        receive(subscription_id)
+        publish(subscription_id)
+        check("repeated updates to one identity preserve source order",
+              value("analytics", f"SELECT note FROM {RUN}.target WHERE id=4"), "second")
+
+        value("analytics", f"INSERT INTO {RUN}.target VALUES (4, 'duplicate')")
+        value("application", f"UPDATE public.{TABLE} SET note='third' WHERE id=4")
+        receive(subscription_id)
+        published_before = value("analytics", f"""
+            SELECT published_lsn::text FROM lake_replication.checkpoints
+             WHERE subscription_id={subscription_id}
+        """)
+        failure = None
+        try:
+            publish(subscription_id)
+        except RuntimeError as exc:
+            failure = str(exc)
+        check("duplicate destination identity rejects update",
+              failure is not None and "instead of exactly one" in failure, True)
+        check("failed update does not advance published checkpoint",
+              value("analytics", f"""
+                SELECT published_lsn::text FROM lake_replication.checkpoints
+                 WHERE subscription_id={subscription_id}
+              """), published_before)
 
         EVIDENCE["final_state"] = json.loads(value("analytics", f"""
             SELECT json_build_object(

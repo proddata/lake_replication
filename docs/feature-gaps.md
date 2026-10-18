@@ -63,6 +63,37 @@ that do not select a path.
 
 ## Desirable after the first beta
 
+### Subscription compatibility with Crunchy Data Warehouse
+
+Crunchy's [Postgres to Iceberg Data Sync documentation](https://docs.crunchybridge.com/warehouse/replication)
+uses ordinary PostgreSQL subscription options alongside its Iceberg options.
+This project's current `lake_target = 'iceberg'` path has a narrower contract:
+
+| Behavior | Current lake_replication behavior |
+|---|---|
+| Source logical slot | Automatically creates a persistent `pgoutput` slot after commit; default name is `<subscription>` and failover is enabled. |
+| Existing slot / custom name | `slot_name` selects a slot; `create_slot = false` uses a pre-created persistent `pgoutput` slot with a temporary slot for the initial-copy snapshot. |
+| Initial data copy / deferred start | Always copies and starts; `copy_data` and `enabled` are rejected. |
+| Copy recovery | Each table uses its own source session and retries a failed copy twice against one shared exported snapshot; all tables become visible together at one checkpoint. |
+| Target tables | Creates missing Iceberg tables. `create_tables_using` and mixed heap/Iceberg targets are unsupported. |
+| Existing nonempty Iceberg tables | No SQL option to request `overwrite_iceberg_data`; the copy fails closed. |
+| Wire options | Explicit `binary` and `streaming` options are rejected; the current receiver uses text values and streaming protocol support internally. |
+| Publications | Exactly one per subscription. |
+| Monitoring | Subscription health, LSN lag, and metrics exist; Crunchy's per-relation flush and row counters are not exposed. |
+
+- Native subscription option parity: deferred starts (`enabled = false`) and
+  subscriptions without an initial copy (`copy_data = false`). These options
+  are rejected rather than silently ignored.
+- Native table synchronization: PostgreSQL uses a transient slot and catch-up
+  worker per table. This project still uses one snapshot LSN for all tables,
+  copies them sequentially, and performs one atomic group cutover. Independent
+  snapshots or parallel copy require per-relation catch-up positions and
+  filtering in both ordinary and streamed transaction staging before the
+  shared checkpoint can advance safely.
+- Crunchy Data Warehouse syntax and destination behavior, including
+  `create_tables_using = 'iceberg'`, `overwrite_iceberg_data`, and mixed heap
+  and Iceberg targets. This project currently uses `lake_target = 'iceberg'`
+  and creates Iceberg destinations.
 - Additional scalar types such as `time`, `time with time zone`, and
   `interval`, where pg_lake and Iceberg semantics can be preserved.
 - Arrays with an explicit element-type and nullability policy.

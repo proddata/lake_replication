@@ -7,7 +7,7 @@ intercepted and routed to this project's own lake_replication.* control
 plane -- with real source-identity discovery via dblink, not a stub --
 instead of PostgreSQL's real subscription/slot/apply-worker machinery ever
 running. Also installs and checks the crunchy_iceberg-shaped monitoring
-views. See docs/native-subscription-spike.md.
+views. See docs/native-subscription-spike.md for the historical design work.
 
 The second half of this probe goes further: it builds the four Rust worker
 binaries, copies them into the lab container, and proves that a single
@@ -367,7 +367,7 @@ def main():
                   SELECT slot_name || ':' || publication_names::text
                     FROM lake_replication.subscriptions
                    WHERE subscription_id={subscription_id}
-              """), f"{SUBSCRIPTION}_slot:{{{PUBLICATION}}}")
+              """), f"{SUBSCRIPTION}:{{{PUBLICATION}}}")
         check("real source identity was discovered via dblink, not stubbed",
               value("analytics", f"""
                   SELECT system_identifier || ':' || database_oid || ':' || timeline
@@ -389,10 +389,8 @@ def main():
               wait_for("analytics", f"SELECT note FROM public.{TABLE} WHERE id=1",
                        "one", timeout=10), "one")
 
-        # supervisor_pid can briefly lag behind state='streaming', which
-        # initial-sync sets independently of the supervisor's own startup
-        # (SPI connect, acquire the per-subscription lock, start_service),
-        # so poll for a non-empty value rather than reading it once.
+        # The launcher starts the supervisor asynchronously after CREATE
+        # commits, so poll for its PID rather than reading it once.
         supervisor_pid = ""
         deadline = time.monotonic() + 10
         while not supervisor_pid and time.monotonic() < deadline:
@@ -482,12 +480,14 @@ def main():
         check("the source-side replication slot was dropped for real, not left behind",
               value("application", f"""
                   SELECT count(*) FROM pg_replication_slots
-                   WHERE slot_name='{SUBSCRIPTION}_slot'
+                   WHERE slot_name='{SUBSCRIPTION}'
               """), "0")
-        check("this extension's own pending_cleanup bookkeeping row is gone too",
+        check("source cleanup and connection rows are removed together",
               value("analytics", f"""
-                  SELECT count(*) FROM lake_replication.pending_cleanup
-                   WHERE subscription_id={subscription_id}
+                  SELECT (SELECT count(*) FROM lake_replication.pending_cleanup
+                           WHERE subscription_id={subscription_id}) +
+                         (SELECT count(*) FROM lake_replication.source_connections
+                           WHERE subscription_id={subscription_id})
               """), "0")
         subscription_id = None
 

@@ -360,24 +360,37 @@ struct Config {
 
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
-        let settings = Settings::from_env()?;
+        let mut settings = Settings::from_env()?;
         let legacy_user = value("LAKE_USER", "postgres");
         let source_address = value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434");
         let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
+        let destination_user = settings.value("LAKE_DESTINATION_USER", &legacy_user);
+        let destination_password = settings.optional("LAKE_DESTINATION_PASSWORD");
+        let destination_tls = tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?;
+        let destination_database = value("LAKE_DESTINATION_DATABASE", "analytics");
+        let subscription_id: i64 = required("LAKE_SUBSCRIPTION_ID")?.parse()?;
+        settings.load_subscription_source_credentials(
+            subscription_id,
+            &destination_address,
+            &destination_user,
+            &destination_database,
+            destination_password.as_deref(),
+            destination_tls.as_ref(),
+        )?;
         Ok(Self {
             source_tls: tls_config(&settings, "LAKE_SOURCE", &[&source_address])?,
-            destination_tls: tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?,
+            destination_tls,
             source_address,
             destination_address,
             source_user: settings.value("LAKE_SOURCE_USER", &legacy_user),
             source_password: settings.optional("LAKE_SOURCE_PASSWORD"),
-            destination_user: settings.value("LAKE_DESTINATION_USER", &legacy_user),
-            destination_password: settings.optional("LAKE_DESTINATION_PASSWORD"),
+            destination_user,
+            destination_password,
             source_database: value("LAKE_SOURCE_DATABASE", "application"),
-            destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
+            destination_database,
             slot: required("LAKE_SLOT")?,
             publication: required("LAKE_PUBLICATION")?,
-            subscription_id: required("LAKE_SUBSCRIPTION_ID")?.parse()?,
+            subscription_id,
             max_transactions: value("LAKE_MAX_TRANSACTIONS", "1").parse()?,
             debug_streaming_immediate: value("LAKE_DEBUG_STREAMING_IMMEDIATE", "0") == "1",
             type_mapping_version: value("LAKE_TYPE_MAPPING_VERSION", "1").parse()?,

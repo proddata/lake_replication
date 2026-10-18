@@ -18,13 +18,12 @@ COMMENT ON ROLE lake_replication_admin IS
 
 CREATE TABLE lake_replication.pending_cleanup (
     subscription_id bigint PRIMARY KEY,
-    source_conninfo text NOT NULL,
     source_slot_name text NOT NULL,
     created_at timestamptz NOT NULL DEFAULT clock_timestamp()
 );
 
 COMMENT ON TABLE lake_replication.pending_cleanup IS
-    'Protected source connection metadata retained so DROP SUBSCRIPTION can remove the source slot.';
+    'Source slot names retained for DROP SUBSCRIPTION cleanup; no connection credentials.';
 
 REVOKE ALL ON lake_replication.pending_cleanup FROM PUBLIC;
 

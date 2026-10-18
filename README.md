@@ -136,18 +136,17 @@ Append `lake_replication` to any existing
 shared_preload_libraries = 'pg_extension_base,lake_replication'
 lake_replication.database_name = 'analytics'
 lake_replication.log_directory = '/var/log/postgresql/lake_replication'
-lake_replication.credential_file = '/etc/lake_replication/worker.env'
+# Optional when workers use local destination authentication:
+# lake_replication.credential_file = '/etc/lake_replication/worker.env'
 ```
 
 The exact existing preload list depends on the pg_lake installation; preserve
 all of its entries when appending `lake_replication`.
 
-Create the credential file as a regular, non-symlink file readable only by the
-PostgreSQL operating-system user (`0600`):
+If the destination worker or TLS setup needs a file, create it as a regular,
+non-symlink file readable only by the PostgreSQL operating-system user (`0600`):
 
 ```text
-LAKE_SOURCE_USER=lake_source
-LAKE_SOURCE_PASSWORD=replace-me
 LAKE_SOURCE_TLS_MODE=verify-full
 LAKE_SOURCE_TLS_ROOT_CERT=/etc/ssl/certs/source-ca.pem
 LAKE_DESTINATION_USER=lake_worker
@@ -155,11 +154,13 @@ LAKE_DESTINATION_PASSWORD=replace-me-too
 LAKE_DESTINATION_TLS_MODE=disable
 ```
 
+The source user and password for a launcher-managed subscription come from its
+`CONNECTION` string. A file can still provide source TLS settings and a fallback
+password for legacy subscriptions without a password in `CONNECTION`.
 Environment variables explicitly set for a manually launched worker override
-the file. This instance-wide setting is the default for subscriptions that do
-not select their own file. Launcher-managed workers receive only a file path;
-credential values are not copied into worker-launch metadata or structured
-logs.
+the file. Launcher-managed workers receive only a file path and subscription ID;
+credential values are not copied into process arguments, worker-launch metadata,
+or structured logs.
 
 Create the log directory with ownership and permissions suitable for the
 PostgreSQL operating-system user, then restart PostgreSQL. In the destination
@@ -178,6 +179,8 @@ requires superuser or membership in the extension-created admin role:
 
 ```sql
 GRANT lake_replication_admin TO replication_operator;
+-- When workers connect as a non-superuser, grant this only to that worker login:
+GRANT lake_replication_worker TO lake_worker;
 ```
 
 ### 4. Create an Iceberg subscription
@@ -186,24 +189,71 @@ Run this in `analytics`:
 
 ```sql
 CREATE SUBSCRIPTION orders_to_lake
-  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
+  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=lake_source password=replace-me'
   PUBLICATION orders_pub
-  WITH (lake_target = 'iceberg',
-        lake_credential_file = '/etc/lake_replication/orders.env');
+  WITH (lake_target = 'iceberg');
 ```
 
-The command discovers the publication, creates corresponding
-`USING iceberg` tables in `public`, performs the initial copy, and starts the
-supervisor. Use `lake_target_schema` to select another destination schema:
+After the creating transaction commits, the supervisor starts the initial-sync
+worker. It automatically creates a persistent `pgoutput` logical slot named
+`orders_to_lake` on the source, copies the existing rows, and starts streaming
+changes. You do not
+create the slot separately. `CREATE SUBSCRIPTION` returns before the worker
+creates the slot; check `lake_replication.subscription_status` and
+`pg_replication_slots` for progress. The command creates corresponding
+`USING iceberg` tables in `public`. Use `lake_target_schema` to select another
+destination schema:
 
 ```sql
 CREATE SUBSCRIPTION orders_to_lake
-  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
+  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=lake_source password=replace-me'
   PUBLICATION orders_pub
   WITH (lake_target = 'iceberg', lake_target_schema = 'warehouse');
 ```
 
+If the initial-sync worker or destination server stops before cutover, the
+supervisor clears incomplete staged rows and retries from a fresh snapshot.
+The existing persistent slot retains WAL while this happens. A completed copy
+is never restarted; its checkpoint and table cutover commit together. Large
+copies currently restart from the beginning after a process crash. Resumable
+per-chunk snapshots and concurrent WAL reconciliation remain future work.
+
 Exactly one publication is supported per subscription in the current beta.
+The default slot name is the subscription name, as in PostgreSQL. Set
+`slot_name` to choose another name. For an existing persistent `pgoutput` slot,
+use `WITH (lake_target = 'iceberg', create_slot = false, slot_name = 'my_slot')`.
+The initial copy uses a temporary logical slot to export a consistent snapshot;
+keep one extra `max_replication_slots` capacity until that copy completes. The
+pre-created slot must belong to the source database, be inactive and retain WAL
+from before the copy snapshot. Dropping the subscription drops that slot.
+`enabled` and `copy_data` are not yet implemented and are rejected if supplied.
+Crunchy's `create_tables_using = 'iceberg'` syntax is separate from this
+project's `lake_target = 'iceberg'` option.
+
+`CONNECTION` is PostgreSQL's standard libpq connection string and also accepts
+`postgres://` and `postgresql://` URIs, for example
+`postgresql://lake_source:encoded-password@source.example:5432/application`.
+Percent-encode reserved characters in URI user names and passwords. Run the
+DDL through a trusted SQL session and consider statement
+logging and SQL client history: the original command can contain the password.
+PostgreSQL does not accept `$1` bind parameters in this DDL. This extension
+passes the secret as a parameter in its own internal SQL calls.
+
+To rotate the source password, disable the subscription and wait for `stopped`,
+change the source password, replace the connection string, then enable it:
+
+```sql
+ALTER SUBSCRIPTION orders_to_lake DISABLE;
+ALTER SUBSCRIPTION orders_to_lake
+  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=lake_source password=new-secret';
+ALTER SUBSCRIPTION orders_to_lake ENABLE;
+```
+
+The new connection must identify the same source cluster and database. For
+managed PostgreSQL, the provider must install the extension binaries and enable
+the required preload settings; subscription creators need no server-side
+source password file.
+
 `lake_credential_file` must be an absolute path. To rotate its values or move
 the subscription to another owner-only file, replace the file atomically and
 reload just that subscription; PostgreSQL itself does not restart:
@@ -216,6 +266,9 @@ ALTER SUBSCRIPTION orders_to_lake
 Setting the same path is intentional: it increments the subscription's launch
 configuration generation and gracefully replaces its supervisor, which reads
 the file again before reconnecting.
+
+For legacy subscriptions that obtain a source password from a file, rotate the
+file with the same disable, update, enable sequence.
 
 ### 5. Verify replication
 
@@ -281,15 +334,22 @@ changing an installed version, follow the coordinated
   catalog update occurs after PostgreSQL commit and does not provide the
   durable reconciliation contract this project requires.
 - Only one publication is accepted per subscription.
+- PostgreSQL subscription options beyond `lake_target`, `lake_target_schema`,
+  and `lake_credential_file` are rejected by this Iceberg path. The slot is
+  created asynchronously after commit, so creation failure is reported through
+  subscription status and worker logs rather than as a CREATE statement error.
 - Mapping version 1 supports common scalar types plus bounded Iceberg decimals,
   `varchar`, and `char`. Unconstrained or over-precision numerics, arrays,
   enums, domains, generated columns, and custom types remain fail-closed; see
   the [feature boundaries](docs/feature-gaps.md).
-- Each subscription may select and reload its own owner-only credential file.
-  The source password may still appear in the protected
-  `lake_replication.pending_cleanup` table when it is embedded in
-  `CREATE SUBSCRIPTION ... CONNECTION`, matching PostgreSQL's own
-  subscription-conninfo tradeoff.
+- Source passwords supplied through `CONNECTION` are stored in
+  `lake_replication.source_connections` for worker reconnects and source slot
+  cleanup. `pending_cleanup` holds only the slot name. Row-level security
+  blocks `pg_read_all_data` from the connection table; only the subscription
+  admin and a narrowly granted worker function can access it. Passwords remain
+  plaintext to the database owner, superusers, physical backups, and anyone
+  who can read the original DDL or server logs. Encrypting against those actors
+  requires a key managed outside PostgreSQL.
 - Compatibility has been validated against one pg_lake revision. Extended
   compatibility, recovery-drill, observability failure-path, security, and
   release-candidate soak gates remain open.

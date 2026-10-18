@@ -20,6 +20,7 @@ import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -40,8 +41,8 @@ SOURCE_IMAGE = f"lake-replication-qualification-source:{RUN}"
 DESTINATION_IMAGE = f"lake-replication-qualification-destination:{RUN}"
 BASE_IMAGE = f"pg-lake-qualification-base:{PG_LAKE_REVISION[:12]}"
 ADMIN_PASSWORD = secrets.token_urlsafe(24)
-SOURCE_PASSWORD = secrets.token_urlsafe(24)
-ROTATED_SOURCE_PASSWORD = secrets.token_urlsafe(24)
+SOURCE_PASSWORD = secrets.token_urlsafe(24) + "@:/%"
+ROTATED_SOURCE_PASSWORD = secrets.token_urlsafe(24) + "?#@"
 ENV = {
     **os.environ,
     "QUALIFICATION_SOURCE_IMAGE": SOURCE_IMAGE,
@@ -286,7 +287,11 @@ def verify_structured_logs(logs, required_events=()):
     )
     check(
         "credential values absent from worker logs",
-        ADMIN_PASSWORD not in logs and SOURCE_PASSWORD not in logs,
+        ADMIN_PASSWORD not in logs
+        and SOURCE_PASSWORD not in logs
+        and quote(SOURCE_PASSWORD, safe="") not in logs
+        and ROTATED_SOURCE_PASSWORD not in logs
+        and quote(ROTATED_SOURCE_PASSWORD, safe="") not in logs,
         True,
     )
     EVIDENCE["worker_log_records"] = len(records)
@@ -370,8 +375,11 @@ def verify_upgrade_contract():
             "destination",
             database,
             f"INSERT INTO lake_replication.pending_cleanup "
-            "(subscription_id, source_conninfo, source_slot_name) VALUES "
-            f"({subscription_id}, 'host=source dbname=application', 'upgrade_slot'); "
+            "(subscription_id, source_slot_name) VALUES "
+            f"({subscription_id}, 'upgrade_slot'); "
+            "INSERT INTO lake_replication.source_connections "
+            "(subscription_id, conninfo) VALUES "
+            f"({subscription_id}, 'host=source dbname=application'); "
             "INSERT INTO lake_replication.worker_launch_config "
             "(subscription_id, slot_name, publication_name, source_database, "
             "destination_database, source_address, destination_address, "
@@ -427,7 +435,7 @@ def verify_upgrade_contract():
                 "WHERE extname='lake_replication') || ':' || "
                 "(SELECT count(*) FROM lake_replication.worker_launch_config)",
             ),
-            "18:1",
+            "19:1",
         )
         logical_dump = compose(
             "exec",
@@ -443,6 +451,7 @@ def verify_upgrade_contract():
             "logical backup contains durable state but not regenerated seed mappings",
             "COPY lake_replication.subscriptions" in logical_dump
             and "COPY lake_replication.worker_launch_config" in logical_dump
+            and "COPY lake_replication.source_connections" in logical_dump
             and "COPY lake_replication.type_mappings" not in logical_dump,
             True,
         )
@@ -525,10 +534,52 @@ def verify_upgrade_contract():
 
 def exercise_replication():
     connection = (
-        "host=source port=5432 dbname=application "
-        f"user=lake_source password={SOURCE_PASSWORD}"
+        f"postgres://lake_source:{quote(SOURCE_PASSWORD, safe='')}"
+        "@source:5432/application"
     )
-    sql(
+    for option_name, option in (
+        ("enabled", "enabled = false"),
+        ("copy_data", "copy_data = false"),
+    ):
+        unsupported = sql_result(
+            "destination", "analytics",
+            "CREATE SUBSCRIPTION unsupported_lake "
+            f"CONNECTION '{connection}' PUBLICATION orders_pub "
+            f"WITH (lake_target = 'iceberg', {option})",
+            check_result=False,
+        )
+        check(
+            f"unsupported {option_name} fails instead of being ignored",
+            unsupported.returncode != 0
+            and f'option "{option_name}" is not supported'
+            in unsupported.stdout + unsupported.stderr,
+            True,
+        )
+    for transaction in (
+        "BEGIN; CREATE SUBSCRIPTION rolled_back_lake "
+        f"CONNECTION '{connection}' PUBLICATION orders_pub "
+        "WITH (lake_target = 'iceberg'); ROLLBACK;",
+        "BEGIN; SAVEPOINT before_subscription; "
+        "CREATE SUBSCRIPTION savepoint_lake "
+        f"CONNECTION '{connection}' PUBLICATION orders_pub "
+        "WITH (lake_target = 'iceberg'); "
+        "ROLLBACK TO SAVEPOINT before_subscription; COMMIT;",
+    ):
+        sql("destination", "analytics", transaction)
+    check(
+        "rolled-back subscriptions leave no source slots or control rows",
+        sql(
+            "source", "application",
+            "SELECT count(*) FROM pg_replication_slots "
+            "WHERE slot_name IN ('rolled_back_lake', 'savepoint_lake')",
+        ) + ":" + sql(
+            "destination", "analytics",
+            "SELECT count(*) FROM lake_replication.subscriptions "
+            "WHERE subscription_name IN ('rolled_back_lake', 'savepoint_lake')",
+        ),
+        "0:0",
+    )
+    create_result = sql_result(
         "destination",
         "analytics",
         f"""
@@ -536,8 +587,14 @@ CREATE SUBSCRIPTION orders_to_lake
   CONNECTION '{connection}'
   PUBLICATION orders_pub
   WITH (lake_target = 'iceberg',
-        lake_credential_file = '/credentials/worker.env');
+        lake_credential_file = '/credentials/destination-only.env');
 """,
+    )
+    check(
+        "subscription notice does not expose the source password",
+        SOURCE_PASSWORD not in create_result.stdout + create_result.stderr
+        and quote(SOURCE_PASSWORD, safe="") not in create_result.stdout + create_result.stderr,
+        True,
     )
     check(
         "subscription records its selected credential file",
@@ -549,7 +606,45 @@ CREATE SUBSCRIPTION orders_to_lake
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
         ),
-        "/credentials/worker.env:1",
+        "/credentials/destination-only.env:1",
+    )
+    check(
+        "postgres URI credentials are stored for workers without a source password file",
+        sql(
+            "destination", "analytics",
+            "SELECT source_user || ':' || (source_password IS NOT NULL)::text "
+            "FROM lake_replication.source_connections p "
+            "JOIN lake_replication.subscriptions s USING (subscription_id) "
+            "WHERE s.subscription_name='orders_to_lake'",
+        ),
+        "lake_source:true",
+    )
+    check(
+        "pending cleanup contains no connection or password columns",
+        sql(
+            "destination", "analytics",
+            "SELECT count(*) FROM information_schema.columns "
+            "WHERE table_schema='lake_replication' "
+            "AND table_name='pending_cleanup' "
+            "AND column_name IN ('source_conninfo', 'source_password', 'conninfo')",
+        ),
+        "0",
+    )
+    sql(
+        "destination", "analytics",
+        "CREATE ROLE lake_secret_reader LOGIN; "
+        "GRANT pg_read_all_data TO lake_secret_reader",
+    )
+    check(
+        "pg_read_all_data cannot read stored connection secrets or invoke the worker getter",
+        sql(
+            "destination", "analytics",
+            "SET ROLE lake_secret_reader; "
+            "SELECT (SELECT count(*) FROM lake_replication.source_connections)::text "
+            "|| ':' || has_function_privilege(current_user, "
+            "'lake_replication.source_credentials(bigint)', 'EXECUTE')::text",
+        ).endswith("0:false"),
+        True,
     )
     relative_path = sql_result(
         "destination",
@@ -570,7 +665,7 @@ CREATE SUBSCRIPTION orders_to_lake
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
         )
-        == "/credentials/worker.env:1",
+        == "/credentials/destination-only.env:1",
         True,
     )
     check(
@@ -583,6 +678,16 @@ CREATE SUBSCRIPTION orders_to_lake
             timeout=90,
         ),
         "initial",
+    )
+    check(
+        "initial sync automatically creates a persistent source pgoutput slot",
+        sql(
+            "source", "application",
+            "SELECT plugin || ':' || slot_type || ':' || temporary::text "
+            "|| ':' || failover::text FROM pg_replication_slots "
+            "WHERE slot_name='orders_to_lake'",
+        ),
+        "pgoutput:logical:false:true",
     )
     check(
         "common parameterized types retain schema and values",
@@ -672,19 +777,33 @@ CREATE SUBSCRIPTION orders_to_lake
         "JOIN lake_replication.subscriptions s USING (subscription_id) "
         "WHERE s.subscription_name='orders_to_lake'",
     )
+    sql("destination", "analytics", "ALTER SUBSCRIPTION orders_to_lake DISABLE")
+    check(
+        "supervisor stops before the source password changes",
+        wait_for(
+            "destination", "analytics",
+            "SELECT health_state FROM lake_replication.subscription_status "
+            "WHERE subscription_name='orders_to_lake'",
+            "stopped", timeout=30,
+        ),
+        "stopped",
+    )
     sql(
         "source",
         "application",
         f"ALTER ROLE lake_source PASSWORD '{ROTATED_SOURCE_PASSWORD}'",
     )
-    sql(
-        "destination",
-        "analytics",
-        "ALTER SUBSCRIPTION orders_to_lake SET "
-        "(lake_credential_file = '/credentials/worker-rotated.env')",
+    rotated_connection = (
+        f"postgresql://lake_source:{quote(ROTATED_SOURCE_PASSWORD, safe='')}"
+        "@source:5432/application"
     )
+    sql(
+        "destination", "analytics",
+        f"ALTER SUBSCRIPTION orders_to_lake CONNECTION '{rotated_connection}'",
+    )
+    sql("destination", "analytics", "ALTER SUBSCRIPTION orders_to_lake ENABLE")
     check(
-        "credential rotation replaces the subscription supervisor",
+        "postgresql URI credential rotation replaces the subscription supervisor",
         wait_for(
             "destination",
             "analytics",
@@ -694,10 +813,10 @@ CREATE SUBSCRIPTION orders_to_lake
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "JOIN lake_replication.service_status ss USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
-            "/credentials/worker-rotated.env:2:true:running",
+            "/credentials/destination-only.env:2:true:running",
             timeout=60,
         ),
-        "/credentials/worker-rotated.env:2:true:running",
+        "/credentials/destination-only.env:2:true:running",
     )
     sql(
         "source",
@@ -723,19 +842,29 @@ CREATE SUBSCRIPTION orders_to_lake
         "JOIN lake_replication.subscriptions s USING (subscription_id) "
         "WHERE s.subscription_name='orders_to_lake'",
     )
+    sql("destination", "analytics", "ALTER SUBSCRIPTION orders_to_lake DISABLE")
+    check(
+        "supervisor stops before restoring the source password",
+        wait_for(
+            "destination", "analytics",
+            "SELECT health_state FROM lake_replication.subscription_status "
+            "WHERE subscription_name='orders_to_lake'",
+            "stopped", timeout=30,
+        ),
+        "stopped",
+    )
     sql(
         "source",
         "application",
         f"ALTER ROLE lake_source PASSWORD '{SOURCE_PASSWORD}'",
     )
     sql(
-        "destination",
-        "analytics",
-        "ALTER SUBSCRIPTION orders_to_lake SET "
-        "(lake_credential_file = '/credentials/worker.env')",
+        "destination", "analytics",
+        f"ALTER SUBSCRIPTION orders_to_lake CONNECTION '{connection}'",
     )
+    sql("destination", "analytics", "ALTER SUBSCRIPTION orders_to_lake ENABLE")
     check(
-        "credential selection can return to the original file",
+        "CONNECTION can return to the original password",
         wait_for(
             "destination",
             "analytics",
@@ -745,10 +874,10 @@ CREATE SUBSCRIPTION orders_to_lake
             "JOIN lake_replication.subscriptions s USING (subscription_id) "
             "JOIN lake_replication.service_status ss USING (subscription_id) "
             "WHERE s.subscription_name='orders_to_lake'",
-            "/credentials/worker.env:3:true:running",
+            "/credentials/destination-only.env:3:true:running",
             timeout=60,
         ),
-        "/credentials/worker.env:3:true:running",
+        "/credentials/destination-only.env:3:true:running",
     )
     sql("destination", "analytics", "ALTER SUBSCRIPTION orders_to_lake DISABLE")
     check(
@@ -883,12 +1012,159 @@ CREATE SUBSCRIPTION orders_to_lake
             "source",
             "application",
             "SELECT count(*) FROM pg_replication_slots "
-            "WHERE slot_name='orders_to_lake_slot'",
+            "WHERE slot_name='orders_to_lake'",
             "0",
             timeout=30,
         ),
         "0",
     )
+
+
+    sql(
+        "source", "application",
+        "CREATE TABLE public.native_slot_items (id bigint PRIMARY KEY, note text NOT NULL); "
+        "INSERT INTO public.native_slot_items VALUES (1, 'snapshot'); "
+        "CREATE PUBLICATION native_slot_pub FOR TABLE public.native_slot_items; "
+        "GRANT SELECT ON public.native_slot_items TO lake_source; "
+        "SELECT pg_create_logical_replication_slot('native_slot_existing', 'pgoutput')",
+    )
+    sql(
+        "destination", "analytics",
+        "CREATE SUBSCRIPTION native_slot_lake "
+        f"CONNECTION '{connection}' PUBLICATION native_slot_pub "
+        "WITH (lake_target = 'iceberg', create_slot = false, "
+        "slot_name = 'native_slot_existing')",
+    )
+    check(
+        "pre-created slot supplies a snapshot copy",
+        wait_for(
+            "destination", "analytics",
+            "SELECT note FROM public.native_slot_items WHERE id=1",
+            "snapshot", timeout=90,
+        ),
+        "snapshot",
+    )
+    sql("source", "application", "INSERT INTO public.native_slot_items VALUES (2, 'streamed')")
+    check(
+        "pre-created slot streams later changes",
+        wait_for(
+            "destination", "analytics",
+            "SELECT note FROM public.native_slot_items WHERE id=2",
+            "streamed", timeout=90,
+        ),
+        "streamed",
+    )
+    check(
+        "temporary snapshot slot is released",
+        sql(
+            "source", "application",
+            "SELECT count(*) FROM pg_replication_slots WHERE slot_name LIKE 'lake_sync_%'",
+        ),
+        "0",
+    )
+    sql("destination", "analytics", "DROP SUBSCRIPTION native_slot_lake")
+    check(
+        "drop removes the pre-created slot",
+        sql(
+            "source", "application",
+            "SELECT count(*) FROM pg_replication_slots WHERE slot_name='native_slot_existing'",
+        ),
+        "0",
+    )
+
+
+def exercise_interrupted_initial_copy():
+    sql(
+        "source", "application",
+        "CREATE TABLE public.recovery_items (id bigint PRIMARY KEY, note text NOT NULL); "
+        "INSERT INTO public.recovery_items VALUES (1, 'one'), (2, 'two'), (3, 'three'); "
+        "CREATE PUBLICATION recovery_pub FOR TABLE public.recovery_items; "
+        "GRANT SELECT ON public.recovery_items TO lake_source",
+    )
+    identity = sql(
+        "source", "application",
+        "SELECT (pg_control_system()).system_identifier || ':' || "
+        "(SELECT oid FROM pg_database WHERE datname=current_database()) || ':' || "
+        "(pg_control_checkpoint()).timeline_id",
+    ).split(":")
+    subscription_id = sql(
+        "destination", "analytics",
+        "SELECT lake_replication.create_subscription("
+        f"{identity[0]}, {identity[1]}, {identity[2]}, "
+        "'recovery_lake', 'recovery_lake', ARRAY['recovery_pub'])",
+    )
+    worker_env = [
+        "LAKE_CREDENTIAL_FILE=/credentials/worker.env",
+        "LAKE_SOURCE_ADDRESS=source:5432",
+        "LAKE_DESTINATION_ADDRESS=127.0.0.1:5432",
+        "LAKE_SOURCE_DATABASE=application",
+        "LAKE_DESTINATION_DATABASE=analytics",
+        "LAKE_SLOT=recovery_lake",
+        "LAKE_PUBLICATION=recovery_pub",
+        f"LAKE_SUBSCRIPTION_ID={subscription_id}",
+        "LAKE_DISCOVER_PUBLICATION=1",
+        "LAKE_DESTINATION_SCHEMA=public",
+        "LAKE_CREATE_TABLES_USING_ICEBERG=1",
+        "LAKE_INITIAL_COPY_CHUNK_ROWS=1",
+    ]
+
+    def initial_copy(*extra):
+        return compose(
+            "exec", "-T", "-u", "postgres", "destination", "env",
+            *worker_env, *extra, "/usr/local/bin/lake-replication-initial-sync",
+            check_result=False, timeout=180,
+        )
+
+    interrupted = initial_copy(
+        "LAKE_INITIAL_COPY_FAIL_AFTER_ROWS=1",
+        "LAKE_INITIAL_COPY_TABLE_RETRIES=0",
+    )
+    staged = sql(
+        "destination", "analytics",
+        "SELECT count(*) FROM lake_replication.initial_copy_rows "
+        f"WHERE subscription_id={subscription_id}",
+    )
+    check("interrupted initial copy keeps staged rows", interrupted.returncode != 0 and staged == "1", True)
+    resumed = initial_copy()
+    check("initial copy restarts from a fresh snapshot", resumed.returncode, 0)
+    check(
+        "restarted copy publishes each source row once",
+        sql("destination", "analytics", "SELECT string_agg(note, ',' ORDER BY id) FROM public.recovery_items"),
+        "one,two,three",
+    )
+    check(
+        "restarted copy advances the checkpoint and retains one source slot",
+        sql(
+            "destination", "analytics",
+            "SELECT (received_lsn > '0/0')::text FROM lake_replication.checkpoints "
+            f"WHERE subscription_id={subscription_id}",
+        ) + ":" + sql(
+            "source", "application",
+            "SELECT count(*) FROM pg_replication_slots WHERE slot_name='recovery_lake'",
+        ),
+        "true:1",
+    )
+    sql("source", "application", "INSERT INTO public.recovery_items VALUES (4, 'after-restart')")
+    received = compose(
+        "exec", "-T", "-u", "postgres", "destination", "env",
+        *worker_env, "LAKE_MAX_TRANSACTIONS=1",
+        "LAKE_RECEIVER_IDLE_TIMEOUT_MS=5000",
+        "/usr/local/bin/lake-replication-receiver",
+        check_result=False, timeout=30,
+    )
+    check("persistent slot streams after restarted copy", received.returncode, 0)
+    published = compose(
+        "exec", "-T", "-u", "postgres", "destination", "env",
+        *worker_env, "/usr/local/bin/lake-replication-publisher",
+        check_result=False, timeout=30,
+    )
+    check("recovered stream publishes new changes", published.returncode, 0)
+    check(
+        "change after interrupted copy appears at destination",
+        sql("destination", "analytics", "SELECT note FROM public.recovery_items WHERE id=4"),
+        "after-restart",
+    )
+    sql("source", "application", "SELECT pg_drop_replication_slot('recovery_lake')")
 
 
 def main():
@@ -916,6 +1192,7 @@ def main():
         )
         verify_upgrade_contract()
         exercise_replication()
+        exercise_interrupted_initial_copy()
         verify_uninstaller()
         EVIDENCE["status"] = "passed"
         exit_code = 0

@@ -2,6 +2,7 @@ use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
 use std::time::Duration;
 
@@ -20,22 +21,53 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut slot_owner = Client::connect_secure(
-        config.source_address.as_str(),
-        &config.source_user,
-        &config.source_database,
-        true,
-        config.source_password.as_deref(),
-        config.source_tls.as_ref(),
+    let mut sync_guard = Client::connect_secure(
+        config.destination_address.as_str(),
+        &config.destination_user,
+        &config.destination_database,
+        false,
+        config.destination_password.as_deref(),
+        config.destination_tls.as_ref(),
     )?;
-    let slot_rows = slot_owner.simple_query(&format!(
-        "CREATE_REPLICATION_SLOT {} LOGICAL pgoutput (SNAPSHOT 'export', FAILOVER {})",
-        quote_identifier(&config.slot),
-        config.slot_failover
+    let lock_rows = sync_guard.simple_query(&format!(
+        "SELECT pg_try_advisory_lock(hashtextextended({}, 0))::text",
+        sql_literal(&format!(
+            "lake_replication_initial_sync:{}",
+            config.subscription_id
+        ))
     ))?;
-    let slot_row = slot_rows.first().ok_or("slot creation returned no row")?;
-    let consistent_lsn = field(slot_row, 1, "consistent_point")?.to_owned();
-    let snapshot_name = field(slot_row, 2, "snapshot_name")?.to_owned();
+    if single_value(&lock_rows, "initial-sync lock")? != "true" {
+        log_event(
+            "initial_sync",
+            "INFO",
+            "already_running",
+            "another initial copy owns this subscription",
+            &[("subscription_id", config.subscription_id.to_string())],
+        );
+        return Ok(());
+    }
+    let reset_rows = sync_guard.simple_query(&format!(
+        "SELECT lake_replication.reset_incomplete_initial_sync({})::text",
+        config.subscription_id
+    ))?;
+    let reset_count = single_value(&reset_rows, "reset incomplete initial copy")?;
+    if reset_count != "0" {
+        log_event(
+            "initial_sync",
+            "WARN",
+            "incomplete_copy_reset",
+            &format!("discarded {reset_count} incomplete table copies before restart"),
+            &[("subscription_id", config.subscription_id.to_string())],
+        );
+    }
+    let mut destination = Client::connect_secure(
+        config.destination_address.as_str(),
+        &config.destination_user,
+        &config.destination_database,
+        false,
+        config.destination_password.as_deref(),
+        config.destination_tls.as_ref(),
+    )?;
 
     let mut source = Client::connect_secure(
         config.source_address.as_str(),
@@ -45,6 +77,47 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         config.source_password.as_deref(),
         config.source_tls.as_ref(),
     )?;
+    let persistent_slot_rows = source.simple_query(&format!(
+        "SELECT EXISTS(SELECT 1 FROM pg_replication_slots WHERE slot_name={})::text",
+        sql_literal(&config.slot)
+    ))?;
+    let persistent_slot_exists =
+        single_value(&persistent_slot_rows, "persistent slot lookup")? == "true";
+    let mut slot_owner = Client::connect_secure(
+        config.source_address.as_str(),
+        &config.source_user,
+        &config.source_database,
+        true,
+        config.source_password.as_deref(),
+        config.source_tls.as_ref(),
+    )?;
+    let slot_rows = if config.create_slot && !persistent_slot_exists {
+        slot_owner.simple_query(&format!(
+            "CREATE_REPLICATION_SLOT {} LOGICAL pgoutput (SNAPSHOT 'export', FAILOVER {})",
+            quote_identifier(&config.slot),
+            config.slot_failover
+        ))?
+    } else {
+        // The persistent slot was created separately, possibly on this same
+        // server. A temporary slot supplies a fresh exported snapshot while
+        // the existing slot retains WAL from before that snapshot.
+        let sync_slot = format!(
+            "lake_sync_{}_{}",
+            config.subscription_id,
+            std::process::id()
+        );
+        slot_owner.simple_query(&format!(
+            "CREATE_REPLICATION_SLOT {} TEMPORARY LOGICAL pgoutput (SNAPSHOT 'export')",
+            quote_identifier(&sync_slot)
+        ))?
+    };
+    let slot_row = slot_rows.first().ok_or("slot creation returned no row")?;
+    let consistent_lsn = field(slot_row, 1, "consistent_point")?.to_owned();
+    let snapshot_name = field(slot_row, 2, "snapshot_name")?.to_owned();
+
+    if persistent_slot_exists || !config.create_slot {
+        validate_existing_slot(&mut source, &config, &consistent_lsn)?;
+    }
     source.simple_query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY")?;
     source.simple_query(&format!(
         "SET TRANSACTION SNAPSHOT {}",
@@ -54,15 +127,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     if plans.is_empty() {
         return Err("publication contains no eligible tables".into());
     }
+    source.simple_query("COMMIT")?;
 
-    let mut destination = Client::connect_secure(
-        config.destination_address.as_str(),
-        &config.destination_user,
-        &config.destination_database,
-        false,
-        config.destination_password.as_deref(),
-        config.destination_tls.as_ref(),
-    )?;
     for plan in &mut plans {
         let registered = destination.simple_query(&format!(
             "SELECT lake_replication.register_relation({}, {}, {}, {}, {}, {}::jsonb)::text",
@@ -126,7 +192,14 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut total_rows = 0_u64;
     for plan in &plans {
-        match copy_table(&mut source, &mut destination, &config, plan) {
+        match copy_table_with_retry(
+            &mut sync_guard,
+            &mut destination,
+            &config,
+            plan,
+            &snapshot_name,
+            &consistent_lsn,
+        ) {
             Ok(copied) => total_rows += copied,
             Err(error) => {
                 for failed_plan in &plans {
@@ -143,13 +216,26 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    sync_guard.simple_query("SELECT 1")?;
+    if persistent_slot_exists || !config.create_slot {
+        // Check again on a fresh connection: the copy connection still uses
+        // the exported snapshot and cannot see concurrent slot changes.
+        let mut source_check = Client::connect_secure(
+            config.source_address.as_str(),
+            &config.source_user,
+            &config.source_database,
+            false,
+            config.source_password.as_deref(),
+            config.source_tls.as_ref(),
+        )?;
+        validate_existing_slot(&mut source_check, &config, &consistent_lsn)?;
+    }
     let completed = destination.simple_query(&format!(
         "SELECT lake_replication.finish_initial_sync_group({}, {})::text",
         config.subscription_id,
         plans.len()
     ))?;
     let completed = single_value(&completed, "finish_initial_sync_group")?;
-    source.simple_query("COMMIT")?;
     log_event(
         "initial_sync",
         "INFO",
@@ -170,6 +256,136 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         ],
     );
     Ok(())
+}
+
+fn copy_table_with_retry(
+    sync_guard: &mut Client,
+    destination: &mut Client,
+    config: &Config,
+    plan: &TablePlan,
+    snapshot_name: &str,
+    consistent_lsn: &str,
+) -> Result<u64, WireError> {
+    for attempt in 0..=config.table_copy_retries {
+        let result = (|| {
+            let mut source = Client::connect_secure(
+                config.source_address.as_str(),
+                &config.source_user,
+                &config.source_database,
+                false,
+                config.source_password.as_deref(),
+                config.source_tls.as_ref(),
+            )?;
+            source.simple_query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY")?;
+            source.simple_query(&format!(
+                "SET TRANSACTION SNAPSHOT {}",
+                sql_literal(snapshot_name)
+            ))?;
+            let copied = copy_table(&mut source, destination, config, plan)?;
+            source.simple_query("COMMIT")?;
+            Ok(copied)
+        })();
+        match result {
+            Ok(copied) => return Ok(copied),
+            Err(_error) if attempt < config.table_copy_retries => {
+                // A lost guard means another worker may have taken over and
+                // reset staging. Never reconnect and write in that case.
+                sync_guard.simple_query("SELECT 1")?;
+                log_event(
+                    "initial_sync",
+                    "WARN",
+                    "table_copy_retry",
+                    &format!(
+                        "retrying table={} attempt={}",
+                        plan.source.sql(),
+                        attempt + 1
+                    ),
+                    &[
+                        ("subscription_id", config.subscription_id.to_string()),
+                        ("table", plan.source.sql()),
+                        ("attempt", (attempt + 1).to_string()),
+                    ],
+                );
+                // A COPY failure can leave either wire connection unusable.
+                // The snapshot owner is independent and stays open, so both
+                // sessions can be replaced without changing the copy point.
+                *destination = Client::connect_secure(
+                    config.destination_address.as_str(),
+                    &config.destination_user,
+                    &config.destination_database,
+                    false,
+                    config.destination_password.as_deref(),
+                    config.destination_tls.as_ref(),
+                )?;
+                destination.simple_query(&format!(
+                    "SELECT lake_replication.reset_initial_copy({}, {}, {})",
+                    config.subscription_id, plan.relation_id, plan.schema_version
+                ))?;
+                destination.simple_query(&format!(
+                    "SELECT lake_replication.begin_initial_copy({}, {}, {}, {}::regclass, {}::pg_lsn, {}, {})",
+                    config.subscription_id,
+                    plan.relation_id,
+                    plan.schema_version,
+                    sql_literal(&plan.destination.sql()),
+                    sql_literal(consistent_lsn),
+                    sql_literal(snapshot_name),
+                    config.overwrite_destination,
+                ))?;
+                thread::sleep(Duration::from_millis(100 * u64::from(attempt + 1)));
+            }
+            Err(error) => return Err(error),
+        }
+    }
+    unreachable!("the retry loop always returns after its final attempt")
+}
+
+fn validate_existing_slot(
+    source: &mut Client,
+    config: &Config,
+    consistent_lsn: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let rows = source.simple_query(&format!(
+        "SELECT plugin::text, slot_type, database::text, temporary::text, active::text, \
+         COALESCE(wal_status, ''), COALESCE(invalidation_reason, ''), \
+         COALESCE(confirmed_flush_lsn, '0/0')::text \
+         FROM pg_replication_slots WHERE slot_name = {}",
+        sql_literal(&config.slot)
+    ))?;
+    let row = rows.first().ok_or_else(|| {
+        format!(
+            "pre-created logical replication slot {} does not exist",
+            config.slot
+        )
+    })?;
+    if field(row, 0, "plugin")? != "pgoutput"
+        || field(row, 1, "slot_type")? != "logical"
+        || field(row, 2, "database")? != config.source_database
+        || field(row, 3, "temporary")? != "false"
+        || field(row, 4, "active")? != "false"
+        || field(row, 5, "wal_status")? == "lost"
+        || !field(row, 6, "invalidation_reason")?.is_empty()
+    {
+        return Err(format!(
+            "pre-created slot {} is not a usable inactive persistent pgoutput slot for {}",
+            config.slot, config.source_database
+        )
+        .into());
+    }
+    let confirmed = parse_slot_lsn(field(row, 7, "confirmed_flush_lsn")?)?;
+    let snapshot = parse_slot_lsn(consistent_lsn)?;
+    if confirmed > snapshot {
+        return Err(format!(
+            "pre-created slot {} has advanced beyond initial-copy snapshot {}",
+            config.slot, consistent_lsn
+        )
+        .into());
+    }
+    Ok(())
+}
+
+fn parse_slot_lsn(value: &str) -> Result<u64, Box<dyn std::error::Error>> {
+    let (high, low) = value.split_once('/').ok_or("invalid source LSN")?;
+    Ok((u64::from_str_radix(high, 16)? << 32) | u64::from_str_radix(low, 16)?)
 }
 
 fn copy_table(
@@ -422,6 +638,14 @@ fn stage_rows(
             "injected failure after {copied} rows"
         )));
     }
+    if config.fail_once_after_rows > 0
+        && *copied >= config.fail_once_after_rows
+        && !config.fail_once_triggered.swap(true, Ordering::SeqCst)
+    {
+        return Err(WireError::Protocol(format!(
+            "injected one-time failure after {copied} rows"
+        )));
+    }
     Ok(())
 }
 
@@ -467,31 +691,48 @@ struct Config {
     chunk_rows: usize,
     chunk_bytes: usize,
     fail_after_rows: u64,
+    fail_once_after_rows: u64,
+    fail_once_triggered: AtomicBool,
     pause_after_snapshot_ms: u64,
     pause_after_chunk_ms: u64,
     slot_failover: bool,
+    create_slot: bool,
+    table_copy_retries: u32,
 }
 
 impl Config {
     fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
-        let settings = Settings::from_env()?;
+        let mut settings = Settings::from_env()?;
         let legacy_user = value("LAKE_USER", "postgres");
         let source_address = value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434");
         let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
+        let destination_user = settings.value("LAKE_DESTINATION_USER", &legacy_user);
+        let destination_password = settings.optional("LAKE_DESTINATION_PASSWORD");
+        let destination_tls = tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?;
+        let destination_database = value("LAKE_DESTINATION_DATABASE", "analytics");
+        let subscription_id: i64 = required("LAKE_SUBSCRIPTION_ID")?.parse()?;
+        settings.load_subscription_source_credentials(
+            subscription_id,
+            &destination_address,
+            &destination_user,
+            &destination_database,
+            destination_password.as_deref(),
+            destination_tls.as_ref(),
+        )?;
         let config = Self {
             source_tls: tls_config(&settings, "LAKE_SOURCE", &[&source_address])?,
-            destination_tls: tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?,
+            destination_tls,
             source_address,
             destination_address,
             source_user: settings.value("LAKE_SOURCE_USER", &legacy_user),
             source_password: settings.optional("LAKE_SOURCE_PASSWORD"),
-            destination_user: settings.value("LAKE_DESTINATION_USER", &legacy_user),
-            destination_password: settings.optional("LAKE_DESTINATION_PASSWORD"),
+            destination_user,
+            destination_password,
             source_database: value("LAKE_SOURCE_DATABASE", "application"),
-            destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
+            destination_database,
             slot: required("LAKE_SLOT")?,
             publication: required("LAKE_PUBLICATION")?,
-            subscription_id: required("LAKE_SUBSCRIPTION_ID")?.parse()?,
+            subscription_id,
             source_table: env::var("LAKE_SOURCE_TABLE").ok(),
             destination_table: env::var("LAKE_DESTINATION_TABLE").ok(),
             destination_schema: env::var("LAKE_DESTINATION_SCHEMA").ok(),
@@ -503,9 +744,13 @@ impl Config {
             chunk_rows: value("LAKE_INITIAL_COPY_CHUNK_ROWS", "1000").parse()?,
             chunk_bytes: value("LAKE_INITIAL_COPY_CHUNK_BYTES", "8388608").parse()?,
             fail_after_rows: value("LAKE_INITIAL_COPY_FAIL_AFTER_ROWS", "0").parse()?,
+            fail_once_after_rows: value("LAKE_INITIAL_COPY_FAIL_ONCE_AFTER_ROWS", "0").parse()?,
+            fail_once_triggered: AtomicBool::new(false),
             pause_after_snapshot_ms: value("LAKE_INITIAL_COPY_PAUSE_MS", "0").parse()?,
             pause_after_chunk_ms: value("LAKE_INITIAL_COPY_CHUNK_PAUSE_MS", "0").parse()?,
             slot_failover: value("LAKE_SLOT_FAILOVER", "1") == "1",
+            create_slot: value("LAKE_CREATE_SLOT", "1") == "1",
+            table_copy_retries: value("LAKE_INITIAL_COPY_TABLE_RETRIES", "2").parse()?,
         };
         if config.chunk_rows == 0 || config.chunk_bytes == 0 || config.type_mapping_version <= 0 {
             return Err("initial-copy row and byte chunk limits must be positive".into());
