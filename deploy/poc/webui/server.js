@@ -95,5 +95,5 @@ app.get('/api/status', async (req, res) => {
 
 const port = Number(process.env.PORT || 3000);
 app.listen(port, () => {
-  console.log(`pg_lake_replication demo console listening on :${port}`);
+  console.log(`lake_replication demo console listening on :${port}`);
 });

@@ -35,7 +35,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 EXT_DIR = ROOT / "extensions" / "lake_replication"
-COMPOSE = ["docker", "compose", "-p", "pg-lake-replication-lab",
+COMPOSE = ["docker", "compose", "-p", "lake-replication-lab",
            "-f", str(ROOT / "deploy/docker-compose/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("subsug_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".lab" / RUN

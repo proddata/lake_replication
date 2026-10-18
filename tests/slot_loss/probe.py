@@ -10,7 +10,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE_COMPOSE = [
-    "docker", "compose", "-p", "pg-lake-replication-slot-loss-lab",
+    "docker", "compose", "-p", "lake-replication-slot-loss-lab",
     "-f", str(ROOT / "deploy/slot-loss/compose.yml"),
 ]
 RUN = datetime.now(timezone.utc).strftime("slot_loss_%Y%m%d_%H%M%S")

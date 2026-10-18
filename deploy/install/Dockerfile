@@ -22,7 +22,7 @@ FROM debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2
 ARG TARGETARCH
 ARG VERSION=0.1.0-beta.1
 ARG REVISION=unknown
-WORKDIR /bundle/pg_lake_replication-${VERSION}
+WORKDIR /bundle/lake_replication-${VERSION}
 COPY --from=worker-builder \
     /src/target/release/lake-replication-receiver \
     /src/target/release/lake-replication-publisher \
@@ -50,13 +50,13 @@ RUN printf '%s\n' "$VERSION" > VERSION \
        | xargs -0 sha256sum > SHA256SUMS
 RUN cd /bundle \
     && tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
-       -cf - pg_lake_replication-${VERSION} \
-       | gzip -n > pg_lake_replication-${VERSION}.tar.gz \
-    && sha256sum pg_lake_replication-${VERSION}.tar.gz \
-       > pg_lake_replication-${VERSION}.tar.gz.sha256
+       -cf - lake_replication-${VERSION} \
+       | gzip -n > lake_replication-${VERSION}.tar.gz \
+    && sha256sum lake_replication-${VERSION}.tar.gz \
+       > lake_replication-${VERSION}.tar.gz.sha256
 
 FROM scratch AS bundle
 ARG VERSION=0.1.0-beta.1
-COPY --from=assembler /bundle/pg_lake_replication-${VERSION} /pg_lake_replication-${VERSION}
-COPY --from=assembler /bundle/pg_lake_replication-${VERSION}.tar.gz /pg_lake_replication-${VERSION}.tar.gz
-COPY --from=assembler /bundle/pg_lake_replication-${VERSION}.tar.gz.sha256 /pg_lake_replication-${VERSION}.tar.gz.sha256
+COPY --from=assembler /bundle/lake_replication-${VERSION} /lake_replication-${VERSION}
+COPY --from=assembler /bundle/lake_replication-${VERSION}.tar.gz /lake_replication-${VERSION}.tar.gz
+COPY --from=assembler /bundle/lake_replication-${VERSION}.tar.gz.sha256 /lake_replication-${VERSION}.tar.gz.sha256

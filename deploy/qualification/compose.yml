@@ -1,4 +1,4 @@
-name: pg-lake-replication-qualification
+name: lake-replication-qualification
 
 services:
   source:

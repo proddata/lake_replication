@@ -10,7 +10,7 @@ Build the native-platform bundle with:
 make install-bundle
 ```
 
-The output is a reproducible `dist/pg_lake_replication-VERSION.tar.gz` plus
+The output is a reproducible `dist/lake_replication-VERSION.tar.gz` plus
 its checksum and an unpacked copy for inspection. On the destination host,
 unpack it and run `install.sh` as a user allowed to write PostgreSQL's extension
 directories and `/usr/local/bin`. The installer verifies every bundled file

@@ -8,13 +8,13 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 COMPOSE = [
-    "docker", "compose", "-p", "pg-lake-replication-lab",
+    "docker", "compose", "-p", "lake-replication-lab",
     "-f", str(ROOT / "deploy/docker-compose/compose.yml"),
 ]
 RUN = datetime.now(timezone.utc).strftime("install_%Y%m%d_%H%M%S")
 DATABASE = f"lake_bundle_{RUN.removeprefix('install_')}"
 RESULTS = ROOT / ".lab" / RUN
-BUNDLE = RESULTS / "dist/pg_lake_replication-0.1.0-beta.1"
+BUNDLE = RESULTS / "dist/lake_replication-0.1.0-beta.1"
 CONTAINER_BUNDLE = f"/tmp/{RUN}"
 EVIDENCE = {"run": RUN, "database": DATABASE, "checks": []}
 
@@ -55,7 +55,7 @@ def main():
     exit_code = 1
     try:
         command([str(ROOT / "deploy/install/build-bundle.sh"), str(RESULTS / "dist")])
-        archive = RESULTS / "dist/pg_lake_replication-0.1.0-beta.1.tar.gz"
+        archive = RESULTS / "dist/lake_replication-0.1.0-beta.1.tar.gz"
         check("release archive produced", archive.is_file(), True)
         compatibility = (BUNDLE / "COMPATIBILITY.md").read_text()
         check(

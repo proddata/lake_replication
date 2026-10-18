@@ -1,10 +1,10 @@
-COMPOSE = docker compose -p pg-lake-replication-lab -f deploy/docker-compose/compose.yml
-FAILOVER_COMPOSE = docker compose -p pg-lake-replication-failover-lab -f deploy/failover/compose.yml
-PATRONI_COMPOSE = docker compose -p pg-lake-replication-patroni-lab -f deploy/patroni/compose.yml
-SLOT_LOSS_COMPOSE = docker compose -p pg-lake-replication-slot-loss-lab -f deploy/slot-loss/compose.yml
-SCRAM_COMPOSE = docker compose -p pg-lake-replication-scram-lab -f deploy/scram/compose.yml
-TLS_COMPOSE = docker compose -p pg-lake-replication-tls-lab -f deploy/tls/compose.yml
-POC_COMPOSE = docker compose -p pg-lake-replication-poc -f deploy/poc/compose.yml
+COMPOSE = docker compose -p lake-replication-lab -f deploy/docker-compose/compose.yml
+FAILOVER_COMPOSE = docker compose -p lake-replication-failover-lab -f deploy/failover/compose.yml
+PATRONI_COMPOSE = docker compose -p lake-replication-patroni-lab -f deploy/patroni/compose.yml
+SLOT_LOSS_COMPOSE = docker compose -p lake-replication-slot-loss-lab -f deploy/slot-loss/compose.yml
+SCRAM_COMPOSE = docker compose -p lake-replication-scram-lab -f deploy/scram/compose.yml
+TLS_COMPOSE = docker compose -p lake-replication-tls-lab -f deploy/tls/compose.yml
+POC_COMPOSE = docker compose -p lake-replication-poc -f deploy/poc/compose.yml
 QUALIFICATION_COMPOSE = docker compose -f deploy/qualification/compose.yml
 PG_LAKE_REV ?= $(shell git -C vendor/pg_lake rev-parse HEAD)
 .DEFAULT_GOAL := lab-build

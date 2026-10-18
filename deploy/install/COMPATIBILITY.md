@@ -1,4 +1,4 @@
-# pg_lake_replication beta compatibility
+# lake_replication beta compatibility
 
 This beta is a separate artifact installed next to an existing PostgreSQL and
 pg_lake installation. It does not bundle either dependency.

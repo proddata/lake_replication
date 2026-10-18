@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_COMPOSE = ["docker", "compose", "-p", "pg-lake-replication-patroni-lab",
+SOURCE_COMPOSE = ["docker", "compose", "-p", "lake-replication-patroni-lab",
                   "-f", str(ROOT / "deploy/patroni/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("patroni_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".lab" / RUN

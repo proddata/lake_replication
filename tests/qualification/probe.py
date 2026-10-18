@@ -35,9 +35,9 @@ if not re.fullmatch(r"[0-9a-f]{40}", PG_LAKE_REVISION):
     raise RuntimeError(
         "QUALIFICATION_PG_LAKE_REVISION must be a full lowercase commit SHA"
     )
-PROJECT = f"pg-lake-replication-{RUN.replace('_', '-')}"
-SOURCE_IMAGE = f"pg-lake-replication-qualification-source:{RUN}"
-DESTINATION_IMAGE = f"pg-lake-replication-qualification-destination:{RUN}"
+PROJECT = f"lake-replication-{RUN.replace('_', '-')}"
+SOURCE_IMAGE = f"lake-replication-qualification-source:{RUN}"
+DESTINATION_IMAGE = f"lake-replication-qualification-destination:{RUN}"
 BASE_IMAGE = f"pg-lake-qualification-base:{PG_LAKE_REVISION[:12]}"
 ADMIN_PASSWORD = secrets.token_urlsafe(24)
 SOURCE_PASSWORD = secrets.token_urlsafe(24)
@@ -155,7 +155,7 @@ def archive_path():
     if configured:
         return Path(configured).expanduser().resolve()
     return ROOT / "dist/release" / (
-        f"pg_lake_replication-{VERSION}-linux-{native_architecture()}.tar.gz"
+        f"lake_replication-{VERSION}-linux-{native_architecture()}.tar.gz"
     )
 
 

@@ -38,8 +38,8 @@ for arch in $arches; do
     mkdir -p "$stage"
     PLATFORM="linux/$arch" VERSION="$version" REVISION="$revision" \
         "$script_dir/build-bundle.sh" "$stage"
-    source_archive="$stage/pg_lake_replication-$version.tar.gz"
-    artifact="pg_lake_replication-$version-linux-$arch.tar.gz"
+    source_archive="$stage/lake_replication-$version.tar.gz"
+    artifact="lake_replication-$version-linux-$arch.tar.gz"
     cp "$source_archive" "$output/$artifact"
     digest=$(sha256_file "$output/$artifact")
     printf '%s  %s\n' "$digest" "$artifact" >"$output/$artifact.sha256"

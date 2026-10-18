@@ -14,7 +14,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
-COMPOSE = ["docker", "compose", "-p", "pg-lake-replication-lab",
+COMPOSE = ["docker", "compose", "-p", "lake-replication-lab",
            "-f", str(ROOT / "deploy/docker-compose/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("icebergvac_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".lab" / RUN

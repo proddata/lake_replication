@@ -1,5 +1,33 @@
 # Upstream source and integration
 
+## Project rename
+
+The project and GitHub repository are named `lake_replication`; the former
+repository name was `pg_lake_replication`. Release archives now use
+`lake_replication-VERSION[-linux-ARCH].tar.gz`. The PostgreSQL extension remains
+`lake_replication` and the worker executable names remain `lake-replication-*`.
+Upstream `pg_lake` and its own source filenames retain their upstream names.
+Retained qualification JSON describes the original artifacts and is unchanged.
+
+Local checkout directory names are independent of the repository name; an
+existing checkout can keep its current directory. Set its Git remote to
+`https://github.com/proddata/lake_replication.git`.
+
+Docker Compose project names and image names now start with `lake-replication`.
+Existing containers and volumes retain their old names. For an existing lab,
+use `docker compose -p pg-lake-replication-lab -f deploy/docker-compose/compose.yml stop`
+before starting a new stack. To reuse that lab's existing data, supply its old
+project name explicitly with the renamed image:
+
+```sh
+make lab-build
+docker compose -p pg-lake-replication-lab -f deploy/docker-compose/compose.yml up -d
+```
+
+The same rule applies to the demo and other labs. Default Make targets select
+the new project names and therefore new named volumes. No existing containers,
+volumes, or installed configuration directories are renamed automatically.
+
 ## Local source and builds
 
 `vendor/pg_lake` is a Git submodule pinned to the qualified revision

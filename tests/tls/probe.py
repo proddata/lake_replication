@@ -10,7 +10,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE_COMPOSE = [
-    "docker", "compose", "-p", "pg-lake-replication-tls-lab",
+    "docker", "compose", "-p", "lake-replication-tls-lab",
     "-f", str(ROOT / "deploy/tls/compose.yml"),
 ]
 RUN = datetime.now(timezone.utc).strftime("tls_%Y%m%d_%H%M%S")

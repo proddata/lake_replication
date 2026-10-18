@@ -10,7 +10,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE_COMPOSE = [
-    "docker", "compose", "-p", "pg-lake-replication-scram-lab",
+    "docker", "compose", "-p", "lake-replication-scram-lab",
     "-f", str(ROOT / "deploy/scram/compose.yml"),
 ]
 RUN = datetime.now(timezone.utc).strftime("scram_%Y%m%d_%H%M%S")

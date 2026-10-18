@@ -1,4 +1,4 @@
-name: pg-lake-replication-slot-loss-lab
+name: lake-replication-slot-loss-lab
 services:
   source:
     image: postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af

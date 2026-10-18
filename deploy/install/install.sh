@@ -67,7 +67,7 @@ for extension_file in "$script_dir"/payload/extension/*; do
 done
 
 cat <<EOF
-Installed pg_lake_replication $(cat "$script_dir/VERSION") for $postgres_version
+Installed lake_replication $(cat "$script_dir/VERSION") for $postgres_version
 from source revision $(cat "$script_dir/SOURCE_REVISION").
 
 Compatibility was validated against pg_lake 3.6 at commit

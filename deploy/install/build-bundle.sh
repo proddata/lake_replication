@@ -32,4 +32,4 @@ else
         "$root"
 fi
 
-echo "Bundle created at $output/pg_lake_replication-$version.tar.gz"
+echo "Bundle created at $output/lake_replication-$version.tar.gz"

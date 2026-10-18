@@ -9,7 +9,7 @@ import time
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_COMPOSE = ["docker", "compose", "-p", "pg-lake-replication-failover-lab",
+SOURCE_COMPOSE = ["docker", "compose", "-p", "lake-replication-failover-lab",
                   "-f", str(ROOT / "deploy/failover/compose.yml")]
 RUN = datetime.now(timezone.utc).strftime("failover_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".lab" / RUN

@@ -9,7 +9,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 EXTENSION = ROOT / "extensions/lake_replication"
 COMPOSE = [
-    "docker", "compose", "-p", "pg-lake-replication-lab",
+    "docker", "compose", "-p", "lake-replication-lab",
     "-f", str(ROOT / "deploy/docker-compose/compose.yml"),
 ]
 RUN = datetime.now(timezone.utc).strftime("extension_%Y%m%d_%H%M%S")

@@ -1,6 +1,6 @@
 # Operations guide
 
-This guide defines the beta monitoring contract for `pg_lake_replication`.
+This guide defines the beta monitoring contract for `lake_replication`.
 Run all queries against the pg_lake destination database containing the
 `lake_replication` extension.
 

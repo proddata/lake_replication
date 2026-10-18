@@ -45,7 +45,7 @@ do
 done
 
 cat <<'EOF'
-Removed pg_lake_replication program and extension files.
+Removed lake_replication program and extension files.
 
 PostgreSQL configuration, roles, extension objects, replication slots, Iceberg
 tables, object-storage data, and credential/log files were not changed. Stop or

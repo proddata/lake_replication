@@ -1,4 +1,4 @@
-name: pg-lake-replication-patroni-lab
+name: lake-replication-patroni-lab
 services:
   etcd:
     image: gcr.io/etcd-development/etcd:v3.6.14@sha256:a491baeaa0cb0c9cd89c0062ac44ece53886e3e5bddad18d2daf36678ce665b6
@@ -25,7 +25,7 @@ services:
       context: .
       args:
         PATRONI_VERSION: 4.1.5
-    image: pg-lake-replication-patroni:4.1.5-pg18
+    image: lake-replication-patroni:4.1.5-pg18
     command: [/etc/patroni/patroni.yml]
     volumes:
       - pg1-data:/var/lib/postgresql/18/data
@@ -53,7 +53,7 @@ services:
       - ./prepare-data.sh:/lab/prepare-data.sh:ro
 
   pg2:
-    image: pg-lake-replication-patroni:4.1.5-pg18
+    image: lake-replication-patroni:4.1.5-pg18
     command: [/etc/patroni/patroni.yml]
     volumes:
       - pg2-data:/var/lib/postgresql/18/data

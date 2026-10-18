@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ ! -s /certs/server.key ]]; then
   openssl req -new -x509 -nodes -days 2 -sha256 \
-    -subj /CN=pg-lake-replication-test-ca \
+    -subj /CN=lake-replication-test-ca \
     -keyout /certs/ca.key -out /certs/ca.crt >/dev/null 2>&1
   openssl req -new -nodes -sha256 -subj /CN=localhost \
     -keyout /certs/server.key -out /certs/server.csr >/dev/null 2>&1

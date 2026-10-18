@@ -1,8 +1,8 @@
 {
-  "name": "pg-lake-replication-poc-webui",
+  "name": "lake-replication-poc-webui",
   "version": "1.0.0",
   "private": true,
-  "description": "Minimal two-pane SQL console for demoing pg_lake_replication locally.",
+  "description": "Minimal two-pane SQL console for demoing lake_replication locally.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

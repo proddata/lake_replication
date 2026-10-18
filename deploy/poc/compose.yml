@@ -1,7 +1,7 @@
-name: pg-lake-replication-poc
+name: lake-replication-poc
 services:
   postgres:
-    image: pg-lake-replication-poc:8180647-pg18
+    image: lake-replication-poc:8180647-pg18
     build:
       context: ../..
       dockerfile: deploy/poc/Dockerfile
@@ -50,7 +50,7 @@ services:
       retries: 60
     shm_size: 256mb
   pgduck:
-    image: pg-lake-replication-poc:8180647-pg18
+    image: lake-replication-poc:8180647-pg18
     user: postgres
     entrypoint: [bash, /lab/pgduck.sh]
     volumes:
@@ -69,7 +69,7 @@ services:
       timeout: 3s
       retries: 30
   permissions:
-    image: pg-lake-replication-poc:8180647-pg18
+    image: lake-replication-poc:8180647-pg18
     user: root
     entrypoint: [chown, postgres:postgres, /var/run/pgduck]
     volumes:

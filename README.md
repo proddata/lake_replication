@@ -1,12 +1,12 @@
-# pg_lake_replication
+# lake_replication
 
-[![CI](https://github.com/proddata/pg_lake_replication/actions/workflows/ci.yml/badge.svg)](https://github.com/proddata/pg_lake_replication/actions/workflows/ci.yml)
+[![CI](https://github.com/proddata/lake_replication/actions/workflows/ci.yml/badge.svg)](https://github.com/proddata/lake_replication/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-PostgreSQL-blue.svg)](LICENSE)
 
 Logical replication from ordinary PostgreSQL tables into
 [pg_lake](https://github.com/Snowflake-Labs/pg_lake) Iceberg tables.
 
-`pg_lake_replication` runs beside an existing PostgreSQL 18 + pg_lake
+`lake_replication` runs beside an existing PostgreSQL 18 + pg_lake
 installation. It takes an initial snapshot, consumes logical replication,
 stages source transactions durably, and publishes bounded micro-batches into
 Iceberg tables. A PostgreSQL extension provides familiar
@@ -113,8 +113,8 @@ bundle from a clean checkout:
 
 ```sh
 make install-bundle
-tar -xzf dist/pg_lake_replication-0.1.0-beta.1.tar.gz -C /tmp
-cd /tmp/pg_lake_replication-0.1.0-beta.1
+tar -xzf dist/lake_replication-0.1.0-beta.1.tar.gz -C /tmp
+cd /tmp/lake_replication-0.1.0-beta.1
 sudo ./install.sh
 ```
 
@@ -135,8 +135,8 @@ Append `lake_replication` to any existing
 # postgresql.conf
 shared_preload_libraries = 'pg_extension_base,lake_replication'
 lake_replication.database_name = 'analytics'
-lake_replication.log_directory = '/var/log/postgresql/pg_lake_replication'
-lake_replication.credential_file = '/etc/pg_lake_replication/worker.env'
+lake_replication.log_directory = '/var/log/postgresql/lake_replication'
+lake_replication.credential_file = '/etc/lake_replication/worker.env'
 ```
 
 The exact existing preload list depends on the pg_lake installation; preserve
@@ -189,7 +189,7 @@ CREATE SUBSCRIPTION orders_to_lake
   CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'
   PUBLICATION orders_pub
   WITH (lake_target = 'iceberg',
-        lake_credential_file = '/etc/pg_lake_replication/orders.env');
+        lake_credential_file = '/etc/lake_replication/orders.env');
 ```
 
 The command discovers the publication, creates corresponding
@@ -210,7 +210,7 @@ reload just that subscription; PostgreSQL itself does not restart:
 
 ```sql
 ALTER SUBSCRIPTION orders_to_lake
-  SET (lake_credential_file = '/etc/pg_lake_replication/orders.env');
+  SET (lake_credential_file = '/etc/lake_replication/orders.env');
 ```
 
 Setting the same path is intentional: it increments the subscription's launch
