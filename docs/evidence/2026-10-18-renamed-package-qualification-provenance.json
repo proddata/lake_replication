@@ -1,0 +1,26 @@
+{
+  "architecture": "arm64",
+  "artifact_source_revision": "67729222efb2110bd0c54ffe73f0c63413a056bb",
+  "checks_passed": 36,
+  "cleanup": "Disposable qualification containers and volumes removed by probe; only cache records created during this test were pruned",
+  "fixture_changes": [
+    "Split upstream-only pg-lake-base from final demo stage",
+    "Reject prerequisite images containing replication files"
+  ],
+  "fixture_file_sha256": {
+    "deploy/poc/Dockerfile": "59fe1c72b1cd044114aa535edb56c00e2591f97cab6662698498fd80e4cbc0ae",
+    "deploy/qualification/Dockerfile.destination": "bdc3d6b5ee504c8d4e04233f7d762ce34357edbb312944a52c44828a180e1266"
+  },
+  "fresh_submodule_build": "Local bundle cloned and pinned revision verified; complete upstream rebuild stopped at PostgreSQL headers because Docker ran out of disk space",
+  "negative_test": "PASS: fixture rejected existing development image containing source-built replication files",
+  "prerequisite_image": "sha256:7e9cc8352b249a090f030cd466291b229a8f041fc1262c53bbfc9748b9908f73",
+  "prerequisite_pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "prerequisite_provenance": "Recovered upstream-only target from existing cache using the pre-submodule Dockerfile at 0e7cca5; no project files or lab crash instrumentation included",
+  "prerequisite_verified": [
+    "Exact pg_lake HEAD",
+    "No tracked pg_lake_table source changes",
+    "No installed lake_replication extension",
+    "Fresh destination guard passed"
+  ],
+  "run": "qualification_20261018_094450"
+}

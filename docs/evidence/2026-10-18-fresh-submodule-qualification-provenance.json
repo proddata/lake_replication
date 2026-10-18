@@ -1,0 +1,38 @@
+{
+  "architecture": "arm64",
+  "archive_sha256": "af3a6358164d44e607623bc5117e2415ce931a9b492cf50cc13ed5cebdeea444",
+  "artifact_source_revision": "67729222efb2110bd0c54ffe73f0c63413a056bb",
+  "build_log_sha256": {
+    "fresh-build-attempt1.log": "6b77ff581ff0a27cd5c6f97cc12301ba5513083279cc60e4ac647c2ab80386ab",
+    "fresh-build-attempt2.log": "1bc87cf4aa511131da2b2e3128cf9331ac23c2f42da1465149188b429da43b85",
+    "fresh-build.log": "1b5ffd6434086c4313d85f9632fc6d53e61ab6bdbe60ec251c3a2e865a564bec"
+  },
+  "build_logs_directory": ".qualification/qualification_20261018_133204",
+  "build_retry_history": [
+    "Transient Docker connection EOF during PostgreSQL header installation; resumed from completed dependency cache",
+    "DuckDB compiled successfully; late dependency installation failed on stale Debian package indexes (HTTP 404)",
+    "Added apt-get update to the late install step; completed the image build and all qualification checks"
+  ],
+  "checks_passed": 36,
+  "cleanup": "Qualification probe removed its disposable containers and volumes",
+  "fixture_changes": [
+    "Separate upstream-only prerequisite stage from demo stage",
+    "Reject prerequisite images containing replication files",
+    "Refresh Debian package index before the late pgduck_server dependency install"
+  ],
+  "fixture_file_sha256": {
+    "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+    "deploy/qualification/Dockerfile.destination": "bdc3d6b5ee504c8d4e04233f7d762ce34357edbb312944a52c44828a180e1266"
+  },
+  "fresh_submodule_build": "PASS: complete pg-lake-base build using the locally prepared vendor/pg_lake Git bundle; no legacy pre-submodule prerequisite image used",
+  "prerequisite_image": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+  "prerequisite_pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "prerequisite_postgresql_version": "18.6",
+  "prerequisite_verified": [
+    "Exact pg_lake HEAD",
+    "No tracked pg_lake_table source changes",
+    "No installed lake_replication extension or worker executables",
+    "Fresh destination guard passed"
+  ],
+  "run": "qualification_20261018_133204"
+}

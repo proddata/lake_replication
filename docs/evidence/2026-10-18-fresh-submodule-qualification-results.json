@@ -1,0 +1,241 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "af3a6358164d44e607623bc5117e2415ce931a9b492cf50cc13ed5cebdeea444",
+  "checks": [
+    {
+      "actual": "af3a6358164d44e607623bc5117e2415ce931a9b492cf50cc13ed5cebdeea444",
+      "expected": "af3a6358164d44e607623bc5117e2415ce931a9b492cf50cc13ed5cebdeea444",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "lake_replication:0.1.0-beta.1",
+      "expected": "lake_replication:0.1.0-beta.1",
+      "name": "archive-installed extension loads",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0:true",
+      "expected": "0.1.0:true",
+      "name": "development baseline excludes beta observability schema",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "expected": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "name": "extension upgrades in place and preserves control-plane state",
+      "passed": true
+    },
+    {
+      "actual": "numeric(12,2):character varying(32)",
+      "expected": "numeric(12,2):character varying(32)",
+      "name": "extension upgrade installs common parameterized type resolution",
+      "passed": true
+    },
+    {
+      "actual": "true:1",
+      "expected": "true:1",
+      "name": "extension upgrade adds per-subscription credential metadata",
+      "passed": true
+    },
+    {
+      "actual": "18:1",
+      "expected": "18:1",
+      "name": "upgrade registers durable extension state for logical backup",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "logical backup contains durable state but not regenerated seed mappings",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1:1:1",
+      "expected": "0.1.0-beta.1:1:1",
+      "name": "logical backup restores extension versions and durable control state",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "no unsupported SQL downgrade path is advertised",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/worker.env:1",
+      "expected": "/credentials/worker.env:1",
+      "name": "subscription records its selected credential file",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "relative per-subscription credential paths are rejected without mutation",
+      "passed": true
+    },
+    {
+      "actual": "initial",
+      "expected": "initial",
+      "name": "initial copy reaches the artifact-installed destination",
+      "passed": true
+    },
+    {
+      "actual": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "expected": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "name": "common parameterized types retain schema and values",
+      "passed": true
+    },
+    {
+      "actual": "healthy:streaming",
+      "expected": "healthy:streaming",
+      "name": "subscription becomes healthy",
+      "passed": true
+    },
+    {
+      "actual": "12",
+      "expected": "12",
+      "name": "all documented metrics are exported",
+      "passed": true
+    },
+    {
+      "actual": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "expected": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "name": "live insert and update replicate",
+      "passed": true
+    },
+    {
+      "actual": "numeric(6,2):1=1.25,2=NULL",
+      "expected": "numeric(6,2):1=1.25,2=NULL",
+      "name": "nullable parameterized column is added and replicated online",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/worker-rotated.env:2:true:running",
+      "expected": "/credentials/worker-rotated.env:2:true:running",
+      "name": "credential rotation replaces the subscription supervisor",
+      "passed": true
+    },
+    {
+      "actual": "rotated-credential",
+      "expected": "rotated-credential",
+      "name": "replication authenticates with the rotated credential",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/worker.env:3:true:running",
+      "expected": "/credentials/worker.env:3:true:running",
+      "name": "credential selection can return to the original file",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "disable reaches stopped state",
+      "passed": true
+    },
+    {
+      "actual": "while-disabled",
+      "expected": "while-disabled",
+      "name": "enable catches up changes made while stopped",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "destination is ready after container restart",
+      "passed": true
+    },
+    {
+      "actual": "after-restart",
+      "expected": "after-restart",
+      "name": "launcher resumes replication after restart",
+      "passed": true
+    },
+    {
+      "actual": "degraded:backoff:true:true:true:true:true",
+      "expected": "degraded:backoff:true:true:true:true:true",
+      "name": "source outage becomes observable retry state",
+      "passed": true
+    },
+    {
+      "actual": "0:true:true",
+      "expected": "0:true:true",
+      "name": "retry metrics mark the subscription unhealthy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "source is ready after outage",
+      "passed": true
+    },
+    {
+      "actual": "healthy:running:0:true:true:true",
+      "expected": "healthy:running:0:true:true:true",
+      "name": "subscription recovers while retaining last-failure evidence",
+      "passed": true
+    },
+    {
+      "actual": "after-source-outage",
+      "expected": "after-source-outage",
+      "name": "replication resumes after source outage",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured worker logs emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured failure and recovery events emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "credential values absent from worker logs",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "drop removes the source replication slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "uninstaller removes only project program files",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "run": "qualification_20261018_133204",
+  "source_revision": "67729222efb2110bd0c54ffe73f0c63413a056bb",
+  "status": "passed",
+  "worker_log_events": [
+    "batch_published",
+    "copy_chunk_staged",
+    "cycle_failed",
+    "idle_timeout",
+    "initial_copy_completed",
+    "replication_started",
+    "snapshot_acquired",
+    "stopped",
+    "table_copied",
+    "transaction_staged"
+  ],
+  "worker_log_records": 61
+}

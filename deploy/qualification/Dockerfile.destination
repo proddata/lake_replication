@@ -2,6 +2,15 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 USER root
+RUN if test -e "$(pg_config --sharedir)/extension/lake_replication.control" \
+       || test -e "$(pg_config --pkglibdir)/lake_replication.so" \
+       || test -e "$(pg_config --pkglibdir)/lake_subscription_sugar.so"; then \
+        echo 'Qualification prerequisite contains replication files; rebuild pg-lake-base.' >&2; \
+        exit 1; \
+    fi \
+    && for worker in receiver publisher initial-sync supervisor; do \
+         test ! -e "/usr/local/bin/lake-replication-$worker" || exit 1; \
+       done
 COPY bundle.tar.gz /tmp/lake_replication-bundle.tar.gz
 RUN mkdir /tmp/lake_replication-bundle \
     && mkdir -p /qualification \

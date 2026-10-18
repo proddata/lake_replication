@@ -42,7 +42,8 @@ RUN --mount=type=cache,id=lake-lab-vcpkg,target=/root/.cache/vcpkg \
 RUN cmake --build duckdb_pglake/build/release -j${BUILD_JOBS} \
     && cp duckdb_pglake/build/release/src/libduckdb.so duckdb_pglake/libduckdb.so \
     && make -C duckdb_pglake install
-RUN apt-get install -y --no-install-recommends libselinux1-dev libpam0g-dev libnuma-dev \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libselinux1-dev libpam0g-dev libnuma-dev \
     && make install-pgduck_server DUCKDB_BUILD_USE_CACHE=1 NCORES=${BUILD_JOBS} \
        with_llvm=no LDFLAGS="-L$(pg_config --pkglibdir)"
 COPY deploy/docker-compose/patches/pg-lake-lab-crash-points.patch /tmp/pg-lake-lab-crash-points.patch

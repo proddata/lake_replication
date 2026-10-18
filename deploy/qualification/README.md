@@ -11,9 +11,13 @@ The probe checks:
 - installation and extension loading on a fresh destination;
 - in-place extension upgrade from the installable development baseline with
   retained control state and no advertised SQL downgrade;
-- SCRAM authentication using an owner-only worker credential file;
-- initial copy, live insert/update, disable/enable catch-up, and restart
-  recovery;
+- SCRAM authentication with source credentials in `postgres://` and
+  `postgresql://` connection URLs and an owner-only destination credential
+  file;
+- automatic persistent source slot creation and explicit errors for unsupported
+  PostgreSQL subscription options;
+- initial copy, interrupted-copy restart from a fresh snapshot, live
+  insert/update, disable/enable catch-up, and restart recovery;
 - the SQL status/metrics contract, source-outage backoff and recovery, resumed
   replication, and structured failure logs without credential values; and
 - removal of project executables and extension program files while preserving
@@ -39,6 +43,22 @@ time. Later runs reuse that image unless `QUALIFICATION_REBUILD_BASE=1` is set.
 Result JSON and captured logs are written under `.qualification/`. The probe
 always removes its containers and volumes; it does not start, stop, or modify
 the development lab.
+
+The `pg-lake-base` build target contains only PostgreSQL and pg_lake
+prerequisites. Qualification rejects an image that already contains replication
+libraries or workers, so source-built files cannot mask omissions from the
+archive. If an older cached prerequisite image triggers that guard, rerun with
+`QUALIFICATION_REBUILD_BASE=1`.
+
+The renamed arm64 archive from commit `6772922` passed all 36 checks with
+the upstream-only fixture. See the [retained results](../../docs/evidence/2026-10-18-renamed-package-qualification-results.json)
+and [build/fixture provenance](../../docs/evidence/2026-10-18-renamed-package-qualification-provenance.json).
+
+The subsequent [fresh-submodule run](../../docs/evidence/2026-10-18-fresh-submodule-qualification-results.json)
+also passed all 36 checks after completing the full upstream build from the
+local bundle. Its [provenance](../../docs/evidence/2026-10-18-fresh-submodule-qualification-provenance.json)
+records the build retries and the fix to refresh Debian package indexes before
+installing late build dependencies.
 
 The GitHub Actions CI workflow intentionally does not run this expensive build
 for ordinary pushes or pull requests. To qualify the amd64 artifact remotely,

@@ -52,12 +52,18 @@ RUN --mount=type=cache,id=lake-poc-vcpkg,target=/root/.cache/vcpkg \
 RUN cmake --build duckdb_pglake/build/release -j${BUILD_JOBS} \
     && cp duckdb_pglake/build/release/src/libduckdb.so duckdb_pglake/libduckdb.so \
     && make -C duckdb_pglake install
-RUN apt-get install -y --no-install-recommends libselinux1-dev libpam0g-dev libnuma-dev \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libselinux1-dev libpam0g-dev libnuma-dev \
     && make install-pgduck_server DUCKDB_BUILD_USE_CACHE=1 NCORES=${BUILD_JOBS} \
        with_llvm=no LDFLAGS="-L$(pg_config --pkglibdir)"
 RUN ldconfig
 LABEL org.opencontainers.image.source="https://github.com/Snowflake-Labs/pg_lake" \
       org.opencontainers.image.revision=${PG_LAKE_REV}
+
+# Qualification consumes only the upstream prerequisite stage. Keep all
+# lake_replication files in the demo stage so a source build cannot hide a
+# missing file in the exported archive during clean-host installation.
+FROM pg-lake-base AS poc
 
 # This project's own control-plane wrapper: CREATE/ALTER/DROP SUBSCRIPTION
 # ... WITH (lake_target = 'iceberg') spawns the worker binaries below and
