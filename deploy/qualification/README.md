@@ -66,6 +66,11 @@ open the **CI** workflow in GitHub Actions and choose **Run workflow**. A manual
 run builds both release artifacts and runs `qualify-amd64` after the amd64
 bundle is available.
 
+The committed lifecycle candidate `85a32b4` subsequently passed all 57
+checks, including source connection credentials, existing slots, and interrupted
+initial-copy recovery. See its [retained results](../../docs/evidence/2026-10-18-lifecycle-qualification-results.json).
+The earlier 36-check results above describe the earlier package and probe.
+
 ## pg_lake compatibility lane
 
 The same artifact-only probe can build and qualify disposable hosts at the two
