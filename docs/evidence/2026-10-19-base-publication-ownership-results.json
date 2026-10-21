@@ -1,0 +1,420 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "checks": [
+    {
+      "actual": "sha256:28288d814db491419a95768e582adfa7ca15f37eaf10667543f6caa3b75c46e1",
+      "expected": "sha256:28288d814db491419a95768e582adfa7ca15f37eaf10667543f6caa3b75c46e1",
+      "name": "use exact local origin-qualified parent",
+      "passed": true
+    },
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "1:one",
+      "expected": "1:one",
+      "name": "primary rows reach 1:one",
+      "passed": true
+    },
+    {
+      "actual": "primary-qualification_20261019_111922",
+      "expected": "primary-qualification_20261019_111922",
+      "name": "fresh binding records external deployment identity",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "primary subscription wrapper drains",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "primary source slot releases",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "real receiver leaves source transaction pending for publication",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "live publisher waits on the ownership row",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "live publisher rejects committed revocation",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "primary subscription wrapper drains",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "primary source slot releases",
+      "passed": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "name": "rejected live transaction remains pending",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "revoked direct publication refuses actual staged transaction",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "revoked initial-copy finish refuses target writes",
+      "passed": true
+    },
+    {
+      "actual": "1:one",
+      "expected": "1:one",
+      "name": "revocation leaves rows unchanged",
+      "passed": true
+    },
+    {
+      "actual": "0/1BD1B58",
+      "expected": "0/1BD1B58",
+      "name": "revocation leaves publication checkpoint unchanged",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/owned_items/18120/metadata/00001-8dfcea94-ae40-41bf-a886-efc4fdbe8933.metadata.json",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/owned_items/18120/metadata/00001-8dfcea94-ae40-41bf-a886-efc4fdbe8933.metadata.json",
+      "name": "revocation leaves Iceberg metadata unchanged",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "guard error leaves transaction staged",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two",
+      "expected": "1:one,2:two",
+      "name": "primary rows reach 1:one,2:two",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "valid publication consumes the pending transaction",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "validated transaction prevents mid-transaction ownership rewrite",
+      "passed": true
+    },
+    {
+      "actual": "primary-qualification_20261019_111922",
+      "expected": "primary-qualification_20261019_111922",
+      "name": "timed-out rewrite leaves owner unchanged",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two,3:three",
+      "expected": "1:one,2:two,3:three",
+      "name": "primary rows reach 1:one,2:two,3:three",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "primary subscription wrapper drains",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "primary source slot releases",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "physical copy with different external identity starts",
+      "passed": true
+    },
+    {
+      "actual": "off",
+      "expected": "off",
+      "name": "physical copy with different external identity disables independent Iceberg autovacuum",
+      "passed": true
+    },
+    {
+      "actual": "7698337793854345256",
+      "expected": "7698337793854345256",
+      "name": "physical copy with different external identity retains cluster system identifier",
+      "passed": true
+    },
+    {
+      "actual": "16384",
+      "expected": "16384",
+      "name": "physical copy with different external identity retains database OID",
+      "passed": true
+    },
+    {
+      "actual": "analytics",
+      "expected": "analytics",
+      "name": "physical copy with different external identity retains database name",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "physical copy with different external identity passes the old tuple alone",
+      "passed": true
+    },
+    {
+      "actual": "primary-qualification_20261019_111922",
+      "expected": "primary-qualification_20261019_111922",
+      "name": "physical copy with different external identity retains original deployment binding",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "physical copy with different external identity fails runtime deployment ownership",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "physical copy with different external identity attempted enable stays stopped",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "physical copy with different external identity creates no subscription wrapper",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with different external identity direct publication is rejected before batch preparation",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with different external identity initial-copy publication is rejected",
+      "passed": true
+    },
+    {
+      "actual": "0/1BD1CC8",
+      "expected": "0/1BD1CC8",
+      "name": "physical copy with different external identity leaves checkpoint unchanged",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/owned_items/18120/metadata/00003-63184041-4878-4919-95ce-7ac03d7d84bc.metadata.json",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/owned_items/18120/metadata/00003-63184041-4878-4919-95ce-7ac03d7d84bc.metadata.json",
+      "name": "physical copy with different external identity leaves Iceberg metadata pointer unchanged",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with different external identity cannot clean original source slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "physical copy with different external identity preserves original source slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with different external identity cannot change deployment identity in a session",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "physical copy with missing external identity starts",
+      "passed": true
+    },
+    {
+      "actual": "off",
+      "expected": "off",
+      "name": "physical copy with missing external identity disables independent Iceberg autovacuum",
+      "passed": true
+    },
+    {
+      "actual": "7698337793854345256",
+      "expected": "7698337793854345256",
+      "name": "physical copy with missing external identity retains cluster system identifier",
+      "passed": true
+    },
+    {
+      "actual": "16384",
+      "expected": "16384",
+      "name": "physical copy with missing external identity retains database OID",
+      "passed": true
+    },
+    {
+      "actual": "analytics",
+      "expected": "analytics",
+      "name": "physical copy with missing external identity retains database name",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "physical copy with missing external identity passes the old tuple alone",
+      "passed": true
+    },
+    {
+      "actual": "primary-qualification_20261019_111922",
+      "expected": "primary-qualification_20261019_111922",
+      "name": "physical copy with missing external identity retains original deployment binding",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "physical copy with missing external identity fails runtime deployment ownership",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "physical copy with missing external identity attempted enable stays stopped",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "physical copy with missing external identity creates no subscription wrapper",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with missing external identity direct publication is rejected before batch preparation",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with missing external identity initial-copy publication is rejected",
+      "passed": true
+    },
+    {
+      "actual": "0/1BD1CC8",
+      "expected": "0/1BD1CC8",
+      "name": "physical copy with missing external identity leaves checkpoint unchanged",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/owned_items/18120/metadata/00003-63184041-4878-4919-95ce-7ac03d7d84bc.metadata.json",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/owned_items/18120/metadata/00003-63184041-4878-4919-95ce-7ac03d7d84bc.metadata.json",
+      "name": "physical copy with missing external identity leaves Iceberg metadata pointer unchanged",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with missing external identity cannot clean original source slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "physical copy with missing external identity preserves original source slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "physical copy with missing external identity cannot change deployment identity in a session",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two,3:three",
+      "expected": "1:one,2:two,3:three",
+      "name": "copied servers did not alter primary rows",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "primary restarts with the same external profile",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two,3:three,4:four",
+      "expected": "1:one,2:two,3:three,4:four",
+      "name": "primary rows reach 1:one,2:two,3:three,4:four",
+      "passed": true
+    }
+  ],
+  "database_oid": "16384",
+  "experiment": "transactional publication fence and physical copy external profile",
+  "harness_sha256": "933d8c7d52c67dd4d48f3d53ef429a93e6e5843c551de40b642e384166079d1e",
+  "image_id": "sha256:0a962ccd1865c9f97709eb2d53383dd607150af073eea5f0989dd13ffe78334f",
+  "limits": [
+    "PostgreSQL 18/Linux arm64 private same-host fixtures with Docker init.",
+    "External profile must be supplied independently of PGDATA; duplicated deployment configuration can duplicate authorization.",
+    "Not a distributed lease, hostile-superuser boundary, split-brain or arbitrary physical-copy exclusivity proof.",
+    "Old profiles require external fencing; no live takeover/rebind or application traffic cutover is qualified."
+  ],
+  "log_fingerprints": {
+    "build.log": "72a0ceb902c47ae02bc11a019e6e67528f9718a506c418342d89c2f8362b7109",
+    "compose.log": "5baebcf6e6bc17b1483f6b693d3fe5b7c51ccbc9b872472d5ecc684068963229",
+    "receiver.jsonl": "5d46a696b4f90bd97648ab3dbc55a11cedeb0e670f9503fa6400dd8fd8d71f30",
+    "rejected-publisher.jsonl": "819b7bb15d961e4b0ac2d535eca75bd95b9442fc001f9de117a56e81f23ae6e4"
+  },
+  "parent_evidence_sha256": "a8889c98a46df1fc5b4f01be878258b0c58755e12213362404c080abe41c0de0",
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_changed": false,
+  "raw_results_sha256": "a2d8734af5c3edbb2261b02c52678b94038819c21abec047492fe1fd88387be9",
+  "run": "qualification_20261019_111922",
+  "source_fingerprints": {
+    "Dockerfile.publication": "9f03a533baef42a314d9361c9ab2ebf987f2c62eabccc2a88e1a4ad06bc23180",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "binding.py": "667057ecc27768a3800294b4945d7d39bd639d6879aba0c14fe4e5a5aea38c3b",
+    "binding.sql": "9e6f7dd3957255f49c7f2337cca1e16525bb37fb9eb6ae1b0510013446bf2116",
+    "compare.py": "dfc3ca8360b25738bd0cca719aaea4c1ff28f533a2f78e9bef2b53fea8133035",
+    "publication.py": "864e50092a12b4b7e449d42c862d4cfd6a68405fa228508ed7fe329da667ba46",
+    "publication.sql": "c115ce431272c871e578bb23cb3a4c6e73f53eee18ca15d63ea2987d49c82116",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3"
+  },
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "passed",
+  "system_identifier": "7698337793854345256"
+}

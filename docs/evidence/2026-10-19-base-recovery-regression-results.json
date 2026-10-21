@@ -1,0 +1,465 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "cargo_lock_sha256": "d2846bf2a5752b976dd53dc20ac4702f5c6b688cb507031147721d337aff74eb",
+  "cases": [
+    {
+      "case": "launcher-paused-children-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "2:2:one,two",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "source slot becomes active after recovery",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 1,
+        "reinitializing": 1,
+        "terminating any other active server processes": 1,
+        "untracked child process": 0
+      },
+      "expected_postgresql_crash_recovery": true,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 229,
+          "pid": 229,
+          "ppid": 228,
+          "start": "1817224",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 6,
+        "start": "1816800",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 129,
+          "pid": 129,
+          "ppid": 128,
+          "start": "1817101",
+          "state": "T"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 129,
+          "pid": 186,
+          "ppid": 129,
+          "start": "1817190",
+          "state": "T"
+        }
+      ],
+      "passed": true,
+      "remaining_after_disable": [],
+      "source_slot_status": "{\"slot_name\":\"fault_sub\",\"plugin\":\"pgoutput\",\"slot_type\":\"logical\",\"datoid\":\"16384\",\"database\":\"application\",\"temporary\":false,\"active\":true,\"active_pid\":256,\"xmin\":null,\"catalog_xmin\":\"765\",\"restart_lsn\":\"0/1BD1B20\",\"confirmed_flush_lsn\":\"0/1BD1C10\",\"wal_status\":\"reserved\",\"safe_wal_size\":null,\"two_phase\":false,\"two_phase_at\":null,\"inactive_since\":null,\"conflicting\":false,\"invalidation_reason\":null,\"failover\":true,\"synced\":false}",
+      "subscription_status": "{\"subscription_id\":1,\"subscription_name\":\"fault_sub\",\"subscription_state\":\"streaming\",\"desired_state\":\"running\",\"service_state\":\"running\",\"supervisor_pid\":229,\"started_at\":\"2026-10-19T10:16:36.640878+00:00\",\"heartbeat_at\":\"2026-10-19T10:16:43.013495+00:00\",\"consecutive_failures\":0,\"total_failures\":1,\"receiver_cycles\":17,\"publisher_cycles\":1,\"last_error\":\"no safe writable source endpoint: 172.22.0.2:5432: source slot contention at 172.22.0.2:5432: slot is still active; refusing consumption (0ms of 5000ms budget)\",\"next_retry_at\":null,\"stopped_at\":null,\"received_lsn\":\"0/1BD1C10\",\"staged_lsn\":\"0/1BD1C10\",\"published_lsn\":\"0/1BD1C10\",\"acknowledged_lsn\":\"0/1BD1C10\",\"staged_transactions\":0,\"staged_changes\":0,\"streamed_transactions\":0,\"reconnections\":0,\"last_reconnected_at\":null,\"last_connection_error\":null,\"source_checked_at\":\"2026-10-19T10:16:43.013495+00:00\",\"observed_system_identifier\":7698320769336705063,\"observed_database_oid\":\"16384\",\"observed_timeline\":1,\"observed_confirmed_lsn\":\"0/1BD1C10\",\"source_check_failures\":0,\"last_source_error\":null,\"active_source_address\":\"172.22.0.2:5432\",\"source_switches\":0,\"last_source_switch_at\":null,\"last_source_candidate_errors\":null,\"observed_current_lsn\":\"0/1BD1C10\",\"last_failure_at\":\"2026-10-19T10:16:36.645208+00:00\",\"heartbeat_age_seconds\":0.06925,\"journal_lag_bytes\":0,\"source_lag_bytes\":0,\"health_state\":\"healthy\",\"health_reason\":null}",
+      "target": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 6,
+        "start": "1816800",
+        "state": "S"
+      },
+      "worker_failure_events": [
+        {
+          "component": "supervisor",
+          "consecutive_failures": "1",
+          "error": "no safe writable source endpoint: 172.22.0.2:5432: source slot contention at 172.22.0.2:5432: slot is still active; refusing consumption (0ms of 5000ms budget)",
+          "event": "cycle_failed",
+          "level": "WARN",
+          "message": "worker cycle failed; retrying in 1000ms: no safe writable source endpoint: 172.22.0.2:5432: source slot contention at 172.22.0.2:5432: slot is still active; refusing consumption (0ms of 5000ms budget)",
+          "pid": 229,
+          "retry_in_ms": "1000",
+          "subscription_id": "1",
+          "timestamp_unix_ms": 1792404996645
+        },
+        {
+          "component": "supervisor",
+          "event": "destination_connection_lost",
+          "level": "WARN",
+          "message": "destination control connection lost: Broken pipe (os error 32)",
+          "pid": 129,
+          "subscription_id": "1",
+          "timestamp_unix_ms": 1792404996771
+        },
+        {
+          "component": "supervisor",
+          "event": "destination_connection_lost",
+          "level": "WARN",
+          "message": "destination control connection lost: Broken pipe (os error 32)",
+          "pid": 129,
+          "subscription_id": "1",
+          "timestamp_unix_ms": 1792404997775
+        },
+        {
+          "component": "supervisor",
+          "event": "process_failed",
+          "level": "ERROR",
+          "message": "subscription 1 was claimed by another supervisor during reconnect",
+          "pid": 129,
+          "timestamp_unix_ms": 1792404998790
+        }
+      ],
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 128,
+        "pid": 128,
+        "ppid": 6,
+        "start": "1817101",
+        "state": "S"
+      }
+    },
+    {
+      "case": "wrapper-paused-children-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "2:2:one,two",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "source slot becomes active after recovery",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 1,
+        "reinitializing": 1,
+        "terminating any other active server processes": 1,
+        "untracked child process": 0
+      },
+      "expected_postgresql_crash_recovery": true,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 228,
+          "pid": 228,
+          "ppid": 227,
+          "start": "1819963",
+          "state": "S"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 228,
+          "pid": 374,
+          "ppid": 228,
+          "start": "1820599",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 97,
+        "pid": 97,
+        "ppid": 7,
+        "start": "1819551",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 131,
+          "pid": 131,
+          "ppid": 130,
+          "start": "1819853",
+          "state": "T"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 131,
+          "pid": 185,
+          "ppid": 131,
+          "start": "1819922",
+          "state": "T"
+        }
+      ],
+      "passed": true,
+      "remaining_after_disable": [],
+      "source_slot_status": "{\"slot_name\":\"fault_sub\",\"plugin\":\"pgoutput\",\"slot_type\":\"logical\",\"datoid\":\"16384\",\"database\":\"application\",\"temporary\":false,\"active\":true,\"active_pid\":249,\"xmin\":null,\"catalog_xmin\":\"765\",\"restart_lsn\":\"0/1BD1B58\",\"confirmed_flush_lsn\":\"0/1BD1C48\",\"wal_status\":\"reserved\",\"safe_wal_size\":null,\"two_phase\":false,\"two_phase_at\":null,\"inactive_since\":null,\"conflicting\":false,\"invalidation_reason\":null,\"failover\":true,\"synced\":false}",
+      "subscription_status": "{\"subscription_id\":1,\"subscription_name\":\"fault_sub\",\"subscription_state\":\"streaming\",\"desired_state\":\"running\",\"service_state\":\"running\",\"supervisor_pid\":228,\"started_at\":\"2026-10-19T10:27:34.649275+00:00\",\"heartbeat_at\":\"2026-10-19T10:27:41.006062+00:00\",\"consecutive_failures\":0,\"total_failures\":1,\"receiver_cycles\":17,\"publisher_cycles\":1,\"last_error\":\"no safe writable source endpoint: 172.22.0.4:5432: source slot contention at 172.22.0.4:5432: slot is still active; refusing consumption (0ms of 5000ms budget)\",\"next_retry_at\":null,\"stopped_at\":null,\"received_lsn\":\"0/1BD1C48\",\"staged_lsn\":\"0/1BD1C48\",\"published_lsn\":\"0/1BD1C48\",\"acknowledged_lsn\":\"0/1BD1C48\",\"staged_transactions\":0,\"staged_changes\":0,\"streamed_transactions\":0,\"reconnections\":0,\"last_reconnected_at\":null,\"last_connection_error\":null,\"source_checked_at\":\"2026-10-19T10:27:41.006062+00:00\",\"observed_system_identifier\":7698320883130269735,\"observed_database_oid\":\"16384\",\"observed_timeline\":1,\"observed_confirmed_lsn\":\"0/1BD1C48\",\"source_check_failures\":0,\"last_source_error\":null,\"active_source_address\":\"172.22.0.4:5432\",\"source_switches\":0,\"last_source_switch_at\":null,\"last_source_candidate_errors\":null,\"observed_current_lsn\":\"0/1BD1C48\",\"last_failure_at\":\"2026-10-19T10:27:34.654771+00:00\",\"heartbeat_age_seconds\":0.091881,\"journal_lag_bytes\":0,\"source_lag_bytes\":0,\"health_state\":\"healthy\",\"health_reason\":null}",
+      "target": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 130,
+        "pid": 130,
+        "ppid": 7,
+        "start": "1819853",
+        "state": "S"
+      },
+      "worker_failure_events": [
+        {
+          "component": "supervisor",
+          "consecutive_failures": "1",
+          "error": "no safe writable source endpoint: 172.22.0.4:5432: source slot contention at 172.22.0.4:5432: slot is still active; refusing consumption (0ms of 5000ms budget)",
+          "event": "cycle_failed",
+          "level": "WARN",
+          "message": "worker cycle failed; retrying in 1000ms: no safe writable source endpoint: 172.22.0.4:5432: source slot contention at 172.22.0.4:5432: slot is still active; refusing consumption (0ms of 5000ms budget)",
+          "pid": 228,
+          "retry_in_ms": "1000",
+          "subscription_id": "1",
+          "timestamp_unix_ms": 1792405654655
+        },
+        {
+          "component": "supervisor",
+          "event": "destination_connection_lost",
+          "level": "WARN",
+          "message": "destination control connection lost: Broken pipe (os error 32)",
+          "pid": 131,
+          "subscription_id": "1",
+          "timestamp_unix_ms": 1792405654756
+        },
+        {
+          "component": "supervisor",
+          "event": "destination_connection_lost",
+          "level": "WARN",
+          "message": "destination control connection lost: Broken pipe (os error 32)",
+          "pid": 131,
+          "subscription_id": "1",
+          "timestamp_unix_ms": 1792405655765
+        },
+        {
+          "component": "supervisor",
+          "event": "process_failed",
+          "level": "ERROR",
+          "message": "subscription 1 was claimed by another supervisor during reconnect",
+          "pid": 131,
+          "timestamp_unix_ms": 1792405656771
+        }
+      ],
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 130,
+        "pid": 130,
+        "ppid": 7,
+        "start": "1819853",
+        "state": "S"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "launcher-paused-children-kill completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "launcher-paused-children-kill really stops the external process group",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "launcher-paused-children-kill includes a receiver descendant",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "wrapper-paused-children-kill completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "wrapper-paused-children-kill really stops the external process group",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "wrapper-paused-children-kill includes a receiver descendant",
+      "passed": true
+    }
+  ],
+  "docker_init": true,
+  "experiment": "forced crash process ownership",
+  "image_id": "sha256:21fc1f0337c6b297f1bb77e8c60e6b223c744e10efbf426c2273e17e1b4b7922",
+  "limits": [
+    "Linux arm64 private fixtures; not a full physical clone/takeover qualification.",
+    "5-second orphan and recovery endpoint observations are not continuous ownership proofs."
+  ],
+  "log_fingerprints": {
+    "build.log": "b565f60817a3656c79304db20851cf77e5d7cd50b8e33d7e94dbd0ae77c1a65c",
+    "launcher-paused-children-kill-source.log": "6a19bead50a832af02b0d0749bc6844ae0c9fbe6202f5d2641c617ed484fa771",
+    "launcher-paused-children-kill.jsonl": "c1e050402b591f5321c0ca57d07936ceafccc6a5f9ccbc08b024e6083d9cbd63",
+    "launcher-paused-children-kill.log": "be9f0f42736af6947ce11e9faa28e48ddb25ddeef51f771c31128a732ebf0c1c",
+    "recovery-build.log": "249f1026a8e0d732e0ff90bd9c882104dba9c84277d49b34494eed2ef439f425",
+    "wrapper-paused-children-kill-source.log": "ca3b4573f1e726656436596363d613b835d7d7b36d4c59a91b827e0c9425d6e9",
+    "wrapper-paused-children-kill.jsonl": "f18911d1d4e90ed7e5327e96a03e718b682b07379c22c92369ebc59c7979af34",
+    "wrapper-paused-children-kill.log": "a2c2ddf40d1aa6b4148cae0ea5e761a4845f4a38c426025fb168645cfe6f6520"
+  },
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_changed": false,
+  "qualification_helper_sha256": "3dc8973deb49ed1b3460b46f4a365f59c02f7df5693238256dfc7e1eb55bf9be",
+  "raw_results_sha256": "cd163575b2dc17a80bf30b82b2a96db03dabdfa5727bc616db907bb1b9aadac0",
+  "recovery_adapter": true,
+  "run": "qualification_20261019_101337",
+  "source_fingerprints": {
+    "Dockerfile": "5231ddf691846aa5b675094b59207730c1875e6e6870fbdd5a218f0bc275cb14",
+    "Dockerfile.recovery": "8b700dcbfe0e9beea937d41638e821731b790ff8d646d6fac093bd67fb45a18e",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "destination-init.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "faults.py": "a7cd61b86f7e18efde903997eda07ccbfdcb5a7b1aeaf89848abbe113054904e",
+    "recovery.py": "46278b891d712ddb90ad97760e92878737d76c60d2a4fb752011cde299f96ca5",
+    "recovery.rs.inc": "7fca75b26053e3ccfa984c60ff00d0e2088865571c23e3a5f18b0b42be48db7d",
+    "register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3"
+  },
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "completed",
+  "worker_source_fingerprints": {
+    "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+    "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+    "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+    "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+    "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+    "worker/src/main.rs": "fc092ca07c941cf096529c4507ffa1ad5e4eabf3265a550959751f4f59d1f228",
+    "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+    "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+    "worker/src/supervisor.rs": "9ef81a4b1351dcd1369358d165155f710cf39d36e3e53f01fb13c349473672f0",
+    "worker/src/wire.rs": "432c810a7bbca2db24ab679827d3d82dd7ad2ddc2ad2b3b6dc7fdb422bb7f5f5"
+  }
+}

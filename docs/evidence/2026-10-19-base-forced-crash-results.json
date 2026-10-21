@@ -1,0 +1,902 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "cases": [
+    {
+      "case": "supervisor-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "2:2:one,two",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one active source slot",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 0,
+        "reinitializing": 0,
+        "terminating any other active server processes": 0,
+        "untracked child process": 0
+      },
+      "expected_postgresql_crash_recovery": false,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 209,
+          "pid": 209,
+          "ppid": 208,
+          "start": "1575630",
+          "state": "S"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 209,
+          "pid": 338,
+          "ppid": 209,
+          "start": "1576205",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 1,
+        "start": "1575222",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 130,
+          "pid": 130,
+          "ppid": 129,
+          "start": "1575525",
+          "state": "S"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 130,
+          "pid": 193,
+          "ppid": 130,
+          "start": "1575612",
+          "state": "S"
+        }
+      ],
+      "passed": true,
+      "remaining_after_disable": [],
+      "target": {
+        "exe": "/usr/local/bin/lake-replication-supervisor",
+        "pgrp": 130,
+        "pid": 130,
+        "ppid": 129,
+        "start": "1575525",
+        "state": "S"
+      },
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 129,
+        "pid": 129,
+        "ppid": 1,
+        "start": "1575525",
+        "state": "S"
+      }
+    },
+    {
+      "case": "supervisor-paused-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "2:2:one,two",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one active source slot",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 0,
+        "reinitializing": 0,
+        "terminating any other active server processes": 0,
+        "untracked child process": 0
+      },
+      "expected_postgresql_crash_recovery": false,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 216,
+          "pid": 216,
+          "ppid": 215,
+          "start": "1577589",
+          "state": "S"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 216,
+          "pid": 356,
+          "ppid": 216,
+          "start": "1578163",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 97,
+        "pid": 97,
+        "ppid": 1,
+        "start": "1577162",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 124,
+          "pid": 124,
+          "ppid": 123,
+          "start": "1577465",
+          "state": "T"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 124,
+          "pid": 181,
+          "ppid": 124,
+          "start": "1577553",
+          "state": "T"
+        }
+      ],
+      "passed": true,
+      "remaining_after_disable": [],
+      "target": {
+        "exe": "/usr/local/bin/lake-replication-supervisor",
+        "pgrp": 124,
+        "pid": 124,
+        "ppid": 123,
+        "start": "1577465",
+        "state": "S"
+      },
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 123,
+        "pid": 123,
+        "ppid": 1,
+        "start": "1577464",
+        "state": "S"
+      }
+    },
+    {
+      "case": "launcher-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "2:2:one,two",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one active source slot",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": false
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 1,
+        "reinitializing": 1,
+        "terminating any other active server processes": 1,
+        "untracked child process": 1
+      },
+      "expected_postgresql_crash_recovery": true,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 224,
+          "pid": 224,
+          "ppid": 223,
+          "start": "1579747",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 1,
+        "start": "1579322",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 123,
+          "pid": 123,
+          "ppid": 122,
+          "start": "1579624",
+          "state": "S"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 123,
+          "pid": 186,
+          "ppid": 123,
+          "start": "1579713",
+          "state": "S"
+        }
+      ],
+      "passed": false,
+      "remaining_after_disable": [],
+      "target": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 1,
+        "start": "1579322",
+        "state": "S"
+      },
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 122,
+        "pid": 122,
+        "ppid": 1,
+        "start": "1579624",
+        "state": "S"
+      }
+    },
+    {
+      "case": "launcher-paused-children-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "1:1:one",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": false
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "1",
+          "name": "exactly one active source slot",
+          "passed": false
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": false
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 1,
+        "reinitializing": 1,
+        "terminating any other active server processes": 1,
+        "untracked child process": 1
+      },
+      "expected_postgresql_crash_recovery": true,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 234,
+          "pid": 234,
+          "ppid": 233,
+          "start": "1581708",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 1,
+        "start": "1581280",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 123,
+          "pid": 123,
+          "ppid": 122,
+          "start": "1581583",
+          "state": "T"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 123,
+          "pid": 187,
+          "ppid": 123,
+          "start": "1581672",
+          "state": "T"
+        }
+      ],
+      "passed": false,
+      "remaining_after_disable": [],
+      "target": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 1,
+        "start": "1581280",
+        "state": "S"
+      },
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 122,
+        "pid": 122,
+        "ppid": 1,
+        "start": "1581583",
+        "state": "S"
+      }
+    },
+    {
+      "case": "wrapper-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "2:2:one,two",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one active source slot",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": false
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 1,
+        "reinitializing": 1,
+        "terminating any other active server processes": 1,
+        "untracked child process": 1
+      },
+      "expected_postgresql_crash_recovery": true,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 224,
+          "pid": 224,
+          "ppid": 223,
+          "start": "1586613",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 1,
+        "start": "1586194",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 129,
+          "pid": 129,
+          "ppid": 128,
+          "start": "1586496",
+          "state": "S"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 129,
+          "pid": 187,
+          "ppid": 129,
+          "start": "1586585",
+          "state": "S"
+        }
+      ],
+      "passed": false,
+      "remaining_after_disable": [],
+      "target": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 128,
+        "pid": 128,
+        "ppid": 1,
+        "start": "1586496",
+        "state": "S"
+      },
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 128,
+        "pid": 128,
+        "ppid": 1,
+        "start": "1586496",
+        "state": "S"
+      }
+    },
+    {
+      "case": "wrapper-paused-children-kill",
+      "checks": [
+        {
+          "actual": [],
+          "expected": [],
+          "name": "all old external processes are reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "database accepts connections after crash",
+          "passed": true
+        },
+        {
+          "actual": "1:1:one",
+          "expected": "2:2:one,two",
+          "name": "replication recovers with unique correct rows",
+          "passed": false
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one wrapper after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "exactly one live launcher after recovery",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "initial copy is not repeated",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "1",
+          "name": "exactly one active source slot",
+          "passed": false
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "PostgreSQL crash recovery matches worker type",
+          "passed": true
+        },
+        {
+          "actual": 1,
+          "expected": 0,
+          "name": "no unexpected untracked children reach postmaster",
+          "passed": false
+        },
+        {
+          "actual": 1,
+          "expected": 1,
+          "name": "exactly one external supervisor after recovery",
+          "passed": true
+        },
+        {
+          "actual": [],
+          "expected": [],
+          "name": "disable removes all external workers including old generation",
+          "passed": true
+        }
+      ],
+      "crash_recovery_events": {
+        "database system is ready to accept connections": 1,
+        "reinitializing": 1,
+        "terminating any other active server processes": 1,
+        "untracked child process": 1
+      },
+      "expected_postgresql_crash_recovery": true,
+      "external_processes_after_recovery": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 234,
+          "pid": 234,
+          "ppid": 233,
+          "start": "1588974",
+          "state": "S"
+        }
+      ],
+      "launcher": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 96,
+        "pid": 96,
+        "ppid": 1,
+        "start": "1588545",
+        "state": "S"
+      },
+      "old_children_after_5_seconds": [],
+      "owned_before": [
+        {
+          "exe": "/usr/local/bin/lake-replication-supervisor",
+          "pgrp": 123,
+          "pid": 123,
+          "ppid": 122,
+          "start": "1588848",
+          "state": "T"
+        },
+        {
+          "exe": "/usr/local/bin/lake-replication-receiver",
+          "pgrp": 123,
+          "pid": 187,
+          "ppid": 123,
+          "start": "1588938",
+          "state": "T"
+        }
+      ],
+      "passed": false,
+      "remaining_after_disable": [],
+      "target": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 122,
+        "pid": 122,
+        "ppid": 1,
+        "start": "1588848",
+        "state": "S"
+      },
+      "wrapper": {
+        "exe": "/usr/lib/postgresql/18/bin/postgres",
+        "pgrp": 122,
+        "pid": 122,
+        "ppid": 1,
+        "start": "1588848",
+        "state": "S"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "supervisor-kill completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "supervisor-paused-kill completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "launcher-kill completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "launcher-paused-children-kill completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "wrapper-kill completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "wrapper-paused-children-kill completes initial copy",
+      "passed": true
+    }
+  ],
+  "experiment": "forced crash process ownership",
+  "image_id": "sha256:0ee6c9bc7e1b5f976f56d9ac224d1eb657ae1165ab99c95685bbc74960377fe9",
+  "limits": [
+    "Linux arm64 private fixtures; not a full physical clone/takeover qualification.",
+    "5-second orphan and recovery endpoint observations are not continuous ownership proofs."
+  ],
+  "log_fingerprints": {
+    "build.log": "75002288cbd8da58099eab8237f9dd2ae2402c4c2410288973687e7b27c3a53a",
+    "launcher-kill.log": "69fd441226aa3ed9dc47a16658aa04645a95ca4c17bdccd90397c5acaa3e92d6",
+    "launcher-paused-children-kill.log": "b05da6ff70d7754969a81af6b15c5399061b39975550d04c5e3b85f58699b004",
+    "supervisor-kill.log": "ea5f88fc60d0e7b9e52fac77cb4ab7fe302a87ce8772bd56978ab2361bc2f2b4",
+    "supervisor-paused-kill.log": "0b68fb50f5571dc39ff542933f3f326889a367548121290b9e94c4b25003ef8f",
+    "wrapper-kill.log": "b8e73d7b843d846c3e5c2ff4a32625e3667a8116b8ac86befd4f2cbf136e4467",
+    "wrapper-paused-children-kill.log": "9c76f86712a8fa08f02320bc04c8818682f1b2d8b13562061212d3061b9bfec6"
+  },
+  "passed": false,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_changed": false,
+  "qualification_helper_sha256": "3dc8973deb49ed1b3460b46f4a365f59c02f7df5693238256dfc7e1eb55bf9be",
+  "raw_results_sha256": "9fda149ecd5e1c6723278fee5fbf2105970b3f5aee7d65cfa09f4e02dc952bd5",
+  "run": "qualification_20261019_061434",
+  "source_fingerprints": {
+    "Dockerfile": "5231ddf691846aa5b675094b59207730c1875e6e6870fbdd5a218f0bc275cb14",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "destination-init.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "faults.py": "11c76b9c46940a5a58ed32fdc46d04480975b81d3f41851a46feb3cd6cdd9446",
+    "register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3"
+  },
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "completed"
+}

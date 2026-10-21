@@ -1,0 +1,35 @@
+{
+  "hardened_changes": [
+    "Per-database base-worker registration and restart return policy",
+    "Refuse inherited destination bindings with a durable diagnostic",
+    "Keep BackgroundWorkerHandle allocations outside the SPI transaction context",
+    "Register child exit notifications for coordinated shutdown waits",
+    "Use interruptible child waits and explicit clean cancellation",
+    "Isolate supervisor process groups and collect descendants with a Linux child subreaper"
+  ],
+  "limits": [
+    "No in-place static-launcher to base-worker upgrade handoff tested",
+    "No SIGKILL/power-loss cleanup qualification",
+    "Prototype name-based binding fence also rejects database renames",
+    "No exhaustive worker-slot exhaustion, logging namespace, or long-running memory-retention qualification"
+  ],
+  "minimal_findings": [
+    "Inherited destination bindings survive a database template clone",
+    "A paused external supervisor and its PostgreSQL wrapper survive extension drop"
+  ],
+  "production_runtime_diff": "",
+  "prototype_files_sha256": {
+    "experiments/base_workers/Dockerfile": "eee471b6e16adac706b096fd6d4b24b949241aa14dd63d3f0a3d3f488a8c623b",
+    "experiments/base_workers/adapt.py": "69e7fe98d16706029c1d91b0343a7071f24a91fc61bcee57308173ffff66b44e",
+    "experiments/base_workers/destination-init.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "experiments/base_workers/probe.py": "fb8282aa84402416981f6f1e0de0cbbf26fb8720567e487f33315d34fdf8e00f",
+    "experiments/base_workers/register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59"
+  },
+  "runs": {
+    "hardened": "qualification_20261018_142141",
+    "minimal": "qualification_20261018_140818"
+  },
+  "scope": "Experimental Docker overlay only; production extension C, control files, migrations, and workers are unchanged",
+  "source_revision": "458034fd301ee10cc59ad2b194148fda815de930",
+  "upstream_pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+}

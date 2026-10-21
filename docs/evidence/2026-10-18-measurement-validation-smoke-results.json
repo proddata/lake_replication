@@ -1,0 +1,1518 @@
+{
+  "adoption_qualified": false,
+  "archive_provenance": {
+    "architecture": "arm64",
+    "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+    "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+    "checks": [
+      {
+        "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      }
+    ],
+    "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+    "run": "qualification_20261018_205345",
+    "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9"
+  },
+  "cases": [
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2873136,
+          "memory_current_bytes": 127635456,
+          "monotonic_seconds": 14232.677854614,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3784704,
+              "rss_bytes": 19685376,
+              "start_ticks": 1422709,
+              "voluntary_switches": 34
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4808704,
+              "rss_bytes": 24432640,
+              "start_ticks": 1422710,
+              "voluntary_switches": 6
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 3097600,
+              "rss_bytes": 18329600,
+              "start_ticks": 1423011,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 2,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1186816,
+              "rss_bytes": 2260992,
+              "start_ticks": 1423011,
+              "voluntary_switches": 151
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1412854,
+          "memory_current_bytes": 168329216,
+          "monotonic_seconds": 14232.764718322,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:53:59.221951+00",
+        "wal_bytes": 32411752
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2748493,
+          "memory_current_bytes": 136531968,
+          "monotonic_seconds": 14231.467499197,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3548160,
+              "rss_bytes": 19685376,
+              "start_ticks": 1422709,
+              "voluntary_switches": 33
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4485120,
+              "rss_bytes": 24432640,
+              "start_ticks": 1422710,
+              "voluntary_switches": 5
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 2857984,
+              "rss_bytes": 18329600,
+              "start_ticks": 1423011,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1170432,
+              "rss_bytes": 2260992,
+              "start_ticks": 1423011,
+              "voluntary_switches": 99
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 180,
+              "pss_bytes": 945152,
+              "rss_bytes": 2129920,
+              "start_ticks": 1423140,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1350523,
+          "memory_current_bytes": 170987520,
+          "monotonic_seconds": 14231.543898697,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:53:59.221951+00",
+        "wal_bytes": 32385120
+      },
+      "idle_elapsed_seconds": 1.2103554169989366,
+      "image": "lake-replication-launcher-static:qualification_20261018_205345",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3289127,
+          "memory_current_bytes": 137129984,
+          "monotonic_seconds": 14234.724688782,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3545088,
+              "rss_bytes": 19685376,
+              "start_ticks": 1422709,
+              "voluntary_switches": 36
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4493312,
+              "rss_bytes": 24432640,
+              "start_ticks": 1422710,
+              "voluntary_switches": 8
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 2854912,
+              "rss_bytes": 18329600,
+              "start_ticks": 1423011,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 3,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1186816,
+              "rss_bytes": 2260992,
+              "start_ticks": 1423011,
+              "voluntary_switches": 287
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 266,
+              "pss_bytes": 945152,
+              "rss_bytes": 2129920,
+              "start_ticks": 1423463,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1563363,
+          "memory_current_bytes": 176001024,
+          "monotonic_seconds": 14234.808343115,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:53:59.221951+00",
+        "wal_bytes": 32590448
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2925440,
+          "memory_current_bytes": 147574784,
+          "monotonic_seconds": 14232.842733781,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3544064,
+              "rss_bytes": 19685376,
+              "start_ticks": 1422709,
+              "voluntary_switches": 34
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4493312,
+              "rss_bytes": 24432640,
+              "start_ticks": 1422710,
+              "voluntary_switches": 6
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 2855936,
+              "rss_bytes": 18329600,
+              "start_ticks": 1423011,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 2,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1175552,
+              "rss_bytes": 2260992,
+              "start_ticks": 1423011,
+              "voluntary_switches": 163
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 204,
+              "pss_bytes": 941056,
+              "rss_bytes": 2125824,
+              "start_ticks": 1423276,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1433086,
+          "memory_current_bytes": 168050688,
+          "monotonic_seconds": 14232.914467989,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:53:59.221951+00",
+        "wal_bytes": 32412376
+      },
+      "poll_ms": 100,
+      "repetition": 1,
+      "variant": "static",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 600,
+      "warmup": {
+        "catchup_seconds": 0.13020812500326429,
+        "first_quarter_p95_observed_commit_lag_ms": 105.01599311828613,
+        "first_quarter_p95_publication_commit_lag_ms": 44.08884048461914,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 1,
+          "observed_epoch": 1792356843.306526,
+          "query_finished_seconds": 0.42240954100270756,
+          "query_started_seconds": 0.41839895799785154,
+          "statement_epoch": 1792356843.305619
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 130.86581230163574,
+        "last_quarter_p95_publication_commit_lag_ms": 45.269012451171875,
+        "observation_completion_seconds_bounds": {
+          "lower": 0.5255007079977077,
+          "upper": 0.6325395000021672
+        },
+        "observation_timeline": [
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 0,
+            "observed_epoch": 1792356842.886597,
+            "query_finished_seconds": 0.001389791003020946,
+            "query_started_seconds": 0.00012124999921070412,
+            "statement_epoch": 1792356842.885998
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356842.991475,
+            "query_finished_seconds": 0.10624608299985994,
+            "query_started_seconds": 0.10535487499873852,
+            "statement_epoch": 1792356842.99124
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356843.095207,
+            "query_finished_seconds": 0.2100733749975916,
+            "query_started_seconds": 0.20904195799812442,
+            "statement_epoch": 1792356843.094992
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356843.20112,
+            "query_finished_seconds": 0.3164385830023093,
+            "query_started_seconds": 0.31396200000017416,
+            "statement_epoch": 1792356843.200491
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356843.306526,
+            "query_finished_seconds": 0.42240954100270756,
+            "query_started_seconds": 0.41839895799785154,
+            "statement_epoch": 1792356843.305619
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356843.411478,
+            "query_finished_seconds": 0.5262651250013732,
+            "query_started_seconds": 0.5255007079977077,
+            "statement_epoch": 1792356843.411351
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 2,
+            "observed_epoch": 1792356843.517583,
+            "query_finished_seconds": 0.6325395000021672,
+            "query_started_seconds": 0.6313444580009673,
+            "statement_epoch": 1792356843.517385
+          }
+        ],
+        "observed_commit_lag_ms": {
+          "p50": 105.01599311828613,
+          "p95": 130.86581230163574,
+          "p99": 130.86581230163574
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 7,
+        "observer_query_ms": {
+          "p50": 1.1950420011999086,
+          "p95": 4.0105830048560165
+        },
+        "observer_query_total_seconds": 0.011637791016255505,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 24.63388442993164,
+          "upper": 130.86581230163574
+        },
+        "publication_catchup_seconds": 0.045269012451171875,
+        "publication_commit_lag_ms": {
+          "p50": 44.08884048461914,
+          "p95": 45.269012451171875,
+          "p99": 45.269012451171875
+        },
+        "publication_rows_per_second": 365.6981831069973,
+        "rows": 200,
+        "rows_per_second_until_observed": 316.113094631201,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 316.18578760585666,
+          "upper": 380.5894016052828
+        },
+        "source_elapsed_seconds": 0.5024768329967628,
+        "source_phase_start_epoch": 1792356842.885087,
+        "source_write_rows_per_second": 398.0283007421528,
+        "transactions": [
+          {
+            "committed_epoch": 1792356842.886459,
+            "first_observed_epoch": 1792356842.991475,
+            "insert_started_seconds": 0.00014016599743627012,
+            "not_seen_before_epoch": 1792356842.885998,
+            "not_seen_before_seconds": 0.00012124999921070412,
+            "publication_commit_epoch": 1792356842.930548,
+            "seen_by_seconds": 0.10624608299985994,
+            "source_xid": 764,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792356843.386717,
+            "first_observed_epoch": 1792356843.517583,
+            "insert_started_seconds": 0.500447250000434,
+            "not_seen_before_epoch": 1792356843.411351,
+            "not_seen_before_seconds": 0.5255007079977077,
+            "publication_commit_epoch": 1792356843.431986,
+            "seen_by_seconds": 0.6325395000021672,
+            "source_xid": 765,
+            "transaction": 2
+          }
+        ],
+        "visible_elapsed_seconds": 0.6326849580000271
+      },
+      "workload": {
+        "catchup_seconds": 0.1905349579974427,
+        "first_quarter_p95_observed_commit_lag_ms": 105.8659553527832,
+        "first_quarter_p95_publication_commit_lag_ms": 41.26095771789551,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 5,
+          "observed_epoch": 1792356846.552229,
+          "query_finished_seconds": 1.4917332920012996,
+          "query_started_seconds": 1.4883709999994608,
+          "statement_epoch": 1792356846.551431
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 193.20988655090332,
+        "last_quarter_p95_publication_commit_lag_ms": 90.43502807617188,
+        "observation_completion_seconds_bounds": {
+          "lower": 1.5931650420025107,
+          "upper": 1.7015894170035608
+        },
+        "observation_timeline": [
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 2,
+            "observed_epoch": 1792356845.062441,
+            "query_finished_seconds": 0.0007475000020349398,
+            "query_started_seconds": 8.854200132191181e-05,
+            "statement_epoch": 1792356845.062277
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356845.168362,
+            "query_finished_seconds": 0.10676737500034506,
+            "query_started_seconds": 0.10582337500090944,
+            "statement_epoch": 1792356845.168164
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356845.269618,
+            "query_finished_seconds": 0.20807770800456638,
+            "query_started_seconds": 0.20709925000119256,
+            "statement_epoch": 1792356845.269461
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356845.376944,
+            "query_finished_seconds": 0.315930707998632,
+            "query_started_seconds": 0.31315441700280644,
+            "statement_epoch": 1792356845.376268
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356845.485335,
+            "query_finished_seconds": 0.42452816700097173,
+            "query_started_seconds": 0.42095858300308464,
+            "statement_epoch": 1792356845.484447
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356845.592025,
+            "query_finished_seconds": 0.5303667920015869,
+            "query_started_seconds": 0.5295981250019395,
+            "statement_epoch": 1792356845.591907
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356845.697941,
+            "query_finished_seconds": 0.6363489170034882,
+            "query_started_seconds": 0.6354319579986623,
+            "statement_epoch": 1792356845.697743
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356845.804105,
+            "query_finished_seconds": 0.7426179579997552,
+            "query_started_seconds": 0.7414261250014533,
+            "statement_epoch": 1792356845.803894
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356845.91131,
+            "query_finished_seconds": 0.8503917080015526,
+            "query_started_seconds": 0.8474299580047955,
+            "statement_epoch": 1792356845.910563
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356846.019592,
+            "query_finished_seconds": 0.9586509580040001,
+            "query_started_seconds": 0.9555122919991845,
+            "statement_epoch": 1792356846.018662
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356846.126097,
+            "query_finished_seconds": 1.0645226670021657,
+            "query_started_seconds": 1.0637326249998296,
+            "statement_epoch": 1792356846.126004
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356846.232277,
+            "query_finished_seconds": 1.1708425420001731,
+            "query_started_seconds": 1.1695907500034082,
+            "statement_epoch": 1792356846.232045
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356846.337787,
+            "query_finished_seconds": 1.2764111249998678,
+            "query_started_seconds": 1.2750873750046594,
+            "statement_epoch": 1792356846.337564
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356846.444708,
+            "query_finished_seconds": 1.3841167499995208,
+            "query_started_seconds": 1.3797198750035022,
+            "statement_epoch": 1792356846.443712
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356846.552229,
+            "query_finished_seconds": 1.4917332920012996,
+            "query_started_seconds": 1.4883709999994608,
+            "statement_epoch": 1792356846.551431
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356846.655642,
+            "query_finished_seconds": 1.5964375830008066,
+            "query_started_seconds": 1.5931650420025107,
+            "statement_epoch": 1792356846.655494
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 6,
+            "observed_epoch": 1792356846.762883,
+            "query_finished_seconds": 1.7015894170035608,
+            "query_started_seconds": 1.7000714579990017,
+            "statement_epoch": 1792356846.762608
+          }
+        ],
+        "observed_commit_lag_ms": {
+          "p50": 134.63115692138672,
+          "p95": 193.20988655090332,
+          "p99": 193.20988655090332
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 17,
+        "observer_query_ms": {
+          "p50": 1.3237499952083454,
+          "p95": 4.396874996018596
+        },
+        "observer_query_total_seconds": 0.03382041699660476,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 85.82091331481934,
+          "upper": 193.20988655090332
+        },
+        "publication_catchup_seconds": 0.09043502807617188,
+        "publication_commit_lag_ms": {
+          "p50": 58.14504623413086,
+          "p95": 90.43502807617188,
+          "p99": 90.43502807617188
+        },
+        "publication_rows_per_second": 250.2363097055447,
+        "rows": 400,
+        "rows_per_second_until_observed": 235.04638566997681,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 235.07433462085464,
+          "upper": 251.07254393256366
+        },
+        "source_elapsed_seconds": 1.511256792000495,
+        "source_phase_start_epoch": 1792356845.061619,
+        "source_write_rows_per_second": 264.6803654529872,
+        "transactions": [
+          {
+            "committed_epoch": 1792356845.062496,
+            "first_observed_epoch": 1792356845.168362,
+            "insert_started_seconds": 0.00010112499876413494,
+            "not_seen_before_epoch": 1792356845.062277,
+            "not_seen_before_seconds": 8.854200132191181e-05,
+            "publication_commit_epoch": 1792356845.103757,
+            "seen_by_seconds": 0.10676737500034506,
+            "source_xid": 766,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792356845.56331,
+            "first_observed_epoch": 1792356845.697941,
+            "insert_started_seconds": 0.500104333004856,
+            "not_seen_before_epoch": 1792356845.591907,
+            "not_seen_before_seconds": 0.5295981250019395,
+            "publication_commit_epoch": 1792356845.621455,
+            "seen_by_seconds": 0.6363489170034882,
+            "source_xid": 767,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792356846.06872,
+            "first_observed_epoch": 1792356846.232277,
+            "insert_started_seconds": 1.0050271670043003,
+            "not_seen_before_epoch": 1792356846.126004,
+            "not_seen_before_seconds": 1.0637326249998296,
+            "publication_commit_epoch": 1792356846.140138,
+            "seen_by_seconds": 1.1708425420001731,
+            "source_xid": 768,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792356846.569673,
+            "first_observed_epoch": 1792356846.762883,
+            "insert_started_seconds": 1.5050311250015511,
+            "not_seen_before_epoch": 1792356846.655494,
+            "not_seen_before_seconds": 1.5931650420025107,
+            "publication_commit_epoch": 1792356846.660108,
+            "seen_by_seconds": 1.7015894170035608,
+            "source_xid": 769,
+            "transaction": 6
+          }
+        ],
+        "visible_elapsed_seconds": 1.7017917499979376
+      }
+    },
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2888999,
+          "memory_current_bytes": 134967296,
+          "monotonic_seconds": 14248.18242933,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4804608,
+              "rss_bytes": 24612864,
+              "start_ticks": 1424259,
+              "voluntary_switches": 6
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3620864,
+              "rss_bytes": 19365888,
+              "start_ticks": 1424259,
+              "voluntary_switches": 7
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 3096576,
+              "rss_bytes": 18182144,
+              "start_ticks": 1424560,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 2,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 129,
+              "pss_bytes": 1183744,
+              "rss_bytes": 2260992,
+              "start_ticks": 1424560,
+              "voluntary_switches": 149
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1199560,
+          "memory_current_bytes": 174596096,
+          "monotonic_seconds": 14248.263276871,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:54:14.711136+00",
+        "wal_bytes": 32397840
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2770095,
+          "memory_current_bytes": 136179712,
+          "monotonic_seconds": 14246.974849287,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4487168,
+              "rss_bytes": 24612864,
+              "start_ticks": 1424259,
+              "voluntary_switches": 5
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3381248,
+              "rss_bytes": 19365888,
+              "start_ticks": 1424259,
+              "voluntary_switches": 6
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 2853888,
+              "rss_bytes": 18182144,
+              "start_ticks": 1424560,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 1,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 129,
+              "pss_bytes": 1170432,
+              "rss_bytes": 2260992,
+              "start_ticks": 1424560,
+              "voluntary_switches": 97
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 180,
+              "pss_bytes": 944128,
+              "rss_bytes": 2117632,
+              "start_ticks": 1424692,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1137796,
+          "memory_current_bytes": 172605440,
+          "monotonic_seconds": 14247.049828121,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:54:14.711136+00",
+        "wal_bytes": 32371280
+      },
+      "idle_elapsed_seconds": 1.207580042999325,
+      "image": "lake-replication-launcher-base:qualification_20261018_205345",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3277682,
+          "memory_current_bytes": 137117696,
+          "monotonic_seconds": 14250.184587081,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4488192,
+              "rss_bytes": 24612864,
+              "start_ticks": 1424259,
+              "voluntary_switches": 8
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3379200,
+              "rss_bytes": 19365888,
+              "start_ticks": 1424259,
+              "voluntary_switches": 9
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 2851840,
+              "rss_bytes": 18182144,
+              "start_ticks": 1424560,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 4,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 129,
+              "pss_bytes": 1186816,
+              "rss_bytes": 2260992,
+              "start_ticks": 1424560,
+              "voluntary_switches": 285
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 266,
+              "pss_bytes": 943104,
+              "rss_bytes": 2113536,
+              "start_ticks": 1425012,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1355054,
+          "memory_current_bytes": 173903872,
+          "monotonic_seconds": 14250.258004872,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:54:14.711136+00",
+        "wal_bytes": 32576576
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2951850,
+          "memory_current_bytes": 139100160,
+          "monotonic_seconds": 14248.33526083,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4448256,
+              "rss_bytes": 24612864,
+              "start_ticks": 1424259,
+              "voluntary_switches": 6
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3377152,
+              "rss_bytes": 19365888,
+              "start_ticks": 1424259,
+              "voluntary_switches": 7
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 128,
+              "pss_bytes": 2849792,
+              "rss_bytes": 18182144,
+              "start_ticks": 1424560,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 2,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 129,
+              "pss_bytes": 1173504,
+              "rss_bytes": 2260992,
+              "start_ticks": 1424560,
+              "voluntary_switches": 161
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 204,
+              "pss_bytes": 939008,
+              "rss_bytes": 2117632,
+              "start_ticks": 1424828,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 1217482,
+          "memory_current_bytes": 172564480,
+          "monotonic_seconds": 14248.405777788,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:54:14.711136+00",
+        "wal_bytes": 32398160
+      },
+      "poll_ms": 100,
+      "repetition": 1,
+      "variant": "base",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 600,
+      "warmup": {
+        "catchup_seconds": 0.12696166699606692,
+        "first_quarter_p95_observed_commit_lag_ms": 101.94611549377441,
+        "first_quarter_p95_publication_commit_lag_ms": 41.24307632446289,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 1,
+          "observed_epoch": 1792356858.806404,
+          "query_finished_seconds": 0.4219279160024598,
+          "query_started_seconds": 0.418385875003878,
+          "statement_epoch": 1792356858.805649
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 128.5688877105713,
+        "last_quarter_p95_publication_commit_lag_ms": 60.86993217468262,
+        "observation_completion_seconds_bounds": {
+          "lower": 0.5267250410033739,
+          "upper": 0.6316894159972435
+        },
+        "observation_timeline": [
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 0,
+            "observed_epoch": 1792356858.386659,
+            "query_finished_seconds": 0.0011655409980448894,
+            "query_started_seconds": 9.137499728240073e-05,
+            "statement_epoch": 1792356858.386165
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356858.48849,
+            "query_finished_seconds": 0.1030712499996298,
+            "query_started_seconds": 0.10222670800430933,
+            "statement_epoch": 1792356858.488289
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356858.594583,
+            "query_finished_seconds": 0.2093460000032792,
+            "query_started_seconds": 0.2081694160006009,
+            "statement_epoch": 1792356858.594395
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356858.701464,
+            "query_finished_seconds": 0.31687116600369336,
+            "query_started_seconds": 0.3136689579987433,
+            "statement_epoch": 1792356858.701064
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356858.806404,
+            "query_finished_seconds": 0.4219279160024598,
+            "query_started_seconds": 0.418385875003878,
+            "statement_epoch": 1792356858.805649
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 1,
+            "observed_epoch": 1792356858.913274,
+            "query_finished_seconds": 0.5280307499997434,
+            "query_started_seconds": 0.5267250410033739,
+            "statement_epoch": 1792356858.913097
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 2,
+            "observed_epoch": 1792356859.01701,
+            "query_finished_seconds": 0.6316894159972435,
+            "query_started_seconds": 0.6306412080011796,
+            "statement_epoch": 1792356859.016839
+          }
+        ],
+        "observed_commit_lag_ms": {
+          "p50": 101.94611549377441,
+          "p95": 128.5688877105713,
+          "p99": 128.5688877105713
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 7,
+        "observer_query_ms": {
+          "p50": 1.1765840026782826,
+          "p95": 3.542040998581797
+        },
+        "observer_query_total_seconds": 0.012193457994726487,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 24.655818939208984,
+          "upper": 128.5688877105713
+        },
+        "publication_catchup_seconds": 0.06086993217468262,
+        "publication_commit_lag_ms": {
+          "p50": 41.24307632446289,
+          "p95": 60.86993217468262,
+          "p99": 60.86993217468262
+        },
+        "publication_rows_per_second": 354.67401782543254,
+        "rows": 200,
+        "rows_per_second_until_observed": 316.5519264869056,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 316.61128860970615,
+          "upper": 379.70474997546
+        },
+        "source_elapsed_seconds": 0.5048462080012541,
+        "source_phase_start_epoch": 1792356858.385413,
+        "source_write_rows_per_second": 396.1602500528303,
+        "transactions": [
+          {
+            "committed_epoch": 1792356858.386544,
+            "first_observed_epoch": 1792356858.48849,
+            "insert_started_seconds": 0.00011583299783524126,
+            "not_seen_before_epoch": 1792356858.386165,
+            "not_seen_before_seconds": 9.137499728240073e-05,
+            "publication_commit_epoch": 1792356858.427787,
+            "seen_by_seconds": 0.1030712499996298,
+            "source_xid": 764,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792356858.888441,
+            "first_observed_epoch": 1792356859.01701,
+            "insert_started_seconds": 0.5013030830014031,
+            "not_seen_before_epoch": 1792356858.913097,
+            "not_seen_before_seconds": 0.5267250410033739,
+            "publication_commit_epoch": 1792356858.949311,
+            "seen_by_seconds": 0.6316894159972435,
+            "source_xid": 765,
+            "transaction": 2
+          }
+        ],
+        "visible_elapsed_seconds": 0.631807874997321
+      },
+      "workload": {
+        "catchup_seconds": 0.17062237500067567,
+        "first_quarter_p95_observed_commit_lag_ms": 105.9260368347168,
+        "first_quarter_p95_publication_commit_lag_ms": 37.00113296508789,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 5,
+          "observed_epoch": 1792356862.020227,
+          "query_finished_seconds": 1.4674590419963351,
+          "query_started_seconds": 1.4662881670010393,
+          "statement_epoch": 1792356862.019995
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 171.57411575317383,
+        "last_quarter_p95_publication_commit_lag_ms": 94.79904174804688,
+        "observation_completion_seconds_bounds": {
+          "lower": 1.5725271249975776,
+          "upper": 1.677758083002118
+        },
+        "observation_timeline": [
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 2,
+            "observed_epoch": 1792356860.553681,
+            "query_finished_seconds": 0.0007565420019091107,
+            "query_started_seconds": 9.666699770605192e-05,
+            "statement_epoch": 1792356860.553518
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356860.659667,
+            "query_finished_seconds": 0.10681091700098477,
+            "query_started_seconds": 0.10584162500163075,
+            "statement_epoch": 1792356860.659471
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356860.765701,
+            "query_finished_seconds": 0.21301687500090338,
+            "query_started_seconds": 0.21190454199677333,
+            "statement_epoch": 1792356860.765557
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356860.873075,
+            "query_finished_seconds": 0.32160524999926565,
+            "query_started_seconds": 0.3171126669985824,
+            "statement_epoch": 1792356860.872257
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356860.982151,
+            "query_finished_seconds": 0.4298480829966138,
+            "query_started_seconds": 0.42675741700077197,
+            "statement_epoch": 1792356860.98135
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 3,
+            "observed_epoch": 1792356861.087865,
+            "query_finished_seconds": 0.5349745830026222,
+            "query_started_seconds": 0.5342213330004597,
+            "statement_epoch": 1792356861.087758
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356861.189117,
+            "query_finished_seconds": 0.6363453329977347,
+            "query_started_seconds": 0.63522925000143,
+            "statement_epoch": 1792356861.188913
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356861.291704,
+            "query_finished_seconds": 0.7388745420030318,
+            "query_started_seconds": 0.7378958749977755,
+            "statement_epoch": 1792356861.291461
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356861.396832,
+            "query_finished_seconds": 0.8442395829988527,
+            "query_started_seconds": 0.8426156670029741,
+            "statement_epoch": 1792356861.396455
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356861.500139,
+            "query_finished_seconds": 0.947827124997275,
+            "query_started_seconds": 0.9450480419982341,
+            "statement_epoch": 1792356861.499455
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 4,
+            "observed_epoch": 1792356861.604553,
+            "query_finished_seconds": 1.0517593749973457,
+            "query_started_seconds": 1.0503905419973307,
+            "statement_epoch": 1792356861.604367
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356861.707257,
+            "query_finished_seconds": 1.1544381670028088,
+            "query_started_seconds": 1.1535162919972208,
+            "statement_epoch": 1792356861.707094
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356861.813516,
+            "query_finished_seconds": 1.2608015000005253,
+            "query_started_seconds": 1.2595394579984713,
+            "statement_epoch": 1792356861.813301
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356861.917456,
+            "query_finished_seconds": 1.3652951670010225,
+            "query_started_seconds": 1.3619717499968829,
+            "statement_epoch": 1792356861.916773
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356862.020227,
+            "query_finished_seconds": 1.4674590419963351,
+            "query_started_seconds": 1.4662881670010393,
+            "statement_epoch": 1792356862.019995
+          },
+          {
+            "backlog_transactions_lower": 1,
+            "backlog_transactions_upper": 1,
+            "maximum_transaction": 5,
+            "observed_epoch": 1792356862.126132,
+            "query_finished_seconds": 1.5732162080021226,
+            "query_started_seconds": 1.5725271249975776,
+            "statement_epoch": 1792356862.126026
+          },
+          {
+            "backlog_transactions_lower": 0,
+            "backlog_transactions_upper": 0,
+            "maximum_transaction": 6,
+            "observed_epoch": 1792356862.23055,
+            "query_finished_seconds": 1.677758083002118,
+            "query_started_seconds": 1.6765522499990766,
+            "statement_epoch": 1792356862.23032
+          }
+        ],
+        "observed_commit_lag_ms": {
+          "p50": 132.72905349731445,
+          "p95": 171.57411575317383,
+          "p99": 171.57411575317383
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 17,
+        "observer_query_ms": {
+          "p50": 1.1708749952958897,
+          "p95": 4.492583000683226
+        },
+        "observer_query_total_seconds": 0.027517706017533783,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 67.04998016357422,
+          "upper": 171.57411575317383
+        },
+        "publication_catchup_seconds": 0.09479904174804688,
+        "publication_commit_lag_ms": {
+          "p50": 62.3321533203125,
+          "p95": 94.79904174804688,
+          "p99": 94.79904174804688
+        },
+        "publication_rows_per_second": 249.86820913656655,
+        "rows": 400,
+        "rows_per_second_until_observed": 238.40070673862874,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 238.4133946678742,
+          "upper": 254.3676313377527
+        },
+        "source_elapsed_seconds": 1.507225000001199,
+        "source_phase_start_epoch": 1792356860.552931,
+        "source_write_rows_per_second": 265.38837930613,
+        "transactions": [
+          {
+            "committed_epoch": 1792356860.553741,
+            "first_observed_epoch": 1792356860.659667,
+            "insert_started_seconds": 0.00011491699842736125,
+            "not_seen_before_epoch": 1792356860.553518,
+            "not_seen_before_seconds": 9.666699770605192e-05,
+            "publication_commit_epoch": 1792356860.590742,
+            "seen_by_seconds": 0.10681091700098477,
+            "source_xid": 766,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792356861.056388,
+            "first_observed_epoch": 1792356861.189117,
+            "insert_started_seconds": 0.5018975830025738,
+            "not_seen_before_epoch": 1792356861.087758,
+            "not_seen_before_seconds": 0.5342213330004597,
+            "publication_commit_epoch": 1792356861.11872,
+            "seen_by_seconds": 0.6363453329977347,
+            "source_xid": 767,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792356861.560871,
+            "first_observed_epoch": 1792356861.707257,
+            "insert_started_seconds": 1.0050449580012355,
+            "not_seen_before_epoch": 1792356861.604367,
+            "not_seen_before_seconds": 1.0503905419973307,
+            "publication_commit_epoch": 1792356861.646835,
+            "seen_by_seconds": 1.1544381670028088,
+            "source_xid": 768,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792356862.058976,
+            "first_observed_epoch": 1792356862.23055,
+            "insert_started_seconds": 1.5050397919985699,
+            "not_seen_before_epoch": 1792356862.126026,
+            "not_seen_before_seconds": 1.5725271249975776,
+            "publication_commit_epoch": 1792356862.153775,
+            "seen_by_seconds": 1.677758083002118,
+            "source_xid": 769,
+            "transaction": 6
+          }
+        ],
+        "visible_elapsed_seconds": 1.6778473750018748
+      }
+    }
+  ],
+  "fingerprints": {
+    "Dockerfile": "5231ddf691846aa5b675094b59207730c1875e6e6870fbdd5a218f0bc275cb14",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "compare.py": "dfc3ca8360b25738bd0cca719aaea4c1ff28f533a2f78e9bef2b53fea8133035",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3",
+    "sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4"
+  },
+  "lag_method": "source and publication pg_xact_commit_timestamp; separate first-observation bounds for the selected observer; same-host container clocks",
+  "measurement_runner_smoke_only": true,
+  "measurement_schema": 3,
+  "other_running_containers": [
+    "54dc8180194c pg-oauth-validator-external-postgres-1 pg-oauth-validator-demo:pg18 Up 6 hours (healthy)"
+  ],
+  "parameters": {
+    "base_preload": false,
+    "catchup_timeout": 90,
+    "idle_seconds": 1.0,
+    "interval_ms": 500.0,
+    "observer": "journal",
+    "observers": null,
+    "payload_bytes": 128,
+    "poll_intervals_ms": null,
+    "poll_ms": 100,
+    "repetitions": 1,
+    "rows_per_transaction": 100,
+    "transactions": 4,
+    "variants": [
+      "static",
+      "base"
+    ],
+    "warmup_transactions": 2
+  },
+  "production_launcher_changed": false,
+  "protocol_sha256": "13fe42abb3256a85b6e811dfdc851bbc4bd5e3437b22f522eda6e2899c1ed125",
+  "run_directory": ".qualification/qualification_20261018_205345_comparison",
+  "scope": "single database/subscription insert screening; not saturation or full adoption qualification",
+  "status": "passed",
+  "summary": {
+    "base/journal/poll-100ms": {
+      "destination_idle_cpu_percent_of_one_core": {
+        "max": 9.84646944849075,
+        "median": 9.84646944849075,
+        "min": 9.84646944849075
+      },
+      "observer_query_total_seconds": {
+        "max": 0.027517706017533783,
+        "median": 0.027517706017533783,
+        "min": 0.027517706017533783
+      },
+      "p95_observed_commit_lag_lower_bound_ms": {
+        "max": 67.04998016357422,
+        "median": 67.04998016357422,
+        "min": 67.04998016357422
+      },
+      "p95_observed_commit_lag_ms": {
+        "max": 171.57411575317383,
+        "median": 171.57411575317383,
+        "min": 171.57411575317383
+      },
+      "p95_publication_commit_lag_ms": {
+        "max": 94.79904174804688,
+        "median": 94.79904174804688,
+        "min": 94.79904174804688
+      },
+      "publication_rows_per_second": {
+        "max": 249.86820913656655,
+        "median": 249.86820913656655,
+        "min": 249.86820913656655
+      },
+      "repetitions": 1,
+      "rows_per_second_until_observed": {
+        "max": 238.40070673862874,
+        "median": 238.40070673862874,
+        "min": 238.40070673862874
+      },
+      "throughput_lower_bound": {
+        "max": 238.4133946678742,
+        "median": 238.4133946678742,
+        "min": 238.4133946678742
+      },
+      "throughput_upper_bound": {
+        "max": 254.3676313377527,
+        "median": 254.3676313377527,
+        "min": 254.3676313377527
+      },
+      "wrapper_idle_voluntary_switches_per_second": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0
+      }
+    },
+    "static/journal/poll-100ms": {
+      "destination_idle_cpu_percent_of_one_core": {
+        "max": 10.298049502604037,
+        "median": 10.298049502604037,
+        "min": 10.298049502604037
+      },
+      "observer_query_total_seconds": {
+        "max": 0.03382041699660476,
+        "median": 0.03382041699660476,
+        "min": 0.03382041699660476
+      },
+      "p95_observed_commit_lag_lower_bound_ms": {
+        "max": 85.82091331481934,
+        "median": 85.82091331481934,
+        "min": 85.82091331481934
+      },
+      "p95_observed_commit_lag_ms": {
+        "max": 193.20988655090332,
+        "median": 193.20988655090332,
+        "min": 193.20988655090332
+      },
+      "p95_publication_commit_lag_ms": {
+        "max": 90.43502807617188,
+        "median": 90.43502807617188,
+        "min": 90.43502807617188
+      },
+      "publication_rows_per_second": {
+        "max": 250.2363097055447,
+        "median": 250.2363097055447,
+        "min": 250.2363097055447
+      },
+      "repetitions": 1,
+      "rows_per_second_until_observed": {
+        "max": 235.04638566997681,
+        "median": 235.04638566997681,
+        "min": 235.04638566997681
+      },
+      "throughput_lower_bound": {
+        "max": 235.07433462085464,
+        "median": 235.07433462085464,
+        "min": 235.07433462085464
+      },
+      "throughput_upper_bound": {
+        "max": 251.07254393256366,
+        "median": 251.07254393256366,
+        "min": 251.07254393256366
+      },
+      "wrapper_idle_voluntary_switches_per_second": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0
+      }
+    }
+  }
+}

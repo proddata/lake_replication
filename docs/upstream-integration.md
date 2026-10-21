@@ -79,6 +79,22 @@ lake_replication, and does not bundle or replace pg_lake.
 
 ## Worker integration assessment
 
+An isolated adapter has now been exercised against the real launcher and Rust
+workers. The minimal adapter passed 81 checks and exposed three failed assertions;
+the adapter with lifecycle fixes passed all 85. See the
+[prototype investigation](pg-extension-base-prototype.md) for evidence, the
+production handle-lifetime issue, cleanup requirements, and remaining migration
+work. The shipped extension still uses the static launcher.
+Follow-up work has extracted common experimental hardening for a fair static/base
+comparison and added performance screening; see the
+[evaluation results](pg-extension-base-evaluation-results.md). Production
+adoption remains gated on that evaluation.
+The [extended evaluation](pg-extension-base-extended-results.md) adds longer
+matched performance runs and a successful 42-check stopped-state upgrade from
+the actual release archive. Catch-up meets the local throughput margin;
+steady-load relative latency remains inconclusive. The shipped runtime and
+release blockers remain unchanged.
+
 Assessment against the pinned source: adopt `pg_extension_base` for extension
 loading and the per-database launcher lifecycle in a separate runtime change.
 Keep replication state, subscription supervision, and the SQL publication path
@@ -128,3 +144,55 @@ engine supplies query execution; it is not the extension lifecycle layer.
 Retain the current `pg_lake` dependency and SQL/FDW publication boundary until
 a measured requirement justifies a deeper API dependency. Runtime migration
 has not been implemented or qualified by this source/build change.
+
+The [identity evaluation](pg-extension-base-identity-results.md) shows another
+layer that pg_extension_base lifecycle registration does not provide: destination
+origin and source-slot cleanup authorization. The isolated tuple checks fence
+same-name copies and prevent cloned DROP from deleting the original slot.
+A full dump of a writable Iceberg table still cannot recreate its non-empty
+location; restore/rebuild/rebind semantics must be qualified with pg_lake before
+production adoption.
+
+A [fresh rebuild rehearsal](pg-extension-base-rebuild-procedure.md) now passes
+on the combined prototype, including real Iceberg copy/streaming, restart and
+replication rollback to the retained old slot. This provides an evaluated new-
+destination recovery route without bypassing pg_lake location checks. Existing-
+object rebind, physical takeover and production adoption remain unqualified.
+
+The [publication ownership experiment](pg-extension-base-publication-results.md)
+now guards native worker write transactions and rejects physical copies under
+different/empty external startup identities. It also shows why lifecycle and
+replication checks alone do not establish exclusive access to shared storage:
+pg_lake maintenance is an independent writer, and duplicated runtime profiles
+still duplicate authorization. Qualify external fencing or a storage-fenced
+lease before supporting physical takeover.
+
+A [controlled cold transfer](pg-extension-base-cold-transfer.md) now resumes
+the same Iceberg objects and source slot after both old PostgreSQL and pgduck
+stop, with maintenance disabled and the copied snapshot validated. This provides
+a narrow evaluated physical-move procedure, while production fencing, automatic
+failover and arbitrary logical restore remain outside the qualified scope.
+
+The [current scaling/performance evaluation](pg-extension-base-scaling-results.md)
+supports retaining base lifecycle management: five matched pairs in each
+single-subscription workload pass the proposed latency/throughput margins with
+the latest recovery/publication checks. It also rejects adopting the execution
+model unchanged: four databases with 16 subscriptions exhaust 24 worker slots,
+and the 64-slot repeat exhausts the shared 2 GB engine during restart recovery.
+Bound aggregate publication/initial-copy concurrency and evaluate a fair worker
+pool before broader adoption; switching lifecycle frameworks does not supply
+that resource policy.
+
+An isolated [bounded-write admission overlay](pg-extension-base-admission-results.md)
+now passes 118 checks, including the previously failing 4-database/16-subscription
+restart under the same 2 GB engine limit. One transaction permit spans the native
+publication/initial-copy entry points across databases; queue cancellation and
+forced-holder crash recovery pass. This does not reduce wrapper counts or close
+production release gates. The [follow-up evaluation](pg-extension-base-admission-performance-results.md)
+now passes the steady-load margin, leaves clean catch-up margins inconclusive,
+and reproduces roughly eight-second stream gaps during a large copy. A
+clock-disrupted cohort is explicitly rejected and replaced. The independent
+[empty filtered-stream receiver defect](empty-filtered-stream-diagnostic.md)
+also reproduces before/after admission. Fix that durable receive/checkpoint path
+and refine admission for bulk work before broader adoption; retain base lifecycle
+management as a separate decision.

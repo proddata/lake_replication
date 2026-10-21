@@ -1,0 +1,522 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "binding_adapter": true,
+  "binding_fingerprints": {
+    "Dockerfile.binding": "958170817541cdc06c5dc3545b8df451021f1be450f695b4a9f635fafd33e004",
+    "binding.py": "667057ecc27768a3800294b4945d7d39bd639d6879aba0c14fe4e5a5aea38c3b",
+    "binding.sql": "9e6f7dd3957255f49c7f2337cca1e16525bb37fb9eb6ae1b0510013446bf2116"
+  },
+  "binding_safety_passed": true,
+  "checks": [
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "sha256:36ad4fc9a8dbcd09056301946b371b8d8359df8e389211a080120a545f71fcee",
+      "expected": "sha256:36ad4fc9a8dbcd09056301946b371b8d8359df8e389211a080120a545f71fcee",
+      "name": "use exact qualified recovery image",
+      "passed": true
+    },
+    {
+      "actual": "sha256:36ad4fc9a8dbcd09056301946b371b8d8359df8e389211a080120a545f71fcee",
+      "expected": "sha256:36ad4fc9a8dbcd09056301946b371b8d8359df8e389211a080120a545f71fcee",
+      "name": "binding build uses verified local parent",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "identity fixture completes its initial copy",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "new subscription records its actual destination origin",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "analytics wrappers drain",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "analytics releases the source slot",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "analytics has no remaining database connections",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "identity_clone inherited binding gets a durable error",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "identity_clone refuses enable of inherited binding",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "identity_clone has no subscription wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "identity_clone leaves the original source slot intact",
+      "passed": true
+    },
+    {
+      "actual": "783",
+      "expected": "783",
+      "name": "identity_clone unchanged diagnostic avoids tuple churn",
+      "passed": true
+    },
+    {
+      "actual": "2:2",
+      "expected": "2:2",
+      "name": "original still streams correct rows after clone rejection",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "analytics wrappers drain",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "analytics releases the source slot",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": true,
+      "name": "full logical restore of existing Iceberg location succeeds",
+      "passed": false
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "identity_metadata inherited binding gets a durable error",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "identity_metadata refuses enable of inherited binding",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "identity_metadata has no subscription wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "identity_metadata leaves the original source slot intact",
+      "passed": true
+    },
+    {
+      "actual": "837",
+      "expected": "837",
+      "name": "identity_metadata unchanged diagnostic avoids tuple churn",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "analytics has no remaining database connections",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "identity_original inherited binding gets a durable error",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "identity_original refuses enable of inherited binding",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "identity_original has no subscription wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "identity_original leaves the original source slot intact",
+      "passed": true
+    },
+    {
+      "actual": "855",
+      "expected": "855",
+      "name": "identity_original unchanged diagnostic avoids tuple churn",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "identity_original has no remaining database connections",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "same-name template copy has a different database OID",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "same-name template copy retains the old matching name",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "same-name template copy is kept stopped during investigation",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "same-name template copy is fenced by an inherited-binding error",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "same-name template copy fails the origin tuple check",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "same-name template copy refuses explicit enable",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "same-name template copy has no subscription wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "analytics has no remaining database connections",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "same-name metadata restore has a different database OID",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "same-name metadata restore retains the old matching name",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "same-name metadata restore is kept stopped during investigation",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "same-name metadata restore is fenced by an inherited-binding error",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "same-name metadata restore fails the origin tuple check",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "same-name metadata restore refuses explicit enable",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "same-name metadata restore has no subscription wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "original source slot exists before cloned DROP",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "cloned DROP preserves original source slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "cloned DROP explicitly refuses unauthorized cleanup",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "refused cloned DROP preserves local subscription metadata",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "legacy origin is not automatically blessed",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "legacy row with matching name stays stopped",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "legacy row has a durable diagnostic",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "analytics has no remaining database connections",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "identity_original has no remaining database connections",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "original database regains its original tuple",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "valid original owner still cleans its own source slot",
+      "passed": true
+    }
+  ],
+  "cloned_drop": {
+    "returncode": 3,
+    "stderr": "NOTICE:  lake_replication: intercepted DROP SUBSCRIPTION \"identity_sub\"; tearing down lake_replication control-plane state instead of native apply\nERROR:  prototype: inherited destination binding cannot authorize source slot cleanup\n"
+  },
+  "cluster_system_identifier": "7698330839015178280",
+  "errors": [],
+  "experiment": "clone, logical restore, rename and inherited cleanup ownership",
+  "harness_sha256": "c3bd9658b6f1b49cd8f9008ec21d956c8c256d67cd33211d84f17a6d6bfb0a51",
+  "image_id": "sha256:28288d814db491419a95768e582adfa7ca15f37eaf10667543f6caa3b75c46e1",
+  "limits": [
+    "Same cluster, Linux arm64; physical-copy exclusivity and cross-cluster restore are unqualified.",
+    "Name-only matching is inspected without enabling a copied destination.",
+    "Rebind/takeover API and publication-side binding checks are not implemented.",
+    "Metadata-only restore does not recreate or qualify existing Iceberg data/table bindings."
+  ],
+  "log_fingerprints": {
+    "binding-build.log": "304af44e3d8886019db289b792c756478a7ae5a0870df1bae8f72465daa53c14",
+    "compose.log": "36f2abdd30342eab2e43dfd6f87e1875c432cfbd1747ede119413ac38fafbd15",
+    "worker.jsonl": "b49cadb97c8924e6c4d160fee1f58fb07cbc041030ed5d06333aa19ec9d8e8d3"
+  },
+  "metadata_dump_tables": [
+    "lake_replication.sources",
+    "lake_replication.subscriptions",
+    "lake_replication.relations",
+    "lake_replication.checkpoints",
+    "lake_replication.batches",
+    "lake_replication.transactions",
+    "lake_replication.changes",
+    "lake_replication.streamed_transactions",
+    "lake_replication.streamed_changes",
+    "lake_replication.initial_copies",
+    "lake_replication.initial_copy_rows",
+    "lake_replication.relation_type_contracts",
+    "lake_replication.rebuild_promotions",
+    "lake_replication.service_status",
+    "lake_replication.journal_maintenance_policies",
+    "lake_replication.journal_maintenance_status",
+    "lake_replication.pending_cleanup",
+    "lake_replication.source_connections",
+    "lake_replication.worker_launch_config"
+  ],
+  "metadata_restore_uses_non_iceberg_placeholder": true,
+  "observations": [
+    {
+      "case": "full logical restore",
+      "error": "pg_restore: error: could not execute query: ERROR:  location \"s3://lake-qualification/iceberg/analytics/public/identity_items/18117\" is not empty\nHINT:  Please use an empty location.\nCommand was: CREATE FOREIGN TABLE public.identity_items (\n    id bigint NOT NULL,\n    note text NOT NULL\n)\nSERVER pg_lake_iceberg\nOPTIONS (\n    catalog 'postgres',\n    location 's3://lake-qualification/iceberg/analytics/public/identity_items/18117'\n);"
+    },
+    {
+      "case": "same-name template copy",
+      "copied_database_oid": "21591",
+      "original_database_oid": "16384",
+      "same_name_dispatch_attempted": false,
+      "status": {
+        "acknowledged_lsn": "0/1BD1C30",
+        "active_source_address": "172.22.0.4:5432",
+        "consecutive_failures": 0,
+        "desired_state": "stopped",
+        "health_reason": "operator requested stop",
+        "health_state": "stopped",
+        "heartbeat_age_seconds": 18.617175,
+        "heartbeat_at": "2026-10-19T10:55:37.514293+00:00",
+        "journal_lag_bytes": 0,
+        "last_connection_error": null,
+        "last_error": null,
+        "last_failure_at": null,
+        "last_reconnected_at": null,
+        "last_source_candidate_errors": null,
+        "last_source_error": null,
+        "last_source_switch_at": null,
+        "next_retry_at": null,
+        "observed_confirmed_lsn": "0/1BD1C30",
+        "observed_current_lsn": "0/1BD1C30",
+        "observed_database_oid": "16384",
+        "observed_system_identifier": 7698330803350417447,
+        "observed_timeline": 1,
+        "published_lsn": "0/1BD1C30",
+        "publisher_cycles": 1,
+        "received_lsn": "0/1BD1C30",
+        "receiver_cycles": 5,
+        "reconnections": 0,
+        "service_state": "stopped",
+        "source_check_failures": 0,
+        "source_checked_at": "2026-10-19T10:55:37.191448+00:00",
+        "source_lag_bytes": 0,
+        "source_switches": 0,
+        "staged_changes": 0,
+        "staged_lsn": "0/1BD1C30",
+        "staged_transactions": 0,
+        "started_at": "2026-10-19T10:55:36.699566+00:00",
+        "stopped_at": "2026-10-19T10:55:37.514293+00:00",
+        "streamed_transactions": 0,
+        "subscription_id": 1,
+        "subscription_name": "identity_sub",
+        "subscription_state": "error",
+        "supervisor_pid": null,
+        "total_failures": 0
+      }
+    },
+    {
+      "case": "same-name metadata restore",
+      "copied_database_oid": "21592",
+      "original_database_oid": "16384",
+      "same_name_dispatch_attempted": false,
+      "status": {
+        "acknowledged_lsn": "0/1BD1C30",
+        "active_source_address": "172.22.0.4:5432",
+        "consecutive_failures": 0,
+        "desired_state": "stopped",
+        "health_reason": "operator requested stop",
+        "health_state": "stopped",
+        "heartbeat_age_seconds": 24.778492,
+        "heartbeat_at": "2026-10-19T10:55:37.514293+00:00",
+        "journal_lag_bytes": 0,
+        "last_connection_error": null,
+        "last_error": null,
+        "last_failure_at": null,
+        "last_reconnected_at": null,
+        "last_source_candidate_errors": null,
+        "last_source_error": null,
+        "last_source_switch_at": null,
+        "next_retry_at": null,
+        "observed_confirmed_lsn": "0/1BD1C30",
+        "observed_current_lsn": "0/1BD1C30",
+        "observed_database_oid": "16384",
+        "observed_system_identifier": 7698330803350417447,
+        "observed_timeline": 1,
+        "published_lsn": "0/1BD1C30",
+        "publisher_cycles": 1,
+        "received_lsn": "0/1BD1C30",
+        "receiver_cycles": 5,
+        "reconnections": 0,
+        "service_state": "stopped",
+        "source_check_failures": 0,
+        "source_checked_at": "2026-10-19T10:55:37.191448+00:00",
+        "source_lag_bytes": 0,
+        "source_switches": 0,
+        "staged_changes": 0,
+        "staged_lsn": "0/1BD1C30",
+        "staged_transactions": 0,
+        "started_at": "2026-10-19T10:55:36.699566+00:00",
+        "stopped_at": "2026-10-19T10:55:37.514293+00:00",
+        "streamed_transactions": 0,
+        "subscription_id": 1,
+        "subscription_name": "identity_sub",
+        "subscription_state": "error",
+        "supervisor_pid": null,
+        "total_failures": 0
+      }
+    }
+  ],
+  "original_database_oid": "16384",
+  "parent_image_id": "sha256:36ad4fc9a8dbcd09056301946b371b8d8359df8e389211a080120a545f71fcee",
+  "passed": false,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_changed": false,
+  "raw_results_sha256": "17a4d87dcf7a7a04570130464bab358f21926f35eb67d20ef93364bf11f5df35",
+  "run": "qualification_20261019_105513",
+  "runtime_evidence_sha256": "4eb994a504688c33d393d05349493fe6dbb4cffdb17f2eb79766ac5e4d59fd16",
+  "runtime_source_fingerprints": {
+    "Dockerfile": "5231ddf691846aa5b675094b59207730c1875e6e6870fbdd5a218f0bc275cb14",
+    "Dockerfile.recovery": "8b700dcbfe0e9beea937d41638e821731b790ff8d646d6fac093bd67fb45a18e",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "destination-init.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "faults.py": "16b425be92b4ec96f91eaad66a00b51f86b3f9aa090893cf83587a6d5ad91b4b",
+    "recovery.py": "46278b891d712ddb90ad97760e92878737d76c60d2a4fb752011cde299f96ca5",
+    "recovery.rs.inc": "6d0528ac5db51c9b340552e42b4a96bbeda17d8b8de3382d3d818041b37347a4",
+    "register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3"
+  },
+  "same_name_copies_kept_stopped": true,
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "findings"
+}

@@ -1,0 +1,283 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "checkpoint_before_upgrade": "0/1BD1248",
+  "checks": [
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "one",
+      "expected": "one",
+      "name": "upgraded replication reaches one",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "packaged release starts through its static launcher",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "packaged release has no replication base registration",
+      "passed": true
+    },
+    {
+      "actual": "/usr/local/bin/lake-replication-supervisor",
+      "expected": "/usr/local/bin/lake-replication-supervisor",
+      "name": "preflight can inspect the real old supervisor executable",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "old subscription stops before package replacement",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "old source slot is inactive before replacement",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "old external worker executables are gone before replacement",
+      "passed": true
+    },
+    {
+      "actual": "2026-10-18 20:53:21.295886+00",
+      "expected": "2026-10-18 20:53:21.295886+00",
+      "name": "old subscription drain does not restart PostgreSQL",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "new package starts the existing database",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "package replacement used a server restart",
+      "passed": true
+    },
+    {
+      "actual": "pg_extension_base,lake_replication",
+      "expected": "pg_extension_base,lake_replication",
+      "name": "old explicit preload setting is retained",
+      "passed": true
+    },
+    {
+      "actual": "analytics",
+      "expected": "analytics",
+      "name": "old single-database setting is retained",
+      "passed": true
+    },
+    {
+      "actual": "lake_replication",
+      "expected": "lake_replication",
+      "name": "old session preload setting is retained",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "new binary does not register the old static owner",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1",
+      "expected": "0.1.0-beta.1",
+      "name": "metadata stays on the old version until SQL upgrade",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "subscription remains durably stopped during handoff",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "no base owner starts before registration",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1",
+      "expected": "0.1.0-beta.1",
+      "name": "rolled-back upgrade preserves the old SQL version",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "rolled-back upgrade leaves no durable base registration",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "rolled-back upgrade leaves no base owner",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "rolled-back upgrade leaves no worker dispatch",
+      "passed": true
+    },
+    {
+      "actual": "one",
+      "expected": "one",
+      "name": "upgraded replication reaches one",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.2-prototype",
+      "expected": "0.1.0-beta.2-prototype",
+      "name": "SQL upgrade commits the prototype version",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "SQL upgrade records exactly one registration",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "committed upgrade starts exactly one base owner",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "committed upgrade keeps dispatch stopped until explicit enable",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "committed upgrade has no subscription wrapper before enable",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "base dependency is explicit after real upgrade",
+      "passed": true
+    },
+    {
+      "actual": "0/1BD1248",
+      "expected": "0/1BD1248",
+      "name": "SQL upgrade preserves the replication checkpoint",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "SQL upgrade preserves the completed copy",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three",
+      "expected": "one,two,three",
+      "name": "upgraded replication reaches one,two,three",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three,four",
+      "expected": "one,two,three,four",
+      "name": "upgraded replication reaches one,two,three,four",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "handoff retains exactly one source slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "handoff does not repeat the initial copy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "upgraded database restarts",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three,four,five",
+      "expected": "one,two,three,four,five",
+      "name": "upgraded replication reaches one,two,three,four,five",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "restart keeps exactly one base owner",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "restart keeps the legacy owner absent",
+      "passed": true
+    },
+    {
+      "actual": "5:5",
+      "expected": "5:5",
+      "name": "post-upgrade rows are unique",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "post-upgrade drop releases the retained source slot",
+      "passed": true
+    }
+  ],
+  "deployment_contract": "explicit stop, replace binaries, restart, SQL upgrade, enable",
+  "experiment": "stopped-server static-to-base upgrade",
+  "limits": [
+    "Not an online handoff or SQL downgrade test.",
+    "Clone/restore identity, forced crashes and exclusive takeover remain unqualified."
+  ],
+  "original_image_id": "sha256:75e13020e8115ce9dbe59f249c4519d807061dddc912b76b4d3e5368dc2cd455",
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_changed": false,
+  "qualification_helper_sha256": "3dc8973deb49ed1b3460b46f4a365f59c02f7df5693238256dfc7e1eb55bf9be",
+  "run": "qualification_20261018_205311",
+  "source_fingerprints": {
+    "Dockerfile.upgrade": "713c5cd1e21f0beaa5dc9834b75fbe3f26d8114cb7bf2a6bde7065055910b309",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3",
+    "upgrade.py": "b692249ddac01532442b95a4156e3746624a504627111e05dec7beddfdf7501d"
+  },
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "passed",
+  "target_version": "0.1.0-beta.2-prototype",
+  "upgraded_image_id": "sha256:d4aec961cb7157a5f8ec5cfe7105665508cf877b1f69c63d286f4dbee28f4672"
+}

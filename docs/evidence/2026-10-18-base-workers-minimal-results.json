@@ -1,0 +1,547 @@
+{
+  "adapter_sha256": "7826ad69272179a5c0049c78f22bd545096c3b87414f72450d8f96888af31b51",
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "checks": [
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "different databases get different launcher processes",
+      "passed": true
+    },
+    {
+      "actual": "pg_extension_base",
+      "expected": "pg_extension_base",
+      "name": "only pg_extension_base is explicitly preloaded",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "no session preload is needed",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "no configured launcher database is needed",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "legacy static launcher is absent",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "rolled-back extension creation leaves no registration",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "rolled-back extension drop resumes the worker",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "committed extension drop stops the launcher",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "extension recreation registers exactly one worker",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0:true",
+      "expected": "0.1.0:true",
+      "name": "development baseline excludes beta observability schema",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "expected": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "name": "extension upgrades in place and preserves control-plane state",
+      "passed": true
+    },
+    {
+      "actual": "numeric(12,2):character varying(32)",
+      "expected": "numeric(12,2):character varying(32)",
+      "name": "extension upgrade installs common parameterized type resolution",
+      "passed": true
+    },
+    {
+      "actual": "true:1",
+      "expected": "true:1",
+      "name": "extension upgrade adds per-subscription credential metadata",
+      "passed": true
+    },
+    {
+      "actual": "19:1",
+      "expected": "19:1",
+      "name": "upgrade registers durable extension state for logical backup",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "logical backup contains durable state but not regenerated seed mappings",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1:1:1",
+      "expected": "0.1.0-beta.1:1:1",
+      "name": "logical backup restores extension versions and durable control state",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "no unsupported SQL downgrade path is advertised",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported enabled fails instead of being ignored",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported copy_data fails instead of being ignored",
+      "passed": true
+    },
+    {
+      "actual": "0:0",
+      "expected": "0:0",
+      "name": "rolled-back subscriptions leave no source slots or control rows",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "subscription notice does not expose the source password",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:1",
+      "expected": "/credentials/destination-only.env:1",
+      "name": "subscription records its selected credential file",
+      "passed": true
+    },
+    {
+      "actual": "lake_source:true",
+      "expected": "lake_source:true",
+      "name": "postgres URI credentials are stored for workers without a source password file",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "pending cleanup contains no connection or password columns",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "pg_read_all_data cannot read stored connection secrets or invoke the worker getter",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "relative per-subscription credential paths are rejected without mutation",
+      "passed": true
+    },
+    {
+      "actual": "initial",
+      "expected": "initial",
+      "name": "initial copy reaches the artifact-installed destination",
+      "passed": true
+    },
+    {
+      "actual": "pgoutput:logical:false:true",
+      "expected": "pgoutput:logical:false:true",
+      "name": "initial sync automatically creates a persistent source pgoutput slot",
+      "passed": true
+    },
+    {
+      "actual": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "expected": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "name": "common parameterized types retain schema and values",
+      "passed": true
+    },
+    {
+      "actual": "healthy:streaming",
+      "expected": "healthy:streaming",
+      "name": "subscription becomes healthy",
+      "passed": true
+    },
+    {
+      "actual": "12",
+      "expected": "12",
+      "name": "all documented metrics are exported",
+      "passed": true
+    },
+    {
+      "actual": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "expected": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "name": "live insert and update replicate",
+      "passed": true
+    },
+    {
+      "actual": "numeric(6,2):1=1.25,2=NULL",
+      "expected": "numeric(6,2):1=1.25,2=NULL",
+      "name": "nullable parameterized column is added and replicated online",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "supervisor stops before the source password changes",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:2:true:running",
+      "expected": "/credentials/destination-only.env:2:true:running",
+      "name": "postgresql URI credential rotation replaces the subscription supervisor",
+      "passed": true
+    },
+    {
+      "actual": "rotated-credential",
+      "expected": "rotated-credential",
+      "name": "replication authenticates with the rotated credential",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "supervisor stops before restoring the source password",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:3:true:running",
+      "expected": "/credentials/destination-only.env:3:true:running",
+      "name": "CONNECTION can return to the original password",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "disable reaches stopped state",
+      "passed": true
+    },
+    {
+      "actual": "while-disabled",
+      "expected": "while-disabled",
+      "name": "enable catches up changes made while stopped",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "destination is ready after container restart",
+      "passed": true
+    },
+    {
+      "actual": "after-restart",
+      "expected": "after-restart",
+      "name": "launcher resumes replication after restart",
+      "passed": true
+    },
+    {
+      "actual": "degraded:backoff:true:true:true:true:true",
+      "expected": "degraded:backoff:true:true:true:true:true",
+      "name": "source outage becomes observable retry state",
+      "passed": true
+    },
+    {
+      "actual": "0:true:true",
+      "expected": "0:true:true",
+      "name": "retry metrics mark the subscription unhealthy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "source is ready after outage",
+      "passed": true
+    },
+    {
+      "actual": "healthy:running:0:true:true:true",
+      "expected": "healthy:running:0:true:true:true",
+      "name": "subscription recovers while retaining last-failure evidence",
+      "passed": true
+    },
+    {
+      "actual": "after-source-outage",
+      "expected": "after-source-outage",
+      "name": "replication resumes after source outage",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured worker logs emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured failure and recovery events emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "credential values absent from worker logs",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "drop removes the source replication slot",
+      "passed": true
+    },
+    {
+      "actual": "snapshot",
+      "expected": "snapshot",
+      "name": "pre-created slot supplies a snapshot copy",
+      "passed": true
+    },
+    {
+      "actual": "streamed",
+      "expected": "streamed",
+      "name": "pre-created slot streams later changes",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "temporary snapshot slot is released",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "drop removes the pre-created slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupted initial copy keeps staged rows",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "initial copy restarts from a fresh snapshot",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three",
+      "expected": "one,two,three",
+      "name": "restarted copy publishes each source row once",
+      "passed": true
+    },
+    {
+      "actual": "true:1",
+      "expected": "true:1",
+      "name": "restarted copy advances the checkpoint and retains one source slot",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "persistent slot streams after restarted copy",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "recovered stream publishes new changes",
+      "passed": true
+    },
+    {
+      "actual": "after-restart",
+      "expected": "after-restart",
+      "name": "change after interrupted copy appears at destination",
+      "passed": true
+    },
+    {
+      "actual": "one",
+      "expected": "one",
+      "name": "analytics replication reaches one",
+      "passed": true
+    },
+    {
+      "actual": "one",
+      "expected": "one",
+      "name": "prototype_second replication reaches one",
+      "passed": true
+    },
+    {
+      "actual": "one,two",
+      "expected": "one,two",
+      "name": "analytics replication reaches one,two",
+      "passed": true
+    },
+    {
+      "actual": "one,two",
+      "expected": "one,two",
+      "name": "prototype_second replication reaches one,two",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "terminated base launcher is replaced",
+      "passed": true
+    },
+    {
+      "actual": "2026-10-18 14:08:54.056155+00",
+      "expected": "2026-10-18 14:08:54.056155+00",
+      "name": "launcher termination does not restart PostgreSQL",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "disable works after launcher replacement",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three",
+      "expected": "one,two,three",
+      "name": "analytics replication reaches one,two,three",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three",
+      "expected": "one,two,three",
+      "name": "prototype_second replication reaches one,two,three",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "registered workers do not start in a template database",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "template clone discovers its registered launcher",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "drop database fails while an ordinary client is connected",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "failed database drop resumes its launcher",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "committed database drop completes",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "cloned subscription stays stopped",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "0",
+      "name": "cloned launch configuration binds to the new database",
+      "passed": false
+    },
+    {
+      "actual": "one,two,three",
+      "expected": "one,two,three",
+      "name": "prototype_drop replication reaches one,two,three",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "0",
+      "name": "extension drop removes its replication worker connections",
+      "passed": false
+    },
+    {
+      "actual": true,
+      "expected": false,
+      "name": "extension drop explicitly terminates a paused external supervisor",
+      "passed": false
+    },
+    {
+      "actual": "2026-10-18 14:09:05.900159+00",
+      "expected": "2026-10-18 14:09:05.900159+00",
+      "name": "active extension drop does not restart PostgreSQL",
+      "passed": true
+    }
+  ],
+  "experiment": "pg_extension_base adapter for the existing replication launcher",
+  "findings": [
+    {
+      "case": "cloned subscription configuration",
+      "error": "cloned launch configuration binds to the new database: expected '0', got '1'"
+    },
+    {
+      "case": "extension drop removes its replication worker connections",
+      "error": "extension drop removes its replication worker connections: expected '0', got '1'"
+    },
+    {
+      "case": "extension drop explicitly terminates a paused external supervisor",
+      "error": "extension drop explicitly terminates a paused external supervisor: expected False, got True"
+    }
+  ],
+  "passed": false,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_launcher_changed": false,
+  "run": "qualification_20261018_140818",
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "findings",
+  "worker_log_events": [
+    "batch_published",
+    "copy_chunk_staged",
+    "cycle_failed",
+    "idle_timeout",
+    "initial_copy_completed",
+    "process_failed",
+    "replication_started",
+    "snapshot_acquired",
+    "stopped",
+    "table_copied",
+    "transaction_staged"
+  ],
+  "worker_log_records": 60
+}

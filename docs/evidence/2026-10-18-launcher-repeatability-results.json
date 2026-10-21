@@ -1,0 +1,4399 @@
+{
+  "adoption_gate_passed": false,
+  "archive_provenance": {
+    "architecture": "arm64",
+    "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+    "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+    "checks": [
+      {
+        "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      }
+    ],
+    "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+    "run": "qualification_20261018_200855",
+    "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9"
+  },
+  "cases": [
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5942261,
+          "memory_current_bytes": 151621632,
+          "monotonic_seconds": 11683.82271691,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 3,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3483648,
+              "rss_bytes": 19087360,
+              "start_ticks": 1166313,
+              "voluntary_switches": 43
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4475904,
+              "rss_bytes": 24756224,
+              "start_ticks": 1166314,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 130,
+              "pss_bytes": 2841600,
+              "rss_bytes": 18423808,
+              "start_ticks": 1166614,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 11,
+              "involuntary_switches": 2,
+              "kind": "rust",
+              "pid": 131,
+              "pss_bytes": 1193984,
+              "rss_bytes": 2260992,
+              "start_ticks": 1166614,
+              "voluntary_switches": 1271
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 702,
+              "pss_bytes": 944128,
+              "rss_bytes": 2129920,
+              "start_ticks": 1168365,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3136857,
+          "memory_current_bytes": 194011136,
+          "monotonic_seconds": 11683.92578441,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:09.735573+00",
+        "wal_bytes": 34499136
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5038280,
+          "memory_current_bytes": 149729280,
+          "monotonic_seconds": 11673.60690678,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 3,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3491840,
+              "rss_bytes": 19087360,
+              "start_ticks": 1166313,
+              "voluntary_switches": 33
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4470784,
+              "rss_bytes": 24756224,
+              "start_ticks": 1166314,
+              "voluntary_switches": 12
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 130,
+              "pss_bytes": 2845696,
+              "rss_bytes": 18423808,
+              "start_ticks": 1166614,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 5,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 131,
+              "pss_bytes": 1193984,
+              "rss_bytes": 2260992,
+              "start_ticks": 1166614,
+              "voluntary_switches": 790
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 556,
+              "pss_bytes": 944128,
+              "rss_bytes": 2129920,
+              "start_ticks": 1167358,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2952591,
+          "memory_current_bytes": 195186688,
+          "monotonic_seconds": 11673.678810447,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:09.735573+00",
+        "wal_bytes": 34118584
+      },
+      "idle_elapsed_seconds": 10.215810129999227,
+      "image": "lake-replication-launcher-static:qualification_20261018_200855",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 9530856,
+          "memory_current_bytes": 156655616,
+          "monotonic_seconds": 11693.250977831,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 3,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3475456,
+              "rss_bytes": 19087360,
+              "start_ticks": 1166313,
+              "voluntary_switches": 53
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4477952,
+              "rss_bytes": 24756224,
+              "start_ticks": 1166314,
+              "voluntary_switches": 33
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 130,
+              "pss_bytes": 2839552,
+              "rss_bytes": 18423808,
+              "start_ticks": 1166614,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 17,
+              "involuntary_switches": 3,
+              "kind": "rust",
+              "pid": 131,
+              "pss_bytes": 1193984,
+              "rss_bytes": 2260992,
+              "start_ticks": 1166614,
+              "voluntary_switches": 2048
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 3,
+              "kind": "rust",
+              "pid": 1137,
+              "pss_bytes": 944128,
+              "rss_bytes": 2129920,
+              "start_ticks": 1169323,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6718824,
+          "memory_current_bytes": 189841408,
+          "monotonic_seconds": 11693.329654081,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:09.735573+00",
+        "wal_bytes": 36330200
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5984225,
+          "memory_current_bytes": 151760896,
+          "monotonic_seconds": 11684.015514535,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 3,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3483648,
+              "rss_bytes": 19087360,
+              "start_ticks": 1166313,
+              "voluntary_switches": 43
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4475904,
+              "rss_bytes": 24756224,
+              "start_ticks": 1166314,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 130,
+              "pss_bytes": 2841600,
+              "rss_bytes": 18423808,
+              "start_ticks": 1166614,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 11,
+              "involuntary_switches": 2,
+              "kind": "rust",
+              "pid": 131,
+              "pss_bytes": 1193984,
+              "rss_bytes": 2260992,
+              "start_ticks": 1166614,
+              "voluntary_switches": 1287
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 711,
+              "pss_bytes": 944128,
+              "rss_bytes": 2129920,
+              "start_ticks": 1168399,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3159325,
+          "memory_current_bytes": 193392640,
+          "monotonic_seconds": 11684.094082952,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:09.735573+00",
+        "wal_bytes": 34499456
+      },
+      "repetition": 1,
+      "variant": "static",
+      "verified_rows": 8000,
+      "warmup": {
+        "catchup_seconds": 3.1548434590004035,
+        "commit_lag_ms": {
+          "p50": 1316.037893295288,
+          "p95": 3027.8608798980713,
+          "p99": 3155.503988265991
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 5.349874998501036,
+          "p95": 7.630583000718616
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 566.4160022151667,
+        "source_elapsed_seconds": 3.9071039159971406,
+        "transactions": [
+          {
+            "committed_epoch": 1792354153.053845,
+            "first_observed_epoch": 1792354153.16291,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792354153.154942,
+            "first_observed_epoch": 1792354153.270537,
+            "transaction": 2
+          },
+          {
+            "committed_epoch": 1792354153.258481,
+            "first_observed_epoch": 1792354153.482621,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792354153.354475,
+            "first_observed_epoch": 1792354153.590549,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792354153.454143,
+            "first_observed_epoch": 1792354153.80138,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792354153.558363,
+            "first_observed_epoch": 1792354153.905691,
+            "transaction": 6
+          },
+          {
+            "committed_epoch": 1792354153.656864,
+            "first_observed_epoch": 1792354154.120195,
+            "transaction": 7
+          },
+          {
+            "committed_epoch": 1792354153.758675,
+            "first_observed_epoch": 1792354154.228173,
+            "transaction": 8
+          },
+          {
+            "committed_epoch": 1792354153.853626,
+            "first_observed_epoch": 1792354154.445274,
+            "transaction": 9
+          },
+          {
+            "committed_epoch": 1792354153.958182,
+            "first_observed_epoch": 1792354154.552352,
+            "transaction": 10
+          },
+          {
+            "committed_epoch": 1792354154.056824,
+            "first_observed_epoch": 1792354154.762429,
+            "transaction": 11
+          },
+          {
+            "committed_epoch": 1792354154.154148,
+            "first_observed_epoch": 1792354154.977692,
+            "transaction": 12
+          },
+          {
+            "committed_epoch": 1792354154.258157,
+            "first_observed_epoch": 1792354155.085045,
+            "transaction": 13
+          },
+          {
+            "committed_epoch": 1792354154.358264,
+            "first_observed_epoch": 1792354155.299423,
+            "transaction": 14
+          },
+          {
+            "committed_epoch": 1792354154.454571,
+            "first_observed_epoch": 1792354155.405836,
+            "transaction": 15
+          },
+          {
+            "committed_epoch": 1792354154.558117,
+            "first_observed_epoch": 1792354155.619822,
+            "transaction": 16
+          },
+          {
+            "committed_epoch": 1792354154.657982,
+            "first_observed_epoch": 1792354155.836387,
+            "transaction": 17
+          },
+          {
+            "committed_epoch": 1792354154.757797,
+            "first_observed_epoch": 1792354155.94384,
+            "transaction": 18
+          },
+          {
+            "committed_epoch": 1792354154.858413,
+            "first_observed_epoch": 1792354156.165027,
+            "transaction": 19
+          },
+          {
+            "committed_epoch": 1792354154.957901,
+            "first_observed_epoch": 1792354156.273939,
+            "transaction": 20
+          },
+          {
+            "committed_epoch": 1792354155.058051,
+            "first_observed_epoch": 1792354156.489756,
+            "transaction": 21
+          },
+          {
+            "committed_epoch": 1792354155.158357,
+            "first_observed_epoch": 1792354156.709702,
+            "transaction": 22
+          },
+          {
+            "committed_epoch": 1792354155.258239,
+            "first_observed_epoch": 1792354156.818885,
+            "transaction": 23
+          },
+          {
+            "committed_epoch": 1792354155.354514,
+            "first_observed_epoch": 1792354157.037643,
+            "transaction": 24
+          },
+          {
+            "committed_epoch": 1792354155.45446,
+            "first_observed_epoch": 1792354157.250848,
+            "transaction": 25
+          },
+          {
+            "committed_epoch": 1792354155.558225,
+            "first_observed_epoch": 1792354157.360562,
+            "transaction": 26
+          },
+          {
+            "committed_epoch": 1792354155.658571,
+            "first_observed_epoch": 1792354157.578489,
+            "transaction": 27
+          },
+          {
+            "committed_epoch": 1792354155.755545,
+            "first_observed_epoch": 1792354157.799083,
+            "transaction": 28
+          },
+          {
+            "committed_epoch": 1792354155.858366,
+            "first_observed_epoch": 1792354158.018889,
+            "transaction": 29
+          },
+          {
+            "committed_epoch": 1792354155.95377,
+            "first_observed_epoch": 1792354158.125745,
+            "transaction": 30
+          },
+          {
+            "committed_epoch": 1792354156.054217,
+            "first_observed_epoch": 1792354158.344968,
+            "transaction": 31
+          },
+          {
+            "committed_epoch": 1792354156.154806,
+            "first_observed_epoch": 1792354158.563297,
+            "transaction": 32
+          },
+          {
+            "committed_epoch": 1792354156.25489,
+            "first_observed_epoch": 1792354158.781243,
+            "transaction": 33
+          },
+          {
+            "committed_epoch": 1792354156.354437,
+            "first_observed_epoch": 1792354158.890497,
+            "transaction": 34
+          },
+          {
+            "committed_epoch": 1792354156.458365,
+            "first_observed_epoch": 1792354159.113423,
+            "transaction": 35
+          },
+          {
+            "committed_epoch": 1792354156.558492,
+            "first_observed_epoch": 1792354159.335509,
+            "transaction": 36
+          },
+          {
+            "committed_epoch": 1792354156.658599,
+            "first_observed_epoch": 1792354159.558571,
+            "transaction": 37
+          },
+          {
+            "committed_epoch": 1792354156.754992,
+            "first_observed_epoch": 1792354159.782853,
+            "transaction": 38
+          },
+          {
+            "committed_epoch": 1792354156.854456,
+            "first_observed_epoch": 1792354159.893267,
+            "transaction": 39
+          },
+          {
+            "committed_epoch": 1792354156.958632,
+            "first_observed_epoch": 1792354160.114136,
+            "transaction": 40
+          }
+        ],
+        "visible_elapsed_seconds": 7.061947374997544
+      },
+      "workload": {
+        "catchup_seconds": 5.158111333999841,
+        "commit_lag_ms": {
+          "p50": 2372.607946395874,
+          "p95": 4900.829076766968,
+          "p99": 5158.883094787598
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 10.244416000205092,
+          "p95": 13.44020899705356
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 441.2503658136405,
+        "source_elapsed_seconds": 3.90703695800039,
+        "transactions": [
+          {
+            "committed_epoch": 1792354170.717898,
+            "first_observed_epoch": 1792354170.834519,
+            "transaction": 41
+          },
+          {
+            "committed_epoch": 1792354170.820762,
+            "first_observed_epoch": 1792354171.054556,
+            "transaction": 42
+          },
+          {
+            "committed_epoch": 1792354170.917871,
+            "first_observed_epoch": 1792354171.276886,
+            "transaction": 43
+          },
+          {
+            "committed_epoch": 1792354171.019867,
+            "first_observed_epoch": 1792354171.498601,
+            "transaction": 44
+          },
+          {
+            "committed_epoch": 1792354171.122624,
+            "first_observed_epoch": 1792354171.721136,
+            "transaction": 45
+          },
+          {
+            "committed_epoch": 1792354171.222546,
+            "first_observed_epoch": 1792354171.941367,
+            "transaction": 46
+          },
+          {
+            "committed_epoch": 1792354171.320335,
+            "first_observed_epoch": 1792354172.162837,
+            "transaction": 47
+          },
+          {
+            "committed_epoch": 1792354171.418705,
+            "first_observed_epoch": 1792354172.391261,
+            "transaction": 48
+          },
+          {
+            "committed_epoch": 1792354171.522604,
+            "first_observed_epoch": 1792354172.619565,
+            "transaction": 49
+          },
+          {
+            "committed_epoch": 1792354171.619049,
+            "first_observed_epoch": 1792354172.845833,
+            "transaction": 50
+          },
+          {
+            "committed_epoch": 1792354171.720686,
+            "first_observed_epoch": 1792354172.9578,
+            "transaction": 51
+          },
+          {
+            "committed_epoch": 1792354171.820123,
+            "first_observed_epoch": 1792354173.179361,
+            "transaction": 52
+          },
+          {
+            "committed_epoch": 1792354171.9192,
+            "first_observed_epoch": 1792354173.40264,
+            "transaction": 53
+          },
+          {
+            "committed_epoch": 1792354172.022556,
+            "first_observed_epoch": 1792354173.63186,
+            "transaction": 54
+          },
+          {
+            "committed_epoch": 1792354172.119336,
+            "first_observed_epoch": 1792354173.856206,
+            "transaction": 55
+          },
+          {
+            "committed_epoch": 1792354172.221243,
+            "first_observed_epoch": 1792354174.083603,
+            "transaction": 56
+          },
+          {
+            "committed_epoch": 1792354172.320907,
+            "first_observed_epoch": 1792354174.311264,
+            "transaction": 57
+          },
+          {
+            "committed_epoch": 1792354172.422626,
+            "first_observed_epoch": 1792354174.53674,
+            "transaction": 58
+          },
+          {
+            "committed_epoch": 1792354172.521721,
+            "first_observed_epoch": 1792354174.766084,
+            "transaction": 59
+          },
+          {
+            "committed_epoch": 1792354172.621282,
+            "first_observed_epoch": 1792354174.99389,
+            "transaction": 60
+          },
+          {
+            "committed_epoch": 1792354172.717749,
+            "first_observed_epoch": 1792354175.218681,
+            "transaction": 61
+          },
+          {
+            "committed_epoch": 1792354172.820697,
+            "first_observed_epoch": 1792354175.449463,
+            "transaction": 62
+          },
+          {
+            "committed_epoch": 1792354172.920642,
+            "first_observed_epoch": 1792354175.676802,
+            "transaction": 63
+          },
+          {
+            "committed_epoch": 1792354173.018086,
+            "first_observed_epoch": 1792354175.904994,
+            "transaction": 64
+          },
+          {
+            "committed_epoch": 1792354173.117762,
+            "first_observed_epoch": 1792354176.127726,
+            "transaction": 65
+          },
+          {
+            "committed_epoch": 1792354173.222666,
+            "first_observed_epoch": 1792354176.352223,
+            "transaction": 66
+          },
+          {
+            "committed_epoch": 1792354173.321334,
+            "first_observed_epoch": 1792354176.578948,
+            "transaction": 67
+          },
+          {
+            "committed_epoch": 1792354173.42109,
+            "first_observed_epoch": 1792354176.81011,
+            "transaction": 68
+          },
+          {
+            "committed_epoch": 1792354173.518532,
+            "first_observed_epoch": 1792354177.038535,
+            "transaction": 69
+          },
+          {
+            "committed_epoch": 1792354173.618177,
+            "first_observed_epoch": 1792354177.382068,
+            "transaction": 70
+          },
+          {
+            "committed_epoch": 1792354173.71824,
+            "first_observed_epoch": 1792354177.614069,
+            "transaction": 71
+          },
+          {
+            "committed_epoch": 1792354173.822649,
+            "first_observed_epoch": 1792354177.837622,
+            "transaction": 72
+          },
+          {
+            "committed_epoch": 1792354173.921709,
+            "first_observed_epoch": 1792354178.061704,
+            "transaction": 73
+          },
+          {
+            "committed_epoch": 1792354174.022666,
+            "first_observed_epoch": 1792354178.284623,
+            "transaction": 74
+          },
+          {
+            "committed_epoch": 1792354174.122644,
+            "first_observed_epoch": 1792354178.512025,
+            "transaction": 75
+          },
+          {
+            "committed_epoch": 1792354174.222449,
+            "first_observed_epoch": 1792354178.862082,
+            "transaction": 76
+          },
+          {
+            "committed_epoch": 1792354174.318328,
+            "first_observed_epoch": 1792354179.091945,
+            "transaction": 77
+          },
+          {
+            "committed_epoch": 1792354174.419827,
+            "first_observed_epoch": 1792354179.320656,
+            "transaction": 78
+          },
+          {
+            "committed_epoch": 1792354174.520709,
+            "first_observed_epoch": 1792354179.554316,
+            "transaction": 79
+          },
+          {
+            "committed_epoch": 1792354174.622597,
+            "first_observed_epoch": 1792354179.78148,
+            "transaction": 80
+          }
+        ],
+        "visible_elapsed_seconds": 9.06514829200023
+      }
+    },
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5937444,
+          "memory_current_bytes": 137003008,
+          "monotonic_seconds": 11721.240741844,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 94,
+              "pss_bytes": 4215808,
+              "rss_bytes": 24473600,
+              "start_ticks": 1170042,
+              "voluntary_switches": 24
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 95,
+              "pss_bytes": 3332096,
+              "rss_bytes": 19423232,
+              "start_ticks": 1170042,
+              "voluntary_switches": 22
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 127,
+              "pss_bytes": 2778112,
+              "rss_bytes": 18280448,
+              "start_ticks": 1170342,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 10,
+              "involuntary_switches": 5,
+              "kind": "rust",
+              "pid": 128,
+              "pss_bytes": 1177600,
+              "rss_bytes": 2260992,
+              "start_ticks": 1170343,
+              "voluntary_switches": 1285
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 702,
+              "pss_bytes": 927744,
+              "rss_bytes": 2121728,
+              "start_ticks": 1172120,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3024369,
+          "memory_current_bytes": 188411904,
+          "monotonic_seconds": 11721.352707885,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:47.010197+00",
+        "wal_bytes": 34485160
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5105163,
+          "memory_current_bytes": 140476416,
+          "monotonic_seconds": 11711.03176088,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 94,
+              "pss_bytes": 4275200,
+              "rss_bytes": 24473600,
+              "start_ticks": 1170042,
+              "voluntary_switches": 14
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 95,
+              "pss_bytes": 3345408,
+              "rss_bytes": 19423232,
+              "start_ticks": 1170042,
+              "voluntary_switches": 12
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 127,
+              "pss_bytes": 2792448,
+              "rss_bytes": 18280448,
+              "start_ticks": 1170342,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 5,
+              "involuntary_switches": 4,
+              "kind": "rust",
+              "pid": 128,
+              "pss_bytes": 1175552,
+              "rss_bytes": 2260992,
+              "start_ticks": 1170343,
+              "voluntary_switches": 789
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 547,
+              "pss_bytes": 929792,
+              "rss_bytes": 2129920,
+              "start_ticks": 1171098,
+              "voluntary_switches": 17
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2880196,
+          "memory_current_bytes": 190251008,
+          "monotonic_seconds": 11711.110710047,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:47.010197+00",
+        "wal_bytes": 34104304
+      },
+      "idle_elapsed_seconds": 10.208980964000148,
+      "image": "lake-replication-launcher-base:qualification_20261018_200855",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 9416567,
+          "memory_current_bytes": 145100800,
+          "monotonic_seconds": 11730.603710806,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 94,
+              "pss_bytes": 4221952,
+              "rss_bytes": 24473600,
+              "start_ticks": 1170042,
+              "voluntary_switches": 34
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 95,
+              "pss_bytes": 3323904,
+              "rss_bytes": 19423232,
+              "start_ticks": 1170042,
+              "voluntary_switches": 32
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 127,
+              "pss_bytes": 2776064,
+              "rss_bytes": 18280448,
+              "start_ticks": 1170342,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 15,
+              "involuntary_switches": 6,
+              "kind": "rust",
+              "pid": 128,
+              "pss_bytes": 1177600,
+              "rss_bytes": 2392064,
+              "start_ticks": 1170343,
+              "voluntary_switches": 2064
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 1132,
+              "pss_bytes": 931840,
+              "rss_bytes": 2129920,
+              "start_ticks": 1173057,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6540505,
+          "memory_current_bytes": 197136384,
+          "monotonic_seconds": 11730.678210598,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:47.010197+00",
+        "wal_bytes": 36312648
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5971104,
+          "memory_current_bytes": 141107200,
+          "monotonic_seconds": 11721.458061344,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 94,
+              "pss_bytes": 4477952,
+              "rss_bytes": 24473600,
+              "start_ticks": 1170042,
+              "voluntary_switches": 24
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 95,
+              "pss_bytes": 3549184,
+              "rss_bytes": 19423232,
+              "start_ticks": 1170042,
+              "voluntary_switches": 22
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 127,
+              "pss_bytes": 2996224,
+              "rss_bytes": 18280448,
+              "start_ticks": 1170342,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 10,
+              "involuntary_switches": 6,
+              "kind": "rust",
+              "pid": 128,
+              "pss_bytes": 1181696,
+              "rss_bytes": 2260992,
+              "start_ticks": 1170343,
+              "voluntary_switches": 1289
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3049359,
+          "memory_current_bytes": 186617856,
+          "monotonic_seconds": 11721.550878052,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:09:47.010197+00",
+        "wal_bytes": 34485464
+      },
+      "repetition": 1,
+      "variant": "base",
+      "verified_rows": 8000,
+      "warmup": {
+        "catchup_seconds": 3.2787441249965923,
+        "commit_lag_ms": {
+          "p50": 1428.8358688354492,
+          "p95": 3037.623167037964,
+          "p99": 3279.1550159454346
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 5.0967920033144765,
+          "p95": 7.966458004375454
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 556.7609688807433,
+        "source_elapsed_seconds": 3.905667541002913,
+        "transactions": [
+          {
+            "committed_epoch": 1792354190.362564,
+            "first_observed_epoch": 1792354190.470329,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792354190.466864,
+            "first_observed_epoch": 1792354190.578527,
+            "transaction": 2
+          },
+          {
+            "committed_epoch": 1792354190.563035,
+            "first_observed_epoch": 1792354190.794384,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792354190.667191,
+            "first_observed_epoch": 1792354190.90137,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792354190.766848,
+            "first_observed_epoch": 1792354191.111034,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792354190.866885,
+            "first_observed_epoch": 1792354191.326876,
+            "transaction": 6
+          },
+          {
+            "committed_epoch": 1792354190.96602,
+            "first_observed_epoch": 1792354191.434922,
+            "transaction": 7
+          },
+          {
+            "committed_epoch": 1792354191.062243,
+            "first_observed_epoch": 1792354191.647736,
+            "transaction": 8
+          },
+          {
+            "committed_epoch": 1792354191.165,
+            "first_observed_epoch": 1792354191.757042,
+            "transaction": 9
+          },
+          {
+            "committed_epoch": 1792354191.267312,
+            "first_observed_epoch": 1792354191.971961,
+            "transaction": 10
+          },
+          {
+            "committed_epoch": 1792354191.366873,
+            "first_observed_epoch": 1792354192.080732,
+            "transaction": 11
+          },
+          {
+            "committed_epoch": 1792354191.465341,
+            "first_observed_epoch": 1792354192.297876,
+            "transaction": 12
+          },
+          {
+            "committed_epoch": 1792354191.565745,
+            "first_observed_epoch": 1792354192.40601,
+            "transaction": 13
+          },
+          {
+            "committed_epoch": 1792354191.663187,
+            "first_observed_epoch": 1792354192.619306,
+            "transaction": 14
+          },
+          {
+            "committed_epoch": 1792354191.764448,
+            "first_observed_epoch": 1792354192.831614,
+            "transaction": 15
+          },
+          {
+            "committed_epoch": 1792354191.865551,
+            "first_observed_epoch": 1792354193.047138,
+            "transaction": 16
+          },
+          {
+            "committed_epoch": 1792354191.967083,
+            "first_observed_epoch": 1792354193.157544,
+            "transaction": 17
+          },
+          {
+            "committed_epoch": 1792354192.067068,
+            "first_observed_epoch": 1792354193.371767,
+            "transaction": 18
+          },
+          {
+            "committed_epoch": 1792354192.165889,
+            "first_observed_epoch": 1792354193.479637,
+            "transaction": 19
+          },
+          {
+            "committed_epoch": 1792354192.267142,
+            "first_observed_epoch": 1792354193.695978,
+            "transaction": 20
+          },
+          {
+            "committed_epoch": 1792354192.367023,
+            "first_observed_epoch": 1792354193.915291,
+            "transaction": 21
+          },
+          {
+            "committed_epoch": 1792354192.465865,
+            "first_observed_epoch": 1792354194.02526,
+            "transaction": 22
+          },
+          {
+            "committed_epoch": 1792354192.567235,
+            "first_observed_epoch": 1792354194.243645,
+            "transaction": 23
+          },
+          {
+            "committed_epoch": 1792354192.663676,
+            "first_observed_epoch": 1792354194.458997,
+            "transaction": 24
+          },
+          {
+            "committed_epoch": 1792354192.767116,
+            "first_observed_epoch": 1792354194.569509,
+            "transaction": 25
+          },
+          {
+            "committed_epoch": 1792354192.866867,
+            "first_observed_epoch": 1792354194.783381,
+            "transaction": 26
+          },
+          {
+            "committed_epoch": 1792354192.96441,
+            "first_observed_epoch": 1792354195.003146,
+            "transaction": 27
+          },
+          {
+            "committed_epoch": 1792354193.063144,
+            "first_observed_epoch": 1792354195.221993,
+            "transaction": 28
+          },
+          {
+            "committed_epoch": 1792354193.165504,
+            "first_observed_epoch": 1792354195.329692,
+            "transaction": 29
+          },
+          {
+            "committed_epoch": 1792354193.267003,
+            "first_observed_epoch": 1792354195.55213,
+            "transaction": 30
+          },
+          {
+            "committed_epoch": 1792354193.366841,
+            "first_observed_epoch": 1792354195.772537,
+            "transaction": 31
+          },
+          {
+            "committed_epoch": 1792354193.467181,
+            "first_observed_epoch": 1792354196.001291,
+            "transaction": 32
+          },
+          {
+            "committed_epoch": 1792354193.564367,
+            "first_observed_epoch": 1792354196.222377,
+            "transaction": 33
+          },
+          {
+            "committed_epoch": 1792354193.665989,
+            "first_observed_epoch": 1792354196.333695,
+            "transaction": 34
+          },
+          {
+            "committed_epoch": 1792354193.764554,
+            "first_observed_epoch": 1792354196.553602,
+            "transaction": 35
+          },
+          {
+            "committed_epoch": 1792354193.86329,
+            "first_observed_epoch": 1792354196.773221,
+            "transaction": 36
+          },
+          {
+            "committed_epoch": 1792354193.964939,
+            "first_observed_epoch": 1792354196.993196,
+            "transaction": 37
+          },
+          {
+            "committed_epoch": 1792354194.066825,
+            "first_observed_epoch": 1792354197.104448,
+            "transaction": 38
+          },
+          {
+            "committed_epoch": 1792354194.162233,
+            "first_observed_epoch": 1792354197.327085,
+            "transaction": 39
+          },
+          {
+            "committed_epoch": 1792354194.266124,
+            "first_observed_epoch": 1792354197.545279,
+            "transaction": 40
+          }
+        ],
+        "visible_elapsed_seconds": 7.184411665999505
+      },
+      "workload": {
+        "catchup_seconds": 5.038685874998919,
+        "commit_lag_ms": {
+          "p50": 2348.119020462036,
+          "p95": 4786.3609790802,
+          "p99": 5039.435863494873
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 9.849624999333173,
+          "p95": 12.899624998681247
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 447.3349739342905,
+        "source_elapsed_seconds": 3.9031591250022757,
+        "transactions": [
+          {
+            "committed_epoch": 1792354208.175672,
+            "first_observed_epoch": 1792354208.293949,
+            "transaction": 41
+          },
+          {
+            "committed_epoch": 1792354208.275331,
+            "first_observed_epoch": 1792354208.517757,
+            "transaction": 42
+          },
+          {
+            "committed_epoch": 1792354208.380315,
+            "first_observed_epoch": 1792354208.739449,
+            "transaction": 43
+          },
+          {
+            "committed_epoch": 1792354208.479964,
+            "first_observed_epoch": 1792354208.964001,
+            "transaction": 44
+          },
+          {
+            "committed_epoch": 1792354208.580201,
+            "first_observed_epoch": 1792354209.186669,
+            "transaction": 45
+          },
+          {
+            "committed_epoch": 1792354208.678839,
+            "first_observed_epoch": 1792354209.408811,
+            "transaction": 46
+          },
+          {
+            "committed_epoch": 1792354208.77997,
+            "first_observed_epoch": 1792354209.631441,
+            "transaction": 47
+          },
+          {
+            "committed_epoch": 1792354208.875398,
+            "first_observed_epoch": 1792354209.851265,
+            "transaction": 48
+          },
+          {
+            "committed_epoch": 1792354208.977627,
+            "first_observed_epoch": 1792354210.075668,
+            "transaction": 49
+          },
+          {
+            "committed_epoch": 1792354209.076023,
+            "first_observed_epoch": 1792354210.185266,
+            "transaction": 50
+          },
+          {
+            "committed_epoch": 1792354209.179882,
+            "first_observed_epoch": 1792354210.406204,
+            "transaction": 51
+          },
+          {
+            "committed_epoch": 1792354209.27514,
+            "first_observed_epoch": 1792354210.632682,
+            "transaction": 52
+          },
+          {
+            "committed_epoch": 1792354209.378818,
+            "first_observed_epoch": 1792354210.853416,
+            "transaction": 53
+          },
+          {
+            "committed_epoch": 1792354209.475726,
+            "first_observed_epoch": 1792354211.074329,
+            "transaction": 54
+          },
+          {
+            "committed_epoch": 1792354209.579993,
+            "first_observed_epoch": 1792354211.30124,
+            "transaction": 55
+          },
+          {
+            "committed_epoch": 1792354209.677412,
+            "first_observed_epoch": 1792354211.522954,
+            "transaction": 56
+          },
+          {
+            "committed_epoch": 1792354209.780069,
+            "first_observed_epoch": 1792354211.745375,
+            "transaction": 57
+          },
+          {
+            "committed_epoch": 1792354209.878617,
+            "first_observed_epoch": 1792354211.970863,
+            "transaction": 58
+          },
+          {
+            "committed_epoch": 1792354209.979922,
+            "first_observed_epoch": 1792354212.199363,
+            "transaction": 59
+          },
+          {
+            "committed_epoch": 1792354210.078334,
+            "first_observed_epoch": 1792354212.426453,
+            "transaction": 60
+          },
+          {
+            "committed_epoch": 1792354210.178577,
+            "first_observed_epoch": 1792354212.652314,
+            "transaction": 61
+          },
+          {
+            "committed_epoch": 1792354210.279897,
+            "first_observed_epoch": 1792354212.876506,
+            "transaction": 62
+          },
+          {
+            "committed_epoch": 1792354210.37709,
+            "first_observed_epoch": 1792354213.107417,
+            "transaction": 63
+          },
+          {
+            "committed_epoch": 1792354210.476945,
+            "first_observed_epoch": 1792354213.335831,
+            "transaction": 64
+          },
+          {
+            "committed_epoch": 1792354210.58001,
+            "first_observed_epoch": 1792354213.565201,
+            "transaction": 65
+          },
+          {
+            "committed_epoch": 1792354210.678442,
+            "first_observed_epoch": 1792354213.791984,
+            "transaction": 66
+          },
+          {
+            "committed_epoch": 1792354210.780207,
+            "first_observed_epoch": 1792354214.023449,
+            "transaction": 67
+          },
+          {
+            "committed_epoch": 1792354210.878733,
+            "first_observed_epoch": 1792354214.2559,
+            "transaction": 68
+          },
+          {
+            "committed_epoch": 1792354210.975162,
+            "first_observed_epoch": 1792354214.487412,
+            "transaction": 69
+          },
+          {
+            "committed_epoch": 1792354211.078599,
+            "first_observed_epoch": 1792354214.711572,
+            "transaction": 70
+          },
+          {
+            "committed_epoch": 1792354211.179678,
+            "first_observed_epoch": 1792354214.94134,
+            "transaction": 71
+          },
+          {
+            "committed_epoch": 1792354211.278726,
+            "first_observed_epoch": 1792354215.16995,
+            "transaction": 72
+          },
+          {
+            "committed_epoch": 1792354211.379714,
+            "first_observed_epoch": 1792354215.399523,
+            "transaction": 73
+          },
+          {
+            "committed_epoch": 1792354211.475734,
+            "first_observed_epoch": 1792354215.630936,
+            "transaction": 74
+          },
+          {
+            "committed_epoch": 1792354211.579286,
+            "first_observed_epoch": 1792354215.857192,
+            "transaction": 75
+          },
+          {
+            "committed_epoch": 1792354211.678722,
+            "first_observed_epoch": 1792354216.202004,
+            "transaction": 76
+          },
+          {
+            "committed_epoch": 1792354211.780009,
+            "first_observed_epoch": 1792354216.43328,
+            "transaction": 77
+          },
+          {
+            "committed_epoch": 1792354211.878689,
+            "first_observed_epoch": 1792354216.66505,
+            "transaction": 78
+          },
+          {
+            "committed_epoch": 1792354211.976471,
+            "first_observed_epoch": 1792354216.889228,
+            "transaction": 79
+          },
+          {
+            "committed_epoch": 1792354212.075999,
+            "first_observed_epoch": 1792354217.115435,
+            "transaction": 80
+          }
+        ],
+        "visible_elapsed_seconds": 8.941845000001194
+      }
+    },
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6420130,
+          "memory_current_bytes": 139710464,
+          "monotonic_seconds": 11759.962128945,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 1,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4588544,
+              "rss_bytes": 24670208,
+              "start_ticks": 1173860,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3563520,
+              "rss_bytes": 19562496,
+              "start_ticks": 1173860,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 3021824,
+              "rss_bytes": 18333696,
+              "start_ticks": 1174161,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 14,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1188864,
+              "rss_bytes": 2260992,
+              "start_ticks": 1174161,
+              "voluntary_switches": 1273
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3406418,
+          "memory_current_bytes": 180334592,
+          "monotonic_seconds": 11760.06948507,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:10:25.198212+00",
+        "wal_bytes": 34475368
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5220968,
+          "memory_current_bytes": 139825152,
+          "monotonic_seconds": 11749.77290494,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4310016,
+              "rss_bytes": 24670208,
+              "start_ticks": 1173860,
+              "voluntary_switches": 12
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3345408,
+              "rss_bytes": 19562496,
+              "start_ticks": 1173860,
+              "voluntary_switches": 13
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2804736,
+              "rss_bytes": 18333696,
+              "start_ticks": 1174161,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 6,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1183744,
+              "rss_bytes": 2260992,
+              "start_ticks": 1174161,
+              "voluntary_switches": 805
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 552,
+              "pss_bytes": 929792,
+              "rss_bytes": 2129920,
+              "start_ticks": 1174973,
+              "voluntary_switches": 17
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3205180,
+          "memory_current_bytes": 186523648,
+          "monotonic_seconds": 11749.842884732,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:10:25.198212+00",
+        "wal_bytes": 34095456
+      },
+      "idle_elapsed_seconds": 10.189224005000142,
+      "image": "lake-replication-launcher-base:qualification_20261018_200855",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 9861643,
+          "memory_current_bytes": 145711104,
+          "monotonic_seconds": 11769.166137073,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 1,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4592640,
+              "rss_bytes": 24670208,
+              "start_ticks": 1173860,
+              "voluntary_switches": 32
+            },
+            {
+              "cpu_ticks": 1,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3553280,
+              "rss_bytes": 19562496,
+              "start_ticks": 1173860,
+              "voluntary_switches": 32
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 3017728,
+              "rss_bytes": 18333696,
+              "start_ticks": 1174161,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 21,
+              "involuntary_switches": 1,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1188864,
+              "rss_bytes": 2260992,
+              "start_ticks": 1174161,
+              "voluntary_switches": 2039
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6810770,
+          "memory_current_bytes": 186290176,
+          "monotonic_seconds": 11769.238471407,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:10:25.198212+00",
+        "wal_bytes": 36312008
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6461981,
+          "memory_current_bytes": 143532032,
+          "monotonic_seconds": 11760.152370195,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 1,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4306944,
+              "rss_bytes": 24670208,
+              "start_ticks": 1173860,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3340288,
+              "rss_bytes": 19562496,
+              "start_ticks": 1173860,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2796544,
+              "rss_bytes": 18333696,
+              "start_ticks": 1174161,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 15,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1184768,
+              "rss_bytes": 2260992,
+              "start_ticks": 1174161,
+              "voluntary_switches": 1285
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 710,
+              "pss_bytes": 929792,
+              "rss_bytes": 2113536,
+              "start_ticks": 1176003,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3429418,
+          "memory_current_bytes": 180133888,
+          "monotonic_seconds": 11760.238290653,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:10:25.198212+00",
+        "wal_bytes": 34475992
+      },
+      "repetition": 2,
+      "variant": "base",
+      "verified_rows": 8000,
+      "warmup": {
+        "catchup_seconds": 3.605781082995236,
+        "commit_lag_ms": {
+          "p50": 1550.7071018218994,
+          "p95": 3359.1201305389404,
+          "p99": 3606.8642139434814
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 5.874166003195569,
+          "p95": 8.427082997513935
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 532.6198978573836,
+        "source_elapsed_seconds": 3.904265042001498,
+        "transactions": [
+          {
+            "committed_epoch": 1792354228.793905,
+            "first_observed_epoch": 1792354228.902228,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792354228.894436,
+            "first_observed_epoch": 1792354229.010294,
+            "transaction": 2
+          },
+          {
+            "committed_epoch": 1792354228.994884,
+            "first_observed_epoch": 1792354229.222436,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792354229.094943,
+            "first_observed_epoch": 1792354229.330798,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792354229.195167,
+            "first_observed_epoch": 1792354229.544005,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792354229.29864,
+            "first_observed_epoch": 1792354229.651854,
+            "transaction": 6
+          },
+          {
+            "committed_epoch": 1792354229.398787,
+            "first_observed_epoch": 1792354229.861857,
+            "transaction": 7
+          },
+          {
+            "committed_epoch": 1792354229.498801,
+            "first_observed_epoch": 1792354230.075777,
+            "transaction": 8
+          },
+          {
+            "committed_epoch": 1792354229.594064,
+            "first_observed_epoch": 1792354230.185029,
+            "transaction": 9
+          },
+          {
+            "committed_epoch": 1792354229.695099,
+            "first_observed_epoch": 1792354230.400717,
+            "transaction": 10
+          },
+          {
+            "committed_epoch": 1792354229.798563,
+            "first_observed_epoch": 1792354230.61742,
+            "transaction": 11
+          },
+          {
+            "committed_epoch": 1792354229.89882,
+            "first_observed_epoch": 1792354230.726232,
+            "transaction": 12
+          },
+          {
+            "committed_epoch": 1792354229.995516,
+            "first_observed_epoch": 1792354230.940365,
+            "transaction": 13
+          },
+          {
+            "committed_epoch": 1792354230.096256,
+            "first_observed_epoch": 1792354231.049348,
+            "transaction": 14
+          },
+          {
+            "committed_epoch": 1792354230.198755,
+            "first_observed_epoch": 1792354231.267479,
+            "transaction": 15
+          },
+          {
+            "committed_epoch": 1792354230.296293,
+            "first_observed_epoch": 1792354231.484186,
+            "transaction": 16
+          },
+          {
+            "committed_epoch": 1792354230.395487,
+            "first_observed_epoch": 1792354231.702482,
+            "transaction": 17
+          },
+          {
+            "committed_epoch": 1792354230.498683,
+            "first_observed_epoch": 1792354231.924732,
+            "transaction": 18
+          },
+          {
+            "committed_epoch": 1792354230.598847,
+            "first_observed_epoch": 1792354232.033616,
+            "transaction": 19
+          },
+          {
+            "committed_epoch": 1792354230.698637,
+            "first_observed_epoch": 1792354232.249344,
+            "transaction": 20
+          },
+          {
+            "committed_epoch": 1792354230.794559,
+            "first_observed_epoch": 1792354232.469784,
+            "transaction": 21
+          },
+          {
+            "committed_epoch": 1792354230.894543,
+            "first_observed_epoch": 1792354232.686779,
+            "transaction": 22
+          },
+          {
+            "committed_epoch": 1792354230.99863,
+            "first_observed_epoch": 1792354232.902268,
+            "transaction": 23
+          },
+          {
+            "committed_epoch": 1792354231.098887,
+            "first_observed_epoch": 1792354233.011181,
+            "transaction": 24
+          },
+          {
+            "committed_epoch": 1792354231.195178,
+            "first_observed_epoch": 1792354233.23053,
+            "transaction": 25
+          },
+          {
+            "committed_epoch": 1792354231.295195,
+            "first_observed_epoch": 1792354233.446471,
+            "transaction": 26
+          },
+          {
+            "committed_epoch": 1792354231.39878,
+            "first_observed_epoch": 1792354233.660861,
+            "transaction": 27
+          },
+          {
+            "committed_epoch": 1792354231.495546,
+            "first_observed_epoch": 1792354233.879723,
+            "transaction": 28
+          },
+          {
+            "committed_epoch": 1792354231.599083,
+            "first_observed_epoch": 1792354234.100062,
+            "transaction": 29
+          },
+          {
+            "committed_epoch": 1792354231.697452,
+            "first_observed_epoch": 1792354234.317384,
+            "transaction": 30
+          },
+          {
+            "committed_epoch": 1792354231.798529,
+            "first_observed_epoch": 1792354234.540958,
+            "transaction": 31
+          },
+          {
+            "committed_epoch": 1792354231.898946,
+            "first_observed_epoch": 1792354234.756356,
+            "transaction": 32
+          },
+          {
+            "committed_epoch": 1792354231.998737,
+            "first_observed_epoch": 1792354234.867433,
+            "transaction": 33
+          },
+          {
+            "committed_epoch": 1792354232.098492,
+            "first_observed_epoch": 1792354235.085723,
+            "transaction": 34
+          },
+          {
+            "committed_epoch": 1792354232.19994,
+            "first_observed_epoch": 1792354235.309825,
+            "transaction": 35
+          },
+          {
+            "committed_epoch": 1792354232.294145,
+            "first_observed_epoch": 1792354235.529763,
+            "transaction": 36
+          },
+          {
+            "committed_epoch": 1792354232.394568,
+            "first_observed_epoch": 1792354235.637954,
+            "transaction": 37
+          },
+          {
+            "committed_epoch": 1792354232.499043,
+            "first_observed_epoch": 1792354235.858163,
+            "transaction": 38
+          },
+          {
+            "committed_epoch": 1792354232.599006,
+            "first_observed_epoch": 1792354236.079561,
+            "transaction": 39
+          },
+          {
+            "committed_epoch": 1792354232.695747,
+            "first_observed_epoch": 1792354236.302611,
+            "transaction": 40
+          }
+        ],
+        "visible_elapsed_seconds": 7.510046124996734
+      },
+      "workload": {
+        "catchup_seconds": 4.930178916001751,
+        "commit_lag_ms": {
+          "p50": 2232.264995574951,
+          "p95": 4672.831058502197,
+          "p99": 4930.903911590576
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 9.77454199892236,
+          "p95": 13.578124999185093
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 452.7063670815808,
+        "source_elapsed_seconds": 3.9055704589991365,
+        "transactions": [
+          {
+            "committed_epoch": 1792354246.859957,
+            "first_observed_epoch": 1792354246.976896,
+            "transaction": 41
+          },
+          {
+            "committed_epoch": 1792354246.963641,
+            "first_observed_epoch": 1792354247.192409,
+            "transaction": 42
+          },
+          {
+            "committed_epoch": 1792354247.060517,
+            "first_observed_epoch": 1792354247.413992,
+            "transaction": 43
+          },
+          {
+            "committed_epoch": 1792354247.161474,
+            "first_observed_epoch": 1792354247.632371,
+            "transaction": 44
+          },
+          {
+            "committed_epoch": 1792354247.261278,
+            "first_observed_epoch": 1792354247.852261,
+            "transaction": 45
+          },
+          {
+            "committed_epoch": 1792354247.364626,
+            "first_observed_epoch": 1792354248.073937,
+            "transaction": 46
+          },
+          {
+            "committed_epoch": 1792354247.460394,
+            "first_observed_epoch": 1792354248.299546,
+            "transaction": 47
+          },
+          {
+            "committed_epoch": 1792354247.561103,
+            "first_observed_epoch": 1792354248.407525,
+            "transaction": 48
+          },
+          {
+            "committed_epoch": 1792354247.661164,
+            "first_observed_epoch": 1792354248.631084,
+            "transaction": 49
+          },
+          {
+            "committed_epoch": 1792354247.764643,
+            "first_observed_epoch": 1792354248.851108,
+            "transaction": 50
+          },
+          {
+            "committed_epoch": 1792354247.864614,
+            "first_observed_epoch": 1792354249.07328,
+            "transaction": 51
+          },
+          {
+            "committed_epoch": 1792354247.964364,
+            "first_observed_epoch": 1792354249.291318,
+            "transaction": 52
+          },
+          {
+            "committed_epoch": 1792354248.063443,
+            "first_observed_epoch": 1792354249.515837,
+            "transaction": 53
+          },
+          {
+            "committed_epoch": 1792354248.162739,
+            "first_observed_epoch": 1792354249.741311,
+            "transaction": 54
+          },
+          {
+            "committed_epoch": 1792354248.261283,
+            "first_observed_epoch": 1792354249.967535,
+            "transaction": 55
+          },
+          {
+            "committed_epoch": 1792354248.361732,
+            "first_observed_epoch": 1792354250.192402,
+            "transaction": 56
+          },
+          {
+            "committed_epoch": 1792354248.464695,
+            "first_observed_epoch": 1792354250.419192,
+            "transaction": 57
+          },
+          {
+            "committed_epoch": 1792354248.564702,
+            "first_observed_epoch": 1792354250.649446,
+            "transaction": 58
+          },
+          {
+            "committed_epoch": 1792354248.66475,
+            "first_observed_epoch": 1792354250.880138,
+            "transaction": 59
+          },
+          {
+            "committed_epoch": 1792354248.761488,
+            "first_observed_epoch": 1792354250.993753,
+            "transaction": 60
+          },
+          {
+            "committed_epoch": 1792354248.860964,
+            "first_observed_epoch": 1792354251.218139,
+            "transaction": 61
+          },
+          {
+            "committed_epoch": 1792354248.962428,
+            "first_observed_epoch": 1792354251.449506,
+            "transaction": 62
+          },
+          {
+            "committed_epoch": 1792354249.064806,
+            "first_observed_epoch": 1792354251.674863,
+            "transaction": 63
+          },
+          {
+            "committed_epoch": 1792354249.161547,
+            "first_observed_epoch": 1792354251.90501,
+            "transaction": 64
+          },
+          {
+            "committed_epoch": 1792354249.26004,
+            "first_observed_epoch": 1792354252.133305,
+            "transaction": 65
+          },
+          {
+            "committed_epoch": 1792354249.360909,
+            "first_observed_epoch": 1792354252.360794,
+            "transaction": 66
+          },
+          {
+            "committed_epoch": 1792354249.464689,
+            "first_observed_epoch": 1792354252.586407,
+            "transaction": 67
+          },
+          {
+            "committed_epoch": 1792354249.564597,
+            "first_observed_epoch": 1792354252.813459,
+            "transaction": 68
+          },
+          {
+            "committed_epoch": 1792354249.65988,
+            "first_observed_epoch": 1792354253.155334,
+            "transaction": 69
+          },
+          {
+            "committed_epoch": 1792354249.764707,
+            "first_observed_epoch": 1792354253.387855,
+            "transaction": 70
+          },
+          {
+            "committed_epoch": 1792354249.864622,
+            "first_observed_epoch": 1792354253.614305,
+            "transaction": 71
+          },
+          {
+            "committed_epoch": 1792354249.961578,
+            "first_observed_epoch": 1792354253.842425,
+            "transaction": 72
+          },
+          {
+            "committed_epoch": 1792354250.064615,
+            "first_observed_epoch": 1792354254.076505,
+            "transaction": 73
+          },
+          {
+            "committed_epoch": 1792354250.163322,
+            "first_observed_epoch": 1792354254.312638,
+            "transaction": 74
+          },
+          {
+            "committed_epoch": 1792354250.264873,
+            "first_observed_epoch": 1792354254.545443,
+            "transaction": 75
+          },
+          {
+            "committed_epoch": 1792354250.36257,
+            "first_observed_epoch": 1792354254.776126,
+            "transaction": 76
+          },
+          {
+            "committed_epoch": 1792354250.460949,
+            "first_observed_epoch": 1792354255.007059,
+            "transaction": 77
+          },
+          {
+            "committed_epoch": 1792354250.563093,
+            "first_observed_epoch": 1792354255.235924,
+            "transaction": 78
+          },
+          {
+            "committed_epoch": 1792354250.664797,
+            "first_observed_epoch": 1792354255.463979,
+            "transaction": 79
+          },
+          {
+            "committed_epoch": 1792354250.76357,
+            "first_observed_epoch": 1792354255.694474,
+            "transaction": 80
+          }
+        ],
+        "visible_elapsed_seconds": 8.835749375000887
+      }
+    },
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5961873,
+          "memory_current_bytes": 143556608,
+          "monotonic_seconds": 11801.226747005,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3519488,
+              "rss_bytes": 19476480,
+              "start_ticks": 1178010,
+              "voluntary_switches": 46
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 11,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4409344,
+              "rss_bytes": 24465408,
+              "start_ticks": 1178011,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2855936,
+              "rss_bytes": 18325504,
+              "start_ticks": 1178312,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 12,
+              "involuntary_switches": 5,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1195008,
+              "rss_bytes": 2260992,
+              "start_ticks": 1178312,
+              "voluntary_switches": 1285
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 704,
+              "pss_bytes": 945152,
+              "rss_bytes": 2129920,
+              "start_ticks": 1180099,
+              "voluntary_switches": 20
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 8165749,
+          "memory_current_bytes": 191942656,
+          "monotonic_seconds": 11801.303370463,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:06.707045+00",
+        "wal_bytes": 34499904
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5095601,
+          "memory_current_bytes": 139018240,
+          "monotonic_seconds": 11791.051846209,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3526656,
+              "rss_bytes": 19476480,
+              "start_ticks": 1178010,
+              "voluntary_switches": 35
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 11,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4402176,
+              "rss_bytes": 24465408,
+              "start_ticks": 1178011,
+              "voluntary_switches": 12
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2861056,
+              "rss_bytes": 18325504,
+              "start_ticks": 1178312,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 5,
+              "involuntary_switches": 4,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1193984,
+              "rss_bytes": 2260992,
+              "start_ticks": 1178312,
+              "voluntary_switches": 805
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 558,
+              "pss_bytes": 944128,
+              "rss_bytes": 2129920,
+              "start_ticks": 1179103,
+              "voluntary_switches": 19
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 7986049,
+          "memory_current_bytes": 193822720,
+          "monotonic_seconds": 11791.127860209,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:06.707045+00",
+        "wal_bytes": 34119384
+      },
+      "idle_elapsed_seconds": 10.174900795998838,
+      "image": "lake-replication-launcher-static:qualification_20261018_200855",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 9546595,
+          "memory_current_bytes": 145801216,
+          "monotonic_seconds": 11810.699815634,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 4,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3739648,
+              "rss_bytes": 19476480,
+              "start_ticks": 1178010,
+              "voluntary_switches": 55
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 11,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4725760,
+              "rss_bytes": 24465408,
+              "start_ticks": 1178011,
+              "voluntary_switches": 34
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 3097600,
+              "rss_bytes": 18325504,
+              "start_ticks": 1178312,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 16,
+              "involuntary_switches": 9,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1203200,
+              "rss_bytes": 2260992,
+              "start_ticks": 1178312,
+              "voluntary_switches": 2050
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 11990040,
+          "memory_current_bytes": 194592768,
+          "monotonic_seconds": 11810.771304426,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:06.707045+00",
+        "wal_bytes": 36333248
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5984383,
+          "memory_current_bytes": 144011264,
+          "monotonic_seconds": 11801.378024172,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3519488,
+              "rss_bytes": 19476480,
+              "start_ticks": 1178010,
+              "voluntary_switches": 46
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 11,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4409344,
+              "rss_bytes": 24465408,
+              "start_ticks": 1178011,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2855936,
+              "rss_bytes": 18325504,
+              "start_ticks": 1178312,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 12,
+              "involuntary_switches": 5,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1193984,
+              "rss_bytes": 2260992,
+              "start_ticks": 1178312,
+              "voluntary_switches": 1285
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 704,
+              "pss_bytes": 944128,
+              "rss_bytes": 2129920,
+              "start_ticks": 1180099,
+              "voluntary_switches": 20
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 8186030,
+          "memory_current_bytes": 192217088,
+          "monotonic_seconds": 11801.453794297,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:06.707045+00",
+        "wal_bytes": 34499904
+      },
+      "repetition": 2,
+      "variant": "static",
+      "verified_rows": 8000,
+      "warmup": {
+        "catchup_seconds": 3.3704873329988914,
+        "commit_lag_ms": {
+          "p50": 1541.0728454589844,
+          "p95": 3239.5761013031006,
+          "p99": 3370.734930038452
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 5.336832997272722,
+          "p95": 8.653582997794729
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 550.0437007110215,
+        "source_elapsed_seconds": 3.9016621249975287,
+        "transactions": [
+          {
+            "committed_epoch": 1792354270.298524,
+            "first_observed_epoch": 1792354270.41078,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792354270.40062,
+            "first_observed_epoch": 1792354270.518267,
+            "transaction": 2
+          },
+          {
+            "committed_epoch": 1792354270.499478,
+            "first_observed_epoch": 1792354270.733263,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792354270.603187,
+            "first_observed_epoch": 1792354270.840891,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792354270.702807,
+            "first_observed_epoch": 1792354271.055491,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792354270.80281,
+            "first_observed_epoch": 1792354271.163626,
+            "transaction": 6
+          },
+          {
+            "committed_epoch": 1792354270.903055,
+            "first_observed_epoch": 1792354271.374912,
+            "transaction": 7
+          },
+          {
+            "committed_epoch": 1792354270.999124,
+            "first_observed_epoch": 1792354271.47865,
+            "transaction": 8
+          },
+          {
+            "committed_epoch": 1792354271.103,
+            "first_observed_epoch": 1792354271.689023,
+            "transaction": 9
+          },
+          {
+            "committed_epoch": 1792354271.200425,
+            "first_observed_epoch": 1792354271.906472,
+            "transaction": 10
+          },
+          {
+            "committed_epoch": 1792354271.299766,
+            "first_observed_epoch": 1792354272.014885,
+            "transaction": 11
+          },
+          {
+            "committed_epoch": 1792354271.40317,
+            "first_observed_epoch": 1792354272.228627,
+            "transaction": 12
+          },
+          {
+            "committed_epoch": 1792354271.498529,
+            "first_observed_epoch": 1792354272.444938,
+            "transaction": 13
+          },
+          {
+            "committed_epoch": 1792354271.600645,
+            "first_observed_epoch": 1792354272.551681,
+            "transaction": 14
+          },
+          {
+            "committed_epoch": 1792354271.702718,
+            "first_observed_epoch": 1792354272.777991,
+            "transaction": 15
+          },
+          {
+            "committed_epoch": 1792354271.802947,
+            "first_observed_epoch": 1792354272.994821,
+            "transaction": 16
+          },
+          {
+            "committed_epoch": 1792354271.903263,
+            "first_observed_epoch": 1792354273.20678,
+            "transaction": 17
+          },
+          {
+            "committed_epoch": 1792354272.002988,
+            "first_observed_epoch": 1792354273.311586,
+            "transaction": 18
+          },
+          {
+            "committed_epoch": 1792354272.098749,
+            "first_observed_epoch": 1792354273.527799,
+            "transaction": 19
+          },
+          {
+            "committed_epoch": 1792354272.198769,
+            "first_observed_epoch": 1792354273.739842,
+            "transaction": 20
+          },
+          {
+            "committed_epoch": 1792354272.298879,
+            "first_observed_epoch": 1792354273.956544,
+            "transaction": 21
+          },
+          {
+            "committed_epoch": 1792354272.400703,
+            "first_observed_epoch": 1792354274.066646,
+            "transaction": 22
+          },
+          {
+            "committed_epoch": 1792354272.49857,
+            "first_observed_epoch": 1792354274.284847,
+            "transaction": 23
+          },
+          {
+            "committed_epoch": 1792354272.603057,
+            "first_observed_epoch": 1792354274.501557,
+            "transaction": 24
+          },
+          {
+            "committed_epoch": 1792354272.702917,
+            "first_observed_epoch": 1792354274.719732,
+            "transaction": 25
+          },
+          {
+            "committed_epoch": 1792354272.798718,
+            "first_observed_epoch": 1792354274.830465,
+            "transaction": 26
+          },
+          {
+            "committed_epoch": 1792354272.900748,
+            "first_observed_epoch": 1792354275.050096,
+            "transaction": 27
+          },
+          {
+            "committed_epoch": 1792354273.001587,
+            "first_observed_epoch": 1792354275.266805,
+            "transaction": 28
+          },
+          {
+            "committed_epoch": 1792354273.098714,
+            "first_observed_epoch": 1792354275.37745,
+            "transaction": 29
+          },
+          {
+            "committed_epoch": 1792354273.203081,
+            "first_observed_epoch": 1792354275.594472,
+            "transaction": 30
+          },
+          {
+            "committed_epoch": 1792354273.299321,
+            "first_observed_epoch": 1792354275.812911,
+            "transaction": 31
+          },
+          {
+            "committed_epoch": 1792354273.398832,
+            "first_observed_epoch": 1792354276.036125,
+            "transaction": 32
+          },
+          {
+            "committed_epoch": 1792354273.498397,
+            "first_observed_epoch": 1792354276.255241,
+            "transaction": 33
+          },
+          {
+            "committed_epoch": 1792354273.599653,
+            "first_observed_epoch": 1792354276.471147,
+            "transaction": 34
+          },
+          {
+            "committed_epoch": 1792354273.702871,
+            "first_observed_epoch": 1792354276.578833,
+            "transaction": 35
+          },
+          {
+            "committed_epoch": 1792354273.801655,
+            "first_observed_epoch": 1792354276.79509,
+            "transaction": 36
+          },
+          {
+            "committed_epoch": 1792354273.898351,
+            "first_observed_epoch": 1792354277.01923,
+            "transaction": 37
+          },
+          {
+            "committed_epoch": 1792354273.9986,
+            "first_observed_epoch": 1792354277.238176,
+            "transaction": 38
+          },
+          {
+            "committed_epoch": 1792354274.103044,
+            "first_observed_epoch": 1792354277.457295,
+            "transaction": 39
+          },
+          {
+            "committed_epoch": 1792354274.19809,
+            "first_observed_epoch": 1792354277.568825,
+            "transaction": 40
+          }
+        ],
+        "visible_elapsed_seconds": 7.27214945799642
+      },
+      "workload": {
+        "catchup_seconds": 5.255947207995632,
+        "commit_lag_ms": {
+          "p50": 2466.088056564331,
+          "p95": 4995.037794113159,
+          "p99": 5256.518840789795
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 10.27191700268304,
+          "p95": 13.019624995649792
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 436.59762293755165,
+        "source_elapsed_seconds": 3.90580675000092,
+        "transactions": [
+          {
+            "committed_epoch": 1792354288.073633,
+            "first_observed_epoch": 1792354288.299589,
+            "transaction": 41
+          },
+          {
+            "committed_epoch": 1792354288.174262,
+            "first_observed_epoch": 1792354288.520605,
+            "transaction": 42
+          },
+          {
+            "committed_epoch": 1792354288.276188,
+            "first_observed_epoch": 1792354288.633225,
+            "transaction": 43
+          },
+          {
+            "committed_epoch": 1792354288.378216,
+            "first_observed_epoch": 1792354288.859068,
+            "transaction": 44
+          },
+          {
+            "committed_epoch": 1792354288.474194,
+            "first_observed_epoch": 1792354289.079705,
+            "transaction": 45
+          },
+          {
+            "committed_epoch": 1792354288.577859,
+            "first_observed_epoch": 1792354289.29884,
+            "transaction": 46
+          },
+          {
+            "committed_epoch": 1792354288.677897,
+            "first_observed_epoch": 1792354289.517818,
+            "transaction": 47
+          },
+          {
+            "committed_epoch": 1792354288.777533,
+            "first_observed_epoch": 1792354289.736775,
+            "transaction": 48
+          },
+          {
+            "committed_epoch": 1792354288.876799,
+            "first_observed_epoch": 1792354289.960807,
+            "transaction": 49
+          },
+          {
+            "committed_epoch": 1792354288.977353,
+            "first_observed_epoch": 1792354290.182493,
+            "transaction": 50
+          },
+          {
+            "committed_epoch": 1792354289.076684,
+            "first_observed_epoch": 1792354290.404178,
+            "transaction": 51
+          },
+          {
+            "committed_epoch": 1792354289.178232,
+            "first_observed_epoch": 1792354290.6322,
+            "transaction": 52
+          },
+          {
+            "committed_epoch": 1792354289.275729,
+            "first_observed_epoch": 1792354290.854353,
+            "transaction": 53
+          },
+          {
+            "committed_epoch": 1792354289.377368,
+            "first_observed_epoch": 1792354291.080854,
+            "transaction": 54
+          },
+          {
+            "committed_epoch": 1792354289.478349,
+            "first_observed_epoch": 1792354291.300891,
+            "transaction": 55
+          },
+          {
+            "committed_epoch": 1792354289.578239,
+            "first_observed_epoch": 1792354291.530569,
+            "transaction": 56
+          },
+          {
+            "committed_epoch": 1792354289.678224,
+            "first_observed_epoch": 1792354291.76155,
+            "transaction": 57
+          },
+          {
+            "committed_epoch": 1792354289.775087,
+            "first_observed_epoch": 1792354291.984629,
+            "transaction": 58
+          },
+          {
+            "committed_epoch": 1792354289.873566,
+            "first_observed_epoch": 1792354292.215559,
+            "transaction": 59
+          },
+          {
+            "committed_epoch": 1792354289.978278,
+            "first_observed_epoch": 1792354292.444366,
+            "transaction": 60
+          },
+          {
+            "committed_epoch": 1792354290.073262,
+            "first_observed_epoch": 1792354292.668641,
+            "transaction": 61
+          },
+          {
+            "committed_epoch": 1792354290.178184,
+            "first_observed_epoch": 1792354292.895602,
+            "transaction": 62
+          },
+          {
+            "committed_epoch": 1792354290.276884,
+            "first_observed_epoch": 1792354293.237617,
+            "transaction": 63
+          },
+          {
+            "committed_epoch": 1792354290.378323,
+            "first_observed_epoch": 1792354293.351937,
+            "transaction": 64
+          },
+          {
+            "committed_epoch": 1792354290.474754,
+            "first_observed_epoch": 1792354293.697548,
+            "transaction": 65
+          },
+          {
+            "committed_epoch": 1792354290.578336,
+            "first_observed_epoch": 1792354293.922595,
+            "transaction": 66
+          },
+          {
+            "committed_epoch": 1792354290.674325,
+            "first_observed_epoch": 1792354294.149011,
+            "transaction": 67
+          },
+          {
+            "committed_epoch": 1792354290.776977,
+            "first_observed_epoch": 1792354294.377612,
+            "transaction": 68
+          },
+          {
+            "committed_epoch": 1792354290.873626,
+            "first_observed_epoch": 1792354294.60061,
+            "transaction": 69
+          },
+          {
+            "committed_epoch": 1792354290.978643,
+            "first_observed_epoch": 1792354294.831677,
+            "transaction": 70
+          },
+          {
+            "committed_epoch": 1792354291.078231,
+            "first_observed_epoch": 1792354295.057065,
+            "transaction": 71
+          },
+          {
+            "committed_epoch": 1792354291.175249,
+            "first_observed_epoch": 1792354295.286156,
+            "transaction": 72
+          },
+          {
+            "committed_epoch": 1792354291.278305,
+            "first_observed_epoch": 1792354295.512492,
+            "transaction": 73
+          },
+          {
+            "committed_epoch": 1792354291.377999,
+            "first_observed_epoch": 1792354295.858819,
+            "transaction": 74
+          },
+          {
+            "committed_epoch": 1792354291.473848,
+            "first_observed_epoch": 1792354296.08525,
+            "transaction": 75
+          },
+          {
+            "committed_epoch": 1792354291.574421,
+            "first_observed_epoch": 1792354296.310972,
+            "transaction": 76
+          },
+          {
+            "committed_epoch": 1792354291.678322,
+            "first_observed_epoch": 1792354296.540715,
+            "transaction": 77
+          },
+          {
+            "committed_epoch": 1792354291.774892,
+            "first_observed_epoch": 1792354296.76993,
+            "transaction": 78
+          },
+          {
+            "committed_epoch": 1792354291.874381,
+            "first_observed_epoch": 1792354297.003799,
+            "transaction": 79
+          },
+          {
+            "committed_epoch": 1792354291.977086,
+            "first_observed_epoch": 1792354297.233605,
+            "transaction": 80
+          }
+        ],
+        "visible_elapsed_seconds": 9.161753957996552
+      }
+    },
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6640517,
+          "memory_current_bytes": 141791232,
+          "monotonic_seconds": 11839.303394189,
+          "processes": [
+            {
+              "cpu_ticks": 1,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3551232,
+              "rss_bytes": 19292160,
+              "start_ticks": 1181778,
+              "voluntary_switches": 46
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4401152,
+              "rss_bytes": 24358912,
+              "start_ticks": 1181779,
+              "voluntary_switches": 22
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2863104,
+              "rss_bytes": 18427904,
+              "start_ticks": 1182079,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 15,
+              "involuntary_switches": 2,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1198080,
+              "rss_bytes": 2260992,
+              "start_ticks": 1182080,
+              "voluntary_switches": 1255
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 698,
+              "pss_bytes": 943104,
+              "rss_bytes": 2113536,
+              "start_ticks": 1183911,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3592674,
+          "memory_current_bytes": 186232832,
+          "monotonic_seconds": 11839.376050189,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:44.383201+00",
+        "wal_bytes": 34497584
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5498792,
+          "memory_current_bytes": 133996544,
+          "monotonic_seconds": 11829.112660018,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3558400,
+              "rss_bytes": 19292160,
+              "start_ticks": 1181778,
+              "voluntary_switches": 36
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4395008,
+              "rss_bytes": 24358912,
+              "start_ticks": 1181779,
+              "voluntary_switches": 12
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2868224,
+              "rss_bytes": 18427904,
+              "start_ticks": 1182079,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 7,
+              "involuntary_switches": 2,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1198080,
+              "rss_bytes": 2260992,
+              "start_ticks": 1182080,
+              "voluntary_switches": 791
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 555,
+              "pss_bytes": 943104,
+              "rss_bytes": 2113536,
+              "start_ticks": 1182908,
+              "voluntary_switches": 17
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3400312,
+          "memory_current_bytes": 187146240,
+          "monotonic_seconds": 11829.205183684,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:44.383201+00",
+        "wal_bytes": 34117648
+      },
+      "idle_elapsed_seconds": 10.190734171001168,
+      "image": "lake-replication-launcher-static:qualification_20261018_200855",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 10237092,
+          "memory_current_bytes": 145534976,
+          "monotonic_seconds": 11848.836140027,
+          "processes": [
+            {
+              "cpu_ticks": 1,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3544064,
+              "rss_bytes": 19292160,
+              "start_ticks": 1181778,
+              "voluntary_switches": 55
+            },
+            {
+              "cpu_ticks": 1,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4403200,
+              "rss_bytes": 24358912,
+              "start_ticks": 1181779,
+              "voluntary_switches": 31
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2863104,
+              "rss_bytes": 18427904,
+              "start_ticks": 1182079,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 21,
+              "involuntary_switches": 5,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1202176,
+              "rss_bytes": 2260992,
+              "start_ticks": 1182080,
+              "voluntary_switches": 2032
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 1128,
+              "pss_bytes": 944128,
+              "rss_bytes": 2129920,
+              "start_ticks": 1184872,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 7289572,
+          "memory_current_bytes": 184750080,
+          "monotonic_seconds": 11848.919558277,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:44.383201+00",
+        "wal_bytes": 36329744
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6674530,
+          "memory_current_bytes": 144429056,
+          "monotonic_seconds": 11839.447867481,
+          "processes": [
+            {
+              "cpu_ticks": 1,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 90,
+              "pss_bytes": 3573760,
+              "rss_bytes": 19292160,
+              "start_ticks": 1181778,
+              "voluntary_switches": 46
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 96,
+              "pss_bytes": 4489216,
+              "rss_bytes": 24358912,
+              "start_ticks": 1181779,
+              "voluntary_switches": 22
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2882560,
+              "rss_bytes": 18427904,
+              "start_ticks": 1182079,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 15,
+              "involuntary_switches": 2,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1200128,
+              "rss_bytes": 2260992,
+              "start_ticks": 1182080,
+              "voluntary_switches": 1270
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 713,
+              "pss_bytes": 945152,
+              "rss_bytes": 2125824,
+              "start_ticks": 1183944,
+              "voluntary_switches": 13
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 3612514,
+          "memory_current_bytes": 186269696,
+          "monotonic_seconds": 11839.518533064,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:11:44.383201+00",
+        "wal_bytes": 34497904
+      },
+      "repetition": 3,
+      "variant": "static",
+      "verified_rows": 8000,
+      "warmup": {
+        "catchup_seconds": 3.8776021669982583,
+        "commit_lag_ms": {
+          "p50": 1536.2989902496338,
+          "p95": 3631.272077560425,
+          "p99": 3878.664016723633
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 6.080291997932363,
+          "p95": 11.882250000780914
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 513.7937677190391,
+        "source_elapsed_seconds": 3.907622667000396,
+        "transactions": [
+          {
+            "committed_epoch": 1792354307.816133,
+            "first_observed_epoch": 1792354307.923623,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792354307.920925,
+            "first_observed_epoch": 1792354308.026907,
+            "transaction": 2
+          },
+          {
+            "committed_epoch": 1792354308.020749,
+            "first_observed_epoch": 1792354308.243292,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792354308.118212,
+            "first_observed_epoch": 1792354308.455258,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792354308.216285,
+            "first_observed_epoch": 1792354308.562658,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792354308.320447,
+            "first_observed_epoch": 1792354308.77207,
+            "transaction": 6
+          },
+          {
+            "committed_epoch": 1792354308.418434,
+            "first_observed_epoch": 1792354308.879174,
+            "transaction": 7
+          },
+          {
+            "committed_epoch": 1792354308.517346,
+            "first_observed_epoch": 1792354309.093881,
+            "transaction": 8
+          },
+          {
+            "committed_epoch": 1792354308.621036,
+            "first_observed_epoch": 1792354309.304979,
+            "transaction": 9
+          },
+          {
+            "committed_epoch": 1792354308.720896,
+            "first_observed_epoch": 1792354309.413097,
+            "transaction": 10
+          },
+          {
+            "committed_epoch": 1792354308.820928,
+            "first_observed_epoch": 1792354309.625868,
+            "transaction": 11
+          },
+          {
+            "committed_epoch": 1792354308.916351,
+            "first_observed_epoch": 1792354309.732082,
+            "transaction": 12
+          },
+          {
+            "committed_epoch": 1792354309.018267,
+            "first_observed_epoch": 1792354309.948957,
+            "transaction": 13
+          },
+          {
+            "committed_epoch": 1792354309.120938,
+            "first_observed_epoch": 1792354310.057421,
+            "transaction": 14
+          },
+          {
+            "committed_epoch": 1792354309.217126,
+            "first_observed_epoch": 1792354310.272483,
+            "transaction": 15
+          },
+          {
+            "committed_epoch": 1792354309.320968,
+            "first_observed_epoch": 1792354310.487437,
+            "transaction": 16
+          },
+          {
+            "committed_epoch": 1792354309.420739,
+            "first_observed_epoch": 1792354310.700109,
+            "transaction": 17
+          },
+          {
+            "committed_epoch": 1792354309.519018,
+            "first_observed_epoch": 1792354310.811347,
+            "transaction": 18
+          },
+          {
+            "committed_epoch": 1792354309.620985,
+            "first_observed_epoch": 1792354311.042118,
+            "transaction": 19
+          },
+          {
+            "committed_epoch": 1792354309.720719,
+            "first_observed_epoch": 1792354311.257018,
+            "transaction": 20
+          },
+          {
+            "committed_epoch": 1792354309.820891,
+            "first_observed_epoch": 1792354311.477599,
+            "transaction": 21
+          },
+          {
+            "committed_epoch": 1792354309.918668,
+            "first_observed_epoch": 1792354311.703968,
+            "transaction": 22
+          },
+          {
+            "committed_epoch": 1792354310.019261,
+            "first_observed_epoch": 1792354311.814822,
+            "transaction": 23
+          },
+          {
+            "committed_epoch": 1792354310.120862,
+            "first_observed_epoch": 1792354312.153789,
+            "transaction": 24
+          },
+          {
+            "committed_epoch": 1792354310.220767,
+            "first_observed_epoch": 1792354312.263338,
+            "transaction": 25
+          },
+          {
+            "committed_epoch": 1792354310.320332,
+            "first_observed_epoch": 1792354312.489275,
+            "transaction": 26
+          },
+          {
+            "committed_epoch": 1792354310.417572,
+            "first_observed_epoch": 1792354312.708881,
+            "transaction": 27
+          },
+          {
+            "committed_epoch": 1792354310.522068,
+            "first_observed_epoch": 1792354312.927515,
+            "transaction": 28
+          },
+          {
+            "committed_epoch": 1792354310.620806,
+            "first_observed_epoch": 1792354313.148128,
+            "transaction": 29
+          },
+          {
+            "committed_epoch": 1792354310.718616,
+            "first_observed_epoch": 1792354313.374631,
+            "transaction": 30
+          },
+          {
+            "committed_epoch": 1792354310.81774,
+            "first_observed_epoch": 1792354313.48467,
+            "transaction": 31
+          },
+          {
+            "committed_epoch": 1792354310.918633,
+            "first_observed_epoch": 1792354313.705589,
+            "transaction": 32
+          },
+          {
+            "committed_epoch": 1792354311.022257,
+            "first_observed_epoch": 1792354313.929861,
+            "transaction": 33
+          },
+          {
+            "committed_epoch": 1792354311.122174,
+            "first_observed_epoch": 1792354314.150091,
+            "transaction": 34
+          },
+          {
+            "committed_epoch": 1792354311.218701,
+            "first_observed_epoch": 1792354314.492075,
+            "transaction": 35
+          },
+          {
+            "committed_epoch": 1792354311.322371,
+            "first_observed_epoch": 1792354314.713164,
+            "transaction": 36
+          },
+          {
+            "committed_epoch": 1792354311.419891,
+            "first_observed_epoch": 1792354314.930144,
+            "transaction": 37
+          },
+          {
+            "committed_epoch": 1792354311.522317,
+            "first_observed_epoch": 1792354315.153589,
+            "transaction": 38
+          },
+          {
+            "committed_epoch": 1792354311.619239,
+            "first_observed_epoch": 1792354315.378802,
+            "transaction": 39
+          },
+          {
+            "committed_epoch": 1792354311.722375,
+            "first_observed_epoch": 1792354315.601039,
+            "transaction": 40
+          }
+        ],
+        "visible_elapsed_seconds": 7.7852248339986545
+      },
+      "workload": {
+        "catchup_seconds": 5.304826209001476,
+        "commit_lag_ms": {
+          "p50": 2482.408046722412,
+          "p95": 4929.183006286621,
+          "p99": 5305.866956710815
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 10.389250004664063,
+          "p95": 14.29104200360598
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 434.20278670676765,
+        "source_elapsed_seconds": 3.9074592079996364,
+        "transactions": [
+          {
+            "committed_epoch": 1792354326.139035,
+            "first_observed_epoch": 1792354326.252939,
+            "transaction": 41
+          },
+          {
+            "committed_epoch": 1792354326.238783,
+            "first_observed_epoch": 1792354326.47077,
+            "transaction": 42
+          },
+          {
+            "committed_epoch": 1792354326.341716,
+            "first_observed_epoch": 1792354326.691364,
+            "transaction": 43
+          },
+          {
+            "committed_epoch": 1792354326.439602,
+            "first_observed_epoch": 1792354326.917471,
+            "transaction": 44
+          },
+          {
+            "committed_epoch": 1792354326.543963,
+            "first_observed_epoch": 1792354327.134971,
+            "transaction": 45
+          },
+          {
+            "committed_epoch": 1792354326.639683,
+            "first_observed_epoch": 1792354327.357014,
+            "transaction": 46
+          },
+          {
+            "committed_epoch": 1792354326.740468,
+            "first_observed_epoch": 1792354327.578561,
+            "transaction": 47
+          },
+          {
+            "committed_epoch": 1792354326.840633,
+            "first_observed_epoch": 1792354327.806869,
+            "transaction": 48
+          },
+          {
+            "committed_epoch": 1792354326.939145,
+            "first_observed_epoch": 1792354328.033421,
+            "transaction": 49
+          },
+          {
+            "committed_epoch": 1792354327.040659,
+            "first_observed_epoch": 1792354328.253455,
+            "transaction": 50
+          },
+          {
+            "committed_epoch": 1792354327.140416,
+            "first_observed_epoch": 1792354328.476377,
+            "transaction": 51
+          },
+          {
+            "committed_epoch": 1792354327.240357,
+            "first_observed_epoch": 1792354328.701907,
+            "transaction": 52
+          },
+          {
+            "committed_epoch": 1792354327.343764,
+            "first_observed_epoch": 1792354328.92828,
+            "transaction": 53
+          },
+          {
+            "committed_epoch": 1792354327.440472,
+            "first_observed_epoch": 1792354329.152377,
+            "transaction": 54
+          },
+          {
+            "committed_epoch": 1792354327.541585,
+            "first_observed_epoch": 1792354329.379945,
+            "transaction": 55
+          },
+          {
+            "committed_epoch": 1792354327.643681,
+            "first_observed_epoch": 1792354329.61111,
+            "transaction": 56
+          },
+          {
+            "committed_epoch": 1792354327.742368,
+            "first_observed_epoch": 1792354329.840631,
+            "transaction": 57
+          },
+          {
+            "committed_epoch": 1792354327.839651,
+            "first_observed_epoch": 1792354330.070007,
+            "transaction": 58
+          },
+          {
+            "committed_epoch": 1792354327.941737,
+            "first_observed_epoch": 1792354330.300546,
+            "transaction": 59
+          },
+          {
+            "committed_epoch": 1792354328.043582,
+            "first_observed_epoch": 1792354330.52599,
+            "transaction": 60
+          },
+          {
+            "committed_epoch": 1792354328.142709,
+            "first_observed_epoch": 1792354330.758804,
+            "transaction": 61
+          },
+          {
+            "committed_epoch": 1792354328.243631,
+            "first_observed_epoch": 1792354330.990829,
+            "transaction": 62
+          },
+          {
+            "committed_epoch": 1792354328.343442,
+            "first_observed_epoch": 1792354331.221039,
+            "transaction": 63
+          },
+          {
+            "committed_epoch": 1792354328.443617,
+            "first_observed_epoch": 1792354331.445776,
+            "transaction": 64
+          },
+          {
+            "committed_epoch": 1792354328.541812,
+            "first_observed_epoch": 1792354331.670269,
+            "transaction": 65
+          },
+          {
+            "committed_epoch": 1792354328.641557,
+            "first_observed_epoch": 1792354331.898962,
+            "transaction": 66
+          },
+          {
+            "committed_epoch": 1792354328.739695,
+            "first_observed_epoch": 1792354332.129623,
+            "transaction": 67
+          },
+          {
+            "committed_epoch": 1792354328.839352,
+            "first_observed_epoch": 1792354332.36026,
+            "transaction": 68
+          },
+          {
+            "committed_epoch": 1792354328.943584,
+            "first_observed_epoch": 1792354332.582868,
+            "transaction": 69
+          },
+          {
+            "committed_epoch": 1792354329.039481,
+            "first_observed_epoch": 1792354332.809353,
+            "transaction": 70
+          },
+          {
+            "committed_epoch": 1792354329.142007,
+            "first_observed_epoch": 1792354333.043434,
+            "transaction": 71
+          },
+          {
+            "committed_epoch": 1792354329.24365,
+            "first_observed_epoch": 1792354333.268518,
+            "transaction": 72
+          },
+          {
+            "committed_epoch": 1792354329.340481,
+            "first_observed_epoch": 1792354333.497734,
+            "transaction": 73
+          },
+          {
+            "committed_epoch": 1792354329.443279,
+            "first_observed_epoch": 1792354333.725434,
+            "transaction": 74
+          },
+          {
+            "committed_epoch": 1792354329.542352,
+            "first_observed_epoch": 1792354334.074181,
+            "transaction": 75
+          },
+          {
+            "committed_epoch": 1792354329.639296,
+            "first_observed_epoch": 1792354334.307583,
+            "transaction": 76
+          },
+          {
+            "committed_epoch": 1792354329.743608,
+            "first_observed_epoch": 1792354334.540154,
+            "transaction": 77
+          },
+          {
+            "committed_epoch": 1792354329.843417,
+            "first_observed_epoch": 1792354334.7726,
+            "transaction": 78
+          },
+          {
+            "committed_epoch": 1792354329.943686,
+            "first_observed_epoch": 1792354334.998066,
+            "transaction": 79
+          },
+          {
+            "committed_epoch": 1792354330.043911,
+            "first_observed_epoch": 1792354335.349778,
+            "transaction": 80
+          }
+        ],
+        "visible_elapsed_seconds": 9.212285417001112
+      }
+    },
+    {
+      "idle_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6083788,
+          "memory_current_bytes": 143806464,
+          "monotonic_seconds": 11877.970771248,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4359168,
+              "rss_bytes": 24535040,
+              "start_ticks": 1185701,
+              "voluntary_switches": 21
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3362816,
+              "rss_bytes": 19378176,
+              "start_ticks": 1185701,
+              "voluntary_switches": 22
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2829312,
+              "rss_bytes": 18202624,
+              "start_ticks": 1186002,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 14,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1197056,
+              "rss_bytes": 2244608,
+              "start_ticks": 1186002,
+              "voluntary_switches": 1286
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 703,
+              "pss_bytes": 945152,
+              "rss_bytes": 2129920,
+              "start_ticks": 1187789,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2958831,
+          "memory_current_bytes": 179589120,
+          "monotonic_seconds": 11878.045258582,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:12:23.605861+00",
+        "wal_bytes": 34485112
+      },
+      "idle_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 5026366,
+          "memory_current_bytes": 141004800,
+          "monotonic_seconds": 11867.808143202,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4361216,
+              "rss_bytes": 24535040,
+              "start_ticks": 1185701,
+              "voluntary_switches": 11
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3366912,
+              "rss_bytes": 19378176,
+              "start_ticks": 1185701,
+              "voluntary_switches": 12
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2836480,
+              "rss_bytes": 18202624,
+              "start_ticks": 1186002,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 6,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1192960,
+              "rss_bytes": 2244608,
+              "start_ticks": 1186002,
+              "voluntary_switches": 806
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 551,
+              "pss_bytes": 946176,
+              "rss_bytes": 2129920,
+              "start_ticks": 1186777,
+              "voluntary_switches": 17
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2789418,
+          "memory_current_bytes": 181743616,
+          "monotonic_seconds": 11867.879935494,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:12:23.605861+00",
+        "wal_bytes": 34104880
+      },
+      "idle_elapsed_seconds": 10.162628045998645,
+      "image": "lake-replication-launcher-base:qualification_20261018_200855",
+      "loaded_after": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 9594034,
+          "memory_current_bytes": 145219584,
+          "monotonic_seconds": 11887.468064336,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4364288,
+              "rss_bytes": 24535040,
+              "start_ticks": 1185701,
+              "voluntary_switches": 31
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3353600,
+              "rss_bytes": 19378176,
+              "start_ticks": 1185701,
+              "voluntary_switches": 32
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 2826240,
+              "rss_bytes": 18202624,
+              "start_ticks": 1186002,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 20,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1197056,
+              "rss_bytes": 2244608,
+              "start_ticks": 1186002,
+              "voluntary_switches": 2063
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 1133,
+              "pss_bytes": 945152,
+              "rss_bytes": 2129920,
+              "start_ticks": 1188739,
+              "voluntary_switches": 18
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6588496,
+          "memory_current_bytes": 180420608,
+          "monotonic_seconds": 11887.545868211,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:12:23.605861+00",
+        "wal_bytes": 36321904
+      },
+      "loaded_before": {
+        "destination": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 6108309,
+          "memory_current_bytes": 141897728,
+          "monotonic_seconds": 11878.117678665,
+          "processes": [
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "framework",
+              "pid": 95,
+              "pss_bytes": 4670464,
+              "rss_bytes": 24535040,
+              "start_ticks": 1185701,
+              "voluntary_switches": 22
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "launcher",
+              "pid": 96,
+              "pss_bytes": 3601408,
+              "rss_bytes": 19378176,
+              "start_ticks": 1185701,
+              "voluntary_switches": 23
+            },
+            {
+              "cpu_ticks": 0,
+              "involuntary_switches": 0,
+              "kind": "wrapper",
+              "pid": 129,
+              "pss_bytes": 3068928,
+              "rss_bytes": 18202624,
+              "start_ticks": 1186002,
+              "voluntary_switches": 1
+            },
+            {
+              "cpu_ticks": 14,
+              "involuntary_switches": 0,
+              "kind": "rust",
+              "pid": 130,
+              "pss_bytes": 1206272,
+              "rss_bytes": 2244608,
+              "start_ticks": 1186002,
+              "voluntary_switches": 1290
+            }
+          ]
+        },
+        "pgduck": {
+          "clock_ticks": 100,
+          "cpu_usage_usec": 2978126,
+          "memory_current_bytes": 179707904,
+          "monotonic_seconds": 11878.187215832,
+          "processes": []
+        },
+        "postmaster_start": "2026-10-18 20:12:23.605861+00",
+        "wal_bytes": 34485416
+      },
+      "repetition": 3,
+      "variant": "base",
+      "verified_rows": 8000,
+      "warmup": {
+        "catchup_seconds": 3.346156792002148,
+        "commit_lag_ms": {
+          "p50": 1519.0620422363281,
+          "p95": 3110.684871673584,
+          "p99": 3346.6339111328125
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 4.805500000657048,
+          "p95": 7.205375004559755
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 551.5086691990797,
+        "source_elapsed_seconds": 3.906675707999966,
+        "transactions": [
+          {
+            "committed_epoch": 1792354347.088863,
+            "first_observed_epoch": 1792354347.30435,
+            "transaction": 1
+          },
+          {
+            "committed_epoch": 1792354347.188937,
+            "first_observed_epoch": 1792354347.514746,
+            "transaction": 2
+          },
+          {
+            "committed_epoch": 1792354347.292461,
+            "first_observed_epoch": 1792354347.619462,
+            "transaction": 3
+          },
+          {
+            "committed_epoch": 1792354347.390057,
+            "first_observed_epoch": 1792354347.831515,
+            "transaction": 4
+          },
+          {
+            "committed_epoch": 1792354347.489295,
+            "first_observed_epoch": 1792354347.939817,
+            "transaction": 5
+          },
+          {
+            "committed_epoch": 1792354347.593452,
+            "first_observed_epoch": 1792354348.151154,
+            "transaction": 6
+          },
+          {
+            "committed_epoch": 1792354347.692385,
+            "first_observed_epoch": 1792354348.255518,
+            "transaction": 7
+          },
+          {
+            "committed_epoch": 1792354347.789803,
+            "first_observed_epoch": 1792354348.472451,
+            "transaction": 8
+          },
+          {
+            "committed_epoch": 1792354347.893716,
+            "first_observed_epoch": 1792354348.580923,
+            "transaction": 9
+          },
+          {
+            "committed_epoch": 1792354347.989568,
+            "first_observed_epoch": 1792354348.794449,
+            "transaction": 10
+          },
+          {
+            "committed_epoch": 1792354348.092568,
+            "first_observed_epoch": 1792354348.897757,
+            "transaction": 11
+          },
+          {
+            "committed_epoch": 1792354348.191013,
+            "first_observed_epoch": 1792354349.111647,
+            "transaction": 12
+          },
+          {
+            "committed_epoch": 1792354348.28947,
+            "first_observed_epoch": 1792354349.325856,
+            "transaction": 13
+          },
+          {
+            "committed_epoch": 1792354348.389734,
+            "first_observed_epoch": 1792354349.433487,
+            "transaction": 14
+          },
+          {
+            "committed_epoch": 1792354348.493396,
+            "first_observed_epoch": 1792354349.651199,
+            "transaction": 15
+          },
+          {
+            "committed_epoch": 1792354348.588555,
+            "first_observed_epoch": 1792354349.757019,
+            "transaction": 16
+          },
+          {
+            "committed_epoch": 1792354348.692853,
+            "first_observed_epoch": 1792354349.976762,
+            "transaction": 17
+          },
+          {
+            "committed_epoch": 1792354348.789523,
+            "first_observed_epoch": 1792354350.186957,
+            "transaction": 18
+          },
+          {
+            "committed_epoch": 1792354348.889529,
+            "first_observed_epoch": 1792354350.292912,
+            "transaction": 19
+          },
+          {
+            "committed_epoch": 1792354348.989116,
+            "first_observed_epoch": 1792354350.508178,
+            "transaction": 20
+          },
+          {
+            "committed_epoch": 1792354349.088996,
+            "first_observed_epoch": 1792354350.723608,
+            "transaction": 21
+          },
+          {
+            "committed_epoch": 1792354349.193052,
+            "first_observed_epoch": 1792354350.829738,
+            "transaction": 22
+          },
+          {
+            "committed_epoch": 1792354349.293517,
+            "first_observed_epoch": 1792354351.048795,
+            "transaction": 23
+          },
+          {
+            "committed_epoch": 1792354349.393599,
+            "first_observed_epoch": 1792354351.266357,
+            "transaction": 24
+          },
+          {
+            "committed_epoch": 1792354349.493571,
+            "first_observed_epoch": 1792354351.376408,
+            "transaction": 25
+          },
+          {
+            "committed_epoch": 1792354349.589912,
+            "first_observed_epoch": 1792354351.597463,
+            "transaction": 26
+          },
+          {
+            "committed_epoch": 1792354349.693403,
+            "first_observed_epoch": 1792354351.812005,
+            "transaction": 27
+          },
+          {
+            "committed_epoch": 1792354349.791229,
+            "first_observed_epoch": 1792354351.918367,
+            "transaction": 28
+          },
+          {
+            "committed_epoch": 1792354349.893411,
+            "first_observed_epoch": 1792354352.132018,
+            "transaction": 29
+          },
+          {
+            "committed_epoch": 1792354349.989087,
+            "first_observed_epoch": 1792354352.347871,
+            "transaction": 30
+          },
+          {
+            "committed_epoch": 1792354350.09151,
+            "first_observed_epoch": 1792354352.564765,
+            "transaction": 31
+          },
+          {
+            "committed_epoch": 1792354350.18902,
+            "first_observed_epoch": 1792354352.787209,
+            "transaction": 32
+          },
+          {
+            "committed_epoch": 1792354350.289558,
+            "first_observed_epoch": 1792354352.894139,
+            "transaction": 33
+          },
+          {
+            "committed_epoch": 1792354350.393427,
+            "first_observed_epoch": 1792354353.1158,
+            "transaction": 34
+          },
+          {
+            "committed_epoch": 1792354350.492309,
+            "first_observed_epoch": 1792354353.338423,
+            "transaction": 35
+          },
+          {
+            "committed_epoch": 1792354350.589366,
+            "first_observed_epoch": 1792354353.565684,
+            "transaction": 36
+          },
+          {
+            "committed_epoch": 1792354350.688786,
+            "first_observed_epoch": 1792354353.677045,
+            "transaction": 37
+          },
+          {
+            "committed_epoch": 1792354350.790143,
+            "first_observed_epoch": 1792354353.900828,
+            "transaction": 38
+          },
+          {
+            "committed_epoch": 1792354350.893533,
+            "first_observed_epoch": 1792354354.120457,
+            "transaction": 39
+          },
+          {
+            "committed_epoch": 1792354350.993472,
+            "first_observed_epoch": 1792354354.340106,
+            "transaction": 40
+          }
+        ],
+        "visible_elapsed_seconds": 7.252832500002114
+      },
+      "workload": {
+        "catchup_seconds": 5.281332708000264,
+        "commit_lag_ms": {
+          "p50": 2465.035915374756,
+          "p95": 4903.781175613403,
+          "p99": 5283.2090854644775
+        },
+        "observer_poll_ms": 100,
+        "observer_query_ms": {
+          "p50": 10.061375003715511,
+          "p95": 14.616708998801187
+        },
+        "rows": 4000,
+        "rows_per_second_until_visible": 435.4091028573321,
+        "source_elapsed_seconds": 3.9054297499969834,
+        "transactions": [
+          {
+            "committed_epoch": 1792354364.80673,
+            "first_observed_epoch": 1792354365.037628,
+            "transaction": 41
+          },
+          {
+            "committed_epoch": 1792354364.911685,
+            "first_observed_epoch": 1792354365.146342,
+            "transaction": 42
+          },
+          {
+            "committed_epoch": 1792354365.007735,
+            "first_observed_epoch": 1792354365.370475,
+            "transaction": 43
+          },
+          {
+            "committed_epoch": 1792354365.109768,
+            "first_observed_epoch": 1792354365.591563,
+            "transaction": 44
+          },
+          {
+            "committed_epoch": 1792354365.209087,
+            "first_observed_epoch": 1792354365.813055,
+            "transaction": 45
+          },
+          {
+            "committed_epoch": 1792354365.310673,
+            "first_observed_epoch": 1792354366.029989,
+            "transaction": 46
+          },
+          {
+            "committed_epoch": 1792354365.410418,
+            "first_observed_epoch": 1792354366.251732,
+            "transaction": 47
+          },
+          {
+            "committed_epoch": 1792354365.507648,
+            "first_observed_epoch": 1792354366.472076,
+            "transaction": 48
+          },
+          {
+            "committed_epoch": 1792354365.608466,
+            "first_observed_epoch": 1792354366.699619,
+            "transaction": 49
+          },
+          {
+            "committed_epoch": 1792354365.711635,
+            "first_observed_epoch": 1792354366.920069,
+            "transaction": 50
+          },
+          {
+            "committed_epoch": 1792354365.806725,
+            "first_observed_epoch": 1792354367.139007,
+            "transaction": 51
+          },
+          {
+            "committed_epoch": 1792354365.910226,
+            "first_observed_epoch": 1792354367.358421,
+            "transaction": 52
+          },
+          {
+            "committed_epoch": 1792354366.011704,
+            "first_observed_epoch": 1792354367.47125,
+            "transaction": 53
+          },
+          {
+            "committed_epoch": 1792354366.11158,
+            "first_observed_epoch": 1792354367.696936,
+            "transaction": 54
+          },
+          {
+            "committed_epoch": 1792354366.207621,
+            "first_observed_epoch": 1792354368.034152,
+            "transaction": 55
+          },
+          {
+            "committed_epoch": 1792354366.310706,
+            "first_observed_epoch": 1792354368.263633,
+            "transaction": 56
+          },
+          {
+            "committed_epoch": 1792354366.410726,
+            "first_observed_epoch": 1792354368.491211,
+            "transaction": 57
+          },
+          {
+            "committed_epoch": 1792354366.511595,
+            "first_observed_epoch": 1792354368.717797,
+            "transaction": 58
+          },
+          {
+            "committed_epoch": 1792354366.607801,
+            "first_observed_epoch": 1792354368.946176,
+            "transaction": 59
+          },
+          {
+            "committed_epoch": 1792354366.709162,
+            "first_observed_epoch": 1792354369.174198,
+            "transaction": 60
+          },
+          {
+            "committed_epoch": 1792354366.810585,
+            "first_observed_epoch": 1792354369.398456,
+            "transaction": 61
+          },
+          {
+            "committed_epoch": 1792354366.910909,
+            "first_observed_epoch": 1792354369.512386,
+            "transaction": 62
+          },
+          {
+            "committed_epoch": 1792354367.008293,
+            "first_observed_epoch": 1792354369.737215,
+            "transaction": 63
+          },
+          {
+            "committed_epoch": 1792354367.111164,
+            "first_observed_epoch": 1792354369.958778,
+            "transaction": 64
+          },
+          {
+            "committed_epoch": 1792354367.211668,
+            "first_observed_epoch": 1792354370.310983,
+            "transaction": 65
+          },
+          {
+            "committed_epoch": 1792354367.308007,
+            "first_observed_epoch": 1792354370.540476,
+            "transaction": 66
+          },
+          {
+            "committed_epoch": 1792354367.407321,
+            "first_observed_epoch": 1792354370.772504,
+            "transaction": 67
+          },
+          {
+            "committed_epoch": 1792354367.507385,
+            "first_observed_epoch": 1792354370.997612,
+            "transaction": 68
+          },
+          {
+            "committed_epoch": 1792354367.606986,
+            "first_observed_epoch": 1792354371.222164,
+            "transaction": 69
+          },
+          {
+            "committed_epoch": 1792354367.711643,
+            "first_observed_epoch": 1792354371.45973,
+            "transaction": 70
+          },
+          {
+            "committed_epoch": 1792354367.811651,
+            "first_observed_epoch": 1792354371.693172,
+            "transaction": 71
+          },
+          {
+            "committed_epoch": 1792354367.910705,
+            "first_observed_epoch": 1792354372.037157,
+            "transaction": 72
+          },
+          {
+            "committed_epoch": 1792354368.011289,
+            "first_observed_epoch": 1792354372.268187,
+            "transaction": 73
+          },
+          {
+            "committed_epoch": 1792354368.111718,
+            "first_observed_epoch": 1792354372.49829,
+            "transaction": 74
+          },
+          {
+            "committed_epoch": 1792354368.210656,
+            "first_observed_epoch": 1792354372.7256,
+            "transaction": 75
+          },
+          {
+            "committed_epoch": 1792354368.306608,
+            "first_observed_epoch": 1792354372.961917,
+            "transaction": 76
+          },
+          {
+            "committed_epoch": 1792354368.407513,
+            "first_observed_epoch": 1792354373.185995,
+            "transaction": 77
+          },
+          {
+            "committed_epoch": 1792354368.510259,
+            "first_observed_epoch": 1792354373.41404,
+            "transaction": 78
+          },
+          {
+            "committed_epoch": 1792354368.611714,
+            "first_observed_epoch": 1792354373.762015,
+            "transaction": 79
+          },
+          {
+            "committed_epoch": 1792354368.709734,
+            "first_observed_epoch": 1792354373.992943,
+            "transaction": 80
+          }
+        ],
+        "visible_elapsed_seconds": 9.186762457997247
+      }
+    }
+  ],
+  "control_interpretation": "Explicit-preload configuration repeatability control. Base automatic startup preload remains enabled, so this does not isolate loading cost.",
+  "fingerprints": {
+    "Dockerfile": "5231ddf691846aa5b675094b59207730c1875e6e6870fbdd5a218f0bc275cb14",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "compare.py": "62710392b5242ce19b62ff6014895e299a2d22e9fa2ec234de357afea8c90521",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3",
+    "sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4"
+  },
+  "host": {
+    "Architecture": "aarch64",
+    "KernelVersion": "7.0.12-linuxkit",
+    "MemTotal": 8214716416,
+    "NCPU": 11,
+    "OSType": "linux",
+    "ServerVersion": "29.7.2"
+  },
+  "images": [
+    {
+      "architecture": "arm64",
+      "id": "sha256:74690404b4fef1fd2e9a8b6f082c879a8ada142326346f5224ccc0c64883a050",
+      "tags": [
+        "lake-replication-launcher-static:qualification_20261018_200855"
+      ]
+    },
+    {
+      "architecture": "arm64",
+      "id": "sha256:0e0356855a1fa378fb30bdc23ab07f61c5f6131314c90a66e43c16b6160b9e1b",
+      "tags": [
+        "lake-replication-launcher-base:qualification_20261018_200855"
+      ]
+    }
+  ],
+  "lag_method": "source pg_xact_commit_timestamp to first destination polling query timestamp; upper observation estimate, same-host container wall clocks",
+  "parameters": {
+    "base_preload": true,
+    "catchup_timeout": 90,
+    "idle_seconds": 10,
+    "interval_ms": 100,
+    "payload_bytes": 128,
+    "poll_ms": 100,
+    "repetitions": 3,
+    "rows_per_transaction": 100,
+    "transactions": 40
+  },
+  "production_launcher_changed": false,
+  "run_directory": ".qualification/qualification_20261018_200855_comparison",
+  "scope": "single database/subscription insert screening; not saturation or full adoption qualification",
+  "status": "passed",
+  "summary": {
+    "base": {
+      "destination_idle_cpu_percent_of_one_core": {
+        "max": 11.768923712066169,
+        "median": 10.405005429834079,
+        "min": 8.152439532749314
+      },
+      "p95_commit_lag_ms": {
+        "max": 4903.781175613403,
+        "median": 4786.3609790802,
+        "min": 4672.831058502197
+      },
+      "repetitions": 3,
+      "rows_per_second_until_visible": {
+        "max": 452.7063670815808,
+        "median": 447.3349739342905,
+        "min": 435.4091028573321
+      },
+      "wrapper_idle_voluntary_switches_per_second": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0
+      }
+    },
+    "static": {
+      "destination_idle_cpu_percent_of_one_core": {
+        "max": 11.20355983034963,
+        "median": 8.848843004094364,
+        "min": 8.513812737522231
+      },
+      "p95_commit_lag_ms": {
+        "max": 4995.037794113159,
+        "median": 4929.183006286621,
+        "min": 4900.829076766968
+      },
+      "repetitions": 3,
+      "rows_per_second_until_visible": {
+        "max": 441.2503658136405,
+        "median": 436.59762293755165,
+        "min": 434.20278670676765
+      },
+      "wrapper_idle_voluntary_switches_per_second": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0
+      }
+    }
+  }
+}

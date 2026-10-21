@@ -1,0 +1,2796 @@
+{
+  "admission": "one worker write transaction per PostgreSQL instance, across all databases",
+  "checks": {
+    "architecture": "arm64",
+    "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+    "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+    "checks": [
+      {
+        "actual": "sha256:0a962ccd1865c9f97709eb2d53383dd607150af073eea5f0989dd13ffe78334f",
+        "expected": "sha256:0a962ccd1865c9f97709eb2d53383dd607150af073eea5f0989dd13ffe78334f",
+        "name": "exact current parent image",
+        "passed": true
+      },
+      {
+        "actual": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+        "expected": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+        "name": "qualified parent source adapt.py",
+        "passed": true
+      },
+      {
+        "actual": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3",
+        "expected": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3",
+        "name": "qualified parent source runtime.c.inc",
+        "passed": true
+      },
+      {
+        "actual": "667057ecc27768a3800294b4945d7d39bd639d6879aba0c14fe4e5a5aea38c3b",
+        "expected": "667057ecc27768a3800294b4945d7d39bd639d6879aba0c14fe4e5a5aea38c3b",
+        "name": "qualified parent source binding.py",
+        "passed": true
+      },
+      {
+        "actual": "9e6f7dd3957255f49c7f2337cca1e16525bb37fb9eb6ae1b0510013446bf2116",
+        "expected": "9e6f7dd3957255f49c7f2337cca1e16525bb37fb9eb6ae1b0510013446bf2116",
+        "name": "qualified parent source binding.sql",
+        "passed": true
+      },
+      {
+        "actual": "864e50092a12b4b7e449d42c862d4cfd6a68405fa228508ed7fe329da667ba46",
+        "expected": "864e50092a12b4b7e449d42c862d4cfd6a68405fa228508ed7fe329da667ba46",
+        "name": "qualified parent source publication.py",
+        "passed": true
+      },
+      {
+        "actual": "c115ce431272c871e578bb23cb3a4c6e73f53eee18ca15d63ea2987d49c82116",
+        "expected": "c115ce431272c871e578bb23cb3a4c6e73f53eee18ca15d63ea2987d49c82116",
+        "name": "qualified parent source publication.sql",
+        "passed": true
+      },
+      {
+        "actual": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+        "expected": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+        "name": "qualified parent source register.sql",
+        "passed": true
+      },
+      {
+        "actual": "44209e27c0ace3d394d9066c01e7f8e7b734b9a0314b9bc621e8a0f449a7a94b",
+        "expected": "44209e27c0ace3d394d9066c01e7f8e7b734b9a0314b9bc621e8a0f449a7a94b",
+        "name": "qualified parent source scale.py",
+        "passed": true
+      },
+      {
+        "actual": "dfc3ca8360b25738bd0cca719aaea4c1ff28f533a2f78e9bef2b53fea8133035",
+        "expected": "dfc3ca8360b25738bd0cca719aaea4c1ff28f533a2f78e9bef2b53fea8133035",
+        "name": "qualified parent source compare.py",
+        "passed": true
+      },
+      {
+        "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='waiting_for_writer'",
+        "passed": true
+      },
+      {
+        "actual": "admission_other",
+        "expected": "admission_other",
+        "name": "waiter from another database is visible",
+        "passed": true
+      },
+      {
+        "actual": "2",
+        "expected": "2",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='waiting_for_writer'",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "ordinary SQL still runs while writers queue",
+        "passed": true
+      },
+      {
+        "actual": false,
+        "expected": false,
+        "name": "first queued writer is admitted before second",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "queued writer cancellation is interruptible",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='waiting_for_writer'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "lock timeout leaves no orphan permit request",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='waiting_for_writer'",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='waiting_for_writer'",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "ownership rejection still applies after admission",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "10",
+        "expected": "10",
+        "name": "all ten native guards remain installed",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "real initial copy completes under admission",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM pg_stat_activity WHERE backend_type='lake_replication supervisor'",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "SELECT (count(*)>0)::text FROM lake_replication.prototype_writer_admission WHERE admission_state='waiting_for_writer'",
+        "passed": true
+      },
+      {
+        "actual": 0,
+        "expected": 0,
+        "name": "queued worker holds no ownership row lock that blocks disable",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM pg_stat_activity WHERE backend_type='lake_replication supervisor'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='waiting_for_writer'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "disabled queued worker did not publish its pending change",
+        "passed": true
+      },
+      {
+        "actual": "2",
+        "expected": "2",
+        "name": "queued subscription resumes and makes progress",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM pg_stat_activity WHERE backend_type='lake_replication supervisor'",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "PostgreSQL recovers after forced holder crash",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "SELECT count(*) FROM lake_replication.prototype_writer_admission WHERE admission_state='admitted'",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "forced backend crash actually caused PostgreSQL recovery",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "analytics replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_1 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_2 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_3 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_0 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_1 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_2 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_3 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_4 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_5 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_6 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_7 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_8 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_9 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_10 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_11 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_12 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_13 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_14 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_15 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "16",
+        "expected": "16",
+        "name": "one wrapper per enabled subscription",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 0",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 1",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 2",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 3",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 4",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 5",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 6",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 7",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 8",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 9",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 10",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 11",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 12",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 13",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 14",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 15",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "analytics replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_1 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_2 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_3 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "16",
+        "expected": "16",
+        "name": "live all wrappers present",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 0",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 1",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 2",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 3",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 4",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 5",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 6",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 7",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 8",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 9",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 10",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 11",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 12",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 13",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 14",
+        "passed": true
+      },
+      {
+        "actual": "restarted",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 15",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "analytics replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_1 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_2 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_3 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "16",
+        "expected": "16",
+        "name": "restarted all wrappers present",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "all disabled wrappers drain",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "disabled source slots release",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "native cleanup removes every source slot",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "analytics replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "scale_db_1 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "scale_db_2 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "scale_db_3 replication owner count",
+        "passed": true
+      }
+    ],
+    "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+    "run": "qualification_20261020_055358",
+    "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9"
+  },
+  "disabled_workers_absent": true,
+  "image_id": "sha256:7a416dc7d646735c7c02ce69e1ee74dd2751abd2061555389e637fe4455e62b6",
+  "limits": [
+    "Experimental fresh-install overlay; PostgreSQL 18/Linux arm64.",
+    "Does not reduce subscription wrapper count or bound ordinary SQL/independent maintenance.",
+    "No multi-instance engine coordination, distributed ownership, adjustable pool or throughput qualification."
+  ],
+  "log_evidence": {
+    "scale-4db-16sub-64slots": {
+      "engine_oom_present": false,
+      "recovery_lines": [],
+      "sha256": "60cefdaaa49e8d77a2fd3703194be303dde6d8f6022e41a74eaad337d912b39c"
+    },
+    "transactions": {
+      "engine_oom_present": false,
+      "recovery_lines": [
+        "destination-1   | 2026-10-20 05:54:44.614 UTC [7] LOG:  client backend (PID 567) was terminated by signal 9: Killed",
+        "destination-1   | 2026-10-20 05:54:44.617 UTC [7] LOG:  all server processes terminated; reinitializing"
+      ],
+      "sha256": "1392048c164b9f182162748c859d4faebb39ed391d3d8ca5f5180a13e013c605"
+    }
+  },
+  "parent_evidence_sha256": "131cee1456cf6e395eddde5c2138a9bea261c19be604710b3ba684e9f33b1507",
+  "production_changed": false,
+  "raw_results_sha256": "1836d12c8b5ca6864473e43e17f6f5d9e6f2a16dfa609b67d76fda3764b1f8a8",
+  "scale_case": {
+    "active_inventory": {
+      "backend_types": [
+        {
+          "backend_type": "autovacuum launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "background writer",
+          "count": 1
+        },
+        {
+          "backend_type": "checkpointer",
+          "count": 1
+        },
+        {
+          "backend_type": "client backend",
+          "count": 25
+        },
+        {
+          "backend_type": "io worker",
+          "count": 3
+        },
+        {
+          "backend_type": "lake_replication supervisor",
+          "count": 16
+        },
+        {
+          "backend_type": "logical replication launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "pg_base_extension server starter",
+          "count": 1
+        },
+        {
+          "backend_type": "pg base extension worker",
+          "count": 8
+        },
+        {
+          "backend_type": "pg_lake cache worker",
+          "count": 1
+        },
+        {
+          "backend_type": "walwriter",
+          "count": 1
+        }
+      ],
+      "base_workers": [
+        {
+          "database_id": "18126",
+          "extension_id": "19040",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 125,
+          "worker_id": 1
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "21018",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 168,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17304",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 96,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22752",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 198,
+          "worker_id": 2
+        },
+        {
+          "database_id": "18126",
+          "extension_id": "19284",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 138,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17548",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 97,
+          "worker_id": 2
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "20774",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 155,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22508",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 185,
+          "worker_id": 1
+        }
+      ],
+      "destination": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 12509950,
+        "memory_current_bytes": 325771264,
+        "monotonic_seconds": 55677.879905583,
+        "processes": [
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 96,
+            "pss_bytes": 2694144,
+            "rss_bytes": 25600000,
+            "start_ticks": 5566461,
+            "voluntary_switches": 17
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 97,
+            "pss_bytes": 2647040,
+            "rss_bytes": 21028864,
+            "start_ticks": 5566461,
+            "voluntary_switches": 20
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 125,
+            "pss_bytes": 3903488,
+            "rss_bytes": 29458432,
+            "start_ticks": 5566689,
+            "voluntary_switches": 14
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 138,
+            "pss_bytes": 3120128,
+            "rss_bytes": 24412160,
+            "start_ticks": 5566869,
+            "voluntary_switches": 13
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 155,
+            "pss_bytes": 3532800,
+            "rss_bytes": 28348416,
+            "start_ticks": 5566911,
+            "voluntary_switches": 10
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 168,
+            "pss_bytes": 2878464,
+            "rss_bytes": 23183360,
+            "start_ticks": 5567090,
+            "voluntary_switches": 11
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 185,
+            "pss_bytes": 3175424,
+            "rss_bytes": 27181056,
+            "start_ticks": 5567134,
+            "voluntary_switches": 7
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 198,
+            "pss_bytes": 2937856,
+            "rss_bytes": 23183360,
+            "start_ticks": 5567312,
+            "voluntary_switches": 10
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 261,
+            "pss_bytes": 2238464,
+            "rss_bytes": 20340736,
+            "start_ticks": 5567412,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 23,
+            "kind": "rust",
+            "pid": 262,
+            "pss_bytes": 263168,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567412,
+            "voluntary_switches": 91
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 337,
+            "pss_bytes": 2467840,
+            "rss_bytes": 22376448,
+            "start_ticks": 5567512,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 338,
+            "pss_bytes": 2466816,
+            "rss_bytes": 22499328,
+            "start_ticks": 5567512,
+            "voluntary_switches": 2
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 339,
+            "pss_bytes": 2413568,
+            "rss_bytes": 21868544,
+            "start_ticks": 5567512,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 340,
+            "pss_bytes": 2415616,
+            "rss_bytes": 21872640,
+            "start_ticks": 5567512,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 4,
+            "kind": "wrapper",
+            "pid": 341,
+            "pss_bytes": 2242560,
+            "rss_bytes": 20303872,
+            "start_ticks": 5567512,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 4,
+            "kind": "rust",
+            "pid": 342,
+            "pss_bytes": 263168,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567512,
+            "voluntary_switches": 99
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 12,
+            "kind": "rust",
+            "pid": 343,
+            "pss_bytes": 267264,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567512,
+            "voluntary_switches": 97
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 15,
+            "kind": "rust",
+            "pid": 344,
+            "pss_bytes": 271360,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567512,
+            "voluntary_switches": 99
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 19,
+            "kind": "rust",
+            "pid": 345,
+            "pss_bytes": 267264,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567512,
+            "voluntary_switches": 102
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 10,
+            "kind": "rust",
+            "pid": 350,
+            "pss_bytes": 263168,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567512,
+            "voluntary_switches": 99
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 351,
+            "pss_bytes": 2417664,
+            "rss_bytes": 22085632,
+            "start_ticks": 5567513,
+            "voluntary_switches": 3
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 352,
+            "pss_bytes": 2416640,
+            "rss_bytes": 22081536,
+            "start_ticks": 5567513,
+            "voluntary_switches": 2
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 13,
+            "kind": "rust",
+            "pid": 357,
+            "pss_bytes": 263168,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567513,
+            "voluntary_switches": 101
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 13,
+            "kind": "rust",
+            "pid": 359,
+            "pss_bytes": 263168,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567513,
+            "voluntary_switches": 101
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 491,
+            "pss_bytes": 2462720,
+            "rss_bytes": 22388736,
+            "start_ticks": 5567612,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 492,
+            "pss_bytes": 2462720,
+            "rss_bytes": 22462464,
+            "start_ticks": 5567612,
+            "voluntary_switches": 3
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 493,
+            "pss_bytes": 2414592,
+            "rss_bytes": 21897216,
+            "start_ticks": 5567612,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 494,
+            "pss_bytes": 2241536,
+            "rss_bytes": 20324352,
+            "start_ticks": 5567612,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 495,
+            "pss_bytes": 2242560,
+            "rss_bytes": 20328448,
+            "start_ticks": 5567612,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 4,
+            "kind": "rust",
+            "pid": 496,
+            "pss_bytes": 267264,
+            "rss_bytes": 2260992,
+            "start_ticks": 5567612,
+            "voluntary_switches": 94
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 2,
+            "kind": "rust",
+            "pid": 497,
+            "pss_bytes": 271360,
+            "rss_bytes": 2248704,
+            "start_ticks": 5567612,
+            "voluntary_switches": 99
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 10,
+            "kind": "rust",
+            "pid": 499,
+            "pss_bytes": 267264,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567613,
+            "voluntary_switches": 92
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 3,
+            "kind": "rust",
+            "pid": 500,
+            "pss_bytes": 263168,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567613,
+            "voluntary_switches": 96
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 7,
+            "kind": "rust",
+            "pid": 501,
+            "pss_bytes": 267264,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567613,
+            "voluntary_switches": 97
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 506,
+            "pss_bytes": 2421760,
+            "rss_bytes": 22065152,
+            "start_ticks": 5567613,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 9,
+            "kind": "rust",
+            "pid": 509,
+            "pss_bytes": 263168,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567613,
+            "voluntary_switches": 97
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 757,
+            "pss_bytes": 2428928,
+            "rss_bytes": 21942272,
+            "start_ticks": 5567712,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 758,
+            "pss_bytes": 259072,
+            "rss_bytes": 2113536,
+            "start_ticks": 5567713,
+            "voluntary_switches": 46
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 760,
+            "pss_bytes": 2428928,
+            "rss_bytes": 22142976,
+            "start_ticks": 5567713,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 762,
+            "pss_bytes": 259072,
+            "rss_bytes": 2252800,
+            "start_ticks": 5567713,
+            "voluntary_switches": 46
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 920,
+            "pss_bytes": 275456,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567777,
+            "voluntary_switches": 17
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 921,
+            "pss_bytes": 275456,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567777,
+            "voluntary_switches": 17
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 932,
+            "pss_bytes": 279552,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567779,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 933,
+            "pss_bytes": 279552,
+            "rss_bytes": 2117632,
+            "start_ticks": 5567779,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 935,
+            "pss_bytes": 275456,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567779,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 942,
+            "pss_bytes": 279552,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567783,
+            "voluntary_switches": 19
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 943,
+            "pss_bytes": 275456,
+            "rss_bytes": 2129920,
+            "start_ticks": 5567783,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 944,
+            "pss_bytes": 275456,
+            "rss_bytes": 2113536,
+            "start_ticks": 5567783,
+            "voluntary_switches": 19
+          }
+        ]
+      },
+      "max_worker_processes": "64",
+      "pgduck": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 14278764,
+        "memory_current_bytes": 147943424,
+        "monotonic_seconds": 55677.958939333,
+        "processes": []
+      },
+      "source_slots": [
+        {
+          "active": true,
+          "slot_name": "scale_sub_0",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_1",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_10",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_11",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_12",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_13",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_14",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_15",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_2",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_3",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_4",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_5",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_6",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_7",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_8",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_9",
+          "wal_status": "reserved"
+        }
+      ]
+    },
+    "databases": 4,
+    "disabled_inventory": {
+      "backend_types": [
+        {
+          "backend_type": "autovacuum launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "background writer",
+          "count": 1
+        },
+        {
+          "backend_type": "checkpointer",
+          "count": 1
+        },
+        {
+          "backend_type": "client backend",
+          "count": 1
+        },
+        {
+          "backend_type": "io worker",
+          "count": 3
+        },
+        {
+          "backend_type": "logical replication launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "pg_base_extension server starter",
+          "count": 1
+        },
+        {
+          "backend_type": "pg base extension worker",
+          "count": 8
+        },
+        {
+          "backend_type": "pg_lake cache worker",
+          "count": 1
+        },
+        {
+          "backend_type": "walwriter",
+          "count": 1
+        }
+      ],
+      "base_workers": [
+        {
+          "database_id": "18126",
+          "extension_id": "19040",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 44,
+          "worker_id": 1
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "21018",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 51,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17304",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 45,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22752",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 50,
+          "worker_id": 2
+        },
+        {
+          "database_id": "18126",
+          "extension_id": "19284",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 48,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17548",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 47,
+          "worker_id": 2
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "20774",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 49,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22508",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 46,
+          "worker_id": 1
+        }
+      ],
+      "destination": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 4552759,
+        "memory_current_bytes": 83025920,
+        "monotonic_seconds": 55685.803144545,
+        "processes": [
+          {
+            "cpu_ticks": 1,
+            "involuntary_switches": 5,
+            "kind": "framework",
+            "pid": 44,
+            "pss_bytes": 5462016,
+            "rss_bytes": 27488256,
+            "start_ticks": 5568080,
+            "voluntary_switches": 9
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 4,
+            "kind": "framework",
+            "pid": 45,
+            "pss_bytes": 5562368,
+            "rss_bytes": 27713536,
+            "start_ticks": 5568080,
+            "voluntary_switches": 7
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 47,
+            "kind": "framework",
+            "pid": 46,
+            "pss_bytes": 5560320,
+            "rss_bytes": 27815936,
+            "start_ticks": 5568080,
+            "voluntary_switches": 9
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 56,
+            "kind": "framework",
+            "pid": 47,
+            "pss_bytes": 4381696,
+            "rss_bytes": 22528000,
+            "start_ticks": 5568080,
+            "voluntary_switches": 12
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 28,
+            "kind": "framework",
+            "pid": 48,
+            "pss_bytes": 4473856,
+            "rss_bytes": 22487040,
+            "start_ticks": 5568080,
+            "voluntary_switches": 11
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 16,
+            "kind": "framework",
+            "pid": 49,
+            "pss_bytes": 5414912,
+            "rss_bytes": 26525696,
+            "start_ticks": 5568081,
+            "voluntary_switches": 6
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 7,
+            "kind": "framework",
+            "pid": 50,
+            "pss_bytes": 4273152,
+            "rss_bytes": 22052864,
+            "start_ticks": 5568081,
+            "voluntary_switches": 13
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 28,
+            "kind": "framework",
+            "pid": 51,
+            "pss_bytes": 4628480,
+            "rss_bytes": 21962752,
+            "start_ticks": 5568082,
+            "voluntary_switches": 13
+          }
+        ]
+      },
+      "max_worker_processes": "64",
+      "pgduck": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 14840309,
+        "memory_current_bytes": 150269952,
+        "monotonic_seconds": 55685.872621545,
+        "processes": []
+      },
+      "source_slots": [
+        {
+          "active": false,
+          "slot_name": "scale_sub_0",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_1",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_10",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_11",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_12",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_13",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_14",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_15",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_2",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_3",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_4",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_5",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_6",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_7",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_8",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_9",
+          "wal_status": "reserved"
+        }
+      ]
+    },
+    "dropped_inventory": {
+      "backend_types": [
+        {
+          "backend_type": "autovacuum launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "background writer",
+          "count": 1
+        },
+        {
+          "backend_type": "checkpointer",
+          "count": 1
+        },
+        {
+          "backend_type": "client backend",
+          "count": 1
+        },
+        {
+          "backend_type": "io worker",
+          "count": 3
+        },
+        {
+          "backend_type": "logical replication launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "pg_base_extension server starter",
+          "count": 1
+        },
+        {
+          "backend_type": "pg base extension worker",
+          "count": 4
+        },
+        {
+          "backend_type": "pg_lake cache worker",
+          "count": 1
+        },
+        {
+          "backend_type": "walwriter",
+          "count": 1
+        }
+      ],
+      "base_workers": [
+        {
+          "database_id": "18126",
+          "extension_id": "19040",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 44,
+          "worker_id": 1
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17304",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 45,
+          "worker_id": 1
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "20774",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 49,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22508",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 46,
+          "worker_id": 1
+        }
+      ],
+      "destination": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 5404961,
+        "memory_current_bytes": 75493376,
+        "monotonic_seconds": 55688.194747754,
+        "processes": [
+          {
+            "cpu_ticks": 1,
+            "involuntary_switches": 5,
+            "kind": "framework",
+            "pid": 44,
+            "pss_bytes": 6931456,
+            "rss_bytes": 27488256,
+            "start_ticks": 5568080,
+            "voluntary_switches": 12
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 4,
+            "kind": "framework",
+            "pid": 45,
+            "pss_bytes": 7149568,
+            "rss_bytes": 27713536,
+            "start_ticks": 5568080,
+            "voluntary_switches": 10
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 47,
+            "kind": "framework",
+            "pid": 46,
+            "pss_bytes": 7188480,
+            "rss_bytes": 27815936,
+            "start_ticks": 5568080,
+            "voluntary_switches": 12
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 16,
+            "kind": "framework",
+            "pid": 49,
+            "pss_bytes": 6912000,
+            "rss_bytes": 26525696,
+            "start_ticks": 5568081,
+            "voluntary_switches": 9
+          }
+        ]
+      },
+      "max_worker_processes": "64",
+      "pgduck": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 14895914,
+        "memory_current_bytes": 151621632,
+        "monotonic_seconds": 55688.261105296,
+        "processes": []
+      },
+      "source_slots": []
+    },
+    "empty_inventory": {
+      "backend_types": [
+        {
+          "backend_type": "autovacuum launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "background writer",
+          "count": 1
+        },
+        {
+          "backend_type": "checkpointer",
+          "count": 1
+        },
+        {
+          "backend_type": "client backend",
+          "count": 1
+        },
+        {
+          "backend_type": "io worker",
+          "count": 3
+        },
+        {
+          "backend_type": "logical replication launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "pg_base_extension server starter",
+          "count": 1
+        },
+        {
+          "backend_type": "pg base extension worker",
+          "count": 8
+        },
+        {
+          "backend_type": "pg_lake cache worker",
+          "count": 1
+        },
+        {
+          "backend_type": "walwriter",
+          "count": 1
+        }
+      ],
+      "base_workers": [
+        {
+          "database_id": "18126",
+          "extension_id": "19040",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 125,
+          "worker_id": 1
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "21018",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 168,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17304",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 96,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22752",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 198,
+          "worker_id": 2
+        },
+        {
+          "database_id": "18126",
+          "extension_id": "19284",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 138,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17548",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 97,
+          "worker_id": 2
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "20774",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 155,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22508",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 185,
+          "worker_id": 1
+        }
+      ],
+      "destination": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 9365994,
+        "memory_current_bytes": 209047552,
+        "monotonic_seconds": 55673.65802658,
+        "processes": [
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 96,
+            "pss_bytes": 5026816,
+            "rss_bytes": 25468928,
+            "start_ticks": 5566461,
+            "voluntary_switches": 12
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 97,
+            "pss_bytes": 3854336,
+            "rss_bytes": 19640320,
+            "start_ticks": 5566461,
+            "voluntary_switches": 13
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 125,
+            "pss_bytes": 7303168,
+            "rss_bytes": 29327360,
+            "start_ticks": 5566689,
+            "voluntary_switches": 9
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 138,
+            "pss_bytes": 5477376,
+            "rss_bytes": 22786048,
+            "start_ticks": 5566869,
+            "voluntary_switches": 7
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 155,
+            "pss_bytes": 7048192,
+            "rss_bytes": 28217344,
+            "start_ticks": 5566911,
+            "voluntary_switches": 6
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 168,
+            "pss_bytes": 5145600,
+            "rss_bytes": 21684224,
+            "start_ticks": 5567090,
+            "voluntary_switches": 4
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 185,
+            "pss_bytes": 6458368,
+            "rss_bytes": 27181056,
+            "start_ticks": 5567134,
+            "voluntary_switches": 3
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "framework",
+            "pid": 198,
+            "pss_bytes": 5256192,
+            "rss_bytes": 21819392,
+            "start_ticks": 5567312,
+            "voluntary_switches": 1
+          }
+        ]
+      },
+      "max_worker_processes": "64",
+      "pgduck": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 14018344,
+        "memory_current_bytes": 141086720,
+        "monotonic_seconds": 55673.732010039,
+        "processes": []
+      },
+      "source_slots": []
+    },
+    "live_all_visible_seconds": 1.8704781660053413,
+    "restart_inventory": {
+      "backend_types": [
+        {
+          "backend_type": "autovacuum launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "background writer",
+          "count": 1
+        },
+        {
+          "backend_type": "checkpointer",
+          "count": 1
+        },
+        {
+          "backend_type": "client backend",
+          "count": 29
+        },
+        {
+          "backend_type": "io worker",
+          "count": 3
+        },
+        {
+          "backend_type": "lake_replication supervisor",
+          "count": 16
+        },
+        {
+          "backend_type": "logical replication launcher",
+          "count": 1
+        },
+        {
+          "backend_type": "pg_base_extension server starter",
+          "count": 1
+        },
+        {
+          "backend_type": "pg base extension worker",
+          "count": 8
+        },
+        {
+          "backend_type": "pg_lake cache worker",
+          "count": 1
+        },
+        {
+          "backend_type": "walwriter",
+          "count": 1
+        }
+      ],
+      "base_workers": [
+        {
+          "database_id": "18126",
+          "extension_id": "19040",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 44,
+          "worker_id": 1
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "21018",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 51,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17304",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 45,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22752",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 50,
+          "worker_id": 2
+        },
+        {
+          "database_id": "18126",
+          "extension_id": "19284",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 48,
+          "worker_id": 2
+        },
+        {
+          "database_id": "16384",
+          "extension_id": "17548",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 47,
+          "worker_id": 2
+        },
+        {
+          "database_id": "19860",
+          "extension_id": "20774",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 49,
+          "worker_id": 1
+        },
+        {
+          "database_id": "21594",
+          "extension_id": "22508",
+          "failure_count": 0,
+          "needs_restart": false,
+          "pid": 46,
+          "worker_id": 1
+        }
+      ],
+      "destination": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 3381103,
+        "memory_current_bytes": 192569344,
+        "monotonic_seconds": 55683.441410377,
+        "processes": [
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 5,
+            "kind": "framework",
+            "pid": 44,
+            "pss_bytes": 2930688,
+            "rss_bytes": 27488256,
+            "start_ticks": 5568080,
+            "voluntary_switches": 7
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 4,
+            "kind": "framework",
+            "pid": 45,
+            "pss_bytes": 3060736,
+            "rss_bytes": 27713536,
+            "start_ticks": 5568080,
+            "voluntary_switches": 5
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 47,
+            "kind": "framework",
+            "pid": 46,
+            "pss_bytes": 2880512,
+            "rss_bytes": 27815936,
+            "start_ticks": 5568080,
+            "voluntary_switches": 7
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 56,
+            "kind": "framework",
+            "pid": 47,
+            "pss_bytes": 2600960,
+            "rss_bytes": 22528000,
+            "start_ticks": 5568080,
+            "voluntary_switches": 6
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 28,
+            "kind": "framework",
+            "pid": 48,
+            "pss_bytes": 2601984,
+            "rss_bytes": 22487040,
+            "start_ticks": 5568080,
+            "voluntary_switches": 6
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 16,
+            "kind": "framework",
+            "pid": 49,
+            "pss_bytes": 2959360,
+            "rss_bytes": 26525696,
+            "start_ticks": 5568081,
+            "voluntary_switches": 4
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 7,
+            "kind": "framework",
+            "pid": 50,
+            "pss_bytes": 2533376,
+            "rss_bytes": 22052864,
+            "start_ticks": 5568081,
+            "voluntary_switches": 8
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 28,
+            "kind": "framework",
+            "pid": 51,
+            "pss_bytes": 2612224,
+            "rss_bytes": 21962752,
+            "start_ticks": 5568082,
+            "voluntary_switches": 8
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 1,
+            "kind": "wrapper",
+            "pid": 52,
+            "pss_bytes": 2191360,
+            "rss_bytes": 21745664,
+            "start_ticks": 5568082,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 1,
+            "kind": "wrapper",
+            "pid": 53,
+            "pss_bytes": 2182144,
+            "rss_bytes": 21643264,
+            "start_ticks": 5568082,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 28,
+            "kind": "wrapper",
+            "pid": 54,
+            "pss_bytes": 2181120,
+            "rss_bytes": 21639168,
+            "start_ticks": 5568082,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 37,
+            "kind": "wrapper",
+            "pid": 55,
+            "pss_bytes": 2182144,
+            "rss_bytes": 21643264,
+            "start_ticks": 5568082,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 56,
+            "pss_bytes": 2171904,
+            "rss_bytes": 21524480,
+            "start_ticks": 5568082,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 5,
+            "kind": "wrapper",
+            "pid": 57,
+            "pss_bytes": 2169856,
+            "rss_bytes": 21516288,
+            "start_ticks": 5568082,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 8,
+            "kind": "rust",
+            "pid": 58,
+            "pss_bytes": 270336,
+            "rss_bytes": 2125824,
+            "start_ticks": 5568083,
+            "voluntary_switches": 119
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 27,
+            "kind": "rust",
+            "pid": 59,
+            "pss_bytes": 274432,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568083,
+            "voluntary_switches": 136
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 7,
+            "kind": "wrapper",
+            "pid": 60,
+            "pss_bytes": 2171904,
+            "rss_bytes": 21520384,
+            "start_ticks": 5568083,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 36,
+            "kind": "wrapper",
+            "pid": 61,
+            "pss_bytes": 2172928,
+            "rss_bytes": 21565440,
+            "start_ticks": 5568083,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 1,
+            "involuntary_switches": 24,
+            "kind": "rust",
+            "pid": 62,
+            "pss_bytes": 270336,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568083,
+            "voluntary_switches": 132
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 23,
+            "kind": "rust",
+            "pid": 64,
+            "pss_bytes": 270336,
+            "rss_bytes": 2121728,
+            "start_ticks": 5568083,
+            "voluntary_switches": 120
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 8,
+            "kind": "rust",
+            "pid": 66,
+            "pss_bytes": 270336,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568083,
+            "voluntary_switches": 136
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 28,
+            "kind": "rust",
+            "pid": 67,
+            "pss_bytes": 270336,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568083,
+            "voluntary_switches": 137
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 8,
+            "kind": "wrapper",
+            "pid": 69,
+            "pss_bytes": 2146304,
+            "rss_bytes": 21127168,
+            "start_ticks": 5568083,
+            "voluntary_switches": 2
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 11,
+            "kind": "rust",
+            "pid": 70,
+            "pss_bytes": 270336,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568083,
+            "voluntary_switches": 134
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 6,
+            "kind": "wrapper",
+            "pid": 71,
+            "pss_bytes": 2146304,
+            "rss_bytes": 21147648,
+            "start_ticks": 5568083,
+            "voluntary_switches": 3
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 3,
+            "kind": "wrapper",
+            "pid": 72,
+            "pss_bytes": 2147328,
+            "rss_bytes": 21139456,
+            "start_ticks": 5568083,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 2,
+            "kind": "wrapper",
+            "pid": 73,
+            "pss_bytes": 2147328,
+            "rss_bytes": 21172224,
+            "start_ticks": 5568083,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 11,
+            "kind": "rust",
+            "pid": 80,
+            "pss_bytes": 270336,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568084,
+            "voluntary_switches": 138
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 28,
+            "kind": "rust",
+            "pid": 82,
+            "pss_bytes": 274432,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568084,
+            "voluntary_switches": 134
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 19,
+            "kind": "rust",
+            "pid": 84,
+            "pss_bytes": 270336,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568084,
+            "voluntary_switches": 133
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 1,
+            "kind": "wrapper",
+            "pid": 86,
+            "pss_bytes": 2182144,
+            "rss_bytes": 21028864,
+            "start_ticks": 5568084,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 3,
+            "kind": "rust",
+            "pid": 87,
+            "pss_bytes": 274432,
+            "rss_bytes": 2244608,
+            "start_ticks": 5568084,
+            "voluntary_switches": 153
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 2,
+            "kind": "wrapper",
+            "pid": 88,
+            "pss_bytes": 2181120,
+            "rss_bytes": 21016576,
+            "start_ticks": 5568084,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "wrapper",
+            "pid": 89,
+            "pss_bytes": 2181120,
+            "rss_bytes": 21016576,
+            "start_ticks": 5568084,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 22,
+            "kind": "rust",
+            "pid": 90,
+            "pss_bytes": 274432,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568084,
+            "voluntary_switches": 133
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 26,
+            "kind": "rust",
+            "pid": 91,
+            "pss_bytes": 266240,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568084,
+            "voluntary_switches": 118
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 3,
+            "kind": "wrapper",
+            "pid": 92,
+            "pss_bytes": 2187264,
+            "rss_bytes": 21151744,
+            "start_ticks": 5568084,
+            "voluntary_switches": 1
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 29,
+            "kind": "rust",
+            "pid": 94,
+            "pss_bytes": 274432,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568084,
+            "voluntary_switches": 121
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 7,
+            "kind": "rust",
+            "pid": 96,
+            "pss_bytes": 266240,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568085,
+            "voluntary_switches": 123
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 14,
+            "kind": "rust",
+            "pid": 98,
+            "pss_bytes": 266240,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568085,
+            "voluntary_switches": 120
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 741,
+            "pss_bytes": 264192,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568324,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 744,
+            "pss_bytes": 264192,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568327,
+            "voluntary_switches": 17
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 1,
+            "kind": "rust",
+            "pid": 753,
+            "pss_bytes": 264192,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568328,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 757,
+            "pss_bytes": 264192,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568330,
+            "voluntary_switches": 19
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 760,
+            "pss_bytes": 264192,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568332,
+            "voluntary_switches": 19
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 763,
+            "pss_bytes": 268288,
+            "rss_bytes": 2117632,
+            "start_ticks": 5568334,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 773,
+            "pss_bytes": 264192,
+            "rss_bytes": 2117632,
+            "start_ticks": 5568338,
+            "voluntary_switches": 19
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 1,
+            "kind": "rust",
+            "pid": 776,
+            "pss_bytes": 264192,
+            "rss_bytes": 2113536,
+            "start_ticks": 5568340,
+            "voluntary_switches": 18
+          },
+          {
+            "cpu_ticks": 0,
+            "involuntary_switches": 0,
+            "kind": "rust",
+            "pid": 779,
+            "pss_bytes": 265216,
+            "rss_bytes": 2129920,
+            "start_ticks": 5568341,
+            "voluntary_switches": 19
+          }
+        ]
+      },
+      "max_worker_processes": "64",
+      "pgduck": {
+        "clock_ticks": 100,
+        "cpu_usage_usec": 14778565,
+        "memory_current_bytes": 150212608,
+        "monotonic_seconds": 55683.518568377,
+        "processes": []
+      },
+      "source_slots": [
+        {
+          "active": true,
+          "slot_name": "scale_sub_0",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_1",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_10",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_11",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_12",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_13",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_14",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_15",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_2",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_3",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_4",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_5",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_6",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_7",
+          "wal_status": "reserved"
+        },
+        {
+          "active": false,
+          "slot_name": "scale_sub_8",
+          "wal_status": "reserved"
+        },
+        {
+          "active": true,
+          "slot_name": "scale_sub_9",
+          "wal_status": "reserved"
+        }
+      ]
+    },
+    "restarted_all_visible_seconds": 1.8682207499950891,
+    "setup_until_all_streaming_seconds": 3.7040350000024773,
+    "status": "passed",
+    "subscriptions": 16,
+    "worker_budget": 64
+  },
+  "source_fingerprints": {
+    "Dockerfile.admission": "953864b1804ff6542bb04fcf8ecf16020a3e0a45a89b39b92bcb6d9cbbfe8626",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+    "admission.py": "e396e8129a76165907ff95126e5024b5f9171d5dbf46dc16f02647e4100da1eb",
+    "admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+    "admission_probe.py": "790b7b76d65b1c88433acef1ed51039e3d04a19caf65369d4993901546532b57",
+    "binding.py": "667057ecc27768a3800294b4945d7d39bd639d6879aba0c14fe4e5a5aea38c3b",
+    "binding.sql": "9e6f7dd3957255f49c7f2337cca1e16525bb37fb9eb6ae1b0510013446bf2116",
+    "compare.py": "dfc3ca8360b25738bd0cca719aaea4c1ff28f533a2f78e9bef2b53fea8133035",
+    "publication.py": "864e50092a12b4b7e449d42c862d4cfd6a68405fa228508ed7fe329da667ba46",
+    "publication.sql": "c115ce431272c871e578bb23cb3a4c6e73f53eee18ca15d63ea2987d49c82116",
+    "register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3",
+    "scale.py": "44209e27c0ace3d394d9066c01e7f8e7b734b9a0314b9bc621e8a0f449a7a94b"
+  },
+  "status": "passed"
+}

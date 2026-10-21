@@ -1,0 +1,474 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "binding_fingerprints": {
+    "Dockerfile.binding": "958170817541cdc06c5dc3545b8df451021f1be450f695b4a9f635fafd33e004",
+    "binding.py": "667057ecc27768a3800294b4945d7d39bd639d6879aba0c14fe4e5a5aea38c3b",
+    "binding.sql": "9e6f7dd3957255f49c7f2337cca1e16525bb37fb9eb6ae1b0510013446bf2116"
+  },
+  "candidate": {
+    "checkpoint_after_copy": "0/1BD1458",
+    "database_oid": "18123",
+    "location": "s3://lake-qualification/iceberg/fresh-qualification_20261019_110507/rebuild_candidate/public/rebuild_items/19848",
+    "prefix": "s3://lake-qualification/iceberg/fresh-qualification_20261019_110507",
+    "slot": "rebuild_candidate_sub"
+  },
+  "checks": [
+    {
+      "actual": "sha256:28288d814db491419a95768e582adfa7ca15f37eaf10667543f6caa3b75c46e1",
+      "expected": "sha256:28288d814db491419a95768e582adfa7ca15f37eaf10667543f6caa3b75c46e1",
+      "name": "use exact identity-qualified local image",
+      "passed": true
+    },
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two",
+      "expected": "1:one,2:two",
+      "name": "original completes initial copy",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "original completes initial copy contains unique primary keys",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "analytics validates its recorded origin",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "analytics wrapper drains",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "rebuild_original_sub slot becomes inactive",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "original Iceberg location is recorded",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "original Iceberg metadata snapshot is recorded",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "original has no connections during template copy",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "inherited copy gets a binding diagnostic",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two",
+      "expected": "1:one,2:two",
+      "name": "paused original keeps its old snapshot",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate slot is absent before CREATE",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "original slot is retained before candidate CREATE",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate has no subscriptions before rebuild",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate has no inherited launch config",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate has no inherited checkpoint",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate has no inherited initial copy",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "candidate has no existing destination table",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/fresh-qualification_20261019_110507",
+      "expected": "s3://lake-qualification/iceberg/fresh-qualification_20261019_110507",
+      "name": "candidate uses explicit fresh prefix",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate storage prefix is empty before CREATE",
+      "passed": true
+    },
+    {
+      "actual": "1:one-updated,3:three",
+      "expected": "1:one-updated,3:three",
+      "name": "fresh rebuild copies current source state",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "fresh rebuild copies current source state contains unique primary keys",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "rebuild_candidate validates its recorded origin",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "candidate location is within fresh prefix",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "candidate location differs from original",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "neither data location contains the other",
+      "passed": true
+    },
+    {
+      "actual": "rebuild_candidate_sub",
+      "expected": "rebuild_candidate_sub",
+      "name": "candidate uses its own slot",
+      "passed": true
+    },
+    {
+      "actual": "2",
+      "expected": "2",
+      "name": "old and candidate source slots both exist",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "candidate completed one new initial copy",
+      "passed": true
+    },
+    {
+      "actual": "0/1BD12C8",
+      "expected": "0/1BD12C8",
+      "name": "rebuild did not alter old checkpoint",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117/metadata/00001-2e1fab1d-b79b-4944-a476-e9614746f678.metadata.json",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117/metadata/00001-2e1fab1d-b79b-4944-a476-e9614746f678.metadata.json",
+      "name": "rebuild did not rewrite old Iceberg metadata",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two",
+      "expected": "1:one,2:two",
+      "name": "rebuild did not overwrite old table data",
+      "passed": true
+    },
+    {
+      "actual": "{\"subscription_id\":1,\"slot_name\":\"rebuild_original_sub\",\"publication_name\":\"rebuild_pub\",\"source_database\":\"application\",\"destination_database\":\"analytics\",\"source_address\":\"172.22.0.2:5432\",\"destination_address\":\"127.0.0.1:5432\",\"destination_schema\":\"public\",\"desired_state\":\"stopped\",\"created_at\":\"2026-10-19T11:05:17.67891+00:00\",\"credential_file\":\"/credentials/destination-only.env\",\"config_generation\":1,\"create_slot\":true,\"origin_system_identifier\":7698333367179739176,\"origin_database_oid\":\"16384\"}",
+      "expected": "{\"subscription_id\":1,\"slot_name\":\"rebuild_original_sub\",\"publication_name\":\"rebuild_pub\",\"source_database\":\"application\",\"destination_database\":\"analytics\",\"source_address\":\"172.22.0.2:5432\",\"destination_address\":\"127.0.0.1:5432\",\"destination_schema\":\"public\",\"desired_state\":\"stopped\",\"created_at\":\"2026-10-19T11:05:17.67891+00:00\",\"credential_file\":\"/credentials/destination-only.env\",\"config_generation\":1,\"create_slot\":true,\"origin_system_identifier\":7698333367179739176,\"origin_database_oid\":\"16384\"}",
+      "name": "rebuild did not rewrite inherited launch configuration",
+      "passed": true
+    },
+    {
+      "actual": "0/1BD12C8",
+      "expected": "0/1BD12C8",
+      "name": "rebuild did not copy over inherited checkpoint",
+      "passed": true
+    },
+    {
+      "actual": "1:one-updated,3:three-new,4:four,5:five",
+      "expected": "1:one-updated,3:three-new,4:four,5:five",
+      "name": "candidate streams after initial rebuild",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "candidate streams after initial rebuild contains unique primary keys",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two",
+      "expected": "1:one,2:two",
+      "name": "candidate streaming leaves old data untouched",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117/metadata/00001-2e1fab1d-b79b-4944-a476-e9614746f678.metadata.json",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117/metadata/00001-2e1fab1d-b79b-4944-a476-e9614746f678.metadata.json",
+      "name": "candidate streaming leaves old metadata untouched",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "inherited cleanup remains explicitly blocked",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "blocked inherited cleanup preserves old slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "blocked inherited cleanup preserves candidate slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "destination returns after restart",
+      "passed": true
+    },
+    {
+      "actual": "1:one-updated,3:three-new,4:four,5:five,6:six",
+      "expected": "1:one-updated,3:three-new,4:four,5:five,6:six",
+      "name": "candidate resumes after restart",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "candidate resumes after restart contains unique primary keys",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "restart keeps old owner stopped",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "restart keeps inherited copy stopped",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "restart does not repeat candidate initial copy",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "rebuild_candidate wrapper drains",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "rebuild_candidate_sub slot becomes inactive",
+      "passed": true
+    },
+    {
+      "actual": "1:one-v2,3:three-new,5:five,6:six,7:seven",
+      "expected": "1:one-v2,3:three-new,5:five,6:six,7:seven",
+      "name": "rollback original catches up through retained source slot",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "rollback original catches up through retained source slot contains unique primary keys",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "rollback uses one original initial copy",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117",
+      "name": "rollback preserves original object location",
+      "passed": true
+    },
+    {
+      "actual": "1:one-updated,3:three-new,4:four,5:five,6:six",
+      "expected": "1:one-updated,3:three-new,4:four,5:five,6:six",
+      "name": "rollback leaves paused candidate snapshot unchanged",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/fresh-qualification_20261019_110507/rebuild_candidate/public/rebuild_items/19848/metadata/00003-bb03a46e-dbcc-4bf8-9102-e57b82b5b8d5.metadata.json",
+      "expected": "s3://lake-qualification/iceberg/fresh-qualification_20261019_110507/rebuild_candidate/public/rebuild_items/19848/metadata/00003-bb03a46e-dbcc-4bf8-9102-e57b82b5b8d5.metadata.json",
+      "name": "rollback leaves paused candidate metadata unchanged",
+      "passed": true
+    },
+    {
+      "actual": "1:one-v2,3:three-new,5:five,6:six,7:seven",
+      "expected": "1:one-v2,3:three-new,5:five,6:six,7:seven",
+      "name": "candidate can catch up again without copying old journal state",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "candidate can catch up again without copying old journal state contains unique primary keys",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "candidate catchup still has one initial copy",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "rebuild_candidate wrapper drains",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "rebuild_candidate_sub slot becomes inactive",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate cleanup removes only its own slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "candidate cleanup retains original slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "candidate cleanup retains inherited metadata",
+      "passed": true
+    },
+    {
+      "actual": "1:one-v2,3:three-new,5:five,6:six,7:seven",
+      "expected": "1:one-v2,3:three-new,5:five,6:six,7:seven",
+      "name": "candidate cleanup retains its Iceberg table for separate retention policy",
+      "passed": true
+    },
+    {
+      "actual": "1:one-v2,3:three-new,5:five,6:six,7:seven,8:eight",
+      "expected": "1:one-v2,3:three-new,5:five,6:six,7:seven,8:eight",
+      "name": "original still streams after candidate cleanup",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "original still streams after candidate cleanup contains unique primary keys",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117",
+      "name": "candidate cleanup did not rebind old storage",
+      "passed": true
+    }
+  ],
+  "experiment": "fresh destination rebuild and replication rollback rehearsal",
+  "harness_sha256": "f7f1d3be302b216a3defe6426e167a8873640d1a5ba75f427db21c8cb874ce9d",
+  "image_id": "sha256:28288d814db491419a95768e582adfa7ca15f37eaf10667543f6caa3b75c46e1",
+  "limits": [
+    "Linux arm64, same source/destination cluster with Docker init.",
+    "Not a writable Iceberg object takeover, in-place rebind or full logical data restore.",
+    "No consumer/application traffic switch is performed; replication rollback only.",
+    "Retained source slot WAL and source reachability are required; source outages/WAL loss are not qualified here.",
+    "Physical-copy exclusivity, publication-side leases, cross-cluster restore and packaged upgrades remain unqualified."
+  ],
+  "log_fingerprints": {
+    "compose.log": "7e4c3d5558a8a864bf86b737cad80cdd7fabbc1954e626b5e587b8d8b8a16bd1",
+    "worker.jsonl": "cdfc74f2fd64bf7159f970479d9b79971975dd7ee26bd45b26ed99cf473b57de"
+  },
+  "original": {
+    "checkpoint": "0/1BD12C8",
+    "database_oid": "16384",
+    "location": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117",
+    "metadata": "s3://lake-qualification/iceberg/analytics/public/rebuild_items/18117/metadata/00001-2e1fab1d-b79b-4944-a476-e9614746f678.metadata.json",
+    "slot": "rebuild_original_sub"
+  },
+  "parent_evidence_sha256": "a8889c98a46df1fc5b4f01be878258b0c58755e12213362404c080abe41c0de0",
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_changed": false,
+  "qualification_helper_sha256": "3dc8973deb49ed1b3460b46f4a365f59c02f7df5693238256dfc7e1eb55bf9be",
+  "raw_results_sha256": "799a61f9b0c3dd2fcca5993b6924a2bd72018d446a2cf256dcbd5f6685f230c1",
+  "run": "qualification_20261019_110507",
+  "runtime_source_fingerprints": {
+    "Dockerfile": "5231ddf691846aa5b675094b59207730c1875e6e6870fbdd5a218f0bc275cb14",
+    "Dockerfile.recovery": "8b700dcbfe0e9beea937d41638e821731b790ff8d646d6fac093bd67fb45a18e",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "destination-init.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "faults.py": "16b425be92b4ec96f91eaad66a00b51f86b3f9aa090893cf83587a6d5ad91b4b",
+    "recovery.py": "46278b891d712ddb90ad97760e92878737d76c60d2a4fb752011cde299f96ca5",
+    "recovery.rs.inc": "6d0528ac5db51c9b340552e42b4a96bbeda17d8b8de3382d3d818041b37347a4",
+    "register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3"
+  },
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "passed"
+}

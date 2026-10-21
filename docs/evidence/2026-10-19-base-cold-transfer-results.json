@@ -1,0 +1,345 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "checks": [
+    {
+      "actual": "sha256:0a962ccd1865c9f97709eb2d53383dd607150af073eea5f0989dd13ffe78334f",
+      "expected": "sha256:0a962ccd1865c9f97709eb2d53383dd607150af073eea5f0989dd13ffe78334f",
+      "name": "use exact publication-qualified local image",
+      "passed": true
+    },
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "1:one,2:two",
+      "expected": "1:one,2:two",
+      "name": "original completes copy",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "original wrapper drains",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "source slot releases",
+      "passed": true
+    },
+    {
+      "actual": "off",
+      "expected": "off",
+      "name": "original Iceberg maintenance is disabled for frozen backup",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "quarantined candidate starts",
+      "passed": true
+    },
+    {
+      "actual": "off",
+      "expected": "off",
+      "name": "candidate starts without background worker launcher",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "quarantined candidate cannot own publication",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "quarantined direct publication is rejected",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "transfer while original PostgreSQL and engine run is refused",
+      "passed": true
+    },
+    {
+      "actual": "quarantine",
+      "expected": "quarantine",
+      "name": "refused transfer does not grant profile",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "transfer while original pgduck still runs is refused",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "candidate remains unowned after partial fencing",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "all tracked old writers are stopped",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "candidate engine serves its separate socket",
+      "passed": true
+    },
+    {
+      "actual": "7698488250389868584",
+      "expected": "7698488250389868584",
+      "name": "physical cluster identity is unchanged",
+      "passed": true
+    },
+    {
+      "actual": "16384",
+      "expected": "16384",
+      "name": "physical database identity is unchanged",
+      "passed": true
+    },
+    {
+      "actual": "7698488096390881320:16384",
+      "expected": "7698488096390881320:16384",
+      "name": "source identity matches reviewed source",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "transfer with wrong checkpoint manifest is refused",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "transfer with unreviewed slot configuration is refused",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "failed validation leaves authorization absent",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "frozen candidate state validates without granting ownership",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "exclusive profile now matches copied binding",
+      "passed": true
+    },
+    {
+      "actual": "exclusive-qualification_20261019_210537",
+      "expected": "exclusive-qualification_20261019_210537",
+      "name": "grant does not rewrite stored origin",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "candidate stays stopped until explicit enable",
+      "passed": true
+    },
+    {
+      "actual": "1:one-new,3:three",
+      "expected": "1:one-new,3:three",
+      "name": "transferred writer catches up through retained slot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "transfer does not repeat initial copy",
+      "passed": true
+    },
+    {
+      "actual": "s3://lake-qualification/iceberg/analytics/public/transfer_items/18120",
+      "expected": "s3://lake-qualification/iceberg/analytics/public/transfer_items/18120",
+      "name": "transfer keeps the same Iceberg object location",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "publication creates a new metadata snapshot",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "transfer retains exactly the original source slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "old writers remain stopped after publication",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "transferred profile survives ordinary restart",
+      "passed": true
+    },
+    {
+      "actual": "1:one-new,3:three,4:four",
+      "expected": "1:one-new,3:three,4:four",
+      "name": "transferred writer streams after restart",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "candidate wrapper drains before failback review",
+      "passed": true
+    },
+    {
+      "actual": "false",
+      "expected": "false",
+      "name": "source slot inactive before failback review",
+      "passed": true
+    },
+    {
+      "actual": "true",
+      "expected": "true",
+      "name": "source progress exceeds the stale original backup",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "blind failback to original stale data directory is refused",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "refused failback never restarts old writers",
+      "passed": true
+    }
+  ],
+  "experiment": "controlled exclusive writer cold transfer",
+  "fenced_inventory": [
+    {
+      "id": "14db38a4a7bf1d6d84319eaf022be691cc66c6579b7a3bde9438a67e3885b24f",
+      "pid": 0,
+      "restart_policy": "no",
+      "restarting": false,
+      "running": false,
+      "service": "destination"
+    },
+    {
+      "id": "6d1a32238356d89edaa956459a5782ae6c0eaf7440295f4cd887e7be28319e71",
+      "pid": 0,
+      "restart_policy": "no",
+      "restarting": false,
+      "running": false,
+      "service": "pgduck"
+    }
+  ],
+  "harness_sha256": "446a58bedc81a8148d583b2883d320f4701474d01c942a881e47e99407d506a5",
+  "image_id": "sha256:0a962ccd1865c9f97709eb2d53383dd607150af073eea5f0989dd13ffe78334f",
+  "limits": [
+    "Linux arm64, private Docker inventory with restart policies disabled; not a production fencing controller or distributed lease.",
+    "Controlled PostgreSQL-catalog Iceberg snapshot, drained replication and disabled Iceberg maintenance before backup.",
+    "Source identity and retained WAL must remain valid; arbitrary old backups and blind failback are refused.",
+    "No consumer routing, live failover, external REST-catalog takeover, hostile admin or unknown writer exclusion is qualified."
+  ],
+  "log_fingerprints": {
+    "compose.log": "b37d012f8183509fe4260e14e457037bc926a0778d379f8f31eff959cc57d490"
+  },
+  "manifest": {
+    "database_oid": "16384",
+    "launch_config": {
+      "config_generation": 1,
+      "create_slot": true,
+      "created_at": "2026-10-19T21:06:19.157826+00:00",
+      "credential_file": "/credentials/destination-only.env",
+      "desired_state": "stopped",
+      "destination_address": "127.0.0.1:5432",
+      "destination_database": "analytics",
+      "destination_schema": "public",
+      "origin_database_oid": "16384",
+      "origin_instance_id": "exclusive-qualification_20261019_210537",
+      "origin_system_identifier": 7698488250389868584,
+      "publication_name": "transfer_pub",
+      "slot_name": "transfer_sub",
+      "source_address": "172.22.0.4:5432",
+      "source_database": "application",
+      "subscription_id": 1
+    },
+    "location": "s3://lake-qualification/iceberg/analytics/public/transfer_items/18120",
+    "metadata": "s3://lake-qualification/iceberg/analytics/public/transfer_items/18120/metadata/00001-71631d83-0fa6-4db2-be68-e838057fa309.metadata.json",
+    "metadata_digest": "a423c81d0d4d6607fddaa74f23052bfd",
+    "published_lsn": "0/1C25390",
+    "source_identity": "7698488096390881320:16384",
+    "staged_lsn": "0/1C25390",
+    "system_identifier": "7698488250389868584"
+  },
+  "parent_evidence_sha256": "5bf3d6f5a54319e764df980718b3b8604f84a7c9f201ea6ce0ffa9040467f56c",
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_changed": false,
+  "raw_results_sha256": "482f2563caa50cc995db49514bc69c009277c0d88a45036e2044989a97f98c77",
+  "refusals": [
+    {
+      "case": "transfer while original PostgreSQL and engine run",
+      "reason": "old writer not fenced: destination"
+    },
+    {
+      "case": "transfer while original pgduck still runs",
+      "reason": "old writer not fenced: pgduck"
+    },
+    {
+      "case": "transfer with wrong checkpoint manifest",
+      "reason": "candidate checkpoint differs from reviewed manifest"
+    },
+    {
+      "case": "transfer with unreviewed slot configuration",
+      "reason": "candidate launch configuration differs from reviewed manifest"
+    },
+    {
+      "case": "blind failback to original stale data directory",
+      "reason": "source slot is active, missing, unsafe or ahead of candidate staged checkpoint"
+    }
+  ],
+  "run": "qualification_20261019_210537",
+  "runtime_source_fingerprints": {
+    "Dockerfile.publication": "9f03a533baef42a314d9361c9ab2ebf987f2c62eabccc2a88e1a4ad06bc23180",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "binding.py": "667057ecc27768a3800294b4945d7d39bd639d6879aba0c14fe4e5a5aea38c3b",
+    "binding.sql": "9e6f7dd3957255f49c7f2337cca1e16525bb37fb9eb6ae1b0510013446bf2116",
+    "compare.py": "dfc3ca8360b25738bd0cca719aaea4c1ff28f533a2f78e9bef2b53fea8133035",
+    "publication.py": "864e50092a12b4b7e449d42c862d4cfd6a68405fa228508ed7fe329da667ba46",
+    "publication.sql": "c115ce431272c871e578bb23cb3a4c6e73f53eee18ca15d63ea2987d49c82116",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3"
+  },
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "passed"
+}

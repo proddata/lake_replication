@@ -1,0 +1,542 @@
+{
+  "adapter_sha256": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "checks": [
+    {
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "static baseline has exactly one launcher",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0:true",
+      "expected": "0.1.0:true",
+      "name": "development baseline excludes beta observability schema",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "expected": "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+      "name": "extension upgrades in place and preserves control-plane state",
+      "passed": true
+    },
+    {
+      "actual": "numeric(12,2):character varying(32)",
+      "expected": "numeric(12,2):character varying(32)",
+      "name": "extension upgrade installs common parameterized type resolution",
+      "passed": true
+    },
+    {
+      "actual": "true:1",
+      "expected": "true:1",
+      "name": "extension upgrade adds per-subscription credential metadata",
+      "passed": true
+    },
+    {
+      "actual": "19:1",
+      "expected": "19:1",
+      "name": "upgrade registers durable extension state for logical backup",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "logical backup contains durable state but not regenerated seed mappings",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.1:1:1",
+      "expected": "0.1.0-beta.1:1:1",
+      "name": "logical backup restores extension versions and durable control state",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "no unsupported SQL downgrade path is advertised",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported enabled fails instead of being ignored",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported copy_data fails instead of being ignored",
+      "passed": true
+    },
+    {
+      "actual": "0:0",
+      "expected": "0:0",
+      "name": "rolled-back subscriptions leave no source slots or control rows",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "subscription notice does not expose the source password",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:1",
+      "expected": "/credentials/destination-only.env:1",
+      "name": "subscription records its selected credential file",
+      "passed": true
+    },
+    {
+      "actual": "lake_source:true",
+      "expected": "lake_source:true",
+      "name": "postgres URI credentials are stored for workers without a source password file",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "pending cleanup contains no connection or password columns",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "pg_read_all_data cannot read stored connection secrets or invoke the worker getter",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "relative per-subscription credential paths are rejected without mutation",
+      "passed": true
+    },
+    {
+      "actual": "initial",
+      "expected": "initial",
+      "name": "initial copy reaches the artifact-installed destination",
+      "passed": true
+    },
+    {
+      "actual": "pgoutput:logical:false:true",
+      "expected": "pgoutput:logical:false:true",
+      "name": "initial sync automatically creates a persistent source pgoutput slot",
+      "passed": true
+    },
+    {
+      "actual": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "expected": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "name": "common parameterized types retain schema and values",
+      "passed": true
+    },
+    {
+      "actual": "healthy:streaming",
+      "expected": "healthy:streaming",
+      "name": "subscription becomes healthy",
+      "passed": true
+    },
+    {
+      "actual": "12",
+      "expected": "12",
+      "name": "all documented metrics are exported",
+      "passed": true
+    },
+    {
+      "actual": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "expected": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "name": "live insert and update replicate",
+      "passed": true
+    },
+    {
+      "actual": "numeric(6,2):1=1.25,2=NULL",
+      "expected": "numeric(6,2):1=1.25,2=NULL",
+      "name": "nullable parameterized column is added and replicated online",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "supervisor stops before the source password changes",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:2:true:running",
+      "expected": "/credentials/destination-only.env:2:true:running",
+      "name": "postgresql URI credential rotation replaces the subscription supervisor",
+      "passed": true
+    },
+    {
+      "actual": "rotated-credential",
+      "expected": "rotated-credential",
+      "name": "replication authenticates with the rotated credential",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "supervisor stops before restoring the source password",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:3:true:running",
+      "expected": "/credentials/destination-only.env:3:true:running",
+      "name": "CONNECTION can return to the original password",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "disable reaches stopped state",
+      "passed": true
+    },
+    {
+      "actual": "while-disabled",
+      "expected": "while-disabled",
+      "name": "enable catches up changes made while stopped",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "destination is ready after container restart",
+      "passed": true
+    },
+    {
+      "actual": "after-restart",
+      "expected": "after-restart",
+      "name": "launcher resumes replication after restart",
+      "passed": true
+    },
+    {
+      "actual": "degraded:backoff:true:true:true:true:true",
+      "expected": "degraded:backoff:true:true:true:true:true",
+      "name": "source outage becomes observable retry state",
+      "passed": true
+    },
+    {
+      "actual": "0:true:true",
+      "expected": "0:true:true",
+      "name": "retry metrics mark the subscription unhealthy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "source is ready after outage",
+      "passed": true
+    },
+    {
+      "actual": "healthy:running:0:true:true:true",
+      "expected": "healthy:running:0:true:true:true",
+      "name": "subscription recovers while retaining last-failure evidence",
+      "passed": true
+    },
+    {
+      "actual": "after-source-outage",
+      "expected": "after-source-outage",
+      "name": "replication resumes after source outage",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured worker logs emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured failure and recovery events emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "credential values absent from worker logs",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "drop removes the source replication slot",
+      "passed": true
+    },
+    {
+      "actual": "snapshot",
+      "expected": "snapshot",
+      "name": "pre-created slot supplies a snapshot copy",
+      "passed": true
+    },
+    {
+      "actual": "streamed",
+      "expected": "streamed",
+      "name": "pre-created slot streams later changes",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "temporary snapshot slot is released",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "drop removes the pre-created slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupted initial copy keeps staged rows",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "initial copy restarts from a fresh snapshot",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three",
+      "expected": "one,two,three",
+      "name": "restarted copy publishes each source row once",
+      "passed": true
+    },
+    {
+      "actual": "true:1",
+      "expected": "true:1",
+      "name": "restarted copy advances the checkpoint and retains one source slot",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "persistent slot streams after restarted copy",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "recovered stream publishes new changes",
+      "passed": true
+    },
+    {
+      "actual": "after-restart",
+      "expected": "after-restart",
+      "name": "change after interrupted copy appears at destination",
+      "passed": true
+    },
+    {
+      "actual": "streaming",
+      "expected": "streaming",
+      "name": "churn subscription finishes its initial copy",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn starts with all subscription wrappers retired",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "disable explicitly reaps a paused supervisor in the shared runtime",
+      "passed": true
+    },
+    {
+      "actual": "2026-10-18 20:13:42.266564+00",
+      "expected": "2026-10-18 20:13:42.266564+00",
+      "name": "paused supervisor disable does not restart PostgreSQL",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 1 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 1 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 2 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 2 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 3 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 3 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 4 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 4 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 5 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 5 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 6 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 6 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 7 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 7 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 8 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 8 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 9 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 9 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "churn cycle 10 starts exactly one wrapper",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "churn cycle 10 retires its wrapper",
+      "passed": true
+    },
+    {
+      "actual": {
+        "total_bytes": 8192,
+        "used_bytes": 240
+      },
+      "expected": {
+        "total_bytes": 8192,
+        "used_bytes": 240
+      },
+      "name": "retired handles return to the original memory usage",
+      "passed": true
+    }
+  ],
+  "experiment": "pg_extension_base adapter for the existing replication launcher",
+  "experiment_fingerprints": {
+    "Dockerfile": "5231ddf691846aa5b675094b59207730c1875e6e6870fbdd5a218f0bc275cb14",
+    "adapt.py": "a897639d97ed3ba513c541e59e08cdf3dc5df59814d79b6754f89b7dadb4cd86",
+    "destination-init.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "probe.py": "318492d786efb386d5a9d39762d40bf252cb32fd0260f48e92822a86b31b4419",
+    "register.sql": "0ba48c2d04b3c6399285264bc168eb33aaabeb9a5414f77c4d6fe54515730e59",
+    "runtime.c.inc": "a91f14ca66777c0a99573a5180378cc9c3c5291e477bf518c45f2e81998641c3"
+  },
+  "findings": [],
+  "handle_churn": {
+    "after": {
+      "total_bytes": 8192,
+      "used_bytes": 240
+    },
+    "before": {
+      "total_bytes": 8192,
+      "used_bytes": 240
+    },
+    "cycles": 10
+  },
+  "hardened_adapter": true,
+  "launcher_variant": "static",
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "production_launcher_changed": false,
+  "run": "qualification_20261018_201314",
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "status": "passed",
+  "worker_log_events": [
+    "batch_published",
+    "copy_chunk_staged",
+    "cycle_failed",
+    "idle_timeout",
+    "initial_copy_completed",
+    "replication_started",
+    "snapshot_acquired",
+    "stopped",
+    "table_copied",
+    "transaction_staged"
+  ],
+  "worker_log_records": 47
+}
