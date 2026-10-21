@@ -8,3 +8,4 @@ target/
 extensions/lake_replication/lake_replication--*.sql
 dist/
 .cargo-linux-build/
+.DS_Store
