@@ -1,5 +1,16 @@
 # Upstream source and integration
 
+## Current runtime: beta.2 migration candidate
+
+The main extension now uses pg_extension_base for its per-database launcher;
+it no longer registers the legacy static launcher. The [migration qualification](pg-extension-base-migration-results.md)
+passes 279 packaged integration checks across fresh installs, beta.1 handoff,
+receiver regressions and forced child crashes on arm64. Admission scheduling
+remains separate. The assessment and measurements below describe the earlier
+static runtime and historical adapters; they do not override the current source.
+The migration is preserved locally; it has not been pushed or published, and
+release gates remain open.
+
 ## Project rename
 
 The project and GitHub repository are named `lake_replication`; the former

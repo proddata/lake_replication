@@ -34,7 +34,7 @@ To qualify an already downloaded native archive, keep its adjacent
 `.sha256` file and select it explicitly:
 
 ```sh
-QUALIFICATION_ARCHIVE=/path/to/lake_replication-0.1.0-beta.1-linux-arm64.tar.gz \
+QUALIFICATION_ARCHIVE=/path/to/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz \
   make qualification-test
 ```
 
@@ -77,7 +77,7 @@ The same artifact-only probe can build and qualify disposable hosts at the two
 exact pg_lake 3.6 revisions selected for the beta compatibility range:
 
 ```sh
-QUALIFICATION_ARCHIVE=/absolute/path/to/lake_replication-0.1.0-beta.1.tar.gz \
+QUALIFICATION_ARCHIVE=/absolute/path/to/lake_replication-0.1.0-beta.2.tar.gz \
   make compatibility-test
 ```
 

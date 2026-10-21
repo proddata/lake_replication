@@ -12,8 +12,8 @@
  *   The supervisor is not spawned directly: this statement records the
  *   subscription's launch configuration (record_worker_launch_config); a
  *   separate, permanently-running launcher background worker
- *   (lake_replication_launcher_main, registered via
- *   shared_preload_libraries -- see _PG_init) notices the new
+ *   (lake_replication_launcher_main, registered per database through
+ *   pg_extension_base) notices the new
  *   configuration on its own and starts the supervisor as a genuine
  *   PostgreSQL background worker it supervises directly, the way native
  *   CREATE SUBSCRIPTION would spawn its own walreceiver/apply worker under
@@ -56,24 +56,10 @@
  * subscription created before that tracking existed cannot be restarted
  * this way.
  *
- * Requiring shared_preload_libraries and a configured
- * lake_replication.database_name (see _PG_init) is a real
- * departure from how this extension used to work (CREATE EXTENSION plus
- * session_preload_libraries, no server restart, no extra GUC): a
- * BackgroundWorkerHandle from RegisterDynamicBackgroundWorker is only
- * valid inside the backend that obtained it, so nothing can reconstruct
- * one later, in a different session, to stop a worker it did not start
- * itself. The only way to manage a worker across the CREATE SUBSCRIPTION
- * session that starts it and a much later, different DROP SUBSCRIPTION
- * session is a single process that outlives both and keeps every handle
- * in its own memory for as long as it might need one -- hence the
- * launcher, and hence it has to be registered once, at postmaster
- * startup, the only time PostgreSQL allows a *static* background worker
- * registration (RegisterBackgroundWorker, as opposed to the *dynamic*
- * RegisterDynamicBackgroundWorker the launcher itself uses for each
- * supervisor). Without lake_replication.database_name set, CREATE
- * SUBSCRIPTION still records launch configuration correctly, but no
- * launcher exists to ever act on it -- see the GUC's own description.
+ * pg_extension_base owns database/extension worker lifetime. Each installed
+ * database gets one launcher, which retains the dynamic subscription handles
+ * in long-lived memory and retires their wrappers before replacement. The
+ * legacy database_name setting is accepted but no longer selects a database.
  *
  * CREATE SUBSCRIPTION naming more than one publication is rejected with a
  * clear error rather than silently applying only the first: this
@@ -145,6 +131,7 @@
 #include "nodes/parsenodes.h"
 #include "nodes/pg_list.h"
 #include "commands/defrem.h"
+#include "commands/dbcommands.h"
 #include "executor/spi.h"
 #include "catalog/pg_type_d.h"
 #include "utils/builtins.h"
@@ -160,6 +147,7 @@
 #include <libpq-fe.h>
 
 #include <fcntl.h>
+#include <sys/prctl.h>
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -173,7 +161,92 @@ PG_MODULE_MAGIC;
 static ProcessUtility_hook_type prev_ProcessUtility = NULL;
 static char *LogDirectory = "/tmp";
 static char *LauncherDatabaseName = NULL;
+static char *LegacyDatabaseName = NULL;
+/* Own the Rust process group and reap descendants before retiring a wrapper. */
+static pid_t LauncherSupervisorPid = 0;
+static volatile sig_atomic_t LauncherWorkerTerminated = false;
+static MemoryContext LauncherHandleContext = NULL;
+
+static void
+LauncherWorkerSigterm(SIGNAL_ARGS)
+{
+    int saved_errno = errno;
+
+    LauncherWorkerTerminated = true;
+    SetLatch(MyLatch);
+    errno = saved_errno;
+}
+
+static void
+LauncherWorkerSigchld(SIGNAL_ARGS)
+{
+    int saved_errno = errno;
+
+    /* Reap in ordinary control flow, never in the signal handler. */
+    SetLatch(MyLatch);
+    errno = saved_errno;
+}
+
+static pid_t
+LauncherWaitSupervisor(pid_t child, int *status)
+{
+    for (;;)
+    {
+        pid_t waited;
+
+        /* Reset before checking waitpid/termination to avoid lost wakeups. */
+        ResetLatch(MyLatch);
+        if (LauncherWorkerTerminated)
+            proc_exit(0); /* before_shmem_exit owns cancellation and reaping. */
+        CHECK_FOR_INTERRUPTS();
+        waited = waitpid(child, status, WNOHANG);
+        if (waited > 0 || (waited < 0 && errno != EINTR))
+            return waited;
+        if (waited == 0)
+            (void) WaitLatch(MyLatch, WL_LATCH_SET | WL_EXIT_ON_PM_DEATH, 0, 0);
+    }
+}
+
+static void
+LauncherStopSupervisor(int code, Datum arg)
+{
+    int status;
+    int attempt;
+    pid_t child = LauncherSupervisorPid;
+
+    (void) code;
+    (void) arg;
+    if (child <= 0)
+        return;
+    LauncherSupervisorPid = 0;
+    /* All Rust descendants inherit this private group. Resume stopped children
+     * so TERM can work. Poll only during bounded shutdown, never steady state. */
+    kill(-child, SIGTERM);
+    kill(-child, SIGCONT);
+    for (attempt = 0; attempt < 100; attempt++)
+    {
+        pid_t reaped;
+
+        do
+        {
+            reaped = waitpid(-1, &status, WNOHANG);
+        } while (reaped > 0);
+        if (reaped < 0 && errno == ECHILD)
+            return;
+        pg_usleep(10000L);
+    }
+    kill(-child, SIGKILL);
+    for (;;)
+    {
+        if (waitpid(-1, &status, 0) > 0)
+            continue;
+        if (errno != EINTR)
+            break;
+    }
+}
+
 static char *CredentialFile = NULL;
+static bool AllowLegacyBindingUpgrade = false;
 static int	LauncherNaptimeMs = 1000;
 
 static bool
@@ -236,6 +309,20 @@ LauncherSigtermHandler(SIGNAL_ARGS)
  */
 extern PGDLLEXPORT void lake_replication_launcher_main(Datum main_arg);
 extern PGDLLEXPORT void lake_replication_worker_main(Datum main_arg);
+
+PG_FUNCTION_INFO_V1(lake_replication_base_launcher);
+
+Datum
+lake_replication_base_launcher(PG_FUNCTION_ARGS)
+{
+	StartTransactionCommand();
+	LauncherDatabaseName = MemoryContextStrdup(TopMemoryContext,
+											get_database_name(MyDatabaseId));
+	CommitTransactionCommand();
+	lake_replication_launcher_main((Datum) 0);
+	/* Base workers use the return value, not bgw_restart_time. */
+	PG_RETURN_INT64(1000);
+}
 
 /*
  * RequireAuthorized raises an error unless the current role is superuser
@@ -470,7 +557,9 @@ lake_replication_worker_main(Datum main_arg)
 	int			logFd;
 	int			fd;
 
-	BackgroundWorkerUnblockSignals();
+    pqsignal(SIGTERM, LauncherWorkerSigterm);
+    pqsignal(SIGCHLD, LauncherWorkerSigchld);
+    BackgroundWorkerUnblockSignals();
 
 	memcpy(dbname, MyBgworkerEntry->bgw_extra, BGW_EXTRALEN);
 	dbname[BGW_EXTRALEN - 1] = '\0';
@@ -486,7 +575,7 @@ lake_replication_worker_main(Datum main_arg)
 			"destination_database, source_address, destination_address, "
 			"destination_schema, credential_file, config_generation, create_slot "
 			"FROM lake_replication.worker_launch_config "
-			"WHERE subscription_id = %lld", (long long) subscriptionId),
+			"WHERE subscription_id = %lld AND lake_replication.worker_binding_matches(subscription_id)", (long long) subscriptionId),
 			true, 1) == SPI_OK_SELECT && SPI_processed == 1)
 	{
 		/* Copied into TopMemoryContext: SPI_finish() below frees SPI's own context. */
@@ -555,8 +644,8 @@ lake_replication_worker_main(Datum main_arg)
 	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
 	supervisorArgv[0] = supervisorPath;
 	supervisorArgv[1] = NULL;
-	supervisorLog = psprintf("%s/lake_replication_%lld_supervisor.log",
-							 LogDirectory, (long long) subscriptionId);
+	supervisorLog = psprintf("%s/lake_replication_db%u_%lld_supervisor.log",
+							 LogDirectory, MyDatabaseId, (long long) subscriptionId);
 
 	/*
 	 * Fork a child to exec the real supervisor binary into, rather than
@@ -582,7 +671,17 @@ lake_replication_worker_main(Datum main_arg)
 	 * with, and could race, the launcher's own decision.
 	 */
 	{
-		pid_t		child = fork();
+        pid_t child;
+
+        /* Reap orphaned Rust descendants instead of passing them to PID 1. */
+        if (prctl(PR_SET_CHILD_SUBREAPER, 1) < 0)
+        {
+            elog(WARNING, "lake_replication: could not become a child subreaper: %m");
+            proc_exit(0);
+        }
+        if (LauncherWorkerTerminated)
+            proc_exit(0);
+        child = fork();
 
 		if (child < 0)
 		{
@@ -592,6 +691,7 @@ lake_replication_worker_main(Datum main_arg)
 
 		if (child == 0)
 		{
+			setpgid(0, 0);
 			/*
 			 * Between fork() and execve() only async-signal-safe calls are
 			 * allowed -- no more SPI, no more elog.
@@ -612,9 +712,12 @@ lake_replication_worker_main(Datum main_arg)
 		}
 
 		{
-			int			status;
+            int status;
 
-			if (waitpid(child, &status, 0) < 0)
+            setpgid(child, child);
+            LauncherSupervisorPid = child;
+            before_shmem_exit(LauncherStopSupervisor, (Datum) 0);
+            if (LauncherWaitSupervisor(child, &status) < 0)
 				elog(WARNING, "lake_replication worker: waitpid failed: %m");
 			else if (WIFSIGNALED(status))
 				elog(WARNING, "lake_replication worker: supervisor for "
@@ -631,9 +734,8 @@ lake_replication_worker_main(Datum main_arg)
 }
 
 /*
- * lake_replication_launcher_main is the single, long-lived
- * background worker registered via shared_preload_libraries (see
- * _PG_init) that owns every dynamic per-subscription supervisor worker
+ * lake_replication_launcher_main is the per-database, long-lived
+ * pg_extension_base worker that owns every dynamic subscription supervisor
  * this extension starts. It is the only thing in this extension that ever
  * calls RegisterDynamicBackgroundWorker or TerminateBackgroundWorker --
  * see the TrackedWorker comment for why that has to be true: a
@@ -654,6 +756,8 @@ lake_replication_launcher_main(Datum main_arg)
 {
 	HASHCTL		hashCtl;
 	HTAB	   *tracked;
+    HASH_SEQ_STATUS cleanupScan;
+    TrackedWorker *cleanupEntry;
 
 	pqsignal(SIGTERM, LauncherSigtermHandler);
 	BackgroundWorkerUnblockSignals();
@@ -667,13 +771,16 @@ lake_replication_launcher_main(Datum main_arg)
 		proc_exit(0);
 	}
 
-	BackgroundWorkerInitializeConnection(LauncherDatabaseName, NULL, 0);
+	/* pg_extension_base has already connected this worker to its database. */
 
 	memset(&hashCtl, 0, sizeof(hashCtl));
 	hashCtl.keysize = sizeof(int64);
 	hashCtl.entrysize = sizeof(TrackedWorker);
 	tracked = hash_create("lake_replication tracked workers", 64,
 						  &hashCtl, HASH_ELEM | HASH_BLOBS);
+    LauncherHandleContext = AllocSetContextCreate(TopMemoryContext,
+        "lake_replication worker handles", ALLOCSET_DEFAULT_SIZES);
+
 
 	ereport(LOG,
 			(errmsg("lake_replication launcher: watching database \"%s\"",
@@ -697,6 +804,19 @@ lake_replication_launcher_main(Datum main_arg)
 			StartTransactionCommand();
 			SPI_connect();
 			PushActiveSnapshot(GetTransactionSnapshot());
+
+            /* Fence copied bindings; unchanged errors do not produce tuple churn. */
+            SPI_execute(
+                "UPDATE lake_replication.subscriptions SET state='error', "
+                "last_error='lake_replication: inherited destination binding requires an explicit rebuild' "
+                "WHERE (state IS DISTINCT FROM 'error' OR last_error IS DISTINCT FROM "
+                "'lake_replication: inherited destination binding requires an explicit rebuild') "
+                "AND subscription_id IN (SELECT subscription_id "
+                "FROM lake_replication.worker_launch_config "
+                "WHERE NOT lake_replication.worker_binding_matches(subscription_id)); "
+                "UPDATE lake_replication.worker_launch_config SET desired_state='stopped' "
+                "WHERE NOT lake_replication.worker_binding_matches(subscription_id) AND desired_state <> 'stopped'",
+                false, 0);
 
 			ret = SPI_execute(
 				"SELECT subscription_id, destination_database, desired_state, "
@@ -741,13 +861,16 @@ lake_replication_launcher_main(Datum main_arg)
 						 */
 						if (liveness == BGWH_STOPPED)
 						{
-							hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+							pfree(entry->handle);
+                        hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
 							found = false;
 						}
 						else if (entry->configGeneration != configGeneration)
 						{
 							TerminateBackgroundWorker(entry->handle);
-							hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+                        WaitForBackgroundWorkerShutdown(entry->handle);
+							pfree(entry->handle);
+                        hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
 							ereport(LOG,
 									(errmsg("lake_replication launcher: "
 											"restarting supervisor for subscription_id=%lld "
@@ -765,6 +888,8 @@ lake_replication_launcher_main(Datum main_arg)
 						{
 							BackgroundWorker worker;
 							BackgroundWorkerHandle *handle;
+                            MemoryContext oldContext;
+                            bool registered;
 
 							memset(&worker, 0, sizeof(worker));
 							snprintf(worker.bgw_name, BGW_MAXLEN,
@@ -792,9 +917,14 @@ lake_replication_launcher_main(Datum main_arg)
 							worker.bgw_main_arg = Int64GetDatum(subscriptionId);
 							strlcpy(worker.bgw_extra, destinationDatabase,
 									BGW_EXTRALEN);
-							worker.bgw_notify_pid = 0;
+							worker.bgw_notify_pid = MyProcPid;
 
-							if (RegisterDynamicBackgroundWorker(&worker, &handle))
+
+                            /* Outlive SPI_finish; independently measurable context. */
+                            oldContext = MemoryContextSwitchTo(LauncherHandleContext);
+                            registered = RegisterDynamicBackgroundWorker(&worker, &handle);
+                            MemoryContextSwitchTo(oldContext);
+                            if (registered)
 							{
 								entry = (TrackedWorker *) hash_search(
 									tracked, &subscriptionId, HASH_ENTER, NULL);
@@ -819,7 +949,9 @@ lake_replication_launcher_main(Datum main_arg)
 					else if (found)
 					{
 						TerminateBackgroundWorker(entry->handle);
-						hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+                        WaitForBackgroundWorkerShutdown(entry->handle);
+						pfree(entry->handle);
+                        hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
 						ereport(LOG,
 								(errmsg("lake_replication launcher: stopped "
 										"supervisor for subscription_id=%lld "
@@ -842,7 +974,9 @@ lake_replication_launcher_main(Datum main_arg)
 					int64		subscriptionId = entry->subscriptionId;
 
 					TerminateBackgroundWorker(entry->handle);
-					hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
+                        WaitForBackgroundWorkerShutdown(entry->handle);
+					pfree(entry->handle);
+                        hash_search(tracked, &subscriptionId, HASH_REMOVE, NULL);
 					ereport(LOG,
 							(errmsg("lake_replication launcher: stopped "
 									"supervisor for subscription_id=%lld "
@@ -881,7 +1015,15 @@ lake_replication_launcher_main(Datum main_arg)
 		ResetLatch(MyLatch);
 	}
 
-	proc_exit(0);
+    hash_seq_init(&cleanupScan, tracked);
+    while ((cleanupEntry = (TrackedWorker *) hash_seq_search(&cleanupScan)) != NULL)
+        TerminateBackgroundWorker(cleanupEntry->handle);
+    hash_seq_init(&cleanupScan, tracked);
+    while ((cleanupEntry = (TrackedWorker *) hash_seq_search(&cleanupScan)) != NULL)
+        WaitForBackgroundWorkerShutdown(cleanupEntry->handle);
+    MemoryContextDelete(LauncherHandleContext);
+    hash_destroy(tracked);
+	return; /* return restart policy to pg_extension_base */
 }
 
 /*
@@ -1111,8 +1253,11 @@ record_worker_launch_config(int64 subscriptionId, const char *slotName,
 		"INSERT INTO lake_replication.worker_launch_config "
 		"(subscription_id, slot_name, publication_name, source_database, "
 		"destination_database, source_address, destination_address, "
-		"destination_schema, credential_file, create_slot, desired_state) "
-		"VALUES (%lld, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'running') "
+		"destination_schema, credential_file, create_slot, desired_state, "
+        "origin_system_identifier, origin_database_oid) "
+		"VALUES (%lld, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'running', "
+        "lake_replication.destination_system_identifier(), "
+        "(SELECT oid FROM pg_database WHERE datname=current_database())) "
 		"ON CONFLICT (subscription_id) DO UPDATE SET "
 		"slot_name = EXCLUDED.slot_name, "
 		"publication_name = EXCLUDED.publication_name, "
@@ -1262,6 +1407,14 @@ handle_drop_subscription(DropSubscriptionStmt *stmt, int64 subscriptionId)
 		PushActiveSnapshot(GetTransactionSnapshot());
 
 	SPI_connect();
+
+    /* An inherited copy cannot authorize deletion of the original source slot. */
+    if (SPI_execute(psprintf(
+            "SELECT 1 WHERE lake_replication.worker_binding_matches(%lld)",
+            (long long) subscriptionId), true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+        ereport(ERROR,
+                (errmsg("lake_replication: inherited destination binding cannot authorize source slot cleanup")));
+
 
 	/*
 	 * Ask the running supervisor to stop cooperatively first (it polls
@@ -1579,20 +1732,12 @@ _PG_init(void)
 	 * lower. PGC_SIGHUP is otherwise inert here: reloading does not make
 	 * the already-running launcher re-read it.
 	 */
-	DefineCustomStringVariable("lake_replication.database_name",
-							   "Database the launcher background worker connects to and manages "
-							   "subscriptions in. Must name the database pg_lake "
-							   "and lake_replication are installed in. Unset: the launcher exits "
-							   "immediately at startup and manages nothing (CREATE SUBSCRIPTION "
-							   "still records launch configuration, but no supervisor ever starts). "
-							   "Only takes effect at postmaster startup, despite the PGC_SIGHUP "
-							   "context -- see the comment above this call.",
-							   NULL,
-							   &LauncherDatabaseName,
-							   NULL,
-							   PGC_SIGHUP,
-							   0,
-							   NULL, NULL, NULL);
+    DefineCustomStringVariable("lake_replication.database_name",
+        "Deprecated compatibility setting; pg_extension_base manages each installed database.",
+        NULL, &LegacyDatabaseName, NULL, PGC_SIGHUP, 0, NULL, NULL, NULL);
+    DefineCustomBoolVariable("lake_replication.allow_legacy_binding_upgrade",
+        "Allow explicit adoption of stopped legacy bindings during a verified original-destination upgrade.",
+        NULL, &AllowLegacyBindingUpgrade, false, PGC_SUSET, 0, NULL, NULL, NULL);
 
 	DefineCustomStringVariable("lake_replication.credential_file",
 							   "Default absolute path to the owner-only worker credential file. "
@@ -1616,36 +1761,7 @@ _PG_init(void)
 							0,
 							NULL, NULL, NULL);
 
-	/*
-	 * RegisterBackgroundWorker (the *static* registration API, as opposed
-	 * to RegisterDynamicBackgroundWorker) is only legal while
-	 * shared_preload_libraries is being processed at postmaster startup --
-	 * calling it later, e.g. when a regular backend LOADs this library via
-	 * session_preload_libraries or CREATE EXTENSION, would itself be an
-	 * error. Guard on that explicitly: everything above (the ProcessUtility
-	 * hook, the GUCs) still needs to work when loaded the ordinary way,
-	 * with no launcher at all -- CREATE SUBSCRIPTION still records launch
-	 * configuration in that case, it just never starts running until a
-	 * launcher (from a properly configured shared_preload_libraries
-	 * instance) notices it.
-	 */
-	if (process_shared_preload_libraries_in_progress)
-	{
-		BackgroundWorker worker;
-
-		memset(&worker, 0, sizeof(worker));
-		snprintf(worker.bgw_name, BGW_MAXLEN, "lake_replication launcher");
-		snprintf(worker.bgw_type, BGW_MAXLEN, "lake_replication launcher");
-		worker.bgw_flags = BGWORKER_SHMEM_ACCESS | BGWORKER_BACKEND_DATABASE_CONNECTION;
-		worker.bgw_start_time = BgWorkerStart_RecoveryFinished;
-		worker.bgw_restart_time = 5;
-		snprintf(worker.bgw_library_name, BGW_MAXLEN, "lake_replication");
-		snprintf(worker.bgw_function_name, BGW_MAXLEN,
-				"lake_replication_launcher_main");
-		worker.bgw_main_arg = (Datum) 0;
-		worker.bgw_notify_pid = 0;
-		RegisterBackgroundWorker(&worker);
-	}
+	/* pg_extension_base registers one launcher in each installed database. */
 
 	prev_ProcessUtility = ProcessUtility_hook;
 	ProcessUtility_hook = lake_ProcessUtility;

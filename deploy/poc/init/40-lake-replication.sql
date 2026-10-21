@@ -4,4 +4,3 @@
 -- immediately), then session_preload_libraries makes it active for every
 -- future connection to this database too.
 CREATE EXTENSION lake_replication;
-ALTER DATABASE analytics SET session_preload_libraries = 'lake_replication';

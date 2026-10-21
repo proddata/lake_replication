@@ -24,7 +24,7 @@ from urllib.parse import quote
 
 
 ROOT = Path(__file__).resolve().parents[2]
-VERSION = os.environ.get("VERSION", "0.1.0-beta.1")
+VERSION = os.environ.get("VERSION", "0.1.0-beta.2")
 RUN = datetime.now(timezone.utc).strftime("qualification_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".qualification" / RUN
 COMPOSE_FILE = ROOT / "deploy/qualification/compose.yml"
@@ -315,8 +315,8 @@ test -f "$(pg_config --pkglibdir)/lake_replication.so"
 test ! -e /usr/local/bin/lake-replication-supervisor
 test ! -e "$(pg_config --pkglibdir)/lake_replication.so"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication.control"
-test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.1.sql"
-test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0--0.1.0-beta.1.sql"
+test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.2.sql"
+test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0--0.1.0-beta.2.sql"
 test -e "$(pg_config --sharedir)/extension/pg_lake.control"
 printf 'uninstall-verified\\n'
 """,
@@ -369,7 +369,7 @@ def verify_upgrade_contract():
         sql(
             "destination",
             database,
-            "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1';",
+            "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2';",
         )
         sql(
             "destination",
@@ -383,9 +383,9 @@ def verify_upgrade_contract():
             "INSERT INTO lake_replication.worker_launch_config "
             "(subscription_id, slot_name, publication_name, source_database, "
             "destination_database, source_address, destination_address, "
-            "destination_schema) VALUES "
+            "destination_schema, desired_state, origin_system_identifier, origin_database_oid) VALUES "
             f"({subscription_id}, 'upgrade_slot', 'upgrade_pub', 'application', "
-            "'upgrade_contract', 'source:5432', '/var/run/postgresql:5432', 'public');",
+            "'upgrade_contract', 'source:5432', '/var/run/postgresql:5432', 'public', 'stopped', (SELECT system_identifier FROM pg_control_system()), (SELECT oid FROM pg_database WHERE datname=current_database()));",
         )
         check(
             "extension upgrades in place and preserves control-plane state",
@@ -401,7 +401,7 @@ def verify_upgrade_contract():
                 "WHERE e.extname='lake_replication' "
                 "AND s.subscription_name='upgrade_fixture'",
             ),
-            "0.1.0-beta.1:upgrade_fixture:0/10:degraded",
+            "0.1.0-beta.2:upgrade_fixture:0/10:degraded",
         )
         check(
             "extension upgrade installs common parameterized type resolution",
@@ -495,7 +495,7 @@ def verify_upgrade_contract():
                 "(SELECT count(*) FROM lake_replication.subscriptions) || ':' || "
                 "(SELECT count(*) FROM lake_replication.worker_launch_config)",
             ),
-            "0.1.0-beta.1:1:1",
+            "0.1.0-beta.2:1:1",
         )
         check(
             "no unsupported SQL downgrade path is advertised",
@@ -503,7 +503,7 @@ def verify_upgrade_contract():
                 "destination",
                 database,
                 "SELECT count(*) FROM pg_extension_update_paths('lake_replication') "
-                "WHERE source='0.1.0-beta.1' AND target='0.1.0' "
+                "WHERE source='0.1.0-beta.2' AND target='0.1.0' "
                 "AND path IS NOT NULL",
             ),
             "0",
@@ -1188,7 +1188,7 @@ def main():
                 "FROM pg_extension WHERE extname IN "
                 "('lake_replication')",
             ),
-            "lake_replication:0.1.0-beta.1",
+            "lake_replication:0.1.0-beta.2",
         )
         verify_upgrade_contract()
         exercise_replication()

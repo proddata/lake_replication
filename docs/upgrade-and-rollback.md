@@ -1,6 +1,6 @@
 # Upgrade, backup, and rollback
 
-This procedure applies to the `v0.1.0-beta.1` package on PostgreSQL 18 with a
+This procedure applies to the `v0.1.0-beta.2` candidate on PostgreSQL 18 with a
 supported pg_lake installation. Rehearse it on a restored copy before changing
 a production-like destination.
 
@@ -49,26 +49,56 @@ those defaults from colliding with the retained policy and status rows in the
 archive. Validate the result against the matching object-store snapshot before
 use.
 
-## Upgrade to beta.1
+## Upgrade to beta.2
 
 1. Verify the new archive checksum and unpack it.
 2. Stop PostgreSQL. Run the new bundle's `install.sh` as root; it replaces the
    program files but does not alter database objects.
-3. Start PostgreSQL while subscriptions remain disabled.
-4. Upgrade the extension in the destination database:
+3. Ensure `pg_extension_base` remains in `shared_preload_libraries`, then start
+   PostgreSQL while subscriptions remain disabled. Retained explicit
+   `lake_replication` preload entries and `lake_replication.database_name` are
+   accepted for handoff compatibility; the new binary never registers the old
+   static launcher. They can be removed in a later configuration cleanup.
+4. Verify this is the original destination cluster/database, not a template copy,
+   restore or physical takeover. Record its system identifier and database OID:
 
 ```sql
-ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1';
+SELECT system_identifier FROM pg_control_system();
+SELECT oid, datname FROM pg_database WHERE datname=current_database();
+```
+
+Legacy beta.1 rows do not record an origin, so the upgrade cannot establish that
+provenance automatically. Existing bindings require explicit verified adoption.
+Copies require a rebuild. Upgrade each installed destination database separately:
+
+```sql
+BEGIN;
+SET LOCAL lake_replication.allow_legacy_binding_upgrade = on;
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2';
+COMMIT;
 ```
 
 5. Confirm the versions and query `lake_replication.subscription_status`.
 6. Enable one subscription, verify that lag returns to its normal range and
    new source changes reach Iceberg, then enable the remaining subscriptions.
 
-The `lake_replication` upgrade from the installable `0.1.0` development
-baseline is forward-only and preserves control-plane rows and checkpoints. It
-adds observability, the PostgreSQL launcher integration, and logical-backup
-registration in the unified `lake_replication` schema.
+The upgrade is forward-only and preserves checkpoints, completed copies, stored
+credentials and source slots. The explicit beta.1-to-beta.2 path adds empty-commit
+handling and the per-database base-worker registration. A direct development
+`0.1.0`-to-beta.2 path is also included. An empty installation does not need the
+adoption setting. SQL upgrade fails if subscriptions are enabled or old launcher/
+wrapper processes are present. Do not replace loaded libraries or workers online.
+
+After SQL upgrade, verify exactly one registration for this extension/database in
+`extension_base.list_base_workers()` and no legacy `lake_replication launcher`
+backend. Subscriptions remain stopped until explicitly enabled. The base-worker
+entry point cannot be called from ordinary SQL (`internal -> internal`). Its
+shutdown stops and reaps subscription wrappers and their Rust descendants.
+
+Each new native subscription records the local system identifier/database OID.
+Copied metadata or database renames are fenced rather than implicitly rebound;
+cloned DROP cannot delete the original source slot. These local origin checks
+are not a distributed lease or authorization for physical takeover.
 
 ## Rollback
 
@@ -76,7 +106,7 @@ There is intentionally no SQL downgrade script. Running old workers against a
 newer control schema, or manually changing `pg_extension.extversion`, is not a
 supported rollback.
 
-If the failure occurs before either `ALTER EXTENSION`, stop PostgreSQL,
+If the failure occurs before `ALTER EXTENSION`, stop PostgreSQL,
 reinstall the previous archive, restore the previous configuration, and start
 PostgreSQL. The database schema has not changed.
 
@@ -99,7 +129,9 @@ checkpoint forward.
 
 ## Current evidence boundary
 
-The clean-host qualification installs only the exported archive and exercises
-the unified `0.1.0` to `0.1.0-beta.1` upgrade path with retained control rows.
-A real beta-to-beta upgrade and full backup/object-store restore drill remain
-required before the upgrade gate can be considered complete.
+The packaged lifecycle lanes exercise fresh install, baseline upgrade, a stopped-
+server beta.1-to-beta.2 handoff with retained data/slot/checkpoint, rolled-back
+upgrade, explicit origin adoption, and resumed replication. See the migration
+qualification report for the exact archive and platform results. A full physical
+backup/object-store restore drill, SQL downgrade, online handoff, distributed
+fencing and automatic physical takeover are not covered by those lanes.

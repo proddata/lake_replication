@@ -248,7 +248,7 @@ def main():
             q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
             contract('analytics')
             sql('CREATE DATABASE upgraded')
-            sql("CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION lake_replication VERSION '0.1.0' CASCADE; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1'",'upgraded')
+            sql("CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION lake_replication VERSION '0.1.0' CASCADE; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2'",'upgraded')
             contract('upgraded')
             wire()
             if args.native_bulk:

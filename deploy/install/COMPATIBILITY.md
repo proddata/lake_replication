@@ -1,23 +1,26 @@
 # lake_replication beta compatibility
 
-This beta is a separate artifact installed next to an existing PostgreSQL and
-pg_lake installation. It does not bundle either dependency.
+This candidate is installed next to PostgreSQL and pg_lake; neither dependency
+is bundled. Qualification is specific to the candidate archive and platform.
 
-| Component | Supported beta target | Validated configuration |
+| Component | Candidate target | Current qualification scope |
 |---|---|---|
-| PostgreSQL | 18.x | 18.6 |
-| pg_lake | Local PostgreSQL catalog; extension version 3.6 | mainline commits `8180647d4535fdb1ed223f92f301ba6094a8ec3e` through `f609ecb17891383f021aebb0e249fe2994ed57bb` |
-| Operating system | Linux with Debian 12 (Bookworm)-compatible glibc | Debian 12 container images pinned in the build |
-| CPU architecture | amd64, arm64 | amd64 and arm64 release artifacts |
-| Object storage | S3-compatible storage supported by pg_lake | MinIO `RELEASE.2025-04-22T22-12-26Z` in the lab |
+| PostgreSQL | 18.x | PostgreSQL 18.6 |
+| pg_lake | Local PostgreSQL catalog; extension version 3.6 | Pinned commit `8180647d4535fdb1ed223f92f301ba6094a8ec3e` |
+| pg_extension_base | Supplied by the supported pg_lake installation | 3.6, preloaded at server startup |
+| Operating system | Linux with Debian 12-compatible glibc | Pinned Debian 12 container images |
+| CPU architecture | amd64 and arm64 build targets | beta.2 migration lanes run locally on arm64; amd64 qualification pending |
+| Object storage | S3-compatible storage supported by pg_lake | MinIO `RELEASE.2025-04-22T22-12-26Z` |
 
-The validated interval follows one pg_lake ancestry path from 2026-09-10
-through 2026-09-22. The same beta archive passed the full artifact-only suite
-at both endpoints; intermediate commits were not each tested independently.
-This is a compatibility claim, not an installer-enforced commit requirement.
-Test the full replication probe against builds outside this interval before
-production use.
+The earlier beta.1 archive passed artifact-only tests at pg_lake commits
+`8180647d4535fdb1ed223f92f301ba6094a8ec3e` and
+`f609ecb17891383f021aebb0e249fe2994ed57bb` on one ancestry path, twelve days
+apart. That historical interval and earlier amd64 builds do not qualify the
+new beta.2 lifecycle implementation. Re-run the compatibility lane before
+extending this candidate's validated range.
 
-REST-catalog-backed destination tables are unsupported in this beta. The
-supported destination is pg_lake's local PostgreSQL catalog. PostgreSQL 16, 17,
-and 19 are also unsupported until their own compatibility lanes pass.
+REST-catalog destinations, PostgreSQL 16/17/19, online static-to-base handoff,
+automatic physical takeover, distributed fencing and a SQL downgrade remain
+outside this candidate's qualified scope. Follow UPGRADE.md for the stopped-
+server beta.1-to-beta.2 handoff. Consult the repository's release gates before
+publishing or treating a candidate as a supported release.

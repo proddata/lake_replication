@@ -51,6 +51,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             std::process::id()
         ),
     )?;
+    let mut slot_contention = SlotContention::new(Duration::from_secs(5));
     let mut consecutive_failures = 0_u32;
     let mut injected_failures = config.inject_failures;
 
@@ -89,6 +90,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 &publisher,
                 &mut destination,
                 &mut consecutive_failures,
+                &mut slot_contention,
             )
         };
         if cycle.is_err()
@@ -141,6 +143,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     config.max_backoff,
                     consecutive_failures,
                 );
+                let delay = slot_contention
+                    .remaining()
+                    .map_or(delay, |left| delay.min(left.max(Duration::from_millis(10))));
                 consecutive_failures = consecutive_failures.saturating_add(1);
                 control_query(
                     &mut destination,
@@ -361,7 +366,11 @@ struct SourceObservation {
     current_lsn: u64,
 }
 
-fn source_preflight(destination: &mut Client, config: &Config) -> Result<String, CycleError> {
+fn source_preflight(
+    destination: &mut Client,
+    config: &Config,
+    busy: &mut SlotContention,
+) -> Result<String, CycleError> {
     let expected_rows = control_query(
         destination,
         config,
@@ -386,7 +395,7 @@ fn source_preflight(destination: &mut Client, config: &Config) -> Result<String,
     let mut candidate_errors = Vec::new();
     let mut retryable_failure = false;
     for address in &config.source_addresses {
-        match inspect_source_candidate(config, address, &expected) {
+        match inspect_source_candidate(config, address, &expected, busy) {
             Ok(observation) => {
                 control_query(
                     destination,
@@ -419,7 +428,7 @@ fn source_preflight(destination: &mut Client, config: &Config) -> Result<String,
         "no safe writable source endpoint: {}",
         candidate_errors.join(" | ")
     );
-    if retryable_failure {
+    if retryable_failure && !busy.remaining().is_some_and(|left| left.is_zero()) {
         Err(CycleError::Retry(error))
     } else {
         Err(CycleError::Fatal(error))
@@ -430,6 +439,7 @@ fn inspect_source_candidate(
     config: &Config,
     address: &str,
     expected: &ExpectedSource,
+    busy: &mut SlotContention,
 ) -> Result<SourceObservation, CycleError> {
     let mut source = config.connect_source(address).map_err(source_query_error)?;
     let identity_rows = source
@@ -514,11 +524,13 @@ fn inspect_source_candidate(
     } else {
         None
     };
-    validate_source(expected, &observation, history.as_deref()).map_err(CycleError::Fatal)?;
+    validate_source_binding(expected, &observation, history.as_deref())
+        .map_err(CycleError::Fatal)?;
+    busy.observe(address, observation.active, Instant::now())?;
     Ok(observation)
 }
 
-fn validate_source(
+fn validate_source_binding(
     expected: &ExpectedSource,
     observed: &SourceObservation,
     timeline_history: Option<&str>,
@@ -540,9 +552,6 @@ fn validate_source(
         || observed.temporary
     {
         return Err("replication slot does not have the required durable pgoutput identity".into());
-    }
-    if observed.active {
-        return Err("replication slot is already active outside this worker cycle".into());
     }
     if observed.conflicting
         || observed.invalidation_reason.is_some()
@@ -746,8 +755,9 @@ fn run_cycle(
     publisher: &Path,
     destination: &mut Client,
     consecutive_failures: &mut u32,
+    busy: &mut SlotContention,
 ) -> Result<(i64, i64), CycleError> {
-    let source_address = source_preflight(destination, config)?;
+    let source_address = source_preflight(destination, config, busy)?;
     // Inherit child logs rather than buffering an unbounded streamed transaction.
     let mut command = Command::new(receiver);
     command
@@ -1154,7 +1164,7 @@ fn truncate(value: &str, maximum: usize) -> &str {
 mod tests {
     use super::*;
 
-    fn expected_source() -> ExpectedSource {
+    pub(super) fn expected_source() -> ExpectedSource {
         ExpectedSource {
             system_identifier: "123".into(),
             database_oid: 42,
@@ -1164,7 +1174,7 @@ mod tests {
         }
     }
 
-    fn source_observation() -> SourceObservation {
+    pub(super) fn source_observation() -> SourceObservation {
         SourceObservation {
             system_identifier: "123".into(),
             database_oid: 42,
@@ -1268,6 +1278,138 @@ mod tests {
             validate_source(&expected_source(), &observation, Some("1 0/80 promoted"))
                 .unwrap_err()
                 .contains("before durable staged")
+        );
+    }
+}
+
+#[cfg(test)]
+fn validate_source(
+    expected: &ExpectedSource,
+    observed: &SourceObservation,
+    history: Option<&str>,
+) -> Result<(), String> {
+    validate_source_binding(expected, observed, history)?;
+    if observed.active {
+        return Err("replication slot is already active outside this worker cycle".into());
+    }
+    Ok(())
+}
+// Bound transient source-slot release races after wrapper restart.
+// Identity/WAL validation always runs first; an active slot is never consumed.
+struct SlotContention {
+    first_busy: std::collections::BTreeMap<String, std::time::Instant>,
+    budget: Duration,
+}
+
+impl SlotContention {
+    fn new(budget: Duration) -> Self {
+        Self {
+            first_busy: std::collections::BTreeMap::new(),
+            budget,
+        }
+    }
+
+    fn observe(
+        &mut self,
+        address: &str,
+        active: bool,
+        now: std::time::Instant,
+    ) -> Result<(), CycleError> {
+        if !active {
+            // A validated inactive endpoint is selected immediately; a healthy
+            // cycle clears stale contention on alternative endpoints as well.
+            self.first_busy.clear();
+            return Ok(());
+        }
+        let first = *self.first_busy.entry(address.to_owned()).or_insert(now);
+        let elapsed = now.saturating_duration_since(first);
+        let message = format!(
+            "source slot contention at {address}: slot is still active; refusing consumption ({}ms of {}ms budget)",
+            elapsed.as_millis(),
+            self.budget.as_millis()
+        );
+        if elapsed < self.budget {
+            Err(CycleError::Retry(message))
+        } else {
+            Err(CycleError::Fatal(message))
+        }
+    }
+
+    fn remaining(&self) -> Option<Duration> {
+        self.first_busy
+            .values()
+            .map(|first| self.budget.saturating_sub(first.elapsed()))
+            .min()
+    }
+}
+
+#[cfg(test)]
+mod contention_tests {
+    use super::*;
+
+    #[test]
+    fn transient_contention_refuses_consumption_then_clears() {
+        let now = std::time::Instant::now();
+        let mut busy = SlotContention::new(Duration::from_secs(5));
+        assert!(matches!(
+            busy.observe("source", true, now),
+            Err(CycleError::Retry(_))
+        ));
+        assert!(matches!(
+            busy.observe("alternative", true, now),
+            Err(CycleError::Retry(_))
+        ));
+        assert!(
+            busy.observe("source", false, now + Duration::from_secs(1))
+                .is_ok()
+        );
+        assert!(busy.first_busy.is_empty());
+        assert!(matches!(
+            busy.observe("source", true, now + Duration::from_secs(10)),
+            Err(CycleError::Retry(_))
+        ));
+    }
+
+    #[test]
+    fn persistent_contention_expires_without_resetting_on_repeated_observations() {
+        let now = std::time::Instant::now();
+        let mut busy = SlotContention::new(Duration::from_secs(5));
+        for seconds in [0, 1, 4] {
+            assert!(matches!(
+                busy.observe("source", true, now + Duration::from_secs(seconds)),
+                Err(CycleError::Retry(_))
+            ));
+        }
+        assert!(matches!(
+            busy.observe("source", true, now + Duration::from_secs(5)),
+            Err(CycleError::Fatal(_))
+        ));
+        assert!(matches!(
+            busy.observe("source", true, now + Duration::from_secs(6)),
+            Err(CycleError::Fatal(_))
+        ));
+    }
+
+    #[test]
+    fn unsafe_binding_is_fatal_even_when_slot_is_active() {
+        let expected = tests::expected_source();
+        let mut observed = tests::source_observation();
+        observed.active = true;
+        observed.system_identifier = "wrong".into();
+        assert!(
+            validate_source_binding(&expected, &observed, None)
+                .unwrap_err()
+                .contains("identity mismatch")
+        );
+        observed.system_identifier = expected.system_identifier.clone();
+        observed.wal_status = Some("lost".into());
+        assert!(validate_source_binding(&expected, &observed, None).is_err());
+        observed.wal_status = Some("reserved".into());
+        observed.confirmed_lsn = expected.staged_lsn + 1;
+        assert!(
+            validate_source_binding(&expected, &observed, None)
+                .unwrap_err()
+                .contains("ahead")
         );
     }
 }

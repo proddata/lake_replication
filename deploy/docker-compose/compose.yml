@@ -23,9 +23,7 @@ services:
       - -c
       - max_worker_processes=24
       - -c
-      - shared_preload_libraries=pg_extension_base,lake_replication
-      - -c
-      - lake_replication.database_name=analytics
+      - shared_preload_libraries=pg_extension_base
       - -c
       - pg_lake_engine.host=host=/var/run/pgduck port=5332
       - -c

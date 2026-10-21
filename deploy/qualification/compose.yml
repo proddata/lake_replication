@@ -84,9 +84,7 @@ services:
       - -c
       - max_worker_processes=24
       - -c
-      - shared_preload_libraries=pg_extension_base,lake_replication
-      - -c
-      - lake_replication.database_name=analytics
+      - shared_preload_libraries=pg_extension_base
       - -c
       - lake_replication.credential_file=/credentials/worker.env
       - -c

@@ -35,6 +35,10 @@ if [ ! -f "$shared_extension_dir/pg_lake.control" ]; then
     echo "lake-replication install: pg_lake must be installed before this bundle" >&2
     exit 1
 fi
+if [ ! -f "$shared_extension_dir/pg_extension_base.control" ]; then
+    echo "lake-replication install: pg_extension_base is required" >&2
+    exit 1
+fi
 if [ ! -f "$shared_extension_dir/dblink.control" ]; then
     echo "lake-replication install: the PostgreSQL dblink extension is required" >&2
     exit 1
@@ -75,10 +79,10 @@ Compatibility was validated against pg_lake 3.6 at commit
 the installed pg_lake source revision cannot be determined from pg_config.
 
 Before creating subscriptions:
-1. Add lake_replication to shared_preload_libraries.
-2. Set lake_replication.database_name to the destination database.
+1. Add pg_extension_base to shared_preload_libraries and restart PostgreSQL.
+2. Create lake_replication in each destination database; no launcher database setting is needed.
 3. For SCRAM/TLS, set lake_replication.credential_file to an owner-only file.
-4. Restart PostgreSQL.
+4. For an existing beta.1 database, follow UPGRADE.md before enabling subscriptions.
 5. Run CREATE EXTENSION dblink; then CREATE EXTENSION lake_replication;
 
 Removing these files later does not remove database objects. Use PostgreSQL's

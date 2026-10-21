@@ -59,14 +59,19 @@ replacing files. After installing this bundle, upgrade the database objects
 with:
 
 ```sql
-ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.1';
+BEGIN;
+-- Only after verifying this is the original destination and draining workers:
+SET LOCAL lake_replication.allow_legacy_binding_upgrade = on;
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2';
+COMMIT;
 ```
 
 ## Removal
 
-Disable or drop managed subscriptions first, remove
-`lake_replication` from `shared_preload_libraries`, and stop PostgreSQL
-before removing its shared library. From the unpacked bundle, run:
+Disable or drop managed subscriptions, then drop `lake_replication` in every
+installed database. Remove any explicit `lake_replication` preload entry and
+stop PostgreSQL before removing its shared library. Keep `pg_extension_base`
+preloaded for pg_lake and other extensions that use it. From the unpacked bundle, run:
 
 ```sh
 sudo ./uninstall.sh
@@ -93,7 +98,7 @@ dirty source tree so its recorded revision is unambiguous. For a local test of
 uncommitted packaging changes, opt in explicitly with
 `ALLOW_DIRTY=1 make install-bundles`.
 
-Pushing a version tag such as `v0.1.0-beta.1` runs the release workflow. The tag must
+Pushing a version tag such as `v0.1.0-beta.2` runs the release workflow. The tag must
 match the worker and SQL-extension versions. The workflow builds both bundles,
 generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
 keylessly signs every archive, SBOM, and checksum manifest with Sigstore

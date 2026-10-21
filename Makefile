@@ -11,7 +11,7 @@ PG_LAKE_REV ?= $(shell git -C vendor/pg_lake rev-parse HEAD)
 
 .PHONY: upstream-source
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop performance-test failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test empty-filtered-test receiver-progress-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop performance-test failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test empty-filtered-test receiver-progress-test lifecycle-test lifecycle-upgrade-test lifecycle-fault-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
 upstream-source:
 	python3 deploy/prepare-upstream.py $(PG_LAKE_REV)
 
@@ -74,6 +74,15 @@ mutations-test:
 
 streaming-test:
 	python3 tests/streaming/probe.py
+
+lifecycle-fault-test:
+	python3 tests/lifecycle/faults.py
+
+lifecycle-test:
+	python3 tests/lifecycle/probe.py
+
+lifecycle-upgrade-test:
+	python3 tests/lifecycle/probe.py --upgrade
 
 receiver-progress-test:
 	$(MAKE) -C extensions/lake_replication generate
@@ -148,6 +157,7 @@ check:
 	python3 -m py_compile tests/transport/probe.py
 	python3 -m py_compile tests/publisher/probe.py
 	python3 -m py_compile tests/mutations/probe.py
+	python3 -m py_compile tests/lifecycle/probe.py tests/lifecycle/cases.py tests/lifecycle/faults.py
 	python3 -m py_compile tests/streaming/probe.py tests/streaming/empty_filtered.py
 	python3 -m py_compile tests/toast/probe.py
 	python3 -m py_compile tests/initial_sync/probe.py
@@ -182,7 +192,7 @@ check:
 	grep -q '0017_common_parameterized_types.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q '0018_postgres_integration.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q '0019_connection_credentials.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
-	grep -q '0022_empty_filtered_transactions.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
+	grep -q '0022_empty_filtered_transactions.sql' extensions/lake_replication/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql
 	grep -q '0020_set_based_apply.sql' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.register_type_contract' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql
 	grep -q 'CREATE OR REPLACE FUNCTION lake_replication.ensure_iceberg_destination' extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql

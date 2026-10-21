@@ -113,8 +113,8 @@ bundle from a clean checkout:
 
 ```sh
 make install-bundle
-tar -xzf dist/lake_replication-0.1.0-beta.1.tar.gz -C /tmp
-cd /tmp/lake_replication-0.1.0-beta.1
+tar -xzf dist/lake_replication-0.1.0-beta.2.tar.gz -C /tmp
+cd /tmp/lake_replication-0.1.0-beta.2
 sudo ./install.sh
 ```
 
@@ -128,20 +128,19 @@ To build release-style archives for both supported architectures instead, run
 
 ### 3. Configure the destination server
 
-Append `lake_replication` to any existing
-`shared_preload_libraries` value and choose the pg_lake destination database:
+Include `pg_extension_base` in the existing `shared_preload_libraries` value.
+It manages one replication launcher in each database containing the extension:
 
 ```conf
 # postgresql.conf
-shared_preload_libraries = 'pg_extension_base,lake_replication'
-lake_replication.database_name = 'analytics'
+shared_preload_libraries = 'pg_extension_base'
 lake_replication.log_directory = '/var/log/postgresql/lake_replication'
 # Optional when workers use local destination authentication:
 # lake_replication.credential_file = '/etc/lake_replication/worker.env'
 ```
 
 The exact existing preload list depends on the pg_lake installation; preserve
-all of its entries when appending `lake_replication`.
+all of its entries when adding `pg_extension_base`.
 
 If the destination worker or TLS setup needs a file, create it as a regular,
 non-symlink file readable only by the PostgreSQL operating-system user (`0600`):
@@ -164,17 +163,15 @@ or structured logs.
 
 Create the log directory with ownership and permissions suitable for the
 PostgreSQL operating-system user, then restart PostgreSQL. In the destination
-database, install the extensions and activate the SQL hook for future sessions:
+database, install the extensions; no session preload or database-name setting is needed:
 
 ```sql
 -- Run in the pg_lake-enabled destination database: analytics
 CREATE EXTENSION dblink;
 CREATE EXTENSION lake_replication;
-
-ALTER DATABASE analytics SET session_preload_libraries = 'lake_replication';
 ```
 
-Reconnect after changing `session_preload_libraries`. Subscription management
+Subscription management
 requires superuser or membership in the extension-created admin role:
 
 ```sql
@@ -354,7 +351,7 @@ changing an installed version, follow the coordinated
   compatibility, recovery-drill, observability failure-path, security, and
   release-candidate soak gates remain open.
 - No signed GitHub prerelease has been published yet. Source checkouts and CI
-  artifacts are development outputs until `v0.1.0-beta.1` is released.
+  artifacts are development outputs until the candidate is qualified and released.
 
 For the complete current decision record, see
 [BETA-RELEASE.md](BETA-RELEASE.md).

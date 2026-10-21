@@ -1,10 +1,9 @@
 # Admission evaluation checkpoint — completed 2026-10-21
 
-The resumed evaluation is complete. No benchmark is running. Private containers
-and volumes were removed; cached images and disk evidence remain. The measurement
-images retain the original production sources. Subsequent work adds SQL migration
-`0022` and the receiver/supervisor/framing fix; C changes are comments only. The findings and source fixes are preserved in separate local commits;
-release-artifact qualification and admission refinement remain pending.
+The admission measurement is complete; no benchmark is running. Subsequent work
+committed the receiver fixes and now implements the [base lifecycle migration](pg-extension-base-migration-results.md)
+in the main extension as a local beta.2 migration checkpoint. Its packaged arm64
+lanes pass 279 checks. Admission policy is still experimental and separate.
 
 [Final report](pg-extension-base-admission-performance-results.md) and
 [accepted evidence](evidence/2026-10-21-base-admission-performance-results.json).
@@ -33,7 +32,7 @@ it. The clean redo used scoped idle-sleep prevention and timing validation.
    passes 96 checks including the native two-million-row case, prompt disable/drop,
    source outage recovery, already-staged work and interrupted-stream replay.
    `make check` passes. These are source-build checks, not a new release artifact.
-2. Refine admission to distinguish actual engine work from PostgreSQL staging,
+2. The lifecycle migration is implemented and locally qualified. Next refine admission to distinguish actual engine work from PostgreSQL staging,
    and test bounded capacity for streaming while one bulk copy runs. Preserve
    ownership validation and atomic copy publication. The fixed blanket permit
    is not a qualified final scheduling policy.

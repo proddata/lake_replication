@@ -1,0 +1,1968 @@
+{
+  "scope": "Production pg_extension_base migration candidate 0.1.0-beta.2, Linux arm64",
+  "status": "passed",
+  "artifact": {
+    "qualified_runtime_archive": ".qualification/base-lifecycle-artifact-final/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+    "qualified_runtime_sha256": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+    "candidate_archive": "dist/release/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+    "candidate_archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+    "differing_members": [
+      "COMPATIBILITY.md",
+      "README.md",
+      "SHA256SUMS"
+    ],
+    "all_executable_payloads_identical": true,
+    "all_other_files_identical": true,
+    "manifests_verified": true,
+    "payload_sha256": {
+      "payload/bin/lake-replication-initial-sync": "8276ed7a7232ab49560db64abc4ee4140341e1ce5ec157a424cbef958d8d0247",
+      "payload/bin/lake-replication-publisher": "c199ca2bce8d63157c10e8929bf109e262e65f0839b21b993831a9521581e8bd",
+      "payload/bin/lake-replication-receiver": "4485666a2921a689684716f5af4f7d08e30edacd477a2e391a7a44153797ee1a",
+      "payload/bin/lake-replication-supervisor": "acf41aea9cd415ee57fc46655f3bc4ecf4e79954f0e9e4e194057a2a8bdfe0b3",
+      "payload/extension/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+      "payload/extension/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+      "payload/extension/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+      "payload/extension/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+      "payload/extension/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+      "payload/extension/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+      "payload/extension/lake_replication.control": "54c9dc24b3226e20cec2ac937e4518e4fe2e89fcddb0c828dbbfaddd93d2b5cd",
+      "payload/lib/lake_replication.so": "a41cac2114d3cf19be7c18b8b4c674206f8ff00eef0b49e4f2bd324e18fe6e92"
+    }
+  },
+  "runs": {
+    "lifecycle": {
+      "run": "qualification_20261021_171331",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "checks": [
+        {
+          "name": "release archive checksum",
+          "passed": true,
+          "actual": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+          "expected": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6"
+        },
+        {
+          "name": "archive architecture matches qualification host",
+          "passed": true,
+          "actual": "arm64",
+          "expected": "arm64"
+        },
+        {
+          "name": "development baseline excludes beta observability schema",
+          "passed": true,
+          "actual": "0.1.0:true",
+          "expected": "0.1.0:true"
+        },
+        {
+          "name": "extension upgrades in place and preserves control-plane state",
+          "passed": true,
+          "actual": "0.1.0-beta.2:upgrade_fixture:0/10:degraded",
+          "expected": "0.1.0-beta.2:upgrade_fixture:0/10:degraded"
+        },
+        {
+          "name": "extension upgrade installs common parameterized type resolution",
+          "passed": true,
+          "actual": "numeric(12,2):character varying(32)",
+          "expected": "numeric(12,2):character varying(32)"
+        },
+        {
+          "name": "extension upgrade adds per-subscription credential metadata",
+          "passed": true,
+          "actual": "true:1",
+          "expected": "true:1"
+        },
+        {
+          "name": "upgrade registers durable extension state for logical backup",
+          "passed": true,
+          "actual": "19:1",
+          "expected": "19:1"
+        },
+        {
+          "name": "logical backup contains durable state but not regenerated seed mappings",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "logical backup restores extension versions and durable control state",
+          "passed": true,
+          "actual": "0.1.0-beta.2:1:1",
+          "expected": "0.1.0-beta.2:1:1"
+        },
+        {
+          "name": "no unsupported SQL downgrade path is advertised",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "admin can use narrowly scoped origin helpers",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "read-all role cannot invoke origin-management helper",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "different databases get different launcher processes",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "only pg_extension_base is explicitly preloaded",
+          "passed": true,
+          "actual": "pg_extension_base",
+          "expected": "pg_extension_base"
+        },
+        {
+          "name": "no session preload is needed",
+          "passed": true,
+          "actual": "",
+          "expected": ""
+        },
+        {
+          "name": "no configured launcher database is needed",
+          "passed": true,
+          "actual": "",
+          "expected": ""
+        },
+        {
+          "name": "legacy static launcher is absent",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "rolled-back extension creation leaves no registration",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "rolled-back extension drop resumes the worker",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "committed extension drop stops the launcher",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "extension recreation registers exactly one worker",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "unsupported enabled fails instead of being ignored",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "unsupported copy_data fails instead of being ignored",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "rolled-back subscriptions leave no source slots or control rows",
+          "passed": true,
+          "actual": "0:0",
+          "expected": "0:0"
+        },
+        {
+          "name": "subscription notice does not expose the source password",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "subscription records its selected credential file",
+          "passed": true,
+          "actual": "/credentials/destination-only.env:1",
+          "expected": "/credentials/destination-only.env:1"
+        },
+        {
+          "name": "postgres URI credentials are stored for workers without a source password file",
+          "passed": true,
+          "actual": "lake_source:true",
+          "expected": "lake_source:true"
+        },
+        {
+          "name": "pending cleanup contains no connection or password columns",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "pg_read_all_data cannot read stored connection secrets or invoke the worker getter",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "relative per-subscription credential paths are rejected without mutation",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "initial copy reaches the artifact-installed destination",
+          "passed": true,
+          "actual": "initial",
+          "expected": "initial"
+        },
+        {
+          "name": "initial sync automatically creates a persistent source pgoutput slot",
+          "passed": true,
+          "actual": "pgoutput:logical:false:true",
+          "expected": "pgoutput:logical:false:true"
+        },
+        {
+          "name": "common parameterized types retain schema and values",
+          "passed": true,
+          "actual": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+          "expected": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label"
+        },
+        {
+          "name": "subscription becomes healthy",
+          "passed": true,
+          "actual": "healthy:streaming",
+          "expected": "healthy:streaming"
+        },
+        {
+          "name": "all documented metrics are exported",
+          "passed": true,
+          "actual": "12",
+          "expected": "12"
+        },
+        {
+          "name": "live insert and update replicate",
+          "passed": true,
+          "actual": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+          "expected": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label"
+        },
+        {
+          "name": "nullable parameterized column is added and replicated online",
+          "passed": true,
+          "actual": "numeric(6,2):1=1.25,2=NULL",
+          "expected": "numeric(6,2):1=1.25,2=NULL"
+        },
+        {
+          "name": "supervisor stops before the source password changes",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "postgresql URI credential rotation replaces the subscription supervisor",
+          "passed": true,
+          "actual": "/credentials/destination-only.env:2:true:running",
+          "expected": "/credentials/destination-only.env:2:true:running"
+        },
+        {
+          "name": "replication authenticates with the rotated credential",
+          "passed": true,
+          "actual": "rotated-credential",
+          "expected": "rotated-credential"
+        },
+        {
+          "name": "supervisor stops before restoring the source password",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "CONNECTION can return to the original password",
+          "passed": true,
+          "actual": "/credentials/destination-only.env:3:true:running",
+          "expected": "/credentials/destination-only.env:3:true:running"
+        },
+        {
+          "name": "disable reaches stopped state",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "enable catches up changes made while stopped",
+          "passed": true,
+          "actual": "while-disabled",
+          "expected": "while-disabled"
+        },
+        {
+          "name": "destination is ready after container restart",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "launcher resumes replication after restart",
+          "passed": true,
+          "actual": "after-restart",
+          "expected": "after-restart"
+        },
+        {
+          "name": "source outage becomes observable retry state",
+          "passed": true,
+          "actual": "degraded:backoff:true:true:true:true:true",
+          "expected": "degraded:backoff:true:true:true:true:true"
+        },
+        {
+          "name": "retry metrics mark the subscription unhealthy",
+          "passed": true,
+          "actual": "0:true:true",
+          "expected": "0:true:true"
+        },
+        {
+          "name": "source is ready after outage",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "subscription recovers while retaining last-failure evidence",
+          "passed": true,
+          "actual": "healthy:running:0:true:true:true",
+          "expected": "healthy:running:0:true:true:true"
+        },
+        {
+          "name": "replication resumes after source outage",
+          "passed": true,
+          "actual": "after-source-outage",
+          "expected": "after-source-outage"
+        },
+        {
+          "name": "structured worker logs emitted",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "structured failure and recovery events emitted",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "credential values absent from worker logs",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "drop removes the source replication slot",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "pre-created slot supplies a snapshot copy",
+          "passed": true,
+          "actual": "snapshot",
+          "expected": "snapshot"
+        },
+        {
+          "name": "pre-created slot streams later changes",
+          "passed": true,
+          "actual": "streamed",
+          "expected": "streamed"
+        },
+        {
+          "name": "temporary snapshot slot is released",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "drop removes the pre-created slot",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "interrupted initial copy keeps staged rows",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "initial copy restarts from a fresh snapshot",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "restarted copy publishes each source row once",
+          "passed": true,
+          "actual": "one,two,three",
+          "expected": "one,two,three"
+        },
+        {
+          "name": "restarted copy advances the checkpoint and retains one source slot",
+          "passed": true,
+          "actual": "true:1",
+          "expected": "true:1"
+        },
+        {
+          "name": "persistent slot streams after restarted copy",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "recovered stream publishes new changes",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "change after interrupted copy appears at destination",
+          "passed": true,
+          "actual": "after-restart",
+          "expected": "after-restart"
+        },
+        {
+          "name": "churn subscription finishes its initial copy",
+          "passed": true,
+          "actual": "streaming",
+          "expected": "streaming"
+        },
+        {
+          "name": "churn starts with all subscription wrappers retired",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "disable explicitly reaps a paused supervisor in the shared runtime",
+          "passed": true,
+          "actual": false,
+          "expected": false
+        },
+        {
+          "name": "paused supervisor disable does not restart PostgreSQL",
+          "passed": true,
+          "actual": "2026-10-21 17:14:35.503859+00",
+          "expected": "2026-10-21 17:14:35.503859+00"
+        },
+        {
+          "name": "churn cycle 1 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 1 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 2 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 2 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 3 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 3 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 4 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 4 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 5 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 5 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 6 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 6 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 7 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 7 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 8 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 8 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 9 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 9 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "churn cycle 10 starts exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "churn cycle 10 retires its wrapper",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "retired handles return to the original memory usage",
+          "passed": true,
+          "actual": {
+            "total_bytes": 8192,
+            "used_bytes": 240
+          },
+          "expected": {
+            "total_bytes": 8192,
+            "used_bytes": 240
+          }
+        },
+        {
+          "name": "analytics replication reaches one",
+          "passed": true,
+          "actual": "one",
+          "expected": "one"
+        },
+        {
+          "name": "lifecycle_second replication reaches one",
+          "passed": true,
+          "actual": "one",
+          "expected": "one"
+        },
+        {
+          "name": "analytics replication reaches one,two",
+          "passed": true,
+          "actual": "one,two",
+          "expected": "one,two"
+        },
+        {
+          "name": "lifecycle_second replication reaches one,two",
+          "passed": true,
+          "actual": "one,two",
+          "expected": "one,two"
+        },
+        {
+          "name": "terminated base launcher is replaced",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "launcher termination does not restart PostgreSQL",
+          "passed": true,
+          "actual": "2026-10-21 17:14:35.503859+00",
+          "expected": "2026-10-21 17:14:35.503859+00"
+        },
+        {
+          "name": "disable works after launcher replacement",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "analytics replication reaches one,two,three",
+          "passed": true,
+          "actual": "one,two,three",
+          "expected": "one,two,three"
+        },
+        {
+          "name": "lifecycle_second replication reaches one,two,three",
+          "passed": true,
+          "actual": "one,two,three",
+          "expected": "one,two,three"
+        },
+        {
+          "name": "analytics has database-scoped worker log files",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "lifecycle_second has database-scoped worker log files",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "registered workers do not start in a template database",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "template clone discovers its registered launcher",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "drop database fails while an ordinary client is connected",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "failed database drop resumes its launcher",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "committed database drop completes",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "cloned subscription stays stopped",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "cloned subscription is rejected with a durable diagnostic",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "attempted enable of inherited binding is fenced",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "unchanged binding errors do not rewrite subscription rows",
+          "passed": true,
+          "actual": "1523",
+          "expected": "1523"
+        },
+        {
+          "name": "matching name cannot bypass copied database OID fence",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "copied binding cannot authorize source slot cleanup",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "copy cleanup rejection preserves original source slot",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "lifecycle_drop replication reaches one,two,three",
+          "passed": true,
+          "actual": "one,two,three",
+          "expected": "one,two,three"
+        },
+        {
+          "name": "extension drop removes its replication worker connections",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "extension drop explicitly terminates a paused external supervisor",
+          "passed": true,
+          "actual": false,
+          "expected": false
+        },
+        {
+          "name": "active extension drop does not restart PostgreSQL",
+          "passed": true,
+          "actual": "2026-10-21 17:15:08.417893+00",
+          "expected": "2026-10-21 17:15:08.417893+00"
+        },
+        {
+          "name": "uninstaller removes only project program files",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        }
+      ],
+      "scope": "Production pg_extension_base migration; actual exported archives",
+      "findings": [],
+      "inputs": {
+        "tests/lifecycle/probe.py": "044ec9a9dc841f1955b6325dcf090cbb5124ef8f0493d009a99484b938c24516",
+        "tests/lifecycle/cases.py": "ac680ec3e12308bc19f4c8612476cc172e9fcf53acee6d2b6b6b814018986ae8",
+        "experiments/base_workers/upgrade.py": "b692249ddac01532442b95a4156e3746624a504627111e05dec7beddfdf7501d",
+        "tests/qualification/probe.py": "b4bafbcc02cca7e9ddb3306ce1def45f3477cebd11157f2de1d2474de7a365f5",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "1b4f1b1e307f3d90ff754bc9c6f8cc67283dab2d65f65ca6bfdf8e90a2fb27e1",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+        "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6",
+        "worker/src/wire.rs": "d555faf6d03a021b93761335e93eb1957d0d4a8c5f533254fc5db0300d01071c",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759",
+        "extensions/lake_replication/lake_replication.control": "54c9dc24b3226e20cec2ac937e4518e4fe2e89fcddb0c828dbbfaddd93d2b5cd"
+      },
+      "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+      "archive_sha256": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+      "architecture": "arm64",
+      "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty",
+      "new_archive": {
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+        "architecture": "arm64",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "new_image": "sha256:42f7025b1a099397b20eba9d788a639e38473c3048a8ca7f6b366d73d4cef2f1",
+      "worker_log_records": 34,
+      "worker_log_events": [
+        "batch_published",
+        "copy_chunk_staged",
+        "cycle_failed",
+        "initial_copy_completed",
+        "replication_started",
+        "snapshot_acquired",
+        "stopped",
+        "table_copied",
+        "transaction_staged"
+      ],
+      "handle_churn": {
+        "cycles": 10,
+        "before": {
+          "total_bytes": 8192,
+          "used_bytes": 240
+        },
+        "after": {
+          "total_bytes": 8192,
+          "used_bytes": 240
+        }
+      },
+      "status": "passed",
+      "passed": true,
+      "cleanup_returncode": 0,
+      "raw_evidence": ".qualification/qualification_20261021_171331_base_lifecycle/results.json",
+      "raw_evidence_sha256": "13ef3c829584d7a3be22da51293672b9f1ae68ecbf2b428eeb747aa6d10bd365",
+      "total_checks": 119,
+      "passed_checks": 119,
+      "compose.log_sha256": "98ba0b91980a2a3ac67c93706e37ff844d4825ecbb7d06626a415efe3de28027",
+      "workers.jsonl_sha256": "d877d8918aac57bc356b3e96ac49648c6e8d66980f5e8005c2ca97440099db63"
+    },
+    "upgrade": {
+      "run": "qualification_20261021_171332",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "checks": [
+        {
+          "name": "release archive checksum",
+          "passed": true,
+          "actual": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+          "expected": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6"
+        },
+        {
+          "name": "archive architecture matches qualification host",
+          "passed": true,
+          "actual": "arm64",
+          "expected": "arm64"
+        },
+        {
+          "name": "release archive checksum",
+          "passed": true,
+          "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+          "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302"
+        },
+        {
+          "name": "archive architecture matches qualification host",
+          "passed": true,
+          "actual": "arm64",
+          "expected": "arm64"
+        },
+        {
+          "name": "upgraded replication reaches one",
+          "passed": true,
+          "actual": "one",
+          "expected": "one"
+        },
+        {
+          "name": "packaged release starts through its static launcher",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "packaged release has no replication base registration",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "preflight can inspect the real old supervisor executable",
+          "passed": true,
+          "actual": "/usr/local/bin/lake-replication-supervisor",
+          "expected": "/usr/local/bin/lake-replication-supervisor"
+        },
+        {
+          "name": "old subscription stops before package replacement",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "old source slot is inactive before replacement",
+          "passed": true,
+          "actual": "false",
+          "expected": "false"
+        },
+        {
+          "name": "old external worker executables are gone before replacement",
+          "passed": true,
+          "actual": false,
+          "expected": false
+        },
+        {
+          "name": "old subscription drain does not restart PostgreSQL",
+          "passed": true,
+          "actual": "2026-10-21 17:14:07.657564+00",
+          "expected": "2026-10-21 17:14:07.657564+00"
+        },
+        {
+          "name": "new package starts the existing database",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "package replacement used a server restart",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "old explicit preload setting is retained",
+          "passed": true,
+          "actual": "pg_extension_base,lake_replication",
+          "expected": "pg_extension_base,lake_replication"
+        },
+        {
+          "name": "old single-database setting is retained",
+          "passed": true,
+          "actual": "analytics",
+          "expected": "analytics"
+        },
+        {
+          "name": "old session preload setting is retained",
+          "passed": true,
+          "actual": "lake_replication",
+          "expected": "lake_replication"
+        },
+        {
+          "name": "new binary does not register the old static owner",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "metadata stays on the old version until SQL upgrade",
+          "passed": true,
+          "actual": "0.1.0-beta.1",
+          "expected": "0.1.0-beta.1"
+        },
+        {
+          "name": "subscription remains durably stopped during handoff",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "no base owner starts before registration",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "SQL migration refuses enabled legacy subscriptions",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "rolled-back upgrade preserves the old SQL version",
+          "passed": true,
+          "actual": "0.1.0-beta.1",
+          "expected": "0.1.0-beta.1"
+        },
+        {
+          "name": "rolled-back upgrade leaves no durable base registration",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "rolled-back upgrade leaves no base owner",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "rolled-back upgrade leaves no worker dispatch",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "upgraded replication reaches one",
+          "passed": true,
+          "actual": "one",
+          "expected": "one"
+        },
+        {
+          "name": "legacy binding upgrade requires explicit verified adoption",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "adopted original destination has valid origin",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "SQL upgrade commits the prototype version",
+          "passed": true,
+          "actual": "0.1.0-beta.2",
+          "expected": "0.1.0-beta.2"
+        },
+        {
+          "name": "SQL upgrade records exactly one registration",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "committed upgrade starts exactly one base owner",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "committed upgrade keeps dispatch stopped until explicit enable",
+          "passed": true,
+          "actual": "stopped",
+          "expected": "stopped"
+        },
+        {
+          "name": "committed upgrade has no subscription wrapper before enable",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "base dependency is explicit after real upgrade",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "SQL upgrade preserves the replication checkpoint",
+          "passed": true,
+          "actual": "0/1BD12B8",
+          "expected": "0/1BD12B8"
+        },
+        {
+          "name": "SQL upgrade preserves the completed copy",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "upgraded replication reaches one,two,three",
+          "passed": true,
+          "actual": "one,two,three",
+          "expected": "one,two,three"
+        },
+        {
+          "name": "upgraded replication reaches one,two,three,four",
+          "passed": true,
+          "actual": "one,two,three,four",
+          "expected": "one,two,three,four"
+        },
+        {
+          "name": "handoff retains exactly one source slot",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "handoff does not repeat the initial copy",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "upgraded database restarts",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "upgraded replication reaches one,two,three,four,five",
+          "passed": true,
+          "actual": "one,two,three,four,five",
+          "expected": "one,two,three,four,five"
+        },
+        {
+          "name": "restart keeps exactly one base owner",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "restart keeps the legacy owner absent",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "post-upgrade rows are unique",
+          "passed": true,
+          "actual": "5:5",
+          "expected": "5:5"
+        },
+        {
+          "name": "post-upgrade drop releases the retained source slot",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        }
+      ],
+      "scope": "Production pg_extension_base migration; actual exported archives",
+      "findings": [],
+      "inputs": {
+        "tests/lifecycle/probe.py": "044ec9a9dc841f1955b6325dcf090cbb5124ef8f0493d009a99484b938c24516",
+        "tests/lifecycle/cases.py": "ac680ec3e12308bc19f4c8612476cc172e9fcf53acee6d2b6b6b814018986ae8",
+        "experiments/base_workers/upgrade.py": "b692249ddac01532442b95a4156e3746624a504627111e05dec7beddfdf7501d",
+        "tests/qualification/probe.py": "b4bafbcc02cca7e9ddb3306ce1def45f3477cebd11157f2de1d2474de7a365f5",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "1b4f1b1e307f3d90ff754bc9c6f8cc67283dab2d65f65ca6bfdf8e90a2fb27e1",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+        "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6",
+        "worker/src/wire.rs": "d555faf6d03a021b93761335e93eb1957d0d4a8c5f533254fc5db0300d01071c",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759",
+        "extensions/lake_replication/lake_replication.control": "54c9dc24b3226e20cec2ac937e4518e4fe2e89fcddb0c828dbbfaddd93d2b5cd"
+      },
+      "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+      "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "architecture": "arm64",
+      "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+      "new_archive": {
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+        "architecture": "arm64",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "new_image": "sha256:42f7025b1a099397b20eba9d788a639e38473c3048a8ca7f6b366d73d4cef2f1",
+      "old_archive": {
+        "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+        "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "architecture": "arm64",
+        "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9"
+      },
+      "checkpoint_before_upgrade": "0/1BD12B8",
+      "status": "passed",
+      "passed": true,
+      "cleanup_returncode": 0,
+      "raw_evidence": ".qualification/qualification_20261021_171332_base_upgrade/results.json",
+      "raw_evidence_sha256": "e0952614b8ce6b705b7265872f1949d8a5ce135e1b24165c537baab7ae9ba93c",
+      "total_checks": 47,
+      "passed_checks": 47,
+      "compose.log_sha256": "7c5caa7a78bc292335a14307ca0339681052a14734009b451df4354e30d0df19",
+      "workers.jsonl_sha256": "f365648ef43656bf5a29120c7569dd3f54a8f4842b7f478ee9cf619d9c88bd76"
+    },
+    "receiver": {
+      "run": "qualification_20261021_171013",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "checks": [
+        {
+          "name": "release archive checksum",
+          "passed": true,
+          "actual": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+          "expected": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6"
+        },
+        {
+          "name": "archive architecture matches qualification host",
+          "passed": true,
+          "actual": "arm64",
+          "expected": "arm64"
+        },
+        {
+          "name": "analytics empty stream commits zero changes",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "analytics staging preserves unpublished predecessor",
+          "passed": true,
+          "actual": "0/140:0/0",
+          "expected": "0/140:0/0"
+        },
+        {
+          "name": "analytics zero-change transaction has no change rows",
+          "passed": true,
+          "actual": "0:0",
+          "expected": "0:0"
+        },
+        {
+          "name": "analytics replay commits idempotently",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "analytics replay keeps exactly two transactions",
+          "passed": true,
+          "actual": "2",
+          "expected": "2"
+        },
+        {
+          "name": "analytics conflicting replay fails closed",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "analytics conflict retains stream for retry",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "analytics transaction limit selects predecessor first",
+          "passed": true,
+          "actual": "0/120:0/120:1:1",
+          "expected": "0/120:0/120:1:1"
+        },
+        {
+          "name": "analytics mixed batch counts empty commits against transaction limit",
+          "passed": true,
+          "actual": "2:1",
+          "expected": "2:1"
+        },
+        {
+          "name": "analytics empty replay cannot replace a data transaction",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "analytics rolled-back staging does not advance checkpoint",
+          "passed": true,
+          "actual": "0/140",
+          "expected": "0/140"
+        },
+        {
+          "name": "analytics feedback cannot acknowledge rolled-back empty commit",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "analytics empty trailing transaction remains selectable",
+          "passed": true,
+          "actual": "0/140:0/140:1:0",
+          "expected": "0/140:0/140:1:0"
+        },
+        {
+          "name": "analytics no-op publication can roll back",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "analytics rollback retains old publication checkpoint",
+          "passed": true,
+          "actual": "0/120",
+          "expected": "0/120"
+        },
+        {
+          "name": "analytics empty-only batch publishes no target rows",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "analytics publication replay is idempotent",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "analytics aborted empty stream does not advance checkpoint",
+          "passed": true,
+          "actual": "0/140:0/140",
+          "expected": "0/140:0/140"
+        },
+        {
+          "name": "analytics older empty commit cannot regress staging",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "analytics ordinary empty commit also journals safely",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "upgraded empty stream commits zero changes",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "upgraded staging preserves unpublished predecessor",
+          "passed": true,
+          "actual": "0/140:0/0",
+          "expected": "0/140:0/0"
+        },
+        {
+          "name": "upgraded zero-change transaction has no change rows",
+          "passed": true,
+          "actual": "0:0",
+          "expected": "0:0"
+        },
+        {
+          "name": "upgraded replay commits idempotently",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "upgraded replay keeps exactly two transactions",
+          "passed": true,
+          "actual": "2",
+          "expected": "2"
+        },
+        {
+          "name": "upgraded conflicting replay fails closed",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "upgraded conflict retains stream for retry",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "upgraded transaction limit selects predecessor first",
+          "passed": true,
+          "actual": "0/120:0/120:1:1",
+          "expected": "0/120:0/120:1:1"
+        },
+        {
+          "name": "upgraded mixed batch counts empty commits against transaction limit",
+          "passed": true,
+          "actual": "2:1",
+          "expected": "2:1"
+        },
+        {
+          "name": "upgraded empty replay cannot replace a data transaction",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "upgraded rolled-back staging does not advance checkpoint",
+          "passed": true,
+          "actual": "0/140",
+          "expected": "0/140"
+        },
+        {
+          "name": "upgraded feedback cannot acknowledge rolled-back empty commit",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "upgraded empty trailing transaction remains selectable",
+          "passed": true,
+          "actual": "0/140:0/140:1:0",
+          "expected": "0/140:0/140:1:0"
+        },
+        {
+          "name": "upgraded no-op publication can roll back",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "upgraded rollback retains old publication checkpoint",
+          "passed": true,
+          "actual": "0/120",
+          "expected": "0/120"
+        },
+        {
+          "name": "upgraded empty-only batch publishes no target rows",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "upgraded publication replay is idempotent",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "upgraded aborted empty stream does not advance checkpoint",
+          "passed": true,
+          "actual": "0/140:0/140",
+          "expected": "0/140:0/140"
+        },
+        {
+          "name": "upgraded older empty commit cannot regress staging",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "upgraded ordinary empty commit also journals safely",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "receiver succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "receiver succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "real pgoutput delivered empty streamed commit",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "wire journal retains earlier unpublished data and no-op",
+          "passed": true,
+          "actual": "2:1",
+          "expected": "2:1"
+        },
+        {
+          "name": "wire feedback acknowledges durable staging only",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "destination recovers",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "restart retains zero-change staged transaction",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "publisher succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "mixed batch publishes included row once",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "restart publication consumes both commits",
+          "passed": true,
+          "actual": "2:2",
+          "expected": "2:2"
+        },
+        {
+          "name": "receiver succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "publisher succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "receiver resumes after empty commit and restart",
+          "passed": true,
+          "actual": "before-filtered,after-restart",
+          "expected": "before-filtered,after-restart"
+        },
+        {
+          "name": "receiver succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "second empty stream is observed",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "publisher succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "empty-only batch leaves included data intact",
+          "passed": true,
+          "actual": "2",
+          "expected": "2"
+        },
+        {
+          "name": "all checkpoints converge after trailing empty commit",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "no durable stream fragments remain",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "uncommitted empty stream is durably retained",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "uncommitted empty stream does not advance staging",
+          "passed": true,
+          "actual": "0/20298B8",
+          "expected": "0/20298B8"
+        },
+        {
+          "name": "receiver loss leaves durable stream",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "source commits while receiver is down",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "receiver succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "publisher succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "restarted receiver replays empty stream exactly once",
+          "passed": true,
+          "actual": "3",
+          "expected": "3"
+        },
+        {
+          "name": "interrupted stream leaves no fragments",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "restart preserves real target rows",
+          "passed": true,
+          "actual": "2",
+          "expected": "2"
+        },
+        {
+          "name": "source never acknowledges beyond durable journal",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "receiver succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "nonempty streamed transaction still stages all relevant changes",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "publisher succeeds",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "mixed streamed transaction publishes relevant changes only",
+          "passed": true,
+          "actual": "1,2,3,4",
+          "expected": "1,2,3,4"
+        },
+        {
+          "name": "native subscription completes initial copy",
+          "passed": true,
+          "actual": "streaming",
+          "expected": "streaming"
+        },
+        {
+          "name": "native idle receiver connects",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "idle native receiver retains its connection beyond 200ms",
+          "passed": true,
+          "actual": "434",
+          "expected": "434"
+        },
+        {
+          "name": "native supervisor progresses beyond two-million-row excluded commit",
+          "passed": true,
+          "actual": "initial,after-unrelated-bulk",
+          "expected": "initial,after-unrelated-bulk"
+        },
+        {
+          "name": "native runtime publishes the filtered commit",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "disable releases persistent receiver slot",
+          "passed": true,
+          "actual": "false",
+          "expected": "false"
+        },
+        {
+          "name": "disable completes within five seconds",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "standalone receiver stages while supervisor is disabled",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "real transaction is durable but unpublished",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "enable resumes once",
+          "passed": true,
+          "actual": "3",
+          "expected": "3"
+        },
+        {
+          "name": "source outage is reported",
+          "passed": true,
+          "actual": "true",
+          "expected": "true"
+        },
+        {
+          "name": "source recovers",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "persistent receiver recovers after source outage",
+          "passed": true,
+          "actual": "1,2,3,4",
+          "expected": "1,2,3,4"
+        },
+        {
+          "name": "native receiver retains an uncommitted stream",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "disable interrupts streamed receive promptly",
+          "passed": true,
+          "actual": "false",
+          "expected": "false"
+        },
+        {
+          "name": "stream disable completes within five seconds",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "source commits after supervised stream interruption",
+          "passed": true,
+          "actual": 0,
+          "expected": 0
+        },
+        {
+          "name": "enabled receiver replays interrupted stream exactly once",
+          "passed": true,
+          "actual": "1,2,3,4,5",
+          "expected": "1,2,3,4,5"
+        },
+        {
+          "name": "replayed native stream clears fragments",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        },
+        {
+          "name": "drop completes within five seconds",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "native drop releases its source slot",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        }
+      ],
+      "native_bulk_diagnostic": true,
+      "current_workers": false,
+      "inputs": {
+        "tests/streaming/empty_filtered.py": "cd59d15ce1125d3bbd08253c203c1df6b55cfc19e43088e71c8ee278b330a4e9",
+        "Cargo.lock": "b91d5aeb68bc6b792c49974ac28dd0f0887f981f009788e0ba50548db609fbe5",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+        "extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+        "extensions/lake_replication/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e"
+      },
+      "scope": "Current SQL overlay; archived native binaries unchanged; not release qualification",
+      "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+      "archive_sha256": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+      "architecture": "arm64",
+      "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty",
+      "image": "sha256:f44bac331a20183472f2e00d13a11dc600b7af052b8ecaf48e5b9280209e8fce",
+      "native_disable_seconds": 0.35869908300810494,
+      "native_stream_disable_seconds": 0.1611779579980066,
+      "native_drop_seconds": 0.41707766699255444,
+      "status": "passed",
+      "native_worker_logs_sha256": "dfbbd4fb9d2170af05b8bda607f65fae0bf618c4eb69ead92e01b6453cef5a25",
+      "cleanup_returncode": 0,
+      "raw_evidence": ".qualification/qualification_20261021_171013_empty_filtered/results.json",
+      "raw_evidence_sha256": "13a572b07fb3ffbd2ce7bbb6f65565c4788de28ef2a38b087af47bb711aeb376",
+      "total_checks": 96,
+      "passed_checks": 96,
+      "native-workers.jsonl_sha256": "dfbbd4fb9d2170af05b8bda607f65fae0bf618c4eb69ead92e01b6453cef5a25",
+      "compose_logs_sha256": "e73f7c2036f116e265edede21b140019640231d7ea17115346693b7ac33438af"
+    },
+    "faults": {
+      "run": "qualification_20261021_171013",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "checks": [
+        {
+          "name": "release archive checksum",
+          "passed": true,
+          "actual": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+          "expected": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6"
+        },
+        {
+          "name": "archive architecture matches qualification host",
+          "passed": true,
+          "actual": "arm64",
+          "expected": "arm64"
+        },
+        {
+          "name": "fault fixture completes initial copy",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "supervisor fault starts with one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "supervisor fault locates its receiver",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "supervisor SIGKILL resumes publication",
+          "passed": true,
+          "actual": "2:2",
+          "expected": "2:2"
+        },
+        {
+          "name": "supervisor SIGKILL preserves postmaster",
+          "passed": true,
+          "actual": "2026-10-21 17:10:55.278248+00",
+          "expected": "2026-10-21 17:10:55.278248+00"
+        },
+        {
+          "name": "supervisor SIGKILL leaves exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "supervisor victim is reaped",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "supervisor crash reaps its old receiver descendant",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "receiver fault starts with one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "receiver fault locates its receiver",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "receiver SIGKILL resumes publication",
+          "passed": true,
+          "actual": "3:3",
+          "expected": "3:3"
+        },
+        {
+          "name": "receiver SIGKILL preserves postmaster",
+          "passed": true,
+          "actual": "2026-10-21 17:10:55.278248+00",
+          "expected": "2026-10-21 17:10:55.278248+00"
+        },
+        {
+          "name": "receiver SIGKILL leaves exactly one wrapper",
+          "passed": true,
+          "actual": "1",
+          "expected": "1"
+        },
+        {
+          "name": "receiver victim is reaped",
+          "passed": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "fault fixture cleans its source slot",
+          "passed": true,
+          "actual": "0",
+          "expected": "0"
+        }
+      ],
+      "scope": "Packaged production base lifecycle; forced Rust supervisor/receiver SIGKILL, not PostgreSQL wrapper SIGKILL",
+      "inputs": {
+        "tests/lifecycle/faults.py": "e05143bffd3458724222609fcb7c3c94f16db43dcb2aa207f6330bdb41dc1427",
+        "tests/qualification/probe.py": "b4bafbcc02cca7e9ddb3306ce1def45f3477cebd11157f2de1d2474de7a365f5",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759",
+        "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d"
+      },
+      "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+      "archive_sha256": "d31a0d11e4609841f93fc118172dd19abbd0865007e2fcf35e9f9ed8618c10f6",
+      "architecture": "arm64",
+      "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty",
+      "status": "passed",
+      "passed": true,
+      "cleanup_returncode": 0,
+      "raw_evidence": ".qualification/qualification_20261021_171013_base_faults/results.json",
+      "raw_evidence_sha256": "00b62f94c3f1b97a9a937cc9f9eb14c9c3ea8ea3d3be4117c88f4b46c85376ec",
+      "total_checks": 17,
+      "passed_checks": 17,
+      "compose.log_sha256": "1dd95045acc280dfa356184ef881786ab4d5a22b39b4200669eb1f60070ed1e4",
+      "workers.jsonl_sha256": "b91c2d6c2102f7fd8c6f83fa2bb3db0fde85c0c11105f728f694fb9a9cb28734"
+    }
+  },
+  "total_checks": 279,
+  "passed_checks": 279,
+  "limits": [
+    "Local arm64; amd64, remote CI and soak pending.",
+    "Stopped-server handoff only; no SQL downgrade or online binary replacement.",
+    "Origin checks are not a distributed lease or physical-takeover fence.",
+    "Admission scheduling and process/connection pooling remain separate.",
+    "SIGKILL tests target Rust supervisor/receiver, not PostgreSQL wrapper or postmaster."
+  ],
+  "frozen_legacy_sql_matches_beta1_archive": true,
+  "validation": {
+    "make_check": "passed",
+    "rust_tests": 35,
+    "python_experiment_tests": 11,
+    "release_version_check": "0.1.0-beta.2"
+  },
+  "post_qualification_test_formatting": {
+    "path": "tests/lifecycle/cases.py",
+    "tested_sha256": "ac680ec3e12308bc19f4c8612476cc172e9fcf53acee6d2b6b6b814018986ae8",
+    "committed_sha256": "85f6881ca3aed649d77398314b09931e454c9ab34ad472d1052ea0858044b995",
+    "change": "Removed one trailing blank line; Python AST is identical. Recorded run input hashes retain the tested file identity."
+  }
+}

@@ -1,5 +1,10 @@
 # pg_extension_base launcher prototype
 
+These adapters and measurements describe the pre-migration runtime. The adapter
+patches intentionally target that historical source and are not applied to the
+new production launcher. For the current implementation, run the packaged
+`tests/lifecycle/probe.py` fresh/upgrade lanes described in the lifecycle results.
+
 Run `python3 experiments/base_workers/probe.py` after building a native release
 archive with `make install-bundles`. The native archive must match the current
 worker, migration, and extension sources. The probe uses disposable qualification
