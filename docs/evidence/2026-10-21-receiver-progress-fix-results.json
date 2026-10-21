@@ -1,0 +1,633 @@
+{
+  "run": "qualification_20261021_064606",
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "checks": [
+    {
+      "name": "release archive checksum",
+      "passed": true,
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302"
+    },
+    {
+      "name": "archive architecture matches qualification host",
+      "passed": true,
+      "actual": "arm64",
+      "expected": "arm64"
+    },
+    {
+      "name": "analytics empty stream commits zero changes",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics staging preserves unpublished predecessor",
+      "passed": true,
+      "actual": "0/140:0/0",
+      "expected": "0/140:0/0"
+    },
+    {
+      "name": "analytics zero-change transaction has no change rows",
+      "passed": true,
+      "actual": "0:0",
+      "expected": "0:0"
+    },
+    {
+      "name": "analytics replay commits idempotently",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics replay keeps exactly two transactions",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "analytics conflicting replay fails closed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics conflict retains stream for retry",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "analytics transaction limit selects predecessor first",
+      "passed": true,
+      "actual": "0/120:0/120:1:1",
+      "expected": "0/120:0/120:1:1"
+    },
+    {
+      "name": "analytics mixed batch counts empty commits against transaction limit",
+      "passed": true,
+      "actual": "2:1",
+      "expected": "2:1"
+    },
+    {
+      "name": "analytics empty replay cannot replace a data transaction",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics rolled-back staging does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140",
+      "expected": "0/140"
+    },
+    {
+      "name": "analytics feedback cannot acknowledge rolled-back empty commit",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics empty trailing transaction remains selectable",
+      "passed": true,
+      "actual": "0/140:0/140:1:0",
+      "expected": "0/140:0/140:1:0"
+    },
+    {
+      "name": "analytics no-op publication can roll back",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "analytics rollback retains old publication checkpoint",
+      "passed": true,
+      "actual": "0/120",
+      "expected": "0/120"
+    },
+    {
+      "name": "analytics empty-only batch publishes no target rows",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics publication replay is idempotent",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics aborted empty stream does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140:0/140",
+      "expected": "0/140:0/140"
+    },
+    {
+      "name": "analytics older empty commit cannot regress staging",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics ordinary empty commit also journals safely",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded empty stream commits zero changes",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded staging preserves unpublished predecessor",
+      "passed": true,
+      "actual": "0/140:0/0",
+      "expected": "0/140:0/0"
+    },
+    {
+      "name": "upgraded zero-change transaction has no change rows",
+      "passed": true,
+      "actual": "0:0",
+      "expected": "0:0"
+    },
+    {
+      "name": "upgraded replay commits idempotently",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded replay keeps exactly two transactions",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "upgraded conflicting replay fails closed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded conflict retains stream for retry",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "upgraded transaction limit selects predecessor first",
+      "passed": true,
+      "actual": "0/120:0/120:1:1",
+      "expected": "0/120:0/120:1:1"
+    },
+    {
+      "name": "upgraded mixed batch counts empty commits against transaction limit",
+      "passed": true,
+      "actual": "2:1",
+      "expected": "2:1"
+    },
+    {
+      "name": "upgraded empty replay cannot replace a data transaction",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded rolled-back staging does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140",
+      "expected": "0/140"
+    },
+    {
+      "name": "upgraded feedback cannot acknowledge rolled-back empty commit",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded empty trailing transaction remains selectable",
+      "passed": true,
+      "actual": "0/140:0/140:1:0",
+      "expected": "0/140:0/140:1:0"
+    },
+    {
+      "name": "upgraded no-op publication can roll back",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "upgraded rollback retains old publication checkpoint",
+      "passed": true,
+      "actual": "0/120",
+      "expected": "0/120"
+    },
+    {
+      "name": "upgraded empty-only batch publishes no target rows",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded publication replay is idempotent",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded aborted empty stream does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140:0/140",
+      "expected": "0/140:0/140"
+    },
+    {
+      "name": "upgraded older empty commit cannot regress staging",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded ordinary empty commit also journals safely",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "real pgoutput delivered empty streamed commit",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "wire journal retains earlier unpublished data and no-op",
+      "passed": true,
+      "actual": "2:1",
+      "expected": "2:1"
+    },
+    {
+      "name": "wire feedback acknowledges durable staging only",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "destination recovers",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "restart retains zero-change staged transaction",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "mixed batch publishes included row once",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "restart publication consumes both commits",
+      "passed": true,
+      "actual": "2:2",
+      "expected": "2:2"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "receiver resumes after empty commit and restart",
+      "passed": true,
+      "actual": "before-filtered,after-restart",
+      "expected": "before-filtered,after-restart"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "second empty stream is observed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "empty-only batch leaves included data intact",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "all checkpoints converge after trailing empty commit",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "no durable stream fragments remain",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "uncommitted empty stream is durably retained",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "uncommitted empty stream does not advance staging",
+      "passed": true,
+      "actual": "0/202B2E8",
+      "expected": "0/202B2E8"
+    },
+    {
+      "name": "receiver loss leaves durable stream",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "source commits while receiver is down",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "restarted receiver replays empty stream exactly once",
+      "passed": true,
+      "actual": "3",
+      "expected": "3"
+    },
+    {
+      "name": "interrupted stream leaves no fragments",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "restart preserves real target rows",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "source never acknowledges beyond durable journal",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "nonempty streamed transaction still stages all relevant changes",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "mixed streamed transaction publishes relevant changes only",
+      "passed": true,
+      "actual": "1,2,3,4",
+      "expected": "1,2,3,4"
+    },
+    {
+      "name": "native subscription completes initial copy",
+      "passed": true,
+      "actual": "streaming",
+      "expected": "streaming"
+    },
+    {
+      "name": "native idle receiver connects",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "idle native receiver retains its connection beyond 200ms",
+      "passed": true,
+      "actual": "369",
+      "expected": "369"
+    },
+    {
+      "name": "native supervisor progresses beyond two-million-row excluded commit",
+      "passed": true,
+      "actual": "initial,after-unrelated-bulk",
+      "expected": "initial,after-unrelated-bulk"
+    },
+    {
+      "name": "native runtime publishes the filtered commit",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "disable releases persistent receiver slot",
+      "passed": true,
+      "actual": "false",
+      "expected": "false"
+    },
+    {
+      "name": "disable completes within five seconds",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "standalone receiver stages while supervisor is disabled",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "real transaction is durable but unpublished",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "enable resumes once",
+      "passed": true,
+      "actual": "3",
+      "expected": "3"
+    },
+    {
+      "name": "source outage is reported",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "source recovers",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "persistent receiver recovers after source outage",
+      "passed": true,
+      "actual": "1,2,3,4",
+      "expected": "1,2,3,4"
+    },
+    {
+      "name": "native receiver retains an uncommitted stream",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "disable interrupts streamed receive promptly",
+      "passed": true,
+      "actual": "false",
+      "expected": "false"
+    },
+    {
+      "name": "stream disable completes within five seconds",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "source commits after supervised stream interruption",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "enabled receiver replays interrupted stream exactly once",
+      "passed": true,
+      "actual": "1,2,3,4,5",
+      "expected": "1,2,3,4,5"
+    },
+    {
+      "name": "replayed native stream clears fragments",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "drop completes within five seconds",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "native drop releases its source slot",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    }
+  ],
+  "native_bulk_diagnostic": true,
+  "current_workers": true,
+  "inputs": {
+    "tests/streaming/empty_filtered.py": "9a0d64e5ef090c793e800b91e29493dcc6fcba505628d32293383f0254017dfb",
+    "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+    "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+    "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+    "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+    "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+    "worker/src/main.rs": "1b4f1b1e307f3d90ff754bc9c6f8cc67283dab2d65f65ca6bfdf8e90a2fb27e1",
+    "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+    "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+    "worker/src/supervisor.rs": "0db8877dffddbbe4d438a86d6012663236f293370a606926c2cd8394bba93623",
+    "worker/src/wire.rs": "d555faf6d03a021b93761335e93eb1957d0d4a8c5f533254fc5db0300d01071c",
+    "Cargo.lock": "d2846bf2a5752b976dd53dc20ac4702f5c6b688cb507031147721d337aff74eb",
+    "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+    "extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql": "bde75ef47d6b8e2ff1ba2f1c929cf49f8027494204a78e2e23ef2fd7ac159ff3",
+    "extensions/lake_replication/lake_replication--0.1.0-beta.1.sql": "72a6351cbcce44a69793a1c8f8d12c361814c05d32eafbc56986e3df2d53e68a",
+    "extensions/lake_replication/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e"
+  },
+  "scope": "Current SQL overlay; current Rust workers; not release qualification",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "architecture": "arm64",
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "image": "sha256:b2216731679b6ae5a5572f8d9475104f9f96af131a7077403e2d2a2d66209be8",
+  "native_disable_seconds": 0.7693825000023935,
+  "native_stream_disable_seconds": 0.15693299999111332,
+  "native_drop_seconds": 0.4335583329957444,
+  "status": "passed",
+  "native_worker_logs_sha256": "56b57ef5743f7e9ca1eb0424cf02f3dd9c29542a55f820b06d6892ac40f8581c",
+  "cleanup_returncode": 0,
+  "compose_logs_sha256": "5216ac2656065324dcfe3a1edd564e645e712fda70972a86f9fd2c7c90a241c7",
+  "raw_evidence": ".qualification/qualification_20261021_064606_empty_filtered/results.json",
+  "raw_evidence_sha256": "1f86c282f6940eb40bf4592f2192a42620584aa6bc5430b3e98458e0c49c7e48",
+  "passed_checks": 96,
+  "total_checks": 96,
+  "destination_crash_log_findings": [],
+  "native_worker_event_counts": {
+    "snapshot_acquired": 1,
+    "copy_chunk_staged": 1,
+    "table_copied": 1,
+    "initial_copy_completed": 1,
+    "replication_started": 8,
+    "stream_segment_started": 8269,
+    "transaction_staged": 4,
+    "batch_published": 5,
+    "stopped": 2,
+    "process_failed": 2,
+    "cycle_failed": 3
+  }
+}

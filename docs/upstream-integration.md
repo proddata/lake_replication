@@ -196,3 +196,11 @@ clock-disrupted cohort is explicitly rejected and replaced. The independent
 also reproduces before/after admission. Fix that durable receive/checkpoint path
 and refine admission for bulk work before broader adoption; retain base lifecycle
 management as a separate decision.
+
+The [empty-commit SQL fix](empty-filtered-stream-fix-results.md) now passes 75
+fresh/upgrade, replay and real-stream restart checks. A broader native bulk test
+exposed a separate 200 ms receive-timeout/reconnect loop. The subsequent
+[receiver lifetime fix](receiver-progress-fix-results.md) passes 96 checks including
+native bulk progress, disable/drop, source outage recovery and interrupted-stream
+replay. Return next to engine-specific admission and reserved streaming capacity.
+These source changes have not been rebuilt into a qualified release archive.

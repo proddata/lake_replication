@@ -117,9 +117,11 @@ excluded from runtime/performance conclusions.
 
 ## Next execution-policy experiment
 
-First fix and qualify empty filtered-stream commits with durable checkpoint,
-acknowledgement, replay and restart tests. That receiver issue affects both
-admission variants and is a release correctness follow-up.
+The subsequent [empty-commit SQL fix](empty-filtered-stream-fix-results.md) passes
+75 regression checks. Its native bulk diagnostic exposed a separate 200 ms
+receive-timeout/reconnect loop; the subsequent [receiver lifetime fix](receiver-progress-fix-results.md)
+now passes 96 checks including native bulk progress and lifecycle recovery.
+These later changes do not alter the measurements above; return next to admission.
 
 For admission, distinguish actual engine work from PostgreSQL-only staging while
 preserving all ownership checks. Then test a small bounded policy that leaves

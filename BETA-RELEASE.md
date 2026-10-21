@@ -40,6 +40,14 @@ changing supervision. Prototype-only fixes passed their tests; those fixes
 have not been applied to the shipped extension and must not be treated as
 release qualification for that implementation.
 
+The [empty filtered-stream diagnostic](docs/empty-filtered-stream-diagnostic.md)
+also reproduces receiver retry without progress after a large unrelated source
+transaction, before and after admission. Its [SQL fix](docs/empty-filtered-stream-fix-results.md)
+passes 75 regression checks. The subsequent [receiver lifetime fix](docs/receiver-progress-fix-results.md)
+passes 96 checks including native bulk progress, prompt disable/drop, source
+outage recovery and interrupted-stream replay. Qualify a rebuilt artifact and
+complete the remaining lifecycle work before promoting release correctness.
+
 The beta may be published only when every required gate is `PASS`, remote CI is
 green on the tagged commit, and there are no known unresolved correctness,
 security, data-loss, or PostgreSQL-stability defects. Deferred features must be

@@ -54,6 +54,7 @@ impl From<io::Error> for Error {
 
 pub struct Client {
     stream: Transport,
+    reader: MessageReader,
 }
 
 enum Transport {
@@ -216,7 +217,10 @@ impl Client {
         stream.write_all(&length.to_be_bytes())?;
         stream.write_all(&body)?;
 
-        let mut client = Self { stream };
+        let mut client = Self {
+            stream,
+            reader: MessageReader::default(),
+        };
         let mut scram = None;
         let mut scram_verified = false;
         let mut authentication_ok = false;
@@ -421,16 +425,51 @@ impl Client {
     }
 
     fn read_message(&mut self) -> Result<(u8, Vec<u8>), Error> {
-        let mut header = [0_u8; 5];
-        self.stream.read_exact(&mut header)?;
-        let length = u32::from_be_bytes(header[1..5].try_into().unwrap());
+        self.reader.read(&mut self.stream)
+    }
+}
+
+// Keep framing state across socket timeouts, including those inside TLS reads.
+// read_exact cannot report how many bytes it consumed before a timeout.
+#[derive(Default)]
+struct MessageReader {
+    header: [u8; 5],
+    header_read: usize,
+    body: Vec<u8>,
+    body_read: usize,
+}
+
+impl MessageReader {
+    fn read(&mut self, stream: &mut impl Read) -> Result<(u8, Vec<u8>), Error> {
+        read_remaining(stream, &mut self.header, &mut self.header_read)?;
+        let length = u32::from_be_bytes(self.header[1..5].try_into().unwrap());
         if !(4..=64 * 1024 * 1024).contains(&length) {
             return Err(Error::Protocol(format!("invalid message length {length}")));
         }
-        let mut body = vec![0; length as usize - 4];
-        self.stream.read_exact(&mut body)?;
-        Ok((header[0], body))
+        self.body.resize(length as usize - 4, 0);
+        read_remaining(stream, &mut self.body, &mut self.body_read)?;
+        let result = (self.header[0], std::mem::take(&mut self.body));
+        self.header_read = 0;
+        self.body_read = 0;
+        Ok(result)
     }
+}
+
+fn read_remaining(stream: &mut impl Read, buffer: &mut [u8], offset: &mut usize) -> io::Result<()> {
+    while *offset < buffer.len() {
+        match stream.read(&mut buffer[*offset..]) {
+            Ok(0) => {
+                return Err(io::Error::new(
+                    io::ErrorKind::UnexpectedEof,
+                    "incomplete PostgreSQL message",
+                ));
+            }
+            Ok(count) => *offset += count,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
+            Err(error) => return Err(error),
+        }
+    }
+    Ok(())
 }
 
 fn connect_tcp(address: impl ToSocketAddrs, timeout: Duration) -> io::Result<TcpStream> {
@@ -656,6 +695,70 @@ fn postgres_now_micros() -> i64 {
 mod tests {
     use super::*;
     use std::net::SocketAddr;
+
+    // Inject timeouts after every possible header/body boundary. The same
+    // framing reader is used above both plain TCP and rustls transports.
+    #[test]
+    fn resumes_fragmented_messages_after_timeouts() {
+        use std::collections::VecDeque;
+        struct Chunks(VecDeque<io::Result<Vec<u8>>>);
+        impl Read for Chunks {
+            fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+                match self.0.pop_front().unwrap_or(Ok(Vec::new())) {
+                    Err(error) => Err(error),
+                    Ok(mut bytes) => {
+                        let count = buffer.len().min(bytes.len());
+                        buffer[..count].copy_from_slice(&bytes[..count]);
+                        if count < bytes.len() {
+                            self.0.push_front(Ok(bytes.split_off(count)));
+                        }
+                        Ok(count)
+                    }
+                }
+            }
+        }
+        let frame = [b'd', 0, 0, 0, 7, b'a', b'b', b'c'];
+        for boundary in 0..frame.len() {
+            for kind in [io::ErrorKind::TimedOut, io::ErrorKind::WouldBlock] {
+                let mut chunks = VecDeque::new();
+                if boundary > 0 {
+                    chunks.push_back(Ok(frame[..boundary].to_vec()));
+                }
+                chunks.push_back(Err(io::Error::from(kind)));
+                chunks.push_back(Err(io::Error::from(kind)));
+                chunks.push_back(Ok(frame[boundary..].to_vec()));
+                chunks.push_back(Ok(vec![b'd', 0, 0, 0, 4]));
+                let mut stream = Chunks(chunks);
+                let mut reader = MessageReader::default();
+                for _ in 0..2 {
+                    assert!(
+                        matches!(reader.read(&mut stream), Err(Error::Io(error)) if error.kind() == kind)
+                    );
+                }
+                assert_eq!(reader.read(&mut stream).unwrap(), (b'd', b"abc".to_vec()));
+                assert_eq!(reader.read(&mut stream).unwrap(), (b'd', Vec::new()));
+            }
+        }
+    }
+
+    #[test]
+    fn truncated_or_oversized_frames_fail_closed() {
+        for size in 0..8 {
+            let bytes = [b'd', 0, 0, 0, 7, b'a', b'b', b'c'];
+            let mut reader = MessageReader::default();
+            assert!(
+                matches!(reader.read(&mut &bytes[..size]), Err(Error::Io(error)) if error.kind() == io::ErrorKind::UnexpectedEof)
+            );
+        }
+        for length in [0u32, 3, 64 * 1024 * 1024 + 1] {
+            let mut header = vec![b'd'];
+            header.extend(length.to_be_bytes());
+            assert!(matches!(
+                MessageReader::default().read(&mut header.as_slice()),
+                Err(Error::Protocol(_))
+            ));
+        }
+    }
 
     #[test]
     fn enforces_the_overall_connection_budget() {

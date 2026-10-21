@@ -1,8 +1,10 @@
 # Admission evaluation checkpoint — completed 2026-10-21
 
 The resumed evaluation is complete. No benchmark is running. Private containers
-and volumes were removed; cached images and disk evidence remain. Production
-sources were unchanged during the measurement.
+and volumes were removed; cached images and disk evidence remain. The measurement
+images retain the original production sources. Subsequent work adds SQL migration
+`0022` and the receiver/supervisor/framing fix; C changes are comments only. The findings and source fixes are preserved in separate local commits;
+release-artifact qualification and admission refinement remain pending.
 
 [Final report](pg-extension-base-admission-performance-results.md) and
 [accepted evidence](evidence/2026-10-21-base-admission-performance-results.json).
@@ -26,14 +28,18 @@ it. The clean redo used scoped idle-sleep prevention and timing validation.
 
 ## Next implementation work
 
-1. Fix the [empty filtered-stream receiver failure](empty-filtered-stream-diagnostic.md)
-   with durable checkpoint/acknowledgement, replay and restart regression tests.
-   It reproduces before/after admission and has not been fixed.
+1. The [empty-commit SQL fix](empty-filtered-stream-fix-results.md) passed
+   75 checks. The subsequent [receiver lifetime fix](receiver-progress-fix-results.md)
+   passes 96 checks including the native two-million-row case, prompt disable/drop,
+   source outage recovery, already-staged work and interrupted-stream replay.
+   `make check` passes. These are source-build checks, not a new release artifact.
 2. Refine admission to distinguish actual engine work from PostgreSQL staging,
    and test bounded capacity for streaming while one bulk copy runs. Preserve
    ownership validation and atomic copy publication. The fixed blanket permit
    is not a qualified final scheduling policy.
 
-`make check` passes, including five new clock-validation regression tests. The
-production-source comparison and whitespace checks pass. No more measurements
-are required to finish this evaluation; implementation changes are next.
+`make check` passes, including five new clock-validation regression tests. At
+measurement completion, the production-source comparison and whitespace checks
+passed; migration `0022` is a subsequent source change. No more measurements
+are required to finish this evaluation; another implementation change is the
+next task, not an automatic rerun until margins pass.

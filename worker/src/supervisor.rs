@@ -4,9 +4,9 @@ use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, addre
 use std::env;
 use std::io::{self, Write};
 use std::path::Path;
-use std::process::{Command, Output};
+use std::process::{Child, Command, Output};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 #[derive(Debug)]
 enum CycleError {
@@ -83,7 +83,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 "lab-injected supervisor child failure".to_owned(),
             ))
         } else {
-            run_cycle(&config, &receiver, &publisher, &mut destination)
+            run_cycle(
+                &config,
+                &receiver,
+                &publisher,
+                &mut destination,
+                &mut consecutive_failures,
+            )
         };
         if cycle.is_err()
             && config.config_generation > 0
@@ -739,31 +745,98 @@ fn run_cycle(
     receiver: &Path,
     publisher: &Path,
     destination: &mut Client,
+    consecutive_failures: &mut u32,
 ) -> Result<(i64, i64), CycleError> {
     let source_address = source_preflight(destination, config)?;
-    let receiver_output = Command::new(receiver)
+    // Inherit child logs rather than buffering an unbounded streamed transaction.
+    let mut command = Command::new(receiver);
+    command
         .env("LAKE_SOURCE_ADDRESS", source_address)
         .env(
             "LAKE_RECEIVER_IDLE_TIMEOUT_MS",
             config.receiver_idle_timeout.as_millis().to_string(),
         )
-        .env("LAKE_MAX_TRANSACTIONS", "1")
-        .output()
-        .map_err(|error| CycleError::Retry(format!("could not start receiver: {error}")))?;
-    ensure_success("receiver", &receiver_output).map_err(CycleError::Retry)?;
-
-    let pending = has_pending_transactions(destination, config)
-        .map_err(|error| CycleError::Fatal(error.to_string()))?;
-    if !pending {
-        return Ok((1, 0));
+        .env("LAKE_RECEIVER_PERSISTENT", "1")
+        .env("LAKE_MAX_TRANSACTIONS", "1");
+    let mut child = MonitoredChild(
+        command
+            .spawn()
+            .map_err(|error| CycleError::Retry(format!("could not start receiver: {error}")))?,
+    );
+    let mut published = 0;
+    let mut heartbeat = Instant::now();
+    loop {
+        let status = child
+            .0
+            .try_wait()
+            .map_err(|error| CycleError::Retry(format!("could not monitor receiver: {error}")))?;
+        // DROP holds the service row locked while cleaning the source slot.
+        // A plain MVCC read would see the old running state until DROP commits,
+        // while DROP waits for this receiver to release that same slot.
+        let rows = destination
+            .simple_query(&format!(
+                "SELECT ss.desired_state, s.state FROM lake_replication.service_status ss \
+             JOIN lake_replication.subscriptions s USING (subscription_id) \
+             WHERE ss.subscription_id={} FOR SHARE OF ss NOWAIT",
+                config.subscription_id
+            ))
+            .map_err(|error| {
+                CycleError::Retry(format!("receiver control state unavailable: {error}"))
+            })?;
+        let should_stop = match rows.first() {
+            None => true,
+            Some(row) => {
+                cycle_field(row, 0, "desired state")? == "stopped"
+                    || cycle_field(row, 1, "subscription state")? != "streaming"
+            }
+        };
+        if should_stop {
+            // Drop kills and reaps the child before the outer loop acknowledges
+            // a stop or pause. Never publish after observing that request.
+            return Ok((0, published));
+        }
+        if let Some(status) = status {
+            if !status.success() {
+                return Err(CycleError::Retry(format!(
+                    "receiver exited with {status}; see child log"
+                )));
+            }
+        }
+        // Drain durable work even while decoding an unrelated/uncommitted
+        // source transaction. A persistent receiver must not starve publication.
+        if has_pending_transactions(destination, config)
+            .map_err(|error| CycleError::Fatal(error.to_string()))?
+        {
+            let output = Command::new(publisher)
+                .env_remove("LAKE_SOURCE_PASSWORD")
+                .env("LAKE_MAX_BATCHES", config.publisher_max_batches.to_string())
+                .output()
+                .map_err(|error| {
+                    CycleError::Retry(format!("could not start publisher: {error}"))
+                })?;
+            ensure_success("publisher", &output).map_err(CycleError::Retry)?;
+            published += 1;
+        }
+        if status.is_some() {
+            return Ok((1, published));
+        }
+        if heartbeat.elapsed() >= Duration::from_secs(1) {
+            report_cycle(destination, config, "running", 0, 0)
+                .map_err(|error| CycleError::Retry(error.to_string()))?;
+            *consecutive_failures = 0;
+            heartbeat = Instant::now();
+        }
+        thread::sleep(config.poll_interval);
     }
-    let publisher_output = Command::new(publisher)
-        .env_remove("LAKE_SOURCE_PASSWORD")
-        .env("LAKE_MAX_BATCHES", config.publisher_max_batches.to_string())
-        .output()
-        .map_err(|error| CycleError::Retry(format!("could not start publisher: {error}")))?;
-    ensure_success("publisher", &publisher_output).map_err(CycleError::Retry)?;
-    Ok((1, 1))
+}
+
+// All return/error paths release the source slot and reap the receiver.
+struct MonitoredChild(Child);
+impl Drop for MonitoredChild {
+    fn drop(&mut self) {
+        let _ = self.0.kill();
+        let _ = self.0.wait();
+    }
 }
 
 fn ensure_success(worker: &str, output: &Output) -> Result<(), String> {

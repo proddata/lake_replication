@@ -1,0 +1,477 @@
+{
+  "run": "qualification_20261021_062030",
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "checks": [
+    {
+      "name": "release archive checksum",
+      "passed": true,
+      "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302"
+    },
+    {
+      "name": "archive architecture matches qualification host",
+      "passed": true,
+      "actual": "arm64",
+      "expected": "arm64"
+    },
+    {
+      "name": "analytics empty stream commits zero changes",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics staging preserves unpublished predecessor",
+      "passed": true,
+      "actual": "0/140:0/0",
+      "expected": "0/140:0/0"
+    },
+    {
+      "name": "analytics zero-change transaction has no change rows",
+      "passed": true,
+      "actual": "0:0",
+      "expected": "0:0"
+    },
+    {
+      "name": "analytics replay commits idempotently",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics replay keeps exactly two transactions",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "analytics conflicting replay fails closed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics conflict retains stream for retry",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "analytics transaction limit selects predecessor first",
+      "passed": true,
+      "actual": "0/120:0/120:1:1",
+      "expected": "0/120:0/120:1:1"
+    },
+    {
+      "name": "analytics mixed batch counts empty commits against transaction limit",
+      "passed": true,
+      "actual": "2:1",
+      "expected": "2:1"
+    },
+    {
+      "name": "analytics empty replay cannot replace a data transaction",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics rolled-back staging does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140",
+      "expected": "0/140"
+    },
+    {
+      "name": "analytics feedback cannot acknowledge rolled-back empty commit",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics empty trailing transaction remains selectable",
+      "passed": true,
+      "actual": "0/140:0/140:1:0",
+      "expected": "0/140:0/140:1:0"
+    },
+    {
+      "name": "analytics no-op publication can roll back",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "analytics rollback retains old publication checkpoint",
+      "passed": true,
+      "actual": "0/120",
+      "expected": "0/120"
+    },
+    {
+      "name": "analytics empty-only batch publishes no target rows",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics publication replay is idempotent",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "analytics aborted empty stream does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140:0/140",
+      "expected": "0/140:0/140"
+    },
+    {
+      "name": "analytics older empty commit cannot regress staging",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "analytics ordinary empty commit also journals safely",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded empty stream commits zero changes",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded staging preserves unpublished predecessor",
+      "passed": true,
+      "actual": "0/140:0/0",
+      "expected": "0/140:0/0"
+    },
+    {
+      "name": "upgraded zero-change transaction has no change rows",
+      "passed": true,
+      "actual": "0:0",
+      "expected": "0:0"
+    },
+    {
+      "name": "upgraded replay commits idempotently",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded replay keeps exactly two transactions",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "upgraded conflicting replay fails closed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded conflict retains stream for retry",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "upgraded transaction limit selects predecessor first",
+      "passed": true,
+      "actual": "0/120:0/120:1:1",
+      "expected": "0/120:0/120:1:1"
+    },
+    {
+      "name": "upgraded mixed batch counts empty commits against transaction limit",
+      "passed": true,
+      "actual": "2:1",
+      "expected": "2:1"
+    },
+    {
+      "name": "upgraded empty replay cannot replace a data transaction",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded rolled-back staging does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140",
+      "expected": "0/140"
+    },
+    {
+      "name": "upgraded feedback cannot acknowledge rolled-back empty commit",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded empty trailing transaction remains selectable",
+      "passed": true,
+      "actual": "0/140:0/140:1:0",
+      "expected": "0/140:0/140:1:0"
+    },
+    {
+      "name": "upgraded no-op publication can roll back",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "upgraded rollback retains old publication checkpoint",
+      "passed": true,
+      "actual": "0/120",
+      "expected": "0/120"
+    },
+    {
+      "name": "upgraded empty-only batch publishes no target rows",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded publication replay is idempotent",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "upgraded aborted empty stream does not advance checkpoint",
+      "passed": true,
+      "actual": "0/140:0/140",
+      "expected": "0/140:0/140"
+    },
+    {
+      "name": "upgraded older empty commit cannot regress staging",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "upgraded ordinary empty commit also journals safely",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "real pgoutput delivered empty streamed commit",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "wire journal retains earlier unpublished data and no-op",
+      "passed": true,
+      "actual": "2:1",
+      "expected": "2:1"
+    },
+    {
+      "name": "wire feedback acknowledges durable staging only",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "destination recovers",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "restart retains zero-change staged transaction",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "mixed batch publishes included row once",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "restart publication consumes both commits",
+      "passed": true,
+      "actual": "2:2",
+      "expected": "2:2"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "receiver resumes after empty commit and restart",
+      "passed": true,
+      "actual": "before-filtered,after-restart",
+      "expected": "before-filtered,after-restart"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "second empty stream is observed",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "empty-only batch leaves included data intact",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "all checkpoints converge after trailing empty commit",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "no durable stream fragments remain",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "uncommitted empty stream is durably retained",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "uncommitted empty stream does not advance staging",
+      "passed": true,
+      "actual": "0/1FD5820",
+      "expected": "0/1FD5820"
+    },
+    {
+      "name": "receiver loss leaves durable stream",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "name": "source commits while receiver is down",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "restarted receiver replays empty stream exactly once",
+      "passed": true,
+      "actual": "3",
+      "expected": "3"
+    },
+    {
+      "name": "interrupted stream leaves no fragments",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "restart preserves real target rows",
+      "passed": true,
+      "actual": "2",
+      "expected": "2"
+    },
+    {
+      "name": "source never acknowledges beyond durable journal",
+      "passed": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "name": "receiver succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "nonempty streamed transaction still stages all relevant changes",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "publisher succeeds",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "mixed streamed transaction publishes relevant changes only",
+      "passed": true,
+      "actual": "1,2,3,4",
+      "expected": "1,2,3,4"
+    }
+  ],
+  "native_bulk_diagnostic": false,
+  "inputs": {
+    "tests/streaming/empty_filtered.py": "bd2317382d26da429230e272428fe4552216e02d83042c22c5b8f17c9704b487",
+    "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+    "extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql": "bde75ef47d6b8e2ff1ba2f1c929cf49f8027494204a78e2e23ef2fd7ac159ff3",
+    "extensions/lake_replication/lake_replication--0.1.0-beta.1.sql": "72a6351cbcce44a69793a1c8f8d12c361814c05d32eafbc56986e3df2d53e68a",
+    "extensions/lake_replication/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e"
+  },
+  "scope": "Current SQL overlay; archived native binaries unchanged; not release qualification",
+  "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+  "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+  "architecture": "arm64",
+  "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+  "image": "sha256:f763504f6b9cf7d0c33538d6b08708d3e7e1a7f3367ed5913fd1e143290c9a63",
+  "status": "passed",
+  "cleanup_returncode": 0,
+  "compose_logs_sha256": "1dcca56b8e58565ace3605a5820e8eb13a7221124ad6b846057153fc8c9d22a6",
+  "raw_evidence": ".qualification/qualification_20261021_062030_empty_filtered/results.json",
+  "raw_evidence_sha256": "3de7607b9cb92045f8bda7888e87f37ee4ea4c7e4740feb4cf111d5f50a4309e",
+  "passed_checks": 75,
+  "total_checks": 75
+}

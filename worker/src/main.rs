@@ -97,6 +97,12 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 if config.idle_timeout_ms > 0
                     && matches!(error.kind(), ErrorKind::WouldBlock | ErrorKind::TimedOut) =>
             {
+                if config.persistent {
+                    // A timeout is a supervision/feedback tick, not a reason to
+                    // restart decoding. MessageReader retains partial frames.
+                    source.standby_status(feedback_lsn)?;
+                    continue;
+                }
                 log_event(
                     "receiver",
                     "INFO",
@@ -356,6 +362,7 @@ struct Config {
     debug_streaming_immediate: bool,
     type_mapping_version: i32,
     idle_timeout_ms: u64,
+    persistent: bool,
 }
 
 impl Config {
@@ -394,6 +401,7 @@ impl Config {
             max_transactions: value("LAKE_MAX_TRANSACTIONS", "1").parse()?,
             debug_streaming_immediate: value("LAKE_DEBUG_STREAMING_IMMEDIATE", "0") == "1",
             type_mapping_version: value("LAKE_TYPE_MAPPING_VERSION", "1").parse()?,
+            persistent: value("LAKE_RECEIVER_PERSISTENT", "0") == "1",
             idle_timeout_ms: value("LAKE_RECEIVER_IDLE_TIMEOUT_MS", "0").parse()?,
         })
     }

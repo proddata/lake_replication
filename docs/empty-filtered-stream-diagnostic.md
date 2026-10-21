@@ -40,7 +40,10 @@ The required fix is a durable no-op/filtered-transaction path preserving staging
 publication and acknowledgement ordering. Simply skipping the error or
 advancing source feedback risks breaking checkpoint invariants or skipping
 unpublished work. Tests must include pending earlier transactions, replay,
-restart, later real changes and source-slot/checkpoint consistency. No fix has been made or qualified in this investigation.
+restart, later real changes and source-slot/checkpoint consistency. The subsequent
+[SQL fix and regression results](empty-filtered-stream-fix-results.md) now pass 75 checks. A separate native 200 ms receive-timeout failure was then
+fixed by the [receiver lifetime change](receiver-progress-fix-results.md), whose
+96-check run includes the full native two-million-row scenario.
 
 For the separate admission coexistence measurement, dataset preparation now
 precedes all replication slots. That isolates copying an existing large table

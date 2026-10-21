@@ -416,11 +416,9 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	envp[i++] = pstrdup("LAKE_USER=postgres");
 
 	/*
-	 * Keep each supervisor cycle short so a cooperative stop request
-	 * (checked only between cycles) is noticed quickly and the supervisor
-	 * has a chance to call report_service_stopped() and exit(0) cleanly
-	 * before the launcher's own TerminateBackgroundWorker backstop (see
-	 * lake_replication_launcher_main) arrives.
+	 * The supervisor polls stop state independently of receiver lifetime.
+	 * This socket timeout is a feedback tick for its persistent receiver;
+	 * quiet decoding must not reconnect and restart the same source WAL.
 	 */
 	envp[i++] = pstrdup("LAKE_RECEIVER_IDLE_TIMEOUT_MS=200");
 	envp[i++] = pstrdup("LAKE_SUPERVISOR_POLL_MS=100");
@@ -1021,12 +1019,12 @@ drop_source_slot(int64 subscriptionId)
 		values[1] = CStringGetTextDatum(innerQuery);
 
 		/*
-		 * The receiver may still hold this slot open for up to a couple of
-		 * hundred ms after the cooperative stop request above: it only
-		 * notices desired_state on its own poll interval
-		 * (LAKE_SUPERVISOR_POLL_MS / LAKE_RECEIVER_IDLE_TIMEOUT_MS, see
-		 * build_worker_env), and handle_drop_subscription no longer waits
-		 * for the supervisor process to actually exit before reaching here
+		 * The supervisor probes the service row with NOWAIT while receiving,
+		 * so this transaction's uncommitted stop request makes it release
+		 * the receiver/slot on its next poll (LAKE_SUPERVISOR_POLL_MS, see
+		 * build_worker_env). Allow time for that release below;
+		 * handle_drop_subscription does not wait for the supervisor process
+		 * to actually exit before reaching here
 		 * (see the comment there). pg_drop_replication_slot raises a real
 		 * ERROR while the slot is still active, not a mere warning, so
 		 * retrying needs a subtransaction (the standard PL/pgSQL-EXCEPTION-

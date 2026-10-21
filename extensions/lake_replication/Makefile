@@ -10,7 +10,8 @@ UPGRADE_MIGRATIONS = ../../migrations/0016_observability.sql \
 	../../migrations/0018_postgres_integration.sql \
 	../../migrations/0019_connection_credentials.sql \
 	../../migrations/0020_set_based_apply.sql \
-	../../migrations/0021_initial_sync_recovery.sql
+	../../migrations/0021_initial_sync_recovery.sql \
+	../../migrations/0022_empty_filtered_transactions.sql
 UPGRADE_SOURCES = $(UPGRADE_MIGRATIONS) $(EXTENSION_METADATA)
 BASELINE_MIGRATIONS = $(filter-out $(UPGRADE_MIGRATIONS),$(MIGRATIONS))
 BASELINE_SQL = $(EXTENSION)--$(BASELINE_VERSION).sql
