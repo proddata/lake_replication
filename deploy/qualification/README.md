@@ -66,6 +66,25 @@ open the **CI** workflow in GitHub Actions and choose **Run workflow**. A manual
 run builds both release artifacts and runs `qualify-amd64` after the amd64
 bundle is available.
 
+For the full beta.2 lifecycle suite on both native architectures, run
+**Packaged lifecycle qualification** with the ID of a successful **CI** run.
+It downloads that run's amd64/arm64 bundles and checks out the exact candidate
+revision. Checksums, embedded source revision and generated SQL are verified
+before testing. Each architecture runs fresh lifecycle checks, Rust-child
+crashes, receiver regressions, and a stopped-server beta.1 upgrade. The old
+package is rebuilt from preserved commit `85a32b4`; it is not a fabricated
+beta.1 configuration on the new binary. Receiver regressions retain their SQL
+overlay fixture, with a byte comparison proving the overlay matches the archive.
+
+```sh
+gh workflow run lifecycle-qualification.yml -f artifact_run_id=RUN_ID
+```
+
+Evidence and the rebuilt old package are uploaded separately per architecture
+and retained for 30 days. Download and retain accepted results before expiry.
+This workflow does not cover the long soak or the physical/object-store
+recovery drill.
+
 The committed lifecycle candidate `85a32b4` subsequently passed all 57
 checks, including source connection credentials, existing slots, and interrupted
 initial-copy recovery. See its [retained results](../../docs/evidence/2026-10-18-lifecycle-qualification-results.json).

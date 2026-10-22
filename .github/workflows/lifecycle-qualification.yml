@@ -1,0 +1,120 @@
+name: Packaged lifecycle qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact_run_id:
+        description: Successful CI run containing both candidate bundles
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  qualify:
+    name: lifecycle (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ARTIFACT_RUN_ID: ${{ inputs.artifact_run_id }}
+      QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.2-linux-${{ matrix.arch }}.tar.gz
+    steps:
+      - name: Resolve the successful candidate CI revision
+        id: candidate
+        env:
+          GH_REPO: ${{ github.repository }}
+        run: |
+          [[ "$ARTIFACT_RUN_ID" =~ ^[0-9]+$ ]]
+          gh api "repos/$GH_REPO/actions/runs/$ARTIFACT_RUN_ID" > "$RUNNER_TEMP/candidate-run.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          run = json.loads((Path(os.environ['RUNNER_TEMP']) / 'candidate-run.json').read_text())
+          assert run['status'] == 'completed' and run['conclusion'] == 'success', 'Candidate CI must pass first'
+          assert run['path'] == '.github/workflows/ci.yml', 'Expected bundle-producing CI workflow'
+          assert run['head_repository']['full_name'] == os.environ['GH_REPO'], 'Expected this repository'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f"sha={run['head_sha']}\n")
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.candidate.outputs.sha }}
+          submodules: true
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: install-bundle-${{ matrix.arch }}
+          path: dist/release
+          run-id: ${{ inputs.artifact_run_id }}
+          github-token: ${{ github.token }}
+      - name: Verify candidate provenance
+        env:
+          CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
+        run: |
+          make -C extensions/lake_replication generate
+          mkdir -p .qualification
+          cp "$RUNNER_TEMP/candidate-run.json" .qualification/candidate-run.json
+          python3 - <<'PY'
+          import hashlib, json, os, tarfile
+          from pathlib import Path
+          archive = Path(os.environ['QUALIFICATION_ARCHIVE'])
+          digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+          checksum, name = Path(str(archive) + '.sha256').read_text().split()
+          assert checksum == digest and name == archive.name
+          with tarfile.open(archive) as bundle:
+              members = [m for m in bundle.getmembers() if m.name.endswith('/SOURCE_REVISION')]
+              assert len(members) == 1
+              revision = bundle.extractfile(members[0]).read().decode().strip()
+              for sql in Path('extensions/lake_replication').glob('lake_replication--*.sql'):
+                  matches = [m for m in bundle.getmembers() if m.name.endswith('/payload/extension/' + sql.name)]
+                  assert len(matches) == 1, sql.name
+                  assert bundle.extractfile(matches[0]).read() == sql.read_bytes(), sql.name
+          assert revision == os.environ['CANDIDATE_SHA'], (revision, os.environ['CANDIDATE_SHA'])
+          Path('.qualification/candidate-artifact.json').write_text(json.dumps({
+              'run_id': os.environ['ARTIFACT_RUN_ID'], 'source_revision': revision,
+              'archive': archive.name, 'sha256': digest,
+              'receiver_sql_overlay_identical_to_archive': True,
+          }, indent=2) + '\n')
+          PY
+      - name: Fresh packaged lifecycle
+        run: make lifecycle-test
+      - name: Forced Rust child crashes
+        run: make lifecycle-fault-test
+      - name: Receiver regressions with archived binaries and current SQL overlay
+        run: python3 tests/streaming/empty_filtered.py --native-bulk
+      - name: Check out the preserved beta.1 source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9
+          path: .qualification/legacy-source
+      - uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+      - name: Build the real beta.1 package for this architecture
+        working-directory: .qualification/legacy-source
+        env:
+          ARCHES: ${{ matrix.arch }}
+        run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/legacy-artifacts"
+      - name: Packaged beta.1 to beta.2 handoff
+        env:
+          OLD_ARCHIVE: ${{ github.workspace }}/.qualification/legacy-artifacts/lake_replication-0.1.0-beta.1-linux-${{ matrix.arch }}.tar.gz
+        run: python3 tests/lifecycle/probe.py --upgrade --old-archive "$OLD_ARCHIVE"
+      - name: Upload qualification evidence and legacy package
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: lifecycle-qualification-${{ matrix.arch }}
+          path: |
+            .qualification/
+            !.qualification/legacy-source/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
