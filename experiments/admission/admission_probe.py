@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
-"""Qualify instance-wide transaction admission in disposable Docker fixtures."""
+"""Transaction admission and ownership checks for an explicitly supplied experimental image."""
 import concurrent.futures
-import hashlib
 import importlib.util
-import json
-import shutil
-import tempfile
 from pathlib import Path
 from urllib.parse import quote
 
@@ -150,65 +146,3 @@ def transaction_checks(image, text, directory):
             (directory / 'compose.log').write_text(logs.stdout + logs.stderr)
         finally:
             q.compose('down', '-v', '--remove-orphans', timeout=300)
-
-
-def main():
-    q.RESULTS = ROOT / '.qualification' / (q.RUN + '_admission')
-    q.RESULTS.mkdir(parents=True, exist_ok=False)
-    root = q.RESULTS
-    result = dict(status='running', production_changed=False,
-        admission='one worker write transaction per PostgreSQL instance, across all databases',
-        limits=['Experimental fresh-install overlay; PostgreSQL 18/Linux arm64.',
-                'Does not reduce subscription wrapper count or bound ordinary SQL/independent maintenance.',
-                'No multi-instance engine coordination, distributed ownership, adjustable pool or throughput qualification.'])
-    original = q.COMPOSE_FILE.read_text()
-    sources = root / 'sources'
-    sources.mkdir()
-    for name in ('admission_probe.py', 'admission.py', 'admission.c.inc', 'admission.sql', 'Dockerfile.admission',
-                 'scale.py', 'compare.py', 'adapt.py', 'runtime.c.inc', 'binding.py', 'binding.sql', 'publication.py', 'publication.sql', 'register.sql'):
-        shutil.copy2(Path(__file__).with_name(name), sources / name)
-    result['source_fingerprints'] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sources.iterdir()}
-    parent_file = ROOT / 'docs/evidence/2026-10-20-base-current-scaling-performance-results.json'
-    parent = json.loads(parent_file.read_text())
-    result['parent_evidence_sha256'] = hashlib.sha256(parent_file.read_bytes()).hexdigest()
-    try:
-        image = parent['image_id']
-        q.check('exact current parent image', q.command(['docker', 'image', 'inspect', '--format', '{{.Id}}', image]).stdout.strip(), image)
-        for name in ('adapt.py', 'runtime.c.inc', 'binding.py', 'binding.sql', 'publication.py', 'publication.sql', 'register.sql', 'scale.py', 'compare.py'):
-            q.check('qualified parent source ' + name, result['source_fingerprints'][name], parent['source_fingerprints'][name])
-        archive = q.archive_path()
-        q.verify_archive(archive)
-        q.command(['git', 'diff', '--exit-code', q.EVIDENCE['source_revision'], '--', 'worker', 'migrations', 'extensions/lake_replication'])
-        tag = 'lake-replication-admission-parent:' + q.RUN
-        new = 'lake-replication-admission:' + q.RUN
-        q.command(['docker', 'tag', image, tag])
-        built = q.command(['docker', 'build', '--build-arg', f'QUAL_IMAGE={tag}', '--tag', new,
-            '--file', str(Path(__file__).with_name('Dockerfile.admission')), str(ROOT)], timeout=600)
-        (root / 'build.log').write_text(built.stdout + built.stderr)
-        result['image_id'] = q.command(['docker', 'image', 'inspect', '--format', '{{.Id}}', new]).stdout.strip()
-        with tempfile.TemporaryDirectory(prefix='lake-admission-') as temporary:
-            q.build_images(archive, Path(temporary))
-        text = original.replace('  destination:\n', '  destination:\n    init: true\n')
-        text = text.replace('shared_preload_libraries=pg_extension_base,lake_replication', 'shared_preload_libraries=pg_extension_base')
-        text = text.replace('      - -c\n      - lake_replication.database_name=analytics\n', '')
-        text = text.replace('      - max_worker_processes=24\n', '      - max_worker_processes=24\n      - -c\n      - lake_replication.prototype_instance_id=admission-owner\n')
-        text = text.replace('max_replication_slots=8', 'max_replication_slots=32').replace('max_wal_senders=8', 'max_wal_senders=32')
-        engine = "printf 'SET threads=1;\\n' > /tmp/admission-pgduck.sql; cat /qualification/pgduck.sql >> /tmp/admission-pgduck.sql; exec pgduck_server --unix_socket_directory /var/run/pgduck --port 5332 --memory_limit 2GB --cache_dir /tmp/pgduck-cache --init_file_path /tmp/admission-pgduck.sql"
-        text = text.replace('    entrypoint: [/qualification/pgduck.sh]', '    entrypoint: ' + json.dumps(['bash', '-ec', engine]))
-        transaction_checks(new, text, root / 'transactions')
-        result['scale_case'] = s.scale_case(4, 16, 64, new, text, root / 'scale-4db-16sub-64slots')
-        if result['scale_case']['status'] != 'passed':
-            raise RuntimeError('bounded scaling case failed: ' + result['scale_case']['error'])
-        result['status'] = 'passed'
-    except Exception as error:
-        result.update(status='error', error=str(error))
-        print('ERROR: ' + str(error), flush=True)
-    finally:
-        result['checks'] = q.EVIDENCE
-        s.write_json(root / 'results.json', result)
-        print('Evidence: ' + str(root), flush=True)
-    return 0 if result['status'] == 'passed' else 1
-
-
-if __name__ == '__main__':
-    raise SystemExit(main())

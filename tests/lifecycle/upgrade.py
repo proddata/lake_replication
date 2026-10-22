@@ -1,19 +1,12 @@
-#!/usr/bin/env python3
-"""Qualify a stopped-server, static-to-base prototype upgrade on private fixtures."""
-import hashlib
-import importlib.util
-import json
-import shutil
-import tempfile
+"""Stopped-server beta.1 handoff assertions used by the packaged lifecycle probe.
+
+The caller supplies the qualification helper as q and manages images and cleanup.
+"""
 import time
-from pathlib import Path
 from urllib.parse import quote
 
-ROOT = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location('qualification', ROOT / 'tests/qualification/probe.py')
-q = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(q)
-TARGET_VERSION = '0.1.0-beta.2-prototype'
+q = None
+TARGET_VERSION = '0.1.0-beta.2'
 LAUNCHER_COUNT_SQL = "SELECT count(*) FROM extension_base.list_base_workers() w JOIN pg_extension e ON e.oid=w.extension_id WHERE e.extname='lake_replication' AND w.database_id=(SELECT oid FROM pg_database WHERE datname=current_database()) AND w.pid>0"
 
 
@@ -105,62 +98,3 @@ def upgrade_case(new_image):
     q.check('post-upgrade rows are unique', q.sql('destination', 'analytics', 'SELECT count(*)::text||\':\'||count(DISTINCT id)::text FROM public.upgrade_items'), '5:5')
     q.sql('destination', 'analytics', 'DROP SUBSCRIPTION prototype_upgrade_sub')
     q.check('post-upgrade drop releases the retained source slot', q.sql('source', 'application', "SELECT count(*) FROM pg_replication_slots WHERE slot_name='prototype_upgrade_sub'"), '0')
-
-
-def main():
-    q.RESULTS = ROOT / '.qualification' / (q.RUN + '_upgrade')
-    q.RESULTS.mkdir(parents=True, exist_ok=False)
-    q.COMPOSE_FILE = q.RESULTS / 'compose.yml'
-    q.COMPOSE_FILE.write_text((ROOT / 'deploy/qualification/compose.yml').read_text())
-    q.EVIDENCE.update(experiment='stopped-server static-to-base upgrade', production_changed=False,
-                      target_version=TARGET_VERSION, deployment_contract='explicit stop, replace binaries, restart, SQL upgrade, enable',
-                      limits=['Not an online handoff or SQL downgrade test.', 'Clone/restore identity, forced crashes and exclusive takeover remain unqualified.'])
-    q.EVIDENCE['source_fingerprints'] = {name: hashlib.sha256((Path(__file__).parent / name).read_bytes()).hexdigest()
-                                         for name in ('upgrade.py', 'Dockerfile.upgrade', 'adapt.py', 'runtime.c.inc', 'register.sql')}
-    sources = q.RESULTS / 'sources'
-    sources.mkdir()
-    for name in q.EVIDENCE['source_fingerprints']:
-        shutil.copy2(Path(__file__).with_name(name), sources / name)
-    q.EVIDENCE['qualification_helper_sha256'] = hashlib.sha256(Path(q.__file__).read_bytes()).hexdigest()
-    started = False
-    try:
-        archive = q.archive_path()
-        q.verify_archive(archive)
-        q.command(['git', 'diff', '--exit-code', q.EVIDENCE['source_revision'], '--', 'worker', 'migrations', 'extensions/lake_replication'])
-        with tempfile.TemporaryDirectory(prefix='lake-base-upgrade-') as temporary:
-            q.build_images(archive, Path(temporary))
-        new_image = f'lake-replication-upgrade-prototype:{q.RUN}'
-        build = q.command(['docker', 'build', '--build-arg', f'QUAL_IMAGE={q.DESTINATION_IMAGE}',
-                           '--tag', new_image, '--file', str(Path(__file__).with_name('Dockerfile.upgrade')), str(ROOT)], timeout=600)
-        (q.RESULTS / 'build.log').write_text(build.stdout + build.stderr)
-        q.EVIDENCE['original_image_id'] = json.loads(q.command(['docker', 'image', 'inspect', '--format', '{{json .Id}}', q.DESTINATION_IMAGE]).stdout)
-        q.EVIDENCE['upgraded_image_id'] = json.loads(q.command(['docker', 'image', 'inspect', '--format', '{{json .Id}}', new_image]).stdout)
-        started = True
-        q.compose('up', '-d', '--wait', '--wait-timeout', '300', timeout=600)
-        upgrade_case(new_image)
-        q.EVIDENCE.update(status='passed', passed=True)
-    except Exception as error:
-        q.EVIDENCE.update(status='error', passed=False, error=str(error))
-        print(f'ERROR: {error}', flush=True)
-    finally:
-        try:
-            if started:
-                logs = q.compose('logs', '--no-color', check_result=False)
-                (q.RESULTS / 'compose.log').write_text(logs.stdout + logs.stderr)
-        except Exception as error:
-            q.EVIDENCE.update(status='evidence_error', passed=False, evidence_error=str(error))
-        finally:
-            try:
-                cleanup = q.compose('down', '-v', '--remove-orphans', check_result=False, timeout=300)
-                if cleanup.returncode:
-                    q.EVIDENCE.update(status='cleanup_error', passed=False, cleanup_error=cleanup.stderr)
-            except Exception as error:
-                q.EVIDENCE.update(status='cleanup_error', passed=False, cleanup_error=str(error))
-            finally:
-                (q.RESULTS / 'results.json').write_text(json.dumps(q.EVIDENCE, indent=2, sort_keys=True) + '\n')
-                print(f'Evidence: {q.RESULTS}', flush=True)
-    return 0 if q.EVIDENCE.get('passed') else 1
-
-
-if __name__ == '__main__':
-    raise SystemExit(main())

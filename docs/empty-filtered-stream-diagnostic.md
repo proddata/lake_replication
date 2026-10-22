@@ -1,5 +1,10 @@
 # Empty filtered streamed transaction: receiver progress failure
 
+> Historical prototype record. Commands and source paths below refer to the
+> [preserved implementation](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers) before cleanup.
+> Current lifecycle tests live in `tests/lifecycle`; retained admission helpers
+> are described in [experiments/admission](../experiments/admission/README.md).
+
 A large source transaction outside a subscription's publication can leave the
 receiver repeatedly failing with `streamed transaction ... has no changes`.
 This reproduced in the qualified base image both with and without admission;

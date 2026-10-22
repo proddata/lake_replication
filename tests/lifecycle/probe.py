@@ -62,10 +62,10 @@ def upgrade(new_image,old_archive):
     q.ENV['QUALIFICATION_DESTINATION_IMAGE']=q.DESTINATION_IMAGE
     q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
     q.sql('destination','analytics',"ALTER DATABASE analytics SET session_preload_libraries='lake_replication'")
-    u=module('legacy_upgrade',ROOT/'experiments/base_workers/upgrade.py')
+    u=module('legacy_upgrade',Path(__file__).with_name('upgrade.py'))
     u.q=q
     u.TARGET_VERSION='0.1.0-beta.2'
-    # Retain the evaluated handoff assertions; add the explicit adoption gate.
+    # Reuse the packaged handoff assertions with the explicit adoption gate.
     original=q.sql
     def sql(service,db,statement,**kwargs):
         if statement == "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2'":
@@ -103,7 +103,7 @@ def main():
     q.ENV['QUALIFICATION_DESTINATION_IMAGE']=q.DESTINATION_IMAGE
     q.RESULTS.mkdir(parents=True)
     q.EVIDENCE.update(scope='Production pg_extension_base migration; actual exported archives',findings=[])
-    q.EVIDENCE['inputs']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(__file__).with_name('cases.py'),ROOT/'experiments/base_workers/upgrade.py',ROOT/'tests/qualification/probe.py',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),ROOT/'extensions/lake_replication/lake_replication.c',ROOT/'extensions/lake_replication/lake_replication.control']}
+    q.EVIDENCE['inputs']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(__file__).with_name('cases.py'),Path(__file__).with_name('upgrade.py'),ROOT/'tests/qualification/probe.py',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),ROOT/'extensions/lake_replication/lake_replication.c',ROOT/'extensions/lake_replication/lake_replication.control']}
     try:
         archive=q.archive_path()
         q.verify_archive(archive)

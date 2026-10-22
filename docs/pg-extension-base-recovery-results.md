@@ -1,5 +1,10 @@
 # Bounded source-slot recovery experiment
 
+> Historical prototype record. Commands and source paths below refer to the
+> [preserved implementation](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers) before cleanup.
+> Current lifecycle tests live in `tests/lifecycle`; retained admission helpers
+> are described in [experiments/admission](../experiments/admission/README.md).
+
 Status: the transient slot-contention regression is fixed in the isolated
 prototype under Docker init. Production adoption remains unqualified.
 The [original failures](pg-extension-base-fault-results.md) remain retained.

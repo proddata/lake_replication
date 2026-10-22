@@ -149,8 +149,8 @@ poc-down:
 check:
 	python3 -m py_compile deploy/prepare-upstream.py
 	python3 -m unittest discover -s tests/upstream -p 'test_*.py'
-	python3 -m py_compile experiments/base_workers/adapt.py experiments/base_workers/probe.py experiments/base_workers/compare.py experiments/base_workers/sample.py experiments/base_workers/analyze.py experiments/base_workers/upgrade.py experiments/base_workers/faults.py experiments/base_workers/recovery.py experiments/base_workers/identity.py experiments/base_workers/binding.py experiments/base_workers/rebuild.py experiments/base_workers/publication.py experiments/base_workers/ownership.py experiments/base_workers/transfer.py experiments/base_workers/scale.py experiments/base_workers/admission.py experiments/base_workers/admission_probe.py experiments/base_workers/admission_measure.py
-	python3 -m unittest discover -s experiments/base_workers -p 'test_*.py'
+	python3 -m compileall -q experiments/admission
+	python3 -m unittest discover -s experiments/admission -p 'test_*.py'
 	python3 -m py_compile tests/replication/probe.py
 	python3 -m py_compile tests/performance/probe.py
 	python3 -m py_compile tests/crash/probe.py
@@ -158,7 +158,7 @@ check:
 	python3 -m py_compile tests/transport/probe.py
 	python3 -m py_compile tests/publisher/probe.py
 	python3 -m py_compile tests/mutations/probe.py
-	python3 -m py_compile tests/lifecycle/probe.py tests/lifecycle/cases.py tests/lifecycle/faults.py
+	python3 -m py_compile tests/lifecycle/probe.py tests/lifecycle/cases.py tests/lifecycle/faults.py tests/lifecycle/upgrade.py
 	python3 -m py_compile tests/streaming/probe.py tests/streaming/empty_filtered.py
 	python3 -m py_compile tests/toast/probe.py
 	python3 -m py_compile tests/initial_sync/probe.py

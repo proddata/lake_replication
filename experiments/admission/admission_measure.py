@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""Measure admission overhead and streaming/initial-copy coexistence privately."""
-import argparse
+"""Shared timing audits, bulk-copy coexistence cases and paired admission analysis."""
 import hashlib
 import importlib.util
 import json
-import shutil
-import tempfile
 import threading
 import time
 from pathlib import Path
@@ -269,93 +266,3 @@ def comparisons(cases):
             results[profile]['absolute_checks']=checks
             results[profile]['absolute_checks_all_pass']=all(all(row[k] for k in ('p95_below_two_seconds','catchup_within_two_seconds','backlog_at_most_four','source_schedule_within_one_interval')) for row in checks)
     return results
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--skip-comparison', action='store_true')
-    parser.add_argument('--skip-fairness', action='store_true')
-    parser.add_argument('--profiles', nargs='+', choices=('steady','catchup'), default=['steady','catchup'],
-        help='select comparison cohorts when resuming completed measurements')
-    parser.add_argument('--fairness-variants', nargs='+', choices=('bounded','unbounded'), default=['bounded','unbounded'])
-    parser.add_argument('--repetitions', type=int, default=5)
-    parser.add_argument('--copy-rows', type=int, default=500000)
-    parser.add_argument('--stream-transactions', type=int, default=120)
-    parser.add_argument('--seed-after-subscriptions', action='store_true',
-        help='reproduce the independent empty-filtered-stream receiver bug; excluded from admission qualification')
-    args = parser.parse_args()
-    if not (1<=args.repetitions<=6) or args.copy_rows<=0 or args.stream_transactions<20:
-        parser.error('use 1..6 repetitions, positive copy size and at least 20 streaming transactions')
-    if len(set(args.profiles))!=len(args.profiles):
-        parser.error('comparison profiles must be unique')
-    text = compose_text()
-    q.RESULTS = ROOT/'.qualification'/(q.RUN+'_admission_measure')
-    q.RESULTS.mkdir(parents=True,exist_ok=False)
-    root = q.RESULTS
-    result = dict(status='running', parameters=vars(args), cases=[], fairness=[], production_changed=False,
-        scope='Latest base prototype before/after one-permit admission; same 2GB/one-thread engine; local arm64',
-        comparison_limits=dict(p95_ratio=1.10, catchup_throughput_ratio=.95))
-    sources = root/'sources'; sources.mkdir()
-    for name in ('admission_measure.py','admission.py','admission.c.inc','admission.sql','Dockerfile.admission','compare.py','scale.py','analyze.py','sample.py'):
-        shutil.copy2(Path(__file__).with_name(name),sources/name)
-    result['source_fingerprints'] = {p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sources.iterdir()}
-    parent_file = ROOT/'docs/evidence/2026-10-20-base-bounded-admission-results.json'
-    parent = json.loads(parent_file.read_text())
-    result['parent_evidence_sha256'] = hashlib.sha256(parent_file.read_bytes()).hexdigest()
-    try:
-        for name in ('admission.py','admission.c.inc','admission.sql','Dockerfile.admission','compare.py','scale.py'):
-            q.check('qualified admission source '+name,result['source_fingerprints'][name],parent['source_fingerprints'][name])
-        base = json.loads((ROOT/'docs/evidence/2026-10-20-base-current-scaling-performance-results.json').read_text())
-        images = dict(bounded=parent['image_id'], unbounded=base['image_id'])
-        for name,image in images.items():
-            q.check('exact '+name+' image',q.command(['docker','image','inspect','--format','{{.Id}}',image]).stdout.strip(),image)
-        result['images'] = images
-        archive=q.archive_path();q.verify_archive(archive)
-        q.command(['git','diff','--exit-code',q.EVIDENCE['source_revision'],'--','worker','migrations','extensions/lake_replication'])
-        with tempfile.TemporaryDirectory(prefix='lake-admission-measure-') as temporary:
-            q.build_images(archive,Path(temporary))
-        result['docker_info']=json.loads(q.command(['docker','info','--format','{{json .}}']).stdout)
-        result['other_running_containers']=q.command(['docker','ps','--format','{{.ID}} {{.Names}} {{.Image}}']).stdout.splitlines()
-        if not args.skip_fairness:
-            for variant in args.fairness_variants:
-                print('FAIRNESS '+variant,flush=True)
-                case=fairness(args,variant,images[variant],text,root/('fairness-'+variant))
-                result['fairness'].append(case)
-                s.write_json(root/'results.json',result)
-                print(json.dumps({k:case.get(k) for k in ('status','checks','error','copy_elapsed_seconds')}),flush=True)
-                if case['status']=='error':
-                    raise RuntimeError('fairness measurement failed: '+case.get('error','cleanup error'))
-        if not args.skip_comparison:
-            for profile in args.profiles:
-                interval=500 if profile=='steady' else 100
-                for repetition in range(1,args.repetitions+1):
-                    for variant in (('unbounded','bounded') if repetition%2 else ('bounded','unbounded')):
-                        print(f'COMPARISON {profile} pair={repetition} {variant}',flush=True)
-                        directory=root/f'{profile}-{repetition:02d}-{variant}';directory.mkdir()
-                        workload=argparse.Namespace(base_preload=False,transactions=120,warmup_transactions=10,
-                            rows_per_transaction=100,payload_bytes=128,interval_ms=interval,observer='journal',poll_ms=100,catchup_timeout=120,idle_seconds=5)
-                        case=c.run_case(workload,'base',repetition,images[variant],text,directory)
-                        case.update(variant=variant,launcher_variant='base',profile=profile)
-                        case['timing_validation']={phase:timing_validation(case[phase]) for phase in ('warmup','workload')}
-                        s.write_json(directory/'results.json',case)
-                        result['cases'].append(case)
-                        result['analysis']=comparisons(result['cases'])
-                        s.write_json(root/'results.json',result)
-        comparison_findings=any(v['p95']['assessment']!='within_proposed_margin_in_this_cohort'
-            or (p=='catchup' and v['throughput']['assessment']!='within_proposed_margin_in_this_cohort')
-            or (p=='steady' and not v['absolute_checks_all_pass']) for p,v in result.get('analysis',{}).items())
-        result['status']='completed_with_findings' if comparison_findings or any(f['status']!='passed' for f in result['fairness']) else 'passed'
-    except Exception as error:
-        result.update(status='error',error=str(error));print('ERROR: '+str(error),flush=True)
-    except KeyboardInterrupt:
-        result.update(status='interrupted',error='Measurement interrupted; complete cases retained.')
-        raise
-    finally:
-        result['archive_provenance']=q.EVIDENCE
-        s.write_json(root/'results.json',result)
-        print('Evidence: '+str(root),flush=True)
-    return 1 if result['status']=='error' else 0
-
-
-if __name__=='__main__':
-    raise SystemExit(main())

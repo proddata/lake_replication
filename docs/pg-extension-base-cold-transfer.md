@@ -1,5 +1,10 @@
 # Controlled cold writer transfer
 
+> Historical prototype record. Commands and source paths below refer to the
+> [preserved implementation](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers) before cleanup.
+> Current lifecycle tests live in `tests/lifecycle`; retained admission helpers
+> are described in [experiments/admission](../experiments/admission/README.md).
+
 Status: the isolated rehearsal passes **40/40 assertions**. It demonstrates a
 manual cold transfer with a complete private Docker writer inventory. It is not
 production fencing, automatic failover, a lease or a generally supported restore.
@@ -58,7 +63,7 @@ cohort and remain subject to the supervisor's continuity checks.
    A new consistent backup of the current owner or the independently tested
    fresh-rebuild route is required when the old checkpoints no longer qualify.
 
-The executable [transfer rehearsal](../experiments/base_workers/transfer.py)
+The executable [transfer rehearsal](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers/transfer.py)
 contains deliberate refusal tests for live writers, incomplete fencing, wrong
 checkpoint/configuration manifests and stale failback. It is hard-coded to
 private fixtures and is not a production transfer command. Consumer routing is

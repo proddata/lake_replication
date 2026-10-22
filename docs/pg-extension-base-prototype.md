@@ -1,5 +1,10 @@
 # pg_extension_base launcher investigation
 
+> Historical prototype record. Commands and source paths below refer to the
+> [preserved implementation](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers) before cleanup.
+> Current lifecycle tests live in `tests/lifecycle`; retained admission helpers
+> are described in [experiments/admission](../experiments/admission/README.md).
+
 Decision: use `pg_extension_base` as the proposed foundation for per-database
 launcher lifecycle, while retaining SQL publication through pg_lake. The
 experiment demonstrates that this is viable; it is not a production migration.
@@ -29,7 +34,7 @@ Evidence: [minimal results](evidence/2026-10-18-base-workers-minimal-results.jso
 [hardened results](evidence/2026-10-18-base-workers-hardened-results.json), and
 [source/prototype provenance](evidence/2026-10-18-base-workers-provenance.json).
 Run instructions and implementation are in
-[`experiments/base_workers`](../experiments/base_workers/README.md).
+[`experiments/base_workers`](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers/README.md).
 
 The destination explicitly preloads only `pg_extension_base`. It needs neither
 `lake_replication.database_name` nor `session_preload_libraries`. Each database

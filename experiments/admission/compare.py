@@ -1,18 +1,11 @@
 #!/usr/bin/env python3
-"""Controlled screening comparison of shared-hardened static/base launchers.
-
-Fresh disposable fixtures per repetition, persistent psql clients, real
-supervisors, and the same pinned release data path in both variants.
-"""
+"""Shared workload, visibility measurement and resource sampling helpers for admission experiments."""
 import argparse
-import hashlib
 import importlib.util
 import json
 import queue
-import shutil
 import statistics
 import subprocess
-import tempfile
 import threading
 import time
 from pathlib import Path
@@ -356,109 +349,3 @@ def summarize(cases):
             'wrapper_idle_voluntary_switches_per_second': distribution(wrapper_switches) if wrapper_switches else None,
         }
     return result
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--repetitions', type=int, default=5)
-    parser.add_argument('--idle-seconds', type=float, default=10)
-    parser.add_argument('--transactions', type=int, default=40)
-    parser.add_argument('--warmup-transactions', type=int,
-                        help='separate warm-up size; defaults to the measured transaction count')
-    parser.add_argument('--rows-per-transaction', type=int, default=100)
-    parser.add_argument('--interval-ms', type=float, default=100)
-    parser.add_argument('--poll-ms', type=float, default=100)
-    parser.add_argument('--observer', choices=('iceberg', 'journal'), default='iceberg')
-    parser.add_argument('--observers', nargs='+', choices=('iceberg', 'journal'),
-                        help='alternate observer types for calibration; journal completion is checked against final Iceberg rows')
-    parser.add_argument('--poll-intervals-ms', nargs='+', type=float,
-                        help='alternate multiple observer intervals within a cohort')
-    parser.add_argument('--variants', nargs='+', choices=('static', 'base'), default=['static', 'base'])
-    parser.add_argument('--payload-bytes', type=int, default=128)
-    parser.add_argument('--catchup-timeout', type=float, default=90)
-    parser.add_argument('--base-preload', action='store_true',
-                        help='repeat with lake_replication also explicit in the preload setting; automatic startup preloading still applies')
-    args = parser.parse_args()
-    excluded = {'base_preload', 'variants', 'poll_intervals_ms', 'observer', 'observers'}
-    if any(value is not None and value <= 0 for name, value in vars(args).items() if name not in excluded):
-        parser.error('all workload parameters must be positive')
-    if args.poll_intervals_ms and any(value <= 0 for value in args.poll_intervals_ms):
-        parser.error('observer intervals must be positive')
-    if len(set(args.variants)) != len(args.variants):
-        parser.error('variants must be unique')
-    if args.poll_intervals_ms and len(set(args.poll_intervals_ms)) != len(args.poll_intervals_ms):
-        parser.error('observer intervals must be unique')
-    if args.observers and len(set(args.observers)) != len(args.observers):
-        parser.error('observer types must be unique')
-    q.RESULTS = ROOT / '.qualification' / (q.RUN + '_comparison')
-    q.RESULTS.mkdir(parents=True, exist_ok=False)
-    sources = q.RESULTS / 'sources'
-    sources.mkdir()
-    for name in ('compare.py', 'adapt.py', 'runtime.c.inc', 'sample.py', 'Dockerfile', 'analyze.py', 'test_compare.py', 'test_analyze.py'):
-        shutil.copy2(Path(__file__).with_name(name), sources / name)
-    protocol = ROOT / 'docs/pg-extension-base-performance-protocol.md'
-    shutil.copy2(protocol, sources / protocol.name)
-    evidence = {'status': 'running', 'measurement_schema': 3, 'parameters': vars(args), 'cases': [],
-                'scope': 'single database/subscription insert screening; not saturation or full adoption qualification',
-                'lag_method': 'source and publication pg_xact_commit_timestamp; separate first-observation bounds for the selected observer; same-host container clocks',
-                'production_launcher_changed': False,
-                'protocol_sha256': hashlib.sha256(protocol.read_bytes()).hexdigest(),
-                'fingerprints': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-                                 for p in (Path(__file__), Path(__file__).with_name('adapt.py'),
-                                           Path(__file__).with_name('runtime.c.inc'), Path(__file__).with_name('sample.py'),
-                                           Path(__file__).with_name('Dockerfile'))}}
-    try:
-        archive = q.archive_path()
-        q.verify_archive(archive)
-        q.command(['git', 'diff', '--exit-code', q.EVIDENCE['source_revision'], '--',
-                   'worker', 'migrations', 'extensions/lake_replication'])
-        with tempfile.TemporaryDirectory(prefix='lake-launcher-comparison-') as temporary:
-            q.build_images(archive, Path(temporary))
-        images = {}
-        for variant in ('static', 'base'):
-            image = f'lake-replication-launcher-{variant}:{q.RUN}'
-            built = q.command(['docker', 'build', '--build-arg', f'QUAL_IMAGE={q.DESTINATION_IMAGE}',
-                               '--build-arg', 'PROTOTYPE_HARDENED=1', '--build-arg', f'PROTOTYPE_VARIANT={variant}',
-                               '--tag', image, '--file', str(Path(__file__).with_name('Dockerfile')), str(ROOT)], timeout=600)
-            (q.RESULTS / f'build-{variant}.log').write_text(built.stdout + built.stderr)
-            images[variant] = image
-        evidence['image_inspect'] = json.loads(q.command(['docker', 'image', 'inspect', *images.values()]).stdout)
-        evidence['docker_info'] = json.loads(q.command(['docker', 'info', '--format', '{{json .}}']).stdout)
-        evidence['other_running_containers'] = q.command([
-            'docker', 'ps', '--format', '{{.ID}} {{.Names}} {{.Image}} {{.Status}}']).stdout.splitlines()
-        compose_text = q.COMPOSE_FILE.read_text().replace('      - wal_level=logical',
-                                                        '      - track_commit_timestamp=on\n      - -c\n      - wal_level=logical')
-        compose_text = compose_text.replace('      - max_worker_processes=24',
-                                            '      - track_commit_timestamp=on\n      - -c\n      - max_worker_processes=24')
-        for repetition in range(1, args.repetitions + 1):
-            order = [(variant, observer, poll_ms) for variant in args.variants
-                     for observer in (args.observers or [args.observer])
-                     for poll_ms in (args.poll_intervals_ms or [args.poll_ms])]
-            if repetition % 2 == 0:
-                order.reverse()
-            for variant, observer, poll_ms in order:
-                directory = q.RESULTS / f'{repetition:02d}-{variant}-{observer}-poll{poll_ms:g}'
-                directory.mkdir()
-                print(f'RUN {repetition}/{args.repetitions} {variant} observer={observer} poll={poll_ms:g}ms', flush=True)
-                case_args = argparse.Namespace(**vars(args))
-                case_args.poll_ms = poll_ms
-                case_args.observer = observer
-                case = run_case(case_args, variant, repetition, images[variant], compose_text, directory)
-                evidence['cases'].append(case)
-                (directory / 'results.json').write_text(json.dumps(case, indent=2) + '\n')
-                evidence['summary'] = summarize(evidence['cases'])
-                (q.RESULTS / 'results.json').write_text(json.dumps(evidence, indent=2) + '\n')
-                print(json.dumps(evidence['summary'][f'{variant}/{observer}/poll-{poll_ms:g}ms']), flush=True)
-        evidence['status'] = 'passed'
-    except Exception as error:
-        evidence.update(status='error', error=str(error))
-        print(f'ERROR: {error}', flush=True)
-    finally:
-        evidence['archive_provenance'] = q.EVIDENCE
-        (q.RESULTS / 'results.json').write_text(json.dumps(evidence, indent=2) + '\n')
-        print(f'Evidence: {q.RESULTS}', flush=True)
-    return 0 if evidence['status'] == 'passed' else 1
-
-
-if __name__ == '__main__':
-    raise SystemExit(main())

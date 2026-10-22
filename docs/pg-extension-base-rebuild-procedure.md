@@ -1,5 +1,10 @@
 # Fresh rebuild procedure for the combined prototype
 
+> Historical prototype record. Commands and source paths below refer to the
+> [preserved implementation](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers) before cleanup.
+> Current lifecycle tests live in `tests/lifecycle`; retained admission helpers
+> are described in [experiments/admission](../experiments/admission/README.md).
+
 Status: tested as a disposable rehearsal on the combined origin-check/retry
 prototype. This is not a production package upgrade, an in-place rebind or a
 writable takeover of existing Iceberg objects. The shipping release does not
@@ -88,7 +93,7 @@ CREATE SUBSCRIPTION fresh_rebuild_sub
 -- The default source slot name is fresh_rebuild_sub.
 ```
 
-The executable [rehearsal](../experiments/base_workers/rebuild.py) enforces these
+The executable [rehearsal](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers/rebuild.py) enforces these
 allocation checks and verifies results on private fixtures. The SQL outline is
 not a generic rebuild command for an arbitrary existing database. There is no
 implemented in-place `rebind` API.

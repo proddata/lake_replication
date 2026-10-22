@@ -1,5 +1,10 @@
 # Admission overhead and coexistence protocol
 
+> Historical prototype record. Commands and source paths below refer to the
+> [preserved implementation](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers) before cleanup.
+> Current lifecycle tests live in `tests/lifecycle`; retained admission helpers
+> are described in [experiments/admission](../experiments/admission/README.md).
+
 This evaluates the qualified base prototype before/after the one-transaction
 admission overlay. It does not change production sources or either immutable
 runtime image. Both variants use Docker init, 64 worker slots, commit timestamp

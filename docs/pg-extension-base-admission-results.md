@@ -1,5 +1,10 @@
 # Bounded worker writes: prototype and results
 
+> Historical prototype record. Commands and source paths below refer to the
+> [preserved implementation](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers) before cleanup.
+> Current lifecycle tests live in `tests/lifecycle`; retained admission helpers
+> are described in [experiments/admission](../experiments/admission/README.md).
+
 The isolated base-worker prototype now admits one native worker write transaction
 at a time across all databases in a PostgreSQL instance. The four-database,
 16-subscription restart case that exhausted the shared engine now passes with
