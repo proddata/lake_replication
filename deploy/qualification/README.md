@@ -70,7 +70,10 @@ For the full beta.2 lifecycle suite on both native architectures, run
 **Packaged lifecycle qualification** with the ID of a successful **CI** run.
 It downloads that run's amd64/arm64 bundles and checks out the exact candidate
 revision. Checksums, embedded source revision and generated SQL are verified
-before testing. Each architecture runs fresh lifecycle checks, Rust-child
+before testing. Checkout uses full submodule history: shallow repositories
+cannot provide the self-contained Git bundle used by the Docker prerequisite
+build. The bundle helper never fetches and rejects shallow history explicitly.
+Each architecture runs fresh lifecycle checks, Rust-child
 crashes, receiver regressions, and a stopped-server beta.1 upgrade. The old
 package is rebuilt from preserved commit `85a32b4`; it is not a fabricated
 beta.1 configuration on the new binary. Receiver regressions retain their SQL

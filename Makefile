@@ -148,6 +148,7 @@ poc-down:
 	$(POC_COMPOSE) down -v
 check:
 	python3 -m py_compile deploy/prepare-upstream.py
+	python3 -m unittest discover -s tests/upstream -p 'test_*.py'
 	python3 -m py_compile experiments/base_workers/adapt.py experiments/base_workers/probe.py experiments/base_workers/compare.py experiments/base_workers/sample.py experiments/base_workers/analyze.py experiments/base_workers/upgrade.py experiments/base_workers/faults.py experiments/base_workers/recovery.py experiments/base_workers/identity.py experiments/base_workers/binding.py experiments/base_workers/rebuild.py experiments/base_workers/publication.py experiments/base_workers/ownership.py experiments/base_workers/transfer.py experiments/base_workers/scale.py experiments/base_workers/admission.py experiments/base_workers/admission_probe.py experiments/base_workers/admission_measure.py
 	python3 -m unittest discover -s experiments/base_workers -p 'test_*.py'
 	python3 -m py_compile tests/replication/probe.py

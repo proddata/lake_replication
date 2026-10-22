@@ -22,6 +22,12 @@ def git(*args):
 def main():
     if not (SOURCE / ".git").exists():
         raise RuntimeError("initialize upstream first: git submodule update --init vendor/pg_lake")
+    if git("rev-parse", "--is-shallow-repository") == "true":
+        raise RuntimeError(
+            "pg_lake history is shallow and cannot produce a self-contained bundle; "
+            "initialize the submodule with full history (Actions: fetch-depth: 0), "
+            "or explicitly run git -C vendor/pg_lake fetch --unshallow first"
+        )
     revision = sys.argv[1] if len(sys.argv) > 1 else git("rev-parse", "HEAD")
     if not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise RuntimeError("expected a full lowercase pg_lake commit SHA")
