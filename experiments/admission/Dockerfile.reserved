@@ -1,0 +1,16 @@
+ARG QUAL_IMAGE
+FROM ${QUAL_IMAGE}
+ARG RESERVED=1
+ARG BULK_ONLY=0
+USER root
+COPY extensions/lake_replication /experiment/extensions/lake_replication
+COPY migrations /experiment/migrations
+COPY experiments/admission/reserved.c.inc experiments/admission/reserved.sql /experiment/
+RUN sed -i '/#include "storage\/latch.h"/a #include "storage/lock.h"' /experiment/extensions/lake_replication/lake_replication.c \
+    && printf '\n#define LAKE_ADMISSION_RESERVED %s\n' "$RESERVED" >> /experiment/extensions/lake_replication/lake_replication.c \
+    && printf '#define LAKE_ADMISSION_BULK_ONLY %s\n' "$BULK_ONLY" >> /experiment/extensions/lake_replication/lake_replication.c \
+    && cat /experiment/reserved.c.inc >> /experiment/extensions/lake_replication/lake_replication.c \
+    && make -C /experiment/extensions/lake_replication clean all install \
+    && for version in 0.1.0-beta.2 0.1.0--0.1.0-beta.2 0.1.0-beta.1--0.1.0-beta.2; do \
+         cat /experiment/reserved.sql >> "$(pg_config --sharedir)/extension/lake_replication--$version.sql"; \
+       done

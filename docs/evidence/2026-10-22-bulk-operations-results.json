@@ -1,0 +1,1155 @@
+{
+  "accepted_operational_assertions": 39,
+  "assertion_selection": {
+    "063409": "checks[2:15] schema (13), checks[18:30] cancel (12); partial rebuild excluded",
+    "063904": "checks[2:16] rebuild (14)"
+  },
+  "cleanup_audit": {
+    "method": "docker ps -a and docker volume ls: no bulk-operations or reserved-admission fixture resources; unrelated lab resources preserved",
+    "private_case_cleanup_returncodes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "remaining_matching_containers": [],
+    "remaining_matching_volumes": []
+  },
+  "limitations": [
+    "Synthetic schema/rebuild fixtures use real Iceberg DDL with independent targets, not arbitrary same-target concurrency.",
+    "Deadlock test proves abort/retry behavior, not prevention.",
+    "Cancellation observes a logged COPY request after function start plus backend Extension wait; does not establish precise internal engine progress.",
+    "Capacity repeat is a single diagnostic, not a paired performance estimate or memory bound.",
+    "Five paired steady/catch-up cohorts, single-copy overhead, production migration, packaged qualification on both architectures and release soak remain pending."
+  ],
+  "runs": [
+    {
+      "accepted_cases": [],
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": false,
+            "expected": true,
+            "name": "queued schema timeout propagates as a retryable SQL error",
+            "passed": false
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_063209",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "cases": [
+        {
+          "case": "schema",
+          "cleanup_returncode": 0,
+          "error": "queued schema timeout propagates as a retryable SQL error: expected True, got False",
+          "status": "finding",
+          "timeout_observation": {
+            "error": "",
+            "response": "SET\npaused:destination ALTER failed: canceling statement due to lock timeout",
+            "returncode": 0,
+            "state": "paused:false"
+          }
+        }
+      ],
+      "checks": [
+        {
+          "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+          "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": true,
+          "name": "queued schema timeout propagates as a retryable SQL error",
+          "passed": false
+        }
+      ],
+      "excluded_cases": {
+        "schema": "Reproduced defect: transient admission timeout was swallowed and durably paused replication."
+      },
+      "image_id": "sha256:6b3f19486f7e1d5e3b0f7b9295bb23a9b24f2ad627010295e0328a2dc23d6d10",
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "3a6b3f3222396440f7006a511fe842e7a7b5141c5135ffc3ab9b46b9064c39d0",
+        "experiments/admission/README.md": "10ade02a0647906d4984817a145175b97b581954a1fb1b0eaef0c5bcab9f0a4b",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "3a334b1266bc1d93a79e1eb5415c249fbbd9a51f0f0c2fe06c94660381f7287e",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "8230613a672dec4deddb69e56a9c14483ae9360e2c2b44b59affef280107f7b6",
+        "experiments/admission/reserved.c.inc": "7f4d664da9114b73148d435d4a0181f1ee83709b2108f4721d056045d10e930b",
+        "experiments/admission/reserved.sql": "b85062b2e9955643e008eed34b7b04d22b5c35a70db6cd24916f932a89e026a4",
+        "experiments/admission/reserved_probe.py": "b964ef7385f83c0d4d289aef075a2b0e20f39420031b1bd78090a53c6ad5575f",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "tests/qualification/probe.py": "b4bafbcc02cca7e9ddb3306ce1def45f3477cebd11157f2de1d2474de7a365f5"
+      },
+      "log_sha256": {
+        "build.log": "19c216297966f9673c7e9d8424fb5bfcf443a6dea8b9cd1fd23b1770b6c1a1de",
+        "schema/compose.log": "f40925eb62be6b43ef9aa3c2b63ad0a647c824e120ed8ae6b3a77d665956db7d"
+      },
+      "parameters": {
+        "cases": [
+          "schema"
+        ],
+        "rows": 2000000
+      },
+      "path": ".qualification/qualification_20261022_063209_bulk_operations",
+      "raw_results_sha256": "d537f12d68a11474f3b7918bcd106ed440ee978b08f668dcaa3c3e2256d53d56",
+      "source_snapshot": ".qualification/qualification_20261022_063209_bulk_operations/sources",
+      "status": "completed_with_findings"
+    },
+    {
+      "accepted_cases": [
+        "schema",
+        "cancel"
+      ],
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued schema timeout propagates as a retryable SQL error",
+            "passed": true
+          },
+          {
+            "actual": "streaming:true",
+            "expected": "streaming:true",
+            "name": "resource timeout does not durably pause the subscription",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "timed-out DDL adds no column",
+            "passed": true
+          },
+          {
+            "actual": "ready",
+            "expected": "ready",
+            "name": "schema reconciliation succeeds after permit release",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "actual DDL relation-lock timeout propagates",
+            "passed": true
+          },
+          {
+            "actual": "streaming:true",
+            "expected": "streaming:true",
+            "name": "actual DDL contention does not durably pause metadata",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "failed DDL releases the admission permit",
+            "passed": true
+          },
+          {
+            "actual": "ready",
+            "expected": "ready",
+            "name": "DDL retry succeeds after conflicting reader leaves",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "schema lock-order victim propagates SQLSTATE 40P01",
+            "passed": true
+          },
+          {
+            "actual": "streaming:true",
+            "expected": "streaming:true",
+            "name": "deadlock abort preserves streaming metadata",
+            "passed": true
+          },
+          {
+            "actual": "ready",
+            "expected": "ready",
+            "name": "deadlock retry can perform the additive DDL",
+            "passed": true
+          },
+          {
+            "actual": "1:row-1:NULL,2:row-2:NULL",
+            "expected": "1:row-1:NULL,2:row-2:NULL",
+            "name": "successful schema retry preserves exact original rows",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "genuine incompatible source schema still pauses replication",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued rebuild cancellation propagates",
+            "passed": true
+          },
+          {
+            "actual": "paused",
+            "expected": "paused",
+            "name": "canceled rebuild preserves old subscription state",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "canceled rebuild records no promotion",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "copy cancellation observes a real engine write request",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "active copy backend accepts cancellation",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "canceled subscription wrapper drains",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "cancellation releases its bulk permit",
+            "passed": true
+          },
+          {
+            "actual": "true",
+            "expected": "true",
+            "name": "canceled copy preserves all zero checkpoints",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "canceled copy publishes no partial Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "false",
+            "expected": "false",
+            "name": "canceled native source slot remains inactive",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "native restart completes a fresh initial copy",
+            "passed": true
+          },
+          {
+            "actual": "2000000:2000000:1:2000000:true",
+            "expected": "2000000:2000000:1:2000000:true",
+            "name": "native copy recovery restores exact IDs and payloads",
+            "passed": true
+          },
+          {
+            "actual": "2000001",
+            "expected": "2000001",
+            "name": "recovered copy continues live replication",
+            "passed": true
+          },
+          {
+            "actual": "2026-10-22 06:37:43.158966+00",
+            "expected": "2026-10-22 06:37:43.158966+00",
+            "name": "copy cancellation preserves the PostgreSQL postmaster",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "recovered subscription drops its source slot",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_063409",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "cases": [
+        {
+          "case": "schema",
+          "cleanup_returncode": 0,
+          "deadlock_error": "psql exited: ERROR:  40P01: deadlock detected\nDETAIL:  Process 393 waits for ExclusiveLock on advisory lock [0,1280460112,2,1]; blocked by process 176.\nProcess 176 waits for ShareLock on transaction 813; blocked by process 393.\nHINT:  See server log for query details.\nCONTEXT:  SQL statement \"SELECT lake_replication.experiment_admit_engine(true)\"\nPL/pgSQL function reconcile_relation_schema(bigint,oid,bigint) line 107 at PERFORM\nLOCATION:  DeadLockReport, deadlock.c:1133\n",
+          "status": "passed",
+          "timeout_observation": {
+            "error": "ERROR:  canceling statement due to lock timeout\nCONTEXT:  SQL statement \"SELECT lake_replication.experiment_admit_engine(true)\"\nPL/pgSQL function reconcile_relation_schema(bigint,oid,bigint) line 107 at PERFORM",
+            "response": "SET",
+            "returncode": 3,
+            "state": "streaming:true"
+          }
+        },
+        {
+          "case": "rebuild",
+          "cleanup_returncode": 0,
+          "error": "",
+          "status": "error"
+        },
+        {
+          "case": "cancel",
+          "cleanup_returncode": 0,
+          "engine_write_observation": {
+            "began": 1792651080.020716,
+            "line_sha256": "19827e7a66cd05fbc8920c79c53987ae86d56bd176dd1a721e9c6f1c29a8777f",
+            "logged_epoch": 1792651082.944183,
+            "operation": "COPY",
+            "pid": 148,
+            "wait_event": "Extension",
+            "wait_event_type": "Extension"
+          },
+          "status": "passed"
+        }
+      ],
+      "checks": [
+        {
+          "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+          "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "queued schema timeout propagates as a retryable SQL error",
+          "passed": true
+        },
+        {
+          "actual": "streaming:true",
+          "expected": "streaming:true",
+          "name": "resource timeout does not durably pause the subscription",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "timed-out DDL adds no column",
+          "passed": true
+        },
+        {
+          "actual": "ready",
+          "expected": "ready",
+          "name": "schema reconciliation succeeds after permit release",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "actual DDL relation-lock timeout propagates",
+          "passed": true
+        },
+        {
+          "actual": "streaming:true",
+          "expected": "streaming:true",
+          "name": "actual DDL contention does not durably pause metadata",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "failed DDL releases the admission permit",
+          "passed": true
+        },
+        {
+          "actual": "ready",
+          "expected": "ready",
+          "name": "DDL retry succeeds after conflicting reader leaves",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "schema lock-order victim propagates SQLSTATE 40P01",
+          "passed": true
+        },
+        {
+          "actual": "streaming:true",
+          "expected": "streaming:true",
+          "name": "deadlock abort preserves streaming metadata",
+          "passed": true
+        },
+        {
+          "actual": "ready",
+          "expected": "ready",
+          "name": "deadlock retry can perform the additive DDL",
+          "passed": true
+        },
+        {
+          "actual": "1:row-1:NULL,2:row-2:NULL",
+          "expected": "1:row-1:NULL,2:row-2:NULL",
+          "name": "successful schema retry preserves exact original rows",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "genuine incompatible source schema still pauses replication",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "queued rebuild cancellation propagates",
+          "passed": true
+        },
+        {
+          "actual": "paused",
+          "expected": "paused",
+          "name": "canceled rebuild preserves old subscription state",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "canceled rebuild records no promotion",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "copy cancellation observes a real engine write request",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "active copy backend accepts cancellation",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "canceled subscription wrapper drains",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "cancellation releases its bulk permit",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "canceled copy preserves all zero checkpoints",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "canceled copy publishes no partial Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "false",
+          "expected": "false",
+          "name": "canceled native source slot remains inactive",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "native restart completes a fresh initial copy",
+          "passed": true
+        },
+        {
+          "actual": "2000000:2000000:1:2000000:true",
+          "expected": "2000000:2000000:1:2000000:true",
+          "name": "native copy recovery restores exact IDs and payloads",
+          "passed": true
+        },
+        {
+          "actual": "2000001",
+          "expected": "2000001",
+          "name": "recovered copy continues live replication",
+          "passed": true
+        },
+        {
+          "actual": "2026-10-22 06:37:43.158966+00",
+          "expected": "2026-10-22 06:37:43.158966+00",
+          "name": "copy cancellation preserves the PostgreSQL postmaster",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "recovered subscription drops its source slot",
+          "passed": true
+        }
+      ],
+      "excluded_cases": {
+        "rebuild": "Harness awaited the schema job while an earlier queued promotion held the permit in its inspection transaction. Excluded; terminated only idle test backend 337 and corrected queue ordering."
+      },
+      "image_id": "sha256:ddf2a8b27ea9caf70f20e25a04a6da2be1263be814f151a58cee185684691268",
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "3a6b3f3222396440f7006a511fe842e7a7b5141c5135ffc3ab9b46b9064c39d0",
+        "experiments/admission/README.md": "10ade02a0647906d4984817a145175b97b581954a1fb1b0eaef0c5bcab9f0a4b",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "3a334b1266bc1d93a79e1eb5415c249fbbd9a51f0f0c2fe06c94660381f7287e",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "2a4d0fcd4ee641308cf37cd2ffc1e1f6df489e2d6de3da624169fcccf1847711",
+        "experiments/admission/reserved.c.inc": "7f4d664da9114b73148d435d4a0181f1ee83709b2108f4721d056045d10e930b",
+        "experiments/admission/reserved.sql": "8708e7d21cac8f63d7acd911723b607c5bcceda2240756a40c01335ba070e08c",
+        "experiments/admission/reserved_probe.py": "b964ef7385f83c0d4d289aef075a2b0e20f39420031b1bd78090a53c6ad5575f",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "tests/qualification/probe.py": "b4bafbcc02cca7e9ddb3306ce1def45f3477cebd11157f2de1d2474de7a365f5"
+      },
+      "log_sha256": {
+        "build.log": "14579b91eb89a4d808140cbefc71417ba7d7247f5cfcc1ec75dd3238cd213462",
+        "cancel/compose.log": "a9c6f72db0e34a735638022710f8671765aaded62a2af307cdd07c58774179e7",
+        "rebuild/compose.log": "7f6c09a1294666903415ecfc3e9db22c818f00471e875daf749ed73f6462b29c",
+        "schema/compose.log": "05368e4d1783b0a6ffbf35aea06b036a3b1e1d5bc1043d62868a07a3ca25aa40"
+      },
+      "parameters": {
+        "cases": [
+          "schema",
+          "rebuild",
+          "cancel"
+        ],
+        "rows": 2000000
+      },
+      "path": ".qualification/qualification_20261022_063409_bulk_operations",
+      "raw_results_sha256": "db7ee129ab7c8dea09c0df0081f304c1691afa254151b3458ded048fcf50e387",
+      "source_snapshot": ".qualification/qualification_20261022_063409_bulk_operations/sources",
+      "status": "completed_with_findings"
+    },
+    {
+      "accepted_cases": [
+        "rebuild"
+      ],
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued rebuild cancellation propagates",
+            "passed": true
+          },
+          {
+            "actual": "paused",
+            "expected": "paused",
+            "name": "canceled rebuild preserves old subscription state",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "canceled rebuild records no promotion",
+            "passed": true
+          },
+          {
+            "actual": [
+              "ready"
+            ],
+            "expected": [
+              "ready"
+            ],
+            "name": "concurrent independent schema operation completes",
+            "passed": true
+          },
+          {
+            "actual": [
+              "1"
+            ],
+            "expected": [
+              "1"
+            ],
+            "name": "concurrent rebuild performs one real rename group",
+            "passed": true
+          },
+          {
+            "actual": [
+              "3"
+            ],
+            "expected": [
+              "3"
+            ],
+            "name": "rebuilt canonical rows are visible in owning transaction",
+            "passed": true
+          },
+          {
+            "actual": "2",
+            "expected": "2",
+            "name": "rebuild rollback restores original table contents",
+            "passed": true
+          },
+          {
+            "actual": "3",
+            "expected": "3",
+            "name": "rebuild rollback preserves shadow table contents",
+            "passed": true
+          },
+          {
+            "actual": "t",
+            "expected": "t",
+            "name": "rebuild rollback removes backup rename",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "rebuild rollback removes promotion metadata",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "rebuild retry commits exactly one promotion",
+            "passed": true
+          },
+          {
+            "actual": "3:2",
+            "expected": "3:2",
+            "name": "promotion commits canonical and retained backup data",
+            "passed": true
+          },
+          {
+            "actual": "disabled:streaming",
+            "expected": "disabled:streaming",
+            "name": "promotion disables the old subscription only",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "independent schema changes survive rebuild rollback",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_063904",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "cases": [
+        {
+          "case": "rebuild",
+          "cleanup_returncode": 0,
+          "status": "passed"
+        }
+      ],
+      "checks": [
+        {
+          "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+          "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "queued rebuild cancellation propagates",
+          "passed": true
+        },
+        {
+          "actual": "paused",
+          "expected": "paused",
+          "name": "canceled rebuild preserves old subscription state",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "canceled rebuild records no promotion",
+          "passed": true
+        },
+        {
+          "actual": [
+            "ready"
+          ],
+          "expected": [
+            "ready"
+          ],
+          "name": "concurrent independent schema operation completes",
+          "passed": true
+        },
+        {
+          "actual": [
+            "1"
+          ],
+          "expected": [
+            "1"
+          ],
+          "name": "concurrent rebuild performs one real rename group",
+          "passed": true
+        },
+        {
+          "actual": [
+            "3"
+          ],
+          "expected": [
+            "3"
+          ],
+          "name": "rebuilt canonical rows are visible in owning transaction",
+          "passed": true
+        },
+        {
+          "actual": "2",
+          "expected": "2",
+          "name": "rebuild rollback restores original table contents",
+          "passed": true
+        },
+        {
+          "actual": "3",
+          "expected": "3",
+          "name": "rebuild rollback preserves shadow table contents",
+          "passed": true
+        },
+        {
+          "actual": "t",
+          "expected": "t",
+          "name": "rebuild rollback removes backup rename",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "rebuild rollback removes promotion metadata",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "rebuild retry commits exactly one promotion",
+          "passed": true
+        },
+        {
+          "actual": "3:2",
+          "expected": "3:2",
+          "name": "promotion commits canonical and retained backup data",
+          "passed": true
+        },
+        {
+          "actual": "disabled:streaming",
+          "expected": "disabled:streaming",
+          "name": "promotion disables the old subscription only",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "independent schema changes survive rebuild rollback",
+          "passed": true
+        }
+      ],
+      "excluded_cases": {},
+      "image_id": "sha256:ddf2a8b27ea9caf70f20e25a04a6da2be1263be814f151a58cee185684691268",
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "3a6b3f3222396440f7006a511fe842e7a7b5141c5135ffc3ab9b46b9064c39d0",
+        "experiments/admission/README.md": "10ade02a0647906d4984817a145175b97b581954a1fb1b0eaef0c5bcab9f0a4b",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "3a334b1266bc1d93a79e1eb5415c249fbbd9a51f0f0c2fe06c94660381f7287e",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "bc406cec7ade3c6b5e27316f5f15d26667d9cc93bb088944a52ac0a6d0c57992",
+        "experiments/admission/reserved.c.inc": "7f4d664da9114b73148d435d4a0181f1ee83709b2108f4721d056045d10e930b",
+        "experiments/admission/reserved.sql": "8708e7d21cac8f63d7acd911723b607c5bcceda2240756a40c01335ba070e08c",
+        "experiments/admission/reserved_probe.py": "b964ef7385f83c0d4d289aef075a2b0e20f39420031b1bd78090a53c6ad5575f",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "tests/qualification/probe.py": "b4bafbcc02cca7e9ddb3306ce1def45f3477cebd11157f2de1d2474de7a365f5"
+      },
+      "log_sha256": {
+        "build.log": "64f3195c4b07128206faecb74c71003dcc0fb5297ff0bf09fc9f335fc6b34191",
+        "rebuild/compose.log": "535fb2d26d47379cac5916f1862b4723f3dd8fb73504732b5c35517a5c3ccb39"
+      },
+      "parameters": {
+        "cases": [
+          "rebuild"
+        ],
+        "rows": 2000000
+      },
+      "path": ".qualification/qualification_20261022_063904_bulk_operations",
+      "raw_results_sha256": "a2a94a10806e3be8d04ce138d1725c21109c7af4983cf8e6461c6f606bd927f8",
+      "source_snapshot": ".qualification/qualification_20261022_063904_bulk_operations/sources",
+      "status": "passed"
+    },
+    {
+      "accepted_cases": [
+        "fairness"
+      ],
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_1 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_2 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "analytics exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 0 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 3 exact final Iceberg rows",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_194711",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "cases": [
+        {
+          "bulk_copies": 4,
+          "case": "fairness",
+          "checks": {
+            "all_stream_targets_pass": true,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "publication_overlap_observed": true,
+            "waiting_observed": true
+          },
+          "copy_commit_epoch": 1792698528.776979,
+          "copy_elapsed_seconds": 35.046278953552246,
+          "copy_rows": 2000000,
+          "copy_start_epoch": 1792698493.7307,
+          "engine_oom": false,
+          "image": "lake-replication-engine-bulk_only:qualification_20261022_194711",
+          "limits": {
+            "catchup_seconds": 5,
+            "copy_timeout_seconds": 180,
+            "max_publication_gap_seconds": 5,
+            "min_commits_during_copy": 5,
+            "p95_publication_ms": 2000
+          },
+          "log_sha256": "2ae9662b9a6aa2aa75909e83667bad77c26cdbb16ed94d6f61b67793e4971c2a",
+          "max_active_copy_publications": 4,
+          "observer_interval_ms": 500,
+          "offered_interval_ms": 500,
+          "status": "passed",
+          "stream_rows_per_transaction": 20,
+          "stream_transactions": 120,
+          "streams": [
+            {
+              "catchup_seconds": 0.10334992408752441,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 70,
+              "database": "analytics",
+              "max_publication_gap_seconds": 0.6976988315582275,
+              "p95_publication_ms": 340.1479721069336,
+              "source_max_schedule_lateness_seconds": 0.005192915996303782
+            },
+            {
+              "catchup_seconds": 0.09640002250671387,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 70,
+              "database": "fair_stream_1",
+              "max_publication_gap_seconds": 0.6872949600219727,
+              "p95_publication_ms": 318.483829498291,
+              "source_max_schedule_lateness_seconds": 0.17044558300403878
+            },
+            {
+              "catchup_seconds": 0.09037590026855469,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 70,
+              "database": "fair_stream_2",
+              "max_publication_gap_seconds": 0.6874439716339111,
+              "p95_publication_ms": 306.79798126220703,
+              "source_max_schedule_lateness_seconds": 0.17557416600175202
+            }
+          ],
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "unexpected_pg_crash": false,
+          "variant": "bulk_only"
+        }
+      ],
+      "checks": [],
+      "excluded_cases": {},
+      "image_id": "sha256:ddf2a8b27ea9caf70f20e25a04a6da2be1263be814f151a58cee185684691268",
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "3a6b3f3222396440f7006a511fe842e7a7b5141c5135ffc3ab9b46b9064c39d0",
+        "experiments/admission/README.md": "10ade02a0647906d4984817a145175b97b581954a1fb1b0eaef0c5bcab9f0a4b",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "3a334b1266bc1d93a79e1eb5415c249fbbd9a51f0f0c2fe06c94660381f7287e",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "bc406cec7ade3c6b5e27316f5f15d26667d9cc93bb088944a52ac0a6d0c57992",
+        "experiments/admission/reserved.c.inc": "7f4d664da9114b73148d435d4a0181f1ee83709b2108f4721d056045d10e930b",
+        "experiments/admission/reserved.sql": "8708e7d21cac8f63d7acd911723b607c5bcceda2240756a40c01335ba070e08c",
+        "experiments/admission/reserved_probe.py": "b964ef7385f83c0d4d289aef075a2b0e20f39420031b1bd78090a53c6ad5575f",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759"
+      },
+      "log_sha256": {
+        "build-bulk_only.log": "3fae060714fc643e6978fda54a9209c4ec132c5bb2a87ff5abbc477b062c6cb6",
+        "bulk_only-fairness/compose.log": "2ae9662b9a6aa2aa75909e83667bad77c26cdbb16ed94d6f61b67793e4971c2a"
+      },
+      "parameters": {
+        "bulk_copies": 4,
+        "cases": [
+          "fairness"
+        ],
+        "copy_rows": 2000000,
+        "stream_transactions": 120,
+        "variants": [
+          "bulk_only"
+        ]
+      },
+      "path": ".qualification/qualification_20261022_194711_reserved_admission",
+      "raw_results_sha256": "e4b31b765e8a934a3d6243d0e179076b24a9c3866695a747bb56a5615d7be18c",
+      "source_snapshot": ".qualification/qualification_20261022_194711_reserved_admission/sources",
+      "status": "passed"
+    }
+  ],
+  "scope": "Local arm64 experimental bulk-only policy operational qualification; production sources unchanged; not release qualification.",
+  "status": "accepted_cases_passed_with_prior_defect_and_harness_attempt_retained",
+  "verification": {
+    "make_check": "passed after final code changes; /tmp/lake-bulk-operations-check.log",
+    "make_check_log_sha256": "f5c36e571650759c9584a36014ae553d98e4ebad0de11a27ea302192f4fca9b7"
+  }
+}

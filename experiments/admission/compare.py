@@ -76,7 +76,7 @@ class Psql:
 
 def resources(service, launcher_pids=''):
     return json.loads(q.compose('exec', '-T', '--user', 'postgres', service, 'python3',
-                               '/prototype/experiment/sample.py', launcher_pids).stdout)
+                               '-c', Path(__file__).with_name('sample.py').read_text(), launcher_pids).stdout)
 
 
 def snapshot(client):

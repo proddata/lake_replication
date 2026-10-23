@@ -104,8 +104,11 @@ signed release artifacts.
 ## Remaining work
 
 Admission scheduling is deliberately separate: no blanket engine permit or
-wrapper pool has been adopted. The earlier eight-second copy-related stream gaps
-and high-concurrency resource findings still require an execution-policy change.
+wrapper pool has been adopted. The [current-runtime admission recheck](engine-admission-results.md)
+passes the original restart and coexistence workloads without admission. The
+historical OOM did not reproduce. A follow-up four-copy test exposes streaming
+latency pressure; bulk-only admission passes its diagnostic and is the candidate
+to qualify before production adoption.
 Local origin checks are not a distributed lease, storage fencing, support for
 physical takeover or authorization to share Iceberg objects between writers.
 

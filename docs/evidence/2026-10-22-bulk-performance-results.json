@@ -1,0 +1,4232 @@
+{
+  "analysis": {
+    "all_requested_gates_pass": true,
+    "production_adoption_qualified": false,
+    "profiles": {
+      "catchup": {
+        "p95": {
+          "assessment": "within_proposed_margin_in_this_cohort",
+          "bootstrap_median_95_interval": [
+            0.988454427971028,
+            1.0086344836527525
+          ],
+          "bootstrap_samples": 3125,
+          "max_ratio": 1.0086344836527525,
+          "median_ratio": 1.001711512112623,
+          "method": "exact resampling of whole pairs; descriptive interval conditional on these local runs",
+          "min_ratio": 0.988454427971028,
+          "paired_ratios": [
+            0.9911532057195718,
+            1.001711512112623,
+            1.0023502309324888,
+            0.988454427971028,
+            1.0086344836527525
+          ],
+          "pairs": 5,
+          "proposed_ratio_limit": 1.1
+        },
+        "throughput": {
+          "assessment": "within_proposed_margin_in_this_cohort",
+          "bootstrap_median_95_interval": [
+            0.9947803207338661,
+            1.0084594706431715
+          ],
+          "bootstrap_samples": 3125,
+          "max_ratio": 1.0084594706431715,
+          "median_ratio": 1.0002159060807134,
+          "method": "exact resampling of whole pairs; descriptive interval conditional on these local runs",
+          "min_ratio": 0.9947803207338661,
+          "paired_ratios": [
+            1.0052637879102497,
+            1.0002159060807134,
+            0.9976847747896816,
+            1.0084594706431715,
+            0.9947803207338661
+          ],
+          "pairs": 5,
+          "proposed_ratio_limit": 0.95
+        }
+      },
+      "single_copy": {
+        "absolute_checks_all_pass": true,
+        "copy_duration": {
+          "assessment": "within_proposed_margin_in_this_cohort",
+          "bootstrap_median_95_interval": [
+            0.9763964389682247,
+            1.0382519458956452
+          ],
+          "bootstrap_samples": 3125,
+          "max_ratio": 1.0382519458956452,
+          "median_ratio": 0.9921383778143058,
+          "method": "exact resampling of whole pairs; descriptive interval conditional on these local runs",
+          "min_ratio": 0.9763964389682247,
+          "paired_ratios": [
+            1.0382519458956452,
+            0.9921383778143058,
+            0.9887926734881473,
+            0.9763964389682247,
+            1.0039678400935161
+          ],
+          "pairs": 5,
+          "proposed_ratio_limit": 1.1
+        }
+      },
+      "steady": {
+        "absolute_checks": [
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 1,
+            "source_schedule_within_one_interval": true,
+            "variant": "unbounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 1,
+            "source_schedule_within_one_interval": true,
+            "variant": "bounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 2,
+            "source_schedule_within_one_interval": true,
+            "variant": "bounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 2,
+            "source_schedule_within_one_interval": true,
+            "variant": "unbounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 3,
+            "source_schedule_within_one_interval": true,
+            "variant": "unbounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 3,
+            "source_schedule_within_one_interval": true,
+            "variant": "bounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 4,
+            "source_schedule_within_one_interval": true,
+            "variant": "bounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 4,
+            "source_schedule_within_one_interval": true,
+            "variant": "unbounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 5,
+            "source_schedule_within_one_interval": true,
+            "variant": "unbounded"
+          },
+          {
+            "backlog_at_most_four": true,
+            "catchup_within_two_seconds": true,
+            "p95_below_two_seconds": true,
+            "repetition": 5,
+            "source_schedule_within_one_interval": true,
+            "variant": "bounded"
+          }
+        ],
+        "absolute_checks_all_pass": true,
+        "p95": {
+          "assessment": "within_proposed_margin_in_this_cohort",
+          "bootstrap_median_95_interval": [
+            1.0370655148025036,
+            1.0609690025799907
+          ],
+          "bootstrap_samples": 3125,
+          "max_ratio": 1.0609690025799907,
+          "median_ratio": 1.0389322290462712,
+          "method": "exact resampling of whole pairs; descriptive interval conditional on these local runs",
+          "min_ratio": 1.0370655148025036,
+          "paired_ratios": [
+            1.0389322290462712,
+            1.0370655148025036,
+            1.0387603213130023,
+            1.0479060399275608,
+            1.0609690025799907
+          ],
+          "pairs": 5,
+          "proposed_ratio_limit": 1.1
+        },
+        "throughput": {
+          "assessment": "offered_load_limited",
+          "bootstrap_median_95_interval": [
+            0.9983943222503495,
+            1.0010736157133506
+          ],
+          "bootstrap_samples": 3125,
+          "max_ratio": 1.0010736157133506,
+          "median_ratio": 1.000019875342857,
+          "method": "exact resampling of whole pairs; descriptive interval conditional on these local runs",
+          "min_ratio": 0.9983943222503495,
+          "paired_ratios": [
+            0.9983958493692375,
+            1.000135237892858,
+            0.9983943222503495,
+            1.000019875342857,
+            1.0010736157133506
+          ],
+          "pairs": 5
+        }
+      }
+    },
+    "scope": "Local paired cohort only; packaging and release soak remain required."
+  },
+  "archive_provenance": {
+    "architecture": "arm64",
+    "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+    "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+    "checks": [
+      {
+        "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      }
+    ],
+    "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+    "run": "qualification_20261022_203158",
+    "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+  },
+  "cases": [
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.223026461000018,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 1,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.20638925000093877,
+        "first_quarter_p95_observed_commit_lag_ms": 204.74004745483398,
+        "first_quarter_p95_publication_commit_lag_ms": 119.9181079864502,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 1,
+          "backlog_transactions_upper": 1,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701170.975852,
+          "query_finished_seconds": 4.512057374988217,
+          "query_started_seconds": 4.508601625013398,
+          "statement_epoch": 1792701170.975231
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 212.0819091796875,
+        "last_quarter_p95_publication_commit_lag_ms": 168.26200485229492,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.614064916007919,
+          "upper": 4.7198212500079535
+        },
+        "observed_commit_lag_ms": {
+          "p50": 173.2168197631836,
+          "p95": 249.23181533813477,
+          "p99": 249.23181533813477
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 46,
+        "observer_query_ms": {
+          "p50": 1.7292500124312937,
+          "p95": 4.897542006801814
+        },
+        "observer_query_total_seconds": 0.10156149708200246,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 142.15683937072754,
+          "upper": 249.23181533813477
+        },
+        "publication_catchup_seconds": 0.16315698623657227,
+        "publication_commit_lag_ms": {
+          "p50": 119.9181079864502,
+          "p95": 168.26200485229492,
+          "p99": 168.26200485229492
+        },
+        "publication_rows_per_second": 214.0960876699239,
+        "rows": 1000,
+        "rows_per_second_until_observed": 211.86665301496492,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 211.87243054984654,
+          "upper": 216.72863694020114
+        },
+        "source_elapsed_seconds": 4.513560708001023,
+        "source_phase_start_epoch": 1792701166.464688,
+        "source_write_rows_per_second": 221.55456959454133,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.719949958001962
+      },
+      "workload": {
+        "catchup_seconds": 0.1334080829983577,
+        "first_quarter_p95_observed_commit_lag_ms": 271.88992500305176,
+        "first_quarter_p95_publication_commit_lag_ms": 194.49996948242188,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792701236.204394,
+          "query_finished_seconds": 59.42975245800335,
+          "query_started_seconds": 59.4280289580056,
+          "statement_epoch": 1792701236.204104
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 269.8678970336914,
+        "last_quarter_p95_publication_commit_lag_ms": 204.06293869018555,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.5347507080005,
+          "upper": 59.64052312498097
+        },
+        "observed_commit_lag_ms": {
+          "p50": 209.05518531799316,
+          "p95": 318.2408809661865,
+          "p99": 332.46898651123047
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 570,
+        "observer_query_ms": {
+          "p50": 1.2811659835278988,
+          "p95": 4.201250005280599
+        },
+        "observer_query_total_seconds": 1.0093623238499276,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 215.05403518676758,
+          "upper": 318.2408809661865
+        },
+        "publication_catchup_seconds": 0.08965396881103516,
+        "publication_commit_lag_ms": {
+          "p50": 164.98899459838867,
+          "p95": 241.9261932373047,
+          "p99": 267.89093017578125
+        },
+        "publication_rows_per_second": 201.36319499613361,
+        "rows": 12000,
+        "rows_per_second_until_observed": 201.2045049001336,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 201.20547861146596,
+          "upper": 201.5629503322569
+        },
+        "source_elapsed_seconds": 59.50740366699756,
+        "source_phase_start_epoch": 1792701176.775334,
+        "source_write_rows_per_second": 201.65557998718614,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.64081174999592
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.233962253000016,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 1,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.23143437501857989,
+        "first_quarter_p95_observed_commit_lag_ms": 212.52202987670898,
+        "first_quarter_p95_publication_commit_lag_ms": 131.20198249816895,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701301.16611,
+          "query_finished_seconds": 4.42320458299946,
+          "query_started_seconds": 4.420493916986743,
+          "statement_epoch": 1792701301.165448
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 236.24110221862793,
+        "last_quarter_p95_publication_commit_lag_ms": 180.3898811340332,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.634940749994712,
+          "upper": 4.740144457988208
+        },
+        "observed_commit_lag_ms": {
+          "p50": 212.52202987670898,
+          "p95": 276.0598659515381,
+          "p99": 276.0598659515381
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 46,
+        "observer_query_ms": {
+          "p50": 1.6032499843277037,
+          "p95": 3.866082988679409
+        },
+        "observer_query_total_seconds": 0.09140833109267987,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 169.1899299621582,
+          "upper": 276.0598659515381
+        },
+        "publication_catchup_seconds": 0.1803898811340332,
+        "publication_commit_lag_ms": {
+          "p50": 154.56914901733398,
+          "p95": 189.74995613098145,
+          "p99": 189.74995613098145
+        },
+        "publication_rows_per_second": 213.48686171151422,
+        "rows": 1000,
+        "rows_per_second_until_observed": 210.95508755628606,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 210.96403471729124,
+          "upper": 215.75248831414746
+        },
+        "source_elapsed_seconds": 4.50891112498357,
+        "source_phase_start_epoch": 1792701296.743384,
+        "source_write_rows_per_second": 221.78303636526968,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.7403455000021495
+      },
+      "workload": {
+        "catchup_seconds": 0.22590270900400355,
+        "first_quarter_p95_observed_commit_lag_ms": 294.6619987487793,
+        "first_quarter_p95_publication_commit_lag_ms": 214.68400955200195,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792701366.545071,
+          "query_finished_seconds": 59.42771362498752,
+          "query_started_seconds": 59.42562316599651,
+          "statement_epoch": 1792701366.544564
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 253.05914878845215,
+        "last_quarter_p95_publication_commit_lag_ms": 196.81501388549805,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.638250957999844,
+          "upper": 59.7437353329733
+        },
+        "observed_commit_lag_ms": {
+          "p50": 224.98703002929688,
+          "p95": 325.14309883117676,
+          "p99": 345.7670211791992
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 570,
+        "observer_query_ms": {
+          "p50": 1.5704160032328218,
+          "p95": 3.6736670008394867
+        },
+        "observer_query_total_seconds": 1.0674803107394837,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 221.4350700378418,
+          "upper": 325.14309883117676
+        },
+        "publication_catchup_seconds": 0.17926311492919922,
+        "publication_commit_lag_ms": {
+          "p50": 178.50112915039062,
+          "p95": 251.3449192047119,
+          "p99": 272.9470729827881
+        },
+        "publication_rows_per_second": 201.04017809986823,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.85724953505866,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.85787962737328,
+          "upper": 201.2131443702295
+        },
+        "source_elapsed_seconds": 59.51802004099591,
+        "source_phase_start_epoch": 1792701307.116747,
+        "source_write_rows_per_second": 201.61961019090387,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.74392274999991
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.224804960000029,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 2,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.10589649999747053,
+        "first_quarter_p95_observed_commit_lag_ms": 118.87598037719727,
+        "first_quarter_p95_publication_commit_lag_ms": 99.59793090820312,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 1,
+          "backlog_transactions_upper": 1,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701429.234232,
+          "query_finished_seconds": 4.518708583025727,
+          "query_started_seconds": 4.516002208023565,
+          "statement_epoch": 1792701429.233892
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 189.67008590698242,
+        "last_quarter_p95_publication_commit_lag_ms": 125.93197822570801,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.516002208023565,
+          "upper": 4.624541291006608
+        },
+        "observed_commit_lag_ms": {
+          "p50": 169.57592964172363,
+          "p95": 249.7880458831787,
+          "p99": 249.7880458831787
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 45,
+        "observer_query_ms": {
+          "p50": 1.6423329943791032,
+          "p95": 3.747790993656963
+        },
+        "observer_query_total_seconds": 0.08738962304778397,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 143.25308799743652,
+          "upper": 249.7880458831787
+        },
+        "publication_catchup_seconds": 0.10790681838989258,
+        "publication_commit_lag_ms": {
+          "p50": 123.01898002624512,
+          "p95": 186.39707565307617,
+          "p99": 186.39707565307617
+        },
+        "publication_rows_per_second": 216.5969172550267,
+        "rows": 1000,
+        "rows_per_second_until_observed": 216.2300997774624,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 216.2376627374287,
+          "upper": 221.43478987306597
+        },
+        "source_elapsed_seconds": 4.518806541018421,
+        "source_phase_start_epoch": 1792701424.716083,
+        "source_write_rows_per_second": 221.29736932146383,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.624703041015891
+      },
+      "workload": {
+        "catchup_seconds": 0.23836741599370725,
+        "first_quarter_p95_observed_commit_lag_ms": 270.8609104156494,
+        "first_quarter_p95_publication_commit_lag_ms": 195.54495811462402,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792701494.380819,
+          "query_finished_seconds": 59.432085917011136,
+          "query_started_seconds": 59.42912795901066,
+          "statement_epoch": 1792701494.380291
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 275.35200119018555,
+        "last_quarter_p95_publication_commit_lag_ms": 197.86596298217773,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.64122795901494,
+          "upper": 59.74845375001314
+        },
+        "observed_commit_lag_ms": {
+          "p50": 228.16205024719238,
+          "p95": 321.5749263763428,
+          "p99": 360.1498603820801
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 571,
+        "observer_query_ms": {
+          "p50": 1.5285419940482825,
+          "p95": 3.789583017351106
+        },
+        "observer_query_total_seconds": 1.0319873006665148,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 217.17309951782227,
+          "upper": 321.5749263763428
+        },
+        "publication_catchup_seconds": 0.19466805458068848,
+        "publication_commit_lag_ms": {
+          "p50": 175.69398880004883,
+          "p95": 260.79392433166504,
+          "p99": 291.9480800628662
+        },
+        "publication_rows_per_second": 200.99648662616843,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.84110581435084,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.84201760614366,
+          "upper": 201.20310078535474
+        },
+        "source_elapsed_seconds": 59.51035758401849,
+        "source_phase_start_epoch": 1792701434.946059,
+        "source_write_rows_per_second": 201.6455704044131,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.7487250000122
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.24884866900004,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 2,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.2337872500065714,
+        "first_quarter_p95_observed_commit_lag_ms": 228.1210422515869,
+        "first_quarter_p95_publication_commit_lag_ms": 159.7268581390381,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701537.539688,
+          "query_finished_seconds": 4.43368308400386,
+          "query_started_seconds": 4.43053595899255,
+          "statement_epoch": 1792701537.538938
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 241.2741184234619,
+        "last_quarter_p95_publication_commit_lag_ms": 163.8507843017578,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.642642042017542,
+          "upper": 4.7488632920139935
+        },
+        "observed_commit_lag_ms": {
+          "p50": 207.62395858764648,
+          "p95": 265.28382301330566,
+          "p99": 265.28382301330566
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 46,
+        "observer_query_ms": {
+          "p50": 1.6688329924363643,
+          "p95": 4.0585839888080955
+        },
+        "observer_query_total_seconds": 0.10070970602100715,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 159.51204299926758,
+          "upper": 265.28382301330566
+        },
+        "publication_catchup_seconds": 0.15286707878112793,
+        "publication_commit_lag_ms": {
+          "p50": 152.86707878112793,
+          "p95": 179.78382110595703,
+          "p99": 179.78382110595703
+        },
+        "publication_rows_per_second": 214.56750464875353,
+        "rows": 1000,
+        "rows_per_second_until_observed": 210.57010142545164,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 210.57670825809345,
+          "upper": 215.39459448944126
+        },
+        "source_elapsed_seconds": 4.515225042006932,
+        "source_phase_start_epoch": 1792701533.106528,
+        "source_write_rows_per_second": 221.47290349796583,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.749012292013504
+      },
+      "workload": {
+        "catchup_seconds": 0.23179391701705754,
+        "first_quarter_p95_observed_commit_lag_ms": 283.22911262512207,
+        "first_quarter_p95_publication_commit_lag_ms": 209.61713790893555,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792701602.898619,
+          "query_finished_seconds": 59.42856650002068,
+          "query_started_seconds": 59.426808000018355,
+          "statement_epoch": 1792701602.898289
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 266.10803604125977,
+        "last_quarter_p95_publication_commit_lag_ms": 204.01692390441895,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.637476167001296,
+          "upper": 59.74558258400066
+        },
+        "observed_commit_lag_ms": {
+          "p50": 224.6870994567871,
+          "p95": 324.5220184326172,
+          "p99": 352.0090579986572
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 569,
+        "observer_query_ms": {
+          "p50": 1.4804160164203495,
+          "p95": 3.69783301721327
+        },
+        "observer_query_total_seconds": 1.0155093426292296,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 217.18215942382812,
+          "upper": 324.5220184326172
+        },
+        "publication_catchup_seconds": 0.2053840160369873,
+        "publication_commit_lag_ms": {
+          "p50": 179.0320873260498,
+          "p95": 251.47294998168945,
+          "p99": 273.6859321594238
+        },
+        "publication_rows_per_second": 200.9693079604307,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.85125223942737,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.8516693787081,
+          "upper": 201.21575846698656
+        },
+        "source_elapsed_seconds": 59.5139127500006,
+        "source_phase_start_epoch": 1792701543.469648,
+        "source_write_rows_per_second": 201.6335247592989,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.74570666701766
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.230755127999942,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 3,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.1329163329792209,
+        "first_quarter_p95_observed_commit_lag_ms": 208.30011367797852,
+        "first_quarter_p95_publication_commit_lag_ms": 130.50222396850586,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701647.995718,
+          "query_finished_seconds": 4.434189125022385,
+          "query_started_seconds": 4.430639666010393,
+          "statement_epoch": 1792701647.994896
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 211.8380069732666,
+        "last_quarter_p95_publication_commit_lag_ms": 131.09397888183594,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.537298041017493,
+          "upper": 4.6424439160036854
+        },
+        "observed_commit_lag_ms": {
+          "p50": 165.41099548339844,
+          "p95": 214.41888809204102,
+          "p99": 214.41888809204102
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 45,
+        "observer_query_ms": {
+          "p50": 1.6872079868335277,
+          "p95": 3.8469999853987247
+        },
+        "observer_query_total_seconds": 0.09757024902501144,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 108.24799537658691,
+          "upper": 214.41888809204102
+        },
+        "publication_catchup_seconds": 0.12974190711975098,
+        "publication_commit_lag_ms": {
+          "p50": 130.50222396850586,
+          "p95": 169.3270206451416,
+          "p99": 169.3270206451416
+        },
+        "publication_rows_per_second": 215.7177069851418,
+        "rows": 1000,
+        "rows_per_second_until_observed": 215.39388506943723,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 215.4037869047261,
+          "upper": 220.39548448436267
+        },
+        "source_elapsed_seconds": 4.50974100001622,
+        "source_phase_start_epoch": 1792701643.562203,
+        "source_write_rows_per_second": 221.74222422006127,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.642657332995441
+      },
+      "workload": {
+        "catchup_seconds": 0.20824079200974666,
+        "first_quarter_p95_observed_commit_lag_ms": 273.5629081726074,
+        "first_quarter_p95_publication_commit_lag_ms": 215.3451442718506,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792701713.200634,
+          "query_finished_seconds": 59.414435166021576,
+          "query_started_seconds": 59.41109450001386,
+          "statement_epoch": 1792701713.199844
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 277.04310417175293,
+        "last_quarter_p95_publication_commit_lag_ms": 210.31808853149414,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.62433466600487,
+          "upper": 59.732070708007086
+        },
+        "observed_commit_lag_ms": {
+          "p50": 211.81607246398926,
+          "p95": 325.18482208251953,
+          "p99": 339.4579887390137
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 569,
+        "observer_query_ms": {
+          "p50": 1.502125000115484,
+          "p95": 3.798666992224753
+        },
+        "observer_query_total_seconds": 1.02375379044679,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 218.15896034240723,
+          "upper": 325.18482208251953
+        },
+        "publication_catchup_seconds": 0.12663793563842773,
+        "publication_commit_lag_ms": {
+          "p50": 161.40508651733398,
+          "p95": 248.8119602203369,
+          "p99": 265.11406898498535
+        },
+        "publication_rows_per_second": 201.23151011147232,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.89675386270804,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.89710364572042,
+          "upper": 201.26010742459258
+        },
+        "source_elapsed_seconds": 59.52393391600344,
+        "source_phase_start_epoch": 1792701653.787405,
+        "source_write_rows_per_second": 201.59957869944668,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.73217470801319
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.237326002000032,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 3,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.2147388330195099,
+        "first_quarter_p95_observed_commit_lag_ms": 235.46981811523438,
+        "first_quarter_p95_publication_commit_lag_ms": 169.58189010620117,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701754.353922,
+          "query_finished_seconds": 4.506792291009333,
+          "query_started_seconds": 4.5031885000062175,
+          "statement_epoch": 1792701754.353062
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 217.8628444671631,
+        "last_quarter_p95_publication_commit_lag_ms": 170.97187042236328,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.614177624986041,
+          "upper": 4.728610624995781
+        },
+        "observed_commit_lag_ms": {
+          "p50": 168.08104515075684,
+          "p95": 272.71008491516113,
+          "p99": 272.71008491516113
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 45,
+        "observer_query_ms": {
+          "p50": 1.6627500008326024,
+          "p95": 3.612333006458357
+        },
+        "observer_query_total_seconds": 0.09075762407155707,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 167.64497756958008,
+          "upper": 272.71008491516113
+        },
+        "publication_catchup_seconds": 0.17097187042236328,
+        "publication_commit_lag_ms": {
+          "p50": 130.3398609161377,
+          "p95": 184.47208404541016,
+          "p99": 184.47208404541016
+        },
+        "publication_rows_per_second": 213.6038799957099,
+        "rows": 1000,
+        "rows_per_second_until_observed": 211.4698572069649,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 211.47860953361797,
+          "upper": 216.72334298206067
+        },
+        "source_elapsed_seconds": 4.514067499985686,
+        "source_phase_start_epoch": 1792701749.848108,
+        "source_write_rows_per_second": 221.52969577950952,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.7288063330051955
+      },
+      "workload": {
+        "catchup_seconds": 0.27301750000333413,
+        "first_quarter_p95_observed_commit_lag_ms": 299.55101013183594,
+        "first_quarter_p95_publication_commit_lag_ms": 228.42097282409668,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792701819.651722,
+          "query_finished_seconds": 59.4718426670006,
+          "query_started_seconds": 59.47032358299475,
+          "statement_epoch": 1792701819.651435
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 279.1109085083008,
+        "last_quarter_p95_publication_commit_lag_ms": 201.33495330810547,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.68074658300611,
+          "upper": 59.783817292016465
+        },
+        "observed_commit_lag_ms": {
+          "p50": 231.98509216308594,
+          "p95": 321.86198234558105,
+          "p99": 340.8629894256592
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 554,
+        "observer_query_ms": {
+          "p50": 1.4932079939171672,
+          "p95": 3.970417019445449
+        },
+        "observer_query_total_seconds": 0.9874614534492139,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 215.4099941253662,
+          "upper": 321.86198234558105
+        },
+        "publication_catchup_seconds": 0.22068119049072266,
+        "publication_commit_lag_ms": {
+          "p50": 176.314115524292,
+          "p95": 258.4559917449951,
+          "p99": 278.6870002746582
+        },
+        "publication_rows_per_second": 200.90839715315775,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.72257548552687,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.72321480218494,
+          "upper": 201.06987072137196
+        },
+        "source_elapsed_seconds": 59.510990208014846,
+        "source_phase_start_epoch": 1792701760.180211,
+        "source_write_rows_per_second": 201.64342683687792,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.78400770801818
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.226634001999969,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 4,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.22806020901771262,
+        "first_quarter_p95_observed_commit_lag_ms": 240.6778335571289,
+        "first_quarter_p95_publication_commit_lag_ms": 136.3539695739746,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701860.669607,
+          "query_finished_seconds": 4.4178036249941215,
+          "query_started_seconds": 4.415048041992122,
+          "statement_epoch": 1792701860.668904
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 231.94479942321777,
+        "last_quarter_p95_publication_commit_lag_ms": 162.10389137268066,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.626159459003247,
+          "upper": 4.738917249982478
+        },
+        "observed_commit_lag_ms": {
+          "p50": 213.38200569152832,
+          "p95": 268.826961517334,
+          "p99": 268.826961517334
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 45,
+        "observer_query_ms": {
+          "p50": 1.8424580048304051,
+          "p95": 4.185750003671274
+        },
+        "observer_query_total_seconds": 0.0983125879720319,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 163.87104988098145,
+          "upper": 268.826961517334
+        },
+        "publication_catchup_seconds": 0.16210389137268066,
+        "publication_commit_lag_ms": {
+          "p50": 134.93585586547852,
+          "p95": 201.11489295959473,
+          "p99": 201.11489295959473
+        },
+        "publication_rows_per_second": 214.1746372086397,
+        "rows": 1000,
+        "rows_per_second_until_observed": 211.01442729918435,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 211.01866676479685,
+          "upper": 216.16202572823983
+        },
+        "source_elapsed_seconds": 4.510952249984257,
+        "source_phase_start_epoch": 1792701856.252191,
+        "source_write_rows_per_second": 221.68268351842784,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.7390124590019695
+      },
+      "workload": {
+        "catchup_seconds": 0.2177611670049373,
+        "first_quarter_p95_observed_commit_lag_ms": 289.0820503234863,
+        "first_quarter_p95_publication_commit_lag_ms": 208.7249755859375,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792701926.09957,
+          "query_finished_seconds": 59.508380333019886,
+          "query_started_seconds": 59.505785500019556,
+          "statement_epoch": 1792701926.098954
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 263.3380889892578,
+        "last_quarter_p95_publication_commit_lag_ms": 204.14495468139648,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.61826929199742,
+          "upper": 59.73142420800286
+        },
+        "observed_commit_lag_ms": {
+          "p50": 227.92696952819824,
+          "p95": 333.0121040344238,
+          "p99": 371.13308906555176
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 554,
+        "observer_query_ms": {
+          "p50": 1.416000013705343,
+          "p95": 3.8112500042188913
+        },
+        "observer_query_total_seconds": 0.9816466638294514,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 226.8819808959961,
+          "upper": 333.0121040344238
+        },
+        "publication_catchup_seconds": 0.12324094772338867,
+        "publication_commit_lag_ms": {
+          "p50": 175.3709316253662,
+          "p95": 255.77497482299805,
+          "p99": 307.9719543457031
+        },
+        "publication_rows_per_second": 201.2389379533178,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.8983765230488,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.89927804521076,
+          "upper": 201.2805829908713
+        },
+        "source_elapsed_seconds": 59.51393108299817,
+        "source_phase_start_epoch": 1792701866.592293,
+        "source_write_rows_per_second": 201.63346264700263,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.73169225000311
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.205046001000028,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 4,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.14404883299721405,
+        "first_quarter_p95_observed_commit_lag_ms": 240.48900604248047,
+        "first_quarter_p95_publication_commit_lag_ms": 172.73497581481934,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792701969.232767,
+          "query_finished_seconds": 4.440949499985436,
+          "query_started_seconds": 4.437786958995275,
+          "statement_epoch": 1792701969.232131
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 217.51785278320312,
+        "last_quarter_p95_publication_commit_lag_ms": 122.19882011413574,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.550257041992154,
+          "upper": 4.659119791991543
+        },
+        "observed_commit_lag_ms": {
+          "p50": 186.25807762145996,
+          "p95": 240.48900604248047,
+          "p99": 240.48900604248047
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 44,
+        "observer_query_ms": {
+          "p50": 1.6595420020166785,
+          "p95": 3.699167020386085
+        },
+        "observer_query_total_seconds": 0.08684483406250365,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 132.00902938842773,
+          "upper": 240.48900604248047
+        },
+        "publication_catchup_seconds": 0.09925317764282227,
+        "publication_commit_lag_ms": {
+          "p50": 145.6899642944336,
+          "p95": 177.5491237640381,
+          "p99": 177.5491237640381
+        },
+        "publication_rows_per_second": 216.94613396544185,
+        "rows": 1000,
+        "rows_per_second_until_observed": 214.62985793270278,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 214.63281577753756,
+          "upper": 219.7678044935652
+        },
+        "source_elapsed_seconds": 4.515135166991968,
+        "source_phase_start_epoch": 1792701964.792486,
+        "source_write_rows_per_second": 221.47731197739776,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.659183999989182
+      },
+      "workload": {
+        "catchup_seconds": 0.14268841699231416,
+        "first_quarter_p95_observed_commit_lag_ms": 278.48291397094727,
+        "first_quarter_p95_publication_commit_lag_ms": 211.99798583984375,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792702034.429306,
+          "query_finished_seconds": 59.44435050000902,
+          "query_started_seconds": 59.44120162501349,
+          "statement_epoch": 1792702034.428688
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 279.3610095977783,
+        "last_quarter_p95_publication_commit_lag_ms": 208.36520195007324,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.54610025000875,
+          "upper": 59.65325145900715
+        },
+        "observed_commit_lag_ms": {
+          "p50": 219.2819118499756,
+          "p95": 328.7341594696045,
+          "p99": 363.6159896850586
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 553,
+        "observer_query_ms": {
+          "p50": 1.4672499964945018,
+          "p95": 3.8731659878976643
+        },
+        "observer_query_total_seconds": 0.984265959035838,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 217.48018264770508,
+          "upper": 328.7341594696045
+        },
+        "publication_catchup_seconds": 0.12690305709838867,
+        "publication_commit_lag_ms": {
+          "p50": 171.4649200439453,
+          "p95": 244.08197402954102,
+          "p99": 283.91003608703613
+        },
+        "publication_rows_per_second": 201.23493833992345,
+        "rows": 12000,
+        "rows_per_second_until_observed": 201.16220696637663,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 201.16254699454606,
+          "upper": 201.52453224673158
+        },
+        "source_elapsed_seconds": 59.51066387500032,
+        "source_phase_start_epoch": 1792701974.985174,
+        "source_write_rows_per_second": 201.64453256991894,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.65335229199263
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.224312960999896,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 5,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.2597236250003334,
+        "first_quarter_p95_observed_commit_lag_ms": 244.91500854492188,
+        "first_quarter_p95_publication_commit_lag_ms": 184.90195274353027,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792702074.422687,
+          "query_finished_seconds": 4.445012499985751,
+          "query_started_seconds": 4.4416269159992225,
+          "statement_epoch": 1792702074.422223
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 263.5979652404785,
+        "last_quarter_p95_publication_commit_lag_ms": 174.25203323364258,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.6655193329788744,
+          "upper": 4.773177291004686
+        },
+        "observed_commit_lag_ms": {
+          "p50": 169.37994956970215,
+          "p95": 276.3478755950928,
+          "p99": 276.3478755950928
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 45,
+        "observer_query_ms": {
+          "p50": 1.6695410013198853,
+          "p95": 4.4491669978015125
+        },
+        "observer_query_total_seconds": 0.09782104205805808,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 165.45581817626953,
+          "upper": 276.3478755950928
+        },
+        "publication_catchup_seconds": 0.17425203323364258,
+        "publication_commit_lag_ms": {
+          "p50": 86.60387992858887,
+          "p95": 184.90195274353027,
+          "p99": 184.90195274353027
+        },
+        "publication_rows_per_second": 213.49114312657971,
+        "rows": 1000,
+        "rows_per_second_until_observed": 209.50107635860167,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 209.50405548198572,
+          "upper": 214.33841093131056
+        },
+        "source_elapsed_seconds": 4.513521540997317,
+        "source_phase_start_epoch": 1792702069.978639,
+        "source_write_rows_per_second": 221.5564921795051,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.7732451659976505
+      },
+      "workload": {
+        "catchup_seconds": 0.23934358300175518,
+        "first_quarter_p95_observed_commit_lag_ms": 276.8750190734863,
+        "first_quarter_p95_publication_commit_lag_ms": 205.75308799743652,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792702139.79348,
+          "query_finished_seconds": 59.439846374996705,
+          "query_started_seconds": 59.43591858400032,
+          "statement_epoch": 1792702139.792466
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 258.8369846343994,
+        "last_quarter_p95_publication_commit_lag_ms": 202.48794555664062,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.64784675001283,
+          "upper": 59.75394741698983
+        },
+        "observed_commit_lag_ms": {
+          "p50": 224.08390045166016,
+          "p95": 324.19395446777344,
+          "p99": 344.2680835723877
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 554,
+        "observer_query_ms": {
+          "p50": 1.4357909967657179,
+          "p95": 3.7466669746208936
+        },
+        "observer_query_total_seconds": 0.960834662662819,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 213.46807479858398,
+          "upper": 324.19395446777344
+        },
+        "publication_catchup_seconds": 0.19627594947814941,
+        "publication_commit_lag_ms": {
+          "p50": 165.07697105407715,
+          "p95": 247.75290489196777,
+          "p99": 281.45909309387207
+        },
+        "publication_rows_per_second": 200.99230561714367,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.8231279796389,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.82355256396067,
+          "upper": 201.1807743922863
+        },
+        "source_elapsed_seconds": 59.514730166993104,
+        "source_phase_start_epoch": 1792702080.353744,
+        "source_write_rows_per_second": 201.63075538323125,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.75407374999486
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.206166961000008,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "steady",
+      "repetition": 5,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 0.17831145899253897,
+        "first_quarter_p95_observed_commit_lag_ms": 253.7100315093994,
+        "first_quarter_p95_publication_commit_lag_ms": 161.53717041015625,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 0,
+          "backlog_transactions_upper": 0,
+          "maximum_transaction": 9,
+          "observed_epoch": 1792702182.909497,
+          "query_finished_seconds": 4.473941292002564,
+          "query_started_seconds": 4.470428583998,
+          "statement_epoch": 1792702182.908706
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 242.77091026306152,
+        "last_quarter_p95_publication_commit_lag_ms": 180.53102493286133,
+        "observation_completion_seconds_bounds": {
+          "lower": 4.580137083976297,
+          "upper": 4.69145870898501
+        },
+        "observed_commit_lag_ms": {
+          "p50": 204.76794242858887,
+          "p95": 266.24417304992676,
+          "p99": 266.24417304992676
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 44,
+        "observer_query_ms": {
+          "p50": 1.6929579724092036,
+          "p95": 4.276667023077607
+        },
+        "observer_query_total_seconds": 0.10116083305911161,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 156.93402290344238,
+          "upper": 266.24417304992676
+        },
+        "publication_catchup_seconds": 0.18053102493286133,
+        "publication_commit_lag_ms": {
+          "p50": 165.76600074768066,
+          "p95": 202.29101181030273,
+          "p99": 202.29101181030273
+        },
+        "publication_rows_per_second": 213.13509107409303,
+        "rows": 1000,
+        "rows_per_second_until_observed": 213.14736838201566,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 213.1533201144487,
+          "upper": 218.3340763966477
+        },
+        "source_elapsed_seconds": 4.51327825000044,
+        "source_phase_start_epoch": 1792702178.435198,
+        "source_write_rows_per_second": 221.56843531636957,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 4.691589708992979
+      },
+      "workload": {
+        "catchup_seconds": 0.22275750001426786,
+        "first_quarter_p95_observed_commit_lag_ms": 275.1169204711914,
+        "first_quarter_p95_publication_commit_lag_ms": 207.72790908813477,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 1,
+          "backlog_transactions_upper": 1,
+          "maximum_transaction": 129,
+          "observed_epoch": 1792702248.189817,
+          "query_finished_seconds": 59.50696445800713,
+          "query_started_seconds": 59.50620075000916,
+          "statement_epoch": 1792702248.189639
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 263.4010314941406,
+        "last_quarter_p95_publication_commit_lag_ms": 206.83979988098145,
+        "observation_completion_seconds_bounds": {
+          "lower": 59.61703049999778,
+          "upper": 59.72987137499149
+        },
+        "observed_commit_lag_ms": {
+          "p50": 206.82001113891602,
+          "p95": 333.34803581237793,
+          "p99": 361.18102073669434
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 554,
+        "observer_query_ms": {
+          "p50": 1.3877500023227185,
+          "p95": 3.923542011762038
+        },
+        "observer_query_total_seconds": 0.962914467905648,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 222.0900058746338,
+          "upper": 333.34803581237793
+        },
+        "publication_catchup_seconds": 0.1340329647064209,
+        "publication_commit_lag_ms": {
+          "p50": 156.97097778320312,
+          "p95": 262.85815238952637,
+          "p99": 305.3021430969238
+        },
+        "publication_rows_per_second": 201.20809411471683,
+        "rows": 12000,
+        "rows_per_second_until_observed": 200.90411777826006,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 200.90450094329722,
+          "upper": 201.2847654329319
+        },
+        "source_elapsed_seconds": 59.50722779199714,
+        "source_phase_start_epoch": 1792702188.682908,
+        "source_write_rows_per_second": 201.6561759849587,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 59.729985292011406
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.2021255859999656,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 1,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.7066452500002924,
+        "first_quarter_p95_observed_commit_lag_ms": 329.0979862213135,
+        "first_quarter_p95_publication_commit_lag_ms": 241.3918972015381,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702286.658042,
+          "query_finished_seconds": 0.8694687919924036,
+          "query_started_seconds": 0.8685777919890825,
+          "statement_epoch": 1792702286.657903
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1707.1380615234375,
+        "last_quarter_p95_publication_commit_lag_ms": 1618.93892288208,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.5001277499832213,
+          "upper": 2.6103483339829836
+        },
+        "observed_commit_lag_ms": {
+          "p50": 789.7617816925049,
+          "p95": 1707.1380615234375,
+          "p99": 1707.1380615234375
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 25,
+        "observer_query_ms": {
+          "p50": 1.2366670125629753,
+          "p95": 1.6870830149855465
+        },
+        "observer_query_total_seconds": 0.031721543869934976,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1597.917079925537,
+          "upper": 1707.1380615234375
+        },
+        "publication_catchup_seconds": 1.61893892288208,
+        "publication_commit_lag_ms": {
+          "p50": 727.6937961578369,
+          "p95": 1618.93892288208,
+          "p99": 1618.93892288208
+        },
+        "publication_rows_per_second": 396.490453581886,
+        "rows": 1000,
+        "rows_per_second_until_observed": 383.0693987372592,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 383.0906346794553,
+          "upper": 399.97956104711494
+        },
+        "source_elapsed_seconds": 0.9038477919821162,
+        "source_phase_start_epoch": 1792702285.788381,
+        "source_write_rows_per_second": 1106.380973512171,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.6104930419824086
+      },
+      "workload": {
+        "catchup_seconds": 25.348604958009673,
+        "first_quarter_p95_observed_commit_lag_ms": 5454.62703704834,
+        "first_quarter_p95_publication_commit_lag_ms": 5371.582984924316,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792702305.88197,
+          "query_finished_seconds": 11.89693037502002,
+          "query_started_seconds": 11.895851333014434,
+          "statement_epoch": 1792702305.881771
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 25128.584146499634,
+        "last_quarter_p95_publication_commit_lag_ms": 25125.359058380127,
+        "observation_completion_seconds_bounds": {
+          "lower": 37.14383691601688,
+          "upper": 37.25375137501396
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12270.917177200317,
+          "p95": 24213.948965072632,
+          "p99": 25128.584146499634
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 347,
+        "observer_query_ms": {
+          "p50": 1.144499983638525,
+          "p95": 1.6682500136084855
+        },
+        "observer_query_total_seconds": 0.423358712811023,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 24110.610008239746,
+          "upper": 24213.948965072632
+        },
+        "publication_catchup_seconds": 25.32243585586548,
+        "publication_commit_lag_ms": {
+          "p50": 12262.696981430054,
+          "p95": 24115.493774414062,
+          "p99": 25125.359058380127
+        },
+        "publication_rows_per_second": 322.3416962307129,
+        "rows": 12000,
+        "rows_per_second_until_observed": 322.1142541747544,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 322.1152114105852,
+          "upper": 323.06840101447494
+        },
+        "source_elapsed_seconds": 11.905257125006756,
+        "source_phase_start_epoch": 1792702293.983996,
+        "source_write_rows_per_second": 1007.9580704556341,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.25386208301643
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.202025751999827,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 1,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.677930625010049,
+        "first_quarter_p95_observed_commit_lag_ms": 328.5658359527588,
+        "first_quarter_p95_publication_commit_lag_ms": 259.8378658294678,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702367.462264,
+          "query_finished_seconds": 0.8575405840238091,
+          "query_started_seconds": 0.8560939170129132,
+          "statement_epoch": 1792702367.461986
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1678.4069538116455,
+        "last_quarter_p95_publication_commit_lag_ms": 1614.2950057983398,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.4809642920154147,
+          "upper": 2.587543708999874
+        },
+        "observed_commit_lag_ms": {
+          "p50": 777.148962020874,
+          "p95": 1678.4069538116455,
+          "p99": 1678.4069538116455
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 25,
+        "observer_query_ms": {
+          "p50": 1.1461660033091903,
+          "p95": 1.4466670108959079
+        },
+        "observer_query_total_seconds": 0.02853587397839874,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1572.998046875,
+          "upper": 1678.4069538116455
+        },
+        "publication_catchup_seconds": 1.6142950057983398,
+        "publication_commit_lag_ms": {
+          "p50": 763.6818885803223,
+          "p95": 1614.2950057983398,
+          "p99": 1614.2950057983398
+        },
+        "publication_rows_per_second": 396.2924679653737,
+        "rows": 1000,
+        "rows_per_second_until_observed": 386.4425892158553,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 386.4669016109164,
+          "upper": 403.0690821380781
+        },
+        "source_elapsed_seconds": 0.9097758750140201,
+        "source_phase_start_epoch": 1792702366.604777,
+        "source_write_rows_per_second": 1099.1718152392089,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.587706500024069
+      },
+      "workload": {
+        "catchup_seconds": 25.141143125016242,
+        "first_quarter_p95_observed_commit_lag_ms": 5483.151912689209,
+        "first_quarter_p95_publication_commit_lag_ms": 5421.60177230835,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792702386.626108,
+          "query_finished_seconds": 11.855982040986419,
+          "query_started_seconds": 11.855011125007877,
+          "statement_epoch": 1792702386.625971
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 25016.97587966919,
+        "last_quarter_p95_publication_commit_lag_ms": 24935.790061950684,
+        "observation_completion_seconds_bounds": {
+          "lower": 36.93578379100654,
+          "upper": 37.04630658298265
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12291.211128234863,
+          "p95": 23910.876989364624,
+          "p99": 25016.97587966919
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 345,
+        "observer_query_ms": {
+          "p50": 1.0861250048037618,
+          "p95": 1.600624993443489
+        },
+        "observer_query_total_seconds": 0.38894637452904135,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 23801.29098892212,
+          "upper": 23910.876989364624
+        },
+        "publication_catchup_seconds": 25.128947973251343,
+        "publication_commit_lag_ms": {
+          "p50": 12289.684057235718,
+          "p95": 23902.148962020874,
+          "p99": 24935.790061950684
+        },
+        "publication_rows_per_second": 324.0384345543015,
+        "rows": 12000,
+        "rows_per_second_until_observed": 323.9183707109277,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 323.9189303020086,
+          "upper": 324.8881915678169
+        },
+        "source_elapsed_seconds": 11.905227457988076,
+        "source_phase_start_epoch": 1792702374.770165,
+        "source_write_rows_per_second": 1007.960582218724,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.04637058300432
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.2090357929998845,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 2,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.6772355000139214,
+        "first_quarter_p95_observed_commit_lag_ms": 327.78000831604004,
+        "first_quarter_p95_publication_commit_lag_ms": 255.33485412597656,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702450.031053,
+          "query_finished_seconds": 0.8422237919876352,
+          "query_started_seconds": 0.8411022090003826,
+          "statement_epoch": 1792702450.030841
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1677.7698993682861,
+        "last_quarter_p95_publication_commit_lag_ms": 1672.874927520752,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.467577125004027,
+          "upper": 2.579131750011584
+        },
+        "observed_commit_lag_ms": {
+          "p50": 856.4949035644531,
+          "p95": 1677.7698993682861,
+          "p99": 1677.7698993682861
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 25,
+        "observer_query_ms": {
+          "p50": 1.322166994214058,
+          "p95": 1.950250007212162
+        },
+        "observer_query_total_seconds": 0.0343464590550866,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1567.3201084136963,
+          "upper": 1677.7698993682861
+        },
+        "publication_catchup_seconds": 1.672874927520752,
+        "publication_commit_lag_ms": {
+          "p50": 775.4650115966797,
+          "p95": 1672.874927520752,
+          "p99": 1672.874927520752
+        },
+        "publication_rows_per_second": 388.4610066301246,
+        "rows": 1000,
+        "rows_per_second_until_observed": 387.7015573056849,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 387.7273815094978,
+          "upper": 405.255823563516
+        },
+        "source_elapsed_seconds": 0.9020680419926066,
+        "source_phase_start_epoch": 1792702449.188823,
+        "source_write_rows_per_second": 1108.5638260624646,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.579303542006528
+      },
+      "workload": {
+        "catchup_seconds": 25.20792524999706,
+        "first_quarter_p95_observed_commit_lag_ms": 5479.841947555542,
+        "first_quarter_p95_publication_commit_lag_ms": 5419.728994369507,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792702469.156484,
+          "query_finished_seconds": 11.824660916987341,
+          "query_started_seconds": 11.823374917003093,
+          "statement_epoch": 1792702469.15612
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 24982.388019561768,
+        "last_quarter_p95_publication_commit_lag_ms": 24957.864999771118,
+        "observation_completion_seconds_bounds": {
+          "lower": 37.00814345799154,
+          "upper": 37.119426499994006
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12232.483863830566,
+          "p95": 24085.270881652832,
+          "p99": 24982.388019561768
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 346,
+        "observer_query_ms": {
+          "p50": 1.1635000118985772,
+          "p95": 1.741041982313618
+        },
+        "observer_query_total_seconds": 0.4228038424625993,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 23979.835033416748,
+          "upper": 24085.270881652832
+        },
+        "publication_catchup_seconds": 25.129050970077515,
+        "publication_commit_lag_ms": {
+          "p50": 12142.771005630493,
+          "p95": 23987.010955810547,
+          "p99": 24957.864999771118
+        },
+        "publication_rows_per_second": 323.979156148122,
+        "rows": 12000,
+        "rows_per_second_until_observed": 323.27978658282257,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 323.2808567234178,
+          "upper": 324.2529583690511
+        },
+        "source_elapsed_seconds": 11.911624125001254,
+        "source_phase_start_epoch": 1792702457.331942,
+        "source_write_rows_per_second": 1007.4192968205952,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.119549374998314
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.219544419000158,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 2,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.778170500008855,
+        "first_quarter_p95_observed_commit_lag_ms": 317.8591728210449,
+        "first_quarter_p95_publication_commit_lag_ms": 244.77005004882812,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702531.656816,
+          "query_finished_seconds": 0.8493713749921881,
+          "query_started_seconds": 0.8479517500090878,
+          "statement_epoch": 1792702531.656618
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1778.292179107666,
+        "last_quarter_p95_publication_commit_lag_ms": 1682.1792125701904,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.5732533750124276,
+          "upper": 2.686917707993416
+        },
+        "observed_commit_lag_ms": {
+          "p50": 857.7170372009277,
+          "p95": 1778.292179107666,
+          "p99": 1778.292179107666
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 26,
+        "observer_query_ms": {
+          "p50": 1.4196249831002206,
+          "p95": 1.7986249877139926
+        },
+        "observer_query_total_seconds": 0.037344747921451926,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1666.2170886993408,
+          "upper": 1778.292179107666
+        },
+        "publication_catchup_seconds": 1.6821792125701904,
+        "publication_commit_lag_ms": {
+          "p50": 775.825023651123,
+          "p95": 1682.1792125701904,
+          "p99": 1682.1792125701904
+        },
+        "publication_rows_per_second": 386.0251003049506,
+        "rows": 1000,
+        "rows_per_second_until_observed": 372.1062228849189,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 372.1736609294215,
+          "upper": 388.61311121186054
+        },
+        "source_elapsed_seconds": 0.9092341669893358,
+        "source_phase_start_epoch": 1792702530.807565,
+        "source_write_rows_per_second": 1099.8266852544805,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.687404666998191
+      },
+      "workload": {
+        "catchup_seconds": 25.16599624999799,
+        "first_quarter_p95_observed_commit_lag_ms": 5438.977956771851,
+        "first_quarter_p95_publication_commit_lag_ms": 5360.82911491394,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792702550.885807,
+          "query_finished_seconds": 11.814367791987024,
+          "query_started_seconds": 11.813655334000941,
+          "statement_epoch": 1792702550.885663
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 25053.83801460266,
+        "last_quarter_p95_publication_commit_lag_ms": 24953.57608795166,
+        "observation_completion_seconds_bounds": {
+          "lower": 36.968672166985925,
+          "upper": 37.07777229198837
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12173.121929168701,
+          "p95": 23950.87695121765,
+          "p99": 25053.83801460266
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 346,
+        "observer_query_ms": {
+          "p50": 1.10616598976776,
+          "p95": 1.7021670064423233
+        },
+        "observer_query_total_seconds": 0.4016127928625792,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 23841.18103981018,
+          "upper": 23950.87695121765
+        },
+        "publication_catchup_seconds": 25.13613796234131,
+        "publication_commit_lag_ms": {
+          "p50": 12135.180950164795,
+          "p95": 23946.027040481567,
+          "p99": 24953.57608795166
+        },
+        "publication_rows_per_second": 323.90922217745475,
+        "rows": 12000,
+        "rows_per_second_until_observed": 323.6428440205056,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 323.64403949351936,
+          "upper": 324.59916184699597
+        },
+        "source_elapsed_seconds": 11.911912999989,
+        "source_phase_start_epoch": 1792702539.070822,
+        "source_write_rows_per_second": 1007.3948659641052,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.07790924998699
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.2180690440000035,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 3,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.6741079159837682,
+        "first_quarter_p95_observed_commit_lag_ms": 327.30793952941895,
+        "first_quarter_p95_publication_commit_lag_ms": 259.321928024292,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702618.405918,
+          "query_finished_seconds": 0.8639715409954078,
+          "query_started_seconds": 0.8628448329982348,
+          "statement_epoch": 1792702618.405779
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1674.4849681854248,
+        "last_quarter_p95_publication_commit_lag_ms": 1564.4280910491943,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.4677907080040313,
+          "upper": 2.5804136660008226
+        },
+        "observed_commit_lag_ms": {
+          "p50": 783.3130359649658,
+          "p95": 1674.4849681854248,
+          "p99": 1674.4849681854248
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 25,
+        "observer_query_ms": {
+          "p50": 1.056874985806644,
+          "p95": 1.3822499895468354
+        },
+        "observer_query_total_seconds": 0.027684791071806103,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1562.932014465332,
+          "upper": 1674.4849681854248
+        },
+        "publication_catchup_seconds": 1.5644280910491943,
+        "publication_commit_lag_ms": {
+          "p50": 765.2440071105957,
+          "p95": 1564.4280910491943,
+          "p99": 1564.4280910491943
+        },
+        "publication_rows_per_second": 404.8323870233695,
+        "rows": 1000,
+        "rows_per_second_until_observed": 387.51572879758214,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 387.5347635830112,
+          "upper": 405.220749375788
+        },
+        "source_elapsed_seconds": 0.906432500021765,
+        "source_phase_start_epoch": 1792702617.541998,
+        "source_write_rows_per_second": 1103.226108922604,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.580540416005533
+      },
+      "workload": {
+        "catchup_seconds": 24.981205167016014,
+        "first_quarter_p95_observed_commit_lag_ms": 5369.001150131226,
+        "first_quarter_p95_publication_commit_lag_ms": 5368.303060531616,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 78,
+          "backlog_transactions_upper": 78,
+          "maximum_transaction": 51,
+          "observed_epoch": 1792702637.531198,
+          "query_finished_seconds": 11.821637249988271,
+          "query_started_seconds": 11.820876957994187,
+          "statement_epoch": 1792702637.531073
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 24755.629062652588,
+        "last_quarter_p95_publication_commit_lag_ms": 24733.214139938354,
+        "observation_completion_seconds_bounds": {
+          "lower": 36.7708986249927,
+          "upper": 36.8841559170105
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12156.588077545166,
+          "p95": 23864.326000213623,
+          "p99": 24755.629062652588
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 344,
+        "observer_query_ms": {
+          "p50": 1.0775839909911156,
+          "p95": 1.6402080073021352
+        },
+        "observer_query_total_seconds": 0.4068769190926105,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 23752.956867218018,
+          "upper": 23864.326000213623
+        },
+        "publication_catchup_seconds": 24.94834303855896,
+        "publication_commit_lag_ms": {
+          "p50": 12100.505113601685,
+          "p95": 23788.792848587036,
+          "p99": 24733.214139938354
+        },
+        "publication_rows_per_second": 325.64073847699456,
+        "rows": 12000,
+        "rows_per_second_until_observed": 325.3412318322095,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 325.34294744334255,
+          "upper": 326.34502959478283
+        },
+        "source_elapsed_seconds": 11.903145249991212,
+        "source_phase_start_epoch": 1792702625.70903,
+        "source_write_rows_per_second": 1008.1369039841684,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 36.88435041700723
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.221731335000186,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 3,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.6775559580128174,
+        "first_quarter_p95_observed_commit_lag_ms": 318.12191009521484,
+        "first_quarter_p95_publication_commit_lag_ms": 250.7150173187256,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702701.807369,
+          "query_finished_seconds": 0.8620291670085862,
+          "query_started_seconds": 0.8606358339893632,
+          "statement_epoch": 1792702701.807105
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1678.0600547790527,
+        "last_quarter_p95_publication_commit_lag_ms": 1638.10396194458,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.475811334006721,
+          "upper": 2.5861167919938453
+        },
+        "observed_commit_lag_ms": {
+          "p50": 774.0969657897949,
+          "p95": 1678.0600547790527,
+          "p99": 1678.0600547790527
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 25,
+        "observer_query_ms": {
+          "p50": 1.2407080212142318,
+          "p95": 1.8758329970296472
+        },
+        "observer_query_total_seconds": 0.0317506660358049,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1569.1969394683838,
+          "upper": 1678.0600547790527
+        },
+        "publication_catchup_seconds": 1.63810396194458,
+        "publication_commit_lag_ms": {
+          "p50": 768.0609226226807,
+          "p95": 1638.10396194458,
+          "p99": 1638.10396194458
+        },
+        "publication_rows_per_second": 392.7790088040175,
+        "rows": 1000,
+        "rows_per_second_until_observed": 386.65019939886037,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 386.6801387686051,
+          "upper": 403.9079982648166
+        },
+        "source_elapsed_seconds": 0.9087610839924309,
+        "source_phase_start_epoch": 1792702700.945513,
+        "source_write_rows_per_second": 1100.399233214006,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.5863170420052484
+      },
+      "workload": {
+        "catchup_seconds": 25.088527124986285,
+        "first_quarter_p95_observed_commit_lag_ms": 5613.350868225098,
+        "first_quarter_p95_publication_commit_lag_ms": 5581.012964248657,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792702720.946217,
+          "query_finished_seconds": 11.84357591700973,
+          "query_started_seconds": 11.842753625009209,
+          "statement_epoch": 1792702720.946089
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 24875.032901763916,
+        "last_quarter_p95_publication_commit_lag_ms": 24840.69800376892,
+        "observation_completion_seconds_bounds": {
+          "lower": 36.89256249999744,
+          "upper": 36.99866645899601
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12313.781023025513,
+          "p95": 23861.165046691895,
+          "p99": 24875.032901763916
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 344,
+        "observer_query_ms": {
+          "p50": 1.152499986346811,
+          "p95": 1.5963340119924396
+        },
+        "observer_query_total_seconds": 0.40605305184726603,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 23750.070095062256,
+          "upper": 23861.165046691895
+        },
+        "publication_catchup_seconds": 25.027000188827515,
+        "publication_commit_lag_ms": {
+          "p50": 12216.202020645142,
+          "p95": 23844.702005386353,
+          "p99": 24840.69800376892
+        },
+        "publication_rows_per_second": 324.88680682976593,
+        "rows": 12000,
+        "rows_per_second_until_observed": 324.33454962848566,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 324.3360139290174,
+          "upper": 325.26881265026884
+        },
+        "source_elapsed_seconds": 11.910306375008076,
+        "source_phase_start_epoch": 1792702709.102522,
+        "source_write_rows_per_second": 1007.530757158366,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 36.99883349999436
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.2301643360001435,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 4,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.6825328750128392,
+        "first_quarter_p95_observed_commit_lag_ms": 307.85202980041504,
+        "first_quarter_p95_publication_commit_lag_ms": 237.18500137329102,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702782.33139,
+          "query_finished_seconds": 0.8345710000139661,
+          "query_started_seconds": 0.833523375011282,
+          "statement_epoch": 1792702782.331188
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1683.14790725708,
+        "last_quarter_p95_publication_commit_lag_ms": 1615.9329414367676,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.4796465410036035,
+          "upper": 2.5857788330176845
+        },
+        "observed_commit_lag_ms": {
+          "p50": 750.601053237915,
+          "p95": 1683.14790725708,
+          "p99": 1683.14790725708
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 25,
+        "observer_query_ms": {
+          "p50": 1.233249990036711,
+          "p95": 1.8404580187052488
+        },
+        "observer_query_total_seconds": 0.031541834090603516,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1578.2780647277832,
+          "upper": 1683.14790725708
+        },
+        "publication_catchup_seconds": 1.6159329414367676,
+        "publication_commit_lag_ms": {
+          "p50": 716.7611122131348,
+          "p95": 1615.9329414367676,
+          "p99": 1615.9329414367676
+        },
+        "publication_rows_per_second": 397.1112769250856,
+        "rows": 1000,
+        "rows_per_second_until_observed": 386.707521985343,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 386.73067751620846,
+          "upper": 403.28328391322395
+        },
+        "source_elapsed_seconds": 0.9034007909940556,
+        "source_phase_start_epoch": 1792702781.496951,
+        "source_write_rows_per_second": 1106.9284087073377,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.585933666006895
+      },
+      "workload": {
+        "catchup_seconds": 25.22392120800214,
+        "first_quarter_p95_observed_commit_lag_ms": 5351.490020751953,
+        "first_quarter_p95_publication_commit_lag_ms": 5291.351795196533,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 77,
+          "backlog_transactions_upper": 77,
+          "maximum_transaction": 51,
+          "observed_epoch": 1792702801.485016,
+          "query_finished_seconds": 11.802900459006196,
+          "query_started_seconds": 11.801712667016545,
+          "statement_epoch": 1792702801.48476
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 25005.974054336548,
+        "last_quarter_p95_publication_commit_lag_ms": 24948.662042617798,
+        "observation_completion_seconds_bounds": {
+          "lower": 37.034402792021865,
+          "upper": 37.13700045901351
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12055.408000946045,
+          "p95": 23999.269008636475,
+          "p99": 25005.974054336548
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 346,
+        "observer_query_ms": {
+          "p50": 1.1327500105835497,
+          "p95": 1.6347079945262522
+        },
+        "observer_query_total_seconds": 0.4085092719469685,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 23888.78107070923,
+          "upper": 23999.269008636475
+        },
+        "publication_catchup_seconds": 25.13496708869934,
+        "publication_commit_lag_ms": {
+          "p50": 12012.93396949768,
+          "p95": 23940.632104873657,
+          "p99": 24948.662042617798
+        },
+        "publication_rows_per_second": 323.9253175342415,
+        "rows": 12000,
+        "rows_per_second_until_observed": 323.1268478836246,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 323.1278738638,
+          "upper": 324.02304601453164
+        },
+        "source_elapsed_seconds": 11.913197167014005,
+        "source_phase_start_epoch": 1792702789.68221,
+        "source_write_rows_per_second": 1007.2862751928878,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.13711837501614
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.245241044000068,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 4,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.663083874998847,
+        "first_quarter_p95_observed_commit_lag_ms": 320.39785385131836,
+        "first_quarter_p95_publication_commit_lag_ms": 244.06099319458008,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702863.058017,
+          "query_finished_seconds": 0.8510376670164987,
+          "query_started_seconds": 0.8499404590111226,
+          "statement_epoch": 1792702863.057859
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1663.6748313903809,
+        "last_quarter_p95_publication_commit_lag_ms": 1621.9089031219482,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.4674292920099106,
+          "upper": 2.572194959007902
+        },
+        "observed_commit_lag_ms": {
+          "p50": 773.5440731048584,
+          "p95": 1663.6748313903809,
+          "p99": 1663.6748313903809
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 25,
+        "observer_query_ms": {
+          "p50": 1.3242079876363277,
+          "p95": 1.9092919828835875
+        },
+        "observer_query_total_seconds": 0.03358962095808238,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1560.3468418121338,
+          "upper": 1663.6748313903809
+        },
+        "publication_catchup_seconds": 1.6219089031219482,
+        "publication_commit_lag_ms": {
+          "p50": 758.1009864807129,
+          "p95": 1621.9089031219482,
+          "p99": 1621.9089031219482
+        },
+        "publication_rows_per_second": 395.2075372317596,
+        "rows": 1000,
+        "rows_per_second_until_observed": 388.7393923936655,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 388.7730191282627,
+          "upper": 405.28010396821674
+        },
+        "source_elapsed_seconds": 0.9093335840152577,
+        "source_phase_start_epoch": 1792702862.206941,
+        "source_write_rows_per_second": 1099.706441704699,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.5724174590141047
+      },
+      "workload": {
+        "catchup_seconds": 25.495286167017184,
+        "first_quarter_p95_observed_commit_lag_ms": 5552.155017852783,
+        "first_quarter_p95_publication_commit_lag_ms": 5521.966934204102,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792702882.309076,
+          "query_finished_seconds": 11.896801708993735,
+          "query_started_seconds": 11.895433750003576,
+          "statement_epoch": 1792702882.308901
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 25277.633905410767,
+        "last_quarter_p95_publication_commit_lag_ms": 25246.63496017456,
+        "observation_completion_seconds_bounds": {
+          "lower": 37.30104079199373,
+          "upper": 37.40480970899807
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12427.559852600098,
+          "p95": 24265.857934951782,
+          "p99": 25277.633905410767
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 349,
+        "observer_query_ms": {
+          "p50": 1.1277500016149133,
+          "p95": 1.709167001536116
+        },
+        "observer_query_total_seconds": 0.43650988189619966,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 24156.07786178589,
+          "upper": 24265.857934951782
+        },
+        "publication_catchup_seconds": 25.45093011856079,
+        "publication_commit_lag_ms": {
+          "p50": 12367.39993095398,
+          "p95": 24220.268964767456,
+          "p99": 25246.63496017456
+        },
+        "publication_rows_per_second": 321.20806731841157,
+        "rows": 12000,
+        "rows_per_second_until_observed": 320.8123167447238,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 320.81435765500737,
+          "upper": 321.7068410213281
+        },
+        "source_elapsed_seconds": 11.909761499991873,
+        "source_phase_start_epoch": 1792702870.412606,
+        "source_write_rows_per_second": 1007.576851980469,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.40504766700906
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.282962543999929,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 5,
+      "unexpected_pg_crash": false,
+      "variant": "unbounded",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.7711444580054376,
+        "first_quarter_p95_observed_commit_lag_ms": 317.3549175262451,
+        "first_quarter_p95_publication_commit_lag_ms": 310.5590343475342,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792702945.156982,
+          "query_finished_seconds": 0.8537466669804417,
+          "query_started_seconds": 0.852249708987074,
+          "statement_epoch": 1792702945.15671
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1772.848129272461,
+        "last_quarter_p95_publication_commit_lag_ms": 1718.9481258392334,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.574971708992962,
+          "upper": 2.6803454589971807
+        },
+        "observed_commit_lag_ms": {
+          "p50": 879.647970199585,
+          "p95": 1772.848129272461,
+          "p99": 1772.848129272461
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 26,
+        "observer_query_ms": {
+          "p50": 1.4889589801896363,
+          "p95": 1.940749993082136
+        },
+        "observer_query_total_seconds": 0.037516833981499076,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1668.7180995941162,
+          "upper": 1772.848129272461
+        },
+        "publication_catchup_seconds": 1.7189481258392334,
+        "publication_commit_lag_ms": {
+          "p50": 824.4190216064453,
+          "p95": 1718.9481258392334,
+          "p99": 1718.9481258392334
+        },
+        "publication_rows_per_second": 380.76874124290833,
+        "rows": 1000,
+        "rows_per_second_until_observed": 373.0548569552692,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 373.0862365682288,
+          "upper": 388.3537813279848
+        },
+        "source_elapsed_seconds": 0.909426458994858,
+        "source_phase_start_epoch": 1792702944.303399,
+        "source_write_rows_per_second": 1099.5941344231926,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.6805709170002956
+      },
+      "workload": {
+        "catchup_seconds": 25.22325658297632,
+        "first_quarter_p95_observed_commit_lag_ms": 5490.346908569336,
+        "first_quarter_p95_publication_commit_lag_ms": 5480.103015899658,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792702964.487911,
+          "query_finished_seconds": 11.867144834017381,
+          "query_started_seconds": 11.866066167014651,
+          "statement_epoch": 1792702964.48769
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 24988.956928253174,
+        "last_quarter_p95_publication_commit_lag_ms": 24919.325828552246,
+        "observation_completion_seconds_bounds": {
+          "lower": 37.01929750002455,
+          "upper": 37.12812920901342
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12311.631202697754,
+          "p95": 23985.23211479187,
+          "p99": 24988.956928253174
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 345,
+        "observer_query_ms": {
+          "p50": 1.1131250066682696,
+          "p95": 1.5742920222692192
+        },
+        "observer_query_total_seconds": 0.39679676017840393,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 23874.194145202637,
+          "upper": 23985.23211479187
+        },
+        "publication_catchup_seconds": 25.12369394302368,
+        "publication_commit_lag_ms": {
+          "p50": 12202.253103256226,
+          "p95": 23957.87501335144,
+          "p99": 24919.325828552246
+        },
+        "publication_rows_per_second": 324.07455871173033,
+        "rows": 12000,
+        "rows_per_second_until_observed": 323.2039716058079,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 323.2050807743584,
+          "upper": 324.1552598341998
+        },
+        "source_elapsed_seconds": 11.905000042024767,
+        "source_phase_start_epoch": 1792702952.619767,
+        "source_write_rows_per_second": 1007.9798368450132,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.128256625001086
+      }
+    },
+    {
+      "engine_oom": false,
+      "idle_elapsed_seconds": 5.239171626999905,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "poll_ms": 100,
+      "profile": "catchup",
+      "repetition": 5,
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only",
+      "verified_ids_markers_and_payload": true,
+      "verified_rows": 13000,
+      "warmup": {
+        "catchup_seconds": 1.791116458014585,
+        "first_quarter_p95_observed_commit_lag_ms": 322.47209548950195,
+        "first_quarter_p95_publication_commit_lag_ms": 295.8550453186035,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 6,
+          "backlog_transactions_upper": 6,
+          "maximum_transaction": 3,
+          "observed_epoch": 1792703029.035727,
+          "query_finished_seconds": 0.8630268329870887,
+          "query_started_seconds": 0.861253332986962,
+          "statement_epoch": 1792703029.035405
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 1792.2630310058594,
+        "last_quarter_p95_publication_commit_lag_ms": 1714.5519256591797,
+        "observation_completion_seconds_bounds": {
+          "lower": 2.582350624987157,
+          "upper": 2.6956800000043586
+        },
+        "observed_commit_lag_ms": {
+          "p50": 891.8201923370361,
+          "p95": 1792.2630310058594,
+          "p99": 1792.2630310058594
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 26,
+        "observer_query_ms": {
+          "p50": 1.484459004132077,
+          "p95": 1.7511659825686365
+        },
+        "observer_query_total_seconds": 0.03861283900914714,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 1680.1838874816895,
+          "upper": 1792.2630310058594
+        },
+        "publication_catchup_seconds": 1.7145519256591797,
+        "publication_commit_lag_ms": {
+          "p50": 823.6851692199707,
+          "p95": 1714.5519256591797,
+          "p99": 1714.5519256591797
+        },
+        "publication_rows_per_second": 382.01765387483005,
+        "rows": 1000,
+        "rows_per_second_until_observed": 370.9302575832433,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 370.9639126299795,
+          "upper": 387.24408309385694
+        },
+        "source_elapsed_seconds": 0.9048081249929965,
+        "source_phase_start_epoch": 1792703028.172922,
+        "source_write_rows_per_second": 1105.2066978374453,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 2.6959245830075815
+      },
+      "workload": {
+        "catchup_seconds": 25.393385750008747,
+        "first_quarter_p95_observed_commit_lag_ms": 5721.307992935181,
+        "first_quarter_p95_publication_commit_lag_ms": 5632.015943527222,
+        "last_poll_while_source_active": {
+          "backlog_transactions_lower": 79,
+          "backlog_transactions_upper": 79,
+          "maximum_transaction": 50,
+          "observed_epoch": 1792703048.363054,
+          "query_finished_seconds": 11.87367954099318,
+          "query_started_seconds": 11.87254241600749,
+          "statement_epoch": 1792703048.362816
+        },
+        "last_quarter_p95_observed_commit_lag_ms": 25177.271127700806,
+        "last_quarter_p95_publication_commit_lag_ms": 25120.103120803833,
+        "observation_completion_seconds_bounds": {
+          "lower": 37.20071116599138,
+          "upper": 37.3044764160004
+        },
+        "observed_commit_lag_ms": {
+          "p50": 12438.269853591919,
+          "p95": 24263.51284980774,
+          "p99": 25177.271127700806
+        },
+        "observer_kind": "journal",
+        "observer_poll_ms": 100,
+        "observer_query_count": 347,
+        "observer_query_ms": {
+          "p50": 1.1371249856892973,
+          "p95": 1.6659590182825923
+        },
+        "observer_query_total_seconds": 0.40786486558499746,
+        "p95_observation_lag_bounds_ms": {
+          "lower": 24154.85692024231,
+          "upper": 24263.51284980774
+        },
+        "publication_catchup_seconds": 25.31353211402893,
+        "publication_commit_lag_ms": {
+          "p50": 12333.125829696655,
+          "p95": 24164.73889350891,
+          "p99": 25120.103120803833
+        },
+        "publication_rows_per_second": 322.3829934569412,
+        "rows": 12000,
+        "rows_per_second_until_observed": 321.67537219081476,
+        "rows_per_second_until_observed_bounds": {
+          "lower": 321.67721284121916,
+          "upper": 322.5744783871313
+        },
+        "source_elapsed_seconds": 11.911304124980234,
+        "source_phase_start_epoch": 1792703036.489472,
+        "source_write_rows_per_second": 1007.4463613798387,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "visible_elapsed_seconds": 37.30468987498898
+      }
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703141.540073,
+      "copy_elapsed_seconds": 15.356921911239624,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703126.183151,
+      "engine_oom": false,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "598a82324dddbd553febae1bbea1b98484239dd746068b03f414aa21d6d1fc84",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 1,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.14968609809875488,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.6249830722808838,
+          "p95_publication_ms": 252.1679401397705,
+          "source_max_schedule_lateness_seconds": 0.010169916989980265
+        },
+        {
+          "catchup_seconds": 0.14374709129333496,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.6251449584960938,
+          "p95_publication_ms": 250.04911422729492,
+          "source_max_schedule_lateness_seconds": 0.03711941698566079
+        },
+        {
+          "catchup_seconds": 0.1421949863433838,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.6249380111694336,
+          "p95_publication_ms": 247.0839023590088,
+          "source_max_schedule_lateness_seconds": 0.051869249989977106
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "unbounded"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703254.792251,
+      "copy_elapsed_seconds": 15.944354057312012,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703238.847897,
+      "engine_oom": false,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "e778d2e1185411405a9d87111851273c53445483a9bdc55e183e235642af9b0e",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 1,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.12193799018859863,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.627661943435669,
+          "p95_publication_ms": 258.61096382141113,
+          "source_max_schedule_lateness_seconds": 0.011004208005033433
+        },
+        {
+          "catchup_seconds": 0.11757111549377441,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.6277048587799072,
+          "p95_publication_ms": 254.6229362487793,
+          "source_max_schedule_lateness_seconds": 0.020599792012944818
+        },
+        {
+          "catchup_seconds": 0.11519408226013184,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.6277570724487305,
+          "p95_publication_ms": 251.58190727233887,
+          "source_max_schedule_lateness_seconds": 0.02670508300070651
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703364.576018,
+      "copy_elapsed_seconds": 15.722251176834106,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703348.853767,
+      "engine_oom": false,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "c7f5d8405149b3200175ce9584e45787e4bce0b1eac70447c5e21ccc79798b8b",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 2,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.16103506088256836,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.6863231658935547,
+          "p95_publication_ms": 268.97382736206055,
+          "source_max_schedule_lateness_seconds": 0.010155291005503386
+        },
+        {
+          "catchup_seconds": 0.1496138572692871,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.687021017074585,
+          "p95_publication_ms": 265.98095893859863,
+          "source_max_schedule_lateness_seconds": 0.04075504100183025
+        },
+        {
+          "catchup_seconds": 0.1458420753479004,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.6868200302124023,
+          "p95_publication_ms": 263.55504989624023,
+          "source_max_schedule_lateness_seconds": 0.04204625001875684
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703477.221743,
+      "copy_elapsed_seconds": 15.846832990646362,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703461.37491,
+      "engine_oom": false,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "ad385a76c3d33f43287a28f6d3fd54077a3a252d3e43145215b825da6c839a37",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 2,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.24567914009094238,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.7801439762115479,
+          "p95_publication_ms": 288.2230281829834,
+          "source_max_schedule_lateness_seconds": 0.010134708980331197
+        },
+        {
+          "catchup_seconds": 0.23953580856323242,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.779655933380127,
+          "p95_publication_ms": 282.24802017211914,
+          "source_max_schedule_lateness_seconds": 0.17451283399714157
+        },
+        {
+          "catchup_seconds": 0.2316749095916748,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.7796969413757324,
+          "p95_publication_ms": 278.0721187591553,
+          "source_max_schedule_lateness_seconds": 0.21118954199482687
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "unbounded"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703585.856748,
+      "copy_elapsed_seconds": 15.804583072662354,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703570.052165,
+      "engine_oom": false,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "4a9935300c85bae0494c203851720744994f322dc0635b895fb2c811058ab4e0",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 3,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.12007999420166016,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.6732239723205566,
+          "p95_publication_ms": 262.5150680541992,
+          "source_max_schedule_lateness_seconds": 0.015243458008626476
+        },
+        {
+          "catchup_seconds": 0.11643791198730469,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.672874927520752,
+          "p95_publication_ms": 256.389856338501,
+          "source_max_schedule_lateness_seconds": 0.05137512501096353
+        },
+        {
+          "catchup_seconds": 0.11319804191589355,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.6728579998016357,
+          "p95_publication_ms": 250.2739429473877,
+          "source_max_schedule_lateness_seconds": 0.10876641698996536
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "unbounded"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703694.274497,
+      "copy_elapsed_seconds": 15.627455949783325,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703678.647041,
+      "engine_oom": false,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "0a2db2870255949e57f45fd7db9279667fc51bfe940ee7ef24c8b3cd934be121",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 3,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.20217394828796387,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.6571669578552246,
+          "p95_publication_ms": 266.19505882263184,
+          "source_max_schedule_lateness_seconds": 0.010209541011136025
+        },
+        {
+          "catchup_seconds": 0.19857001304626465,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.6769919395446777,
+          "p95_publication_ms": 257.57694244384766,
+          "source_max_schedule_lateness_seconds": 0.05549645799328573
+        },
+        {
+          "catchup_seconds": 0.19546103477478027,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.6580581665039062,
+          "p95_publication_ms": 255.32197952270508,
+          "source_max_schedule_lateness_seconds": 0.10057512499042787
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703803.353245,
+      "copy_elapsed_seconds": 15.842986106872559,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703787.510259,
+      "engine_oom": false,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "158b1170550d60499bfe387d6de34b25517387ec7392e1d0bc22325b1fb83f1e",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 4,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.16366100311279297,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.6574051380157471,
+          "p95_publication_ms": 276.07178688049316,
+          "source_max_schedule_lateness_seconds": 0.010120249993633479
+        },
+        {
+          "catchup_seconds": 0.16173815727233887,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.65761399269104,
+          "p95_publication_ms": 273.88715744018555,
+          "source_max_schedule_lateness_seconds": 0.05429437500424683
+        },
+        {
+          "catchup_seconds": 0.1601269245147705,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.6482319831848145,
+          "p95_publication_ms": 253.1571388244629,
+          "source_max_schedule_lateness_seconds": 0.13040112500311807
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792703914.430788,
+      "copy_elapsed_seconds": 16.225976943969727,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792703898.204811,
+      "engine_oom": false,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "b0fbffdfdcfe2ba895c0f33c587157a52a61fd0d5f192970f03a0528802cdda4",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 4,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.10576200485229492,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.7108540534973145,
+          "p95_publication_ms": 271.8939781188965,
+          "source_max_schedule_lateness_seconds": 0.010101749998284504
+        },
+        {
+          "catchup_seconds": 0.10384798049926758,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.6924829483032227,
+          "p95_publication_ms": 264.923095703125,
+          "source_max_schedule_lateness_seconds": 0.08191987499594688
+        },
+        {
+          "catchup_seconds": 0.10209012031555176,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.7115199565887451,
+          "p95_publication_ms": 262.6080513000488,
+          "source_max_schedule_lateness_seconds": 0.08416549998219125
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "unbounded"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792704024.165297,
+      "copy_elapsed_seconds": 15.684044122695923,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792704008.481253,
+      "engine_oom": false,
+      "image": "lake-replication-qualification-destination:qualification_20261022_203158-bulk-performance",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "ed59d4d00d92ec6118ad9b9398fc67647490ef5a327c91ea8488419527edc16f",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 5,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.15726613998413086,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.6914699077606201,
+          "p95_publication_ms": 280.8341979980469,
+          "source_max_schedule_lateness_seconds": 0.010208000021521002
+        },
+        {
+          "catchup_seconds": 0.15328407287597656,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.6917448043823242,
+          "p95_publication_ms": 263.1039619445801,
+          "source_max_schedule_lateness_seconds": 0.1705535420041997
+        },
+        {
+          "catchup_seconds": 0.14985394477844238,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 32,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.6916811466217041,
+          "p95_publication_ms": 259.5040798187256,
+          "source_max_schedule_lateness_seconds": 0.1772308340005111
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "unbounded"
+    },
+    {
+      "bulk_copies": 1,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "waiting_observed": true
+      },
+      "copy_commit_epoch": 1792704133.533438,
+      "copy_elapsed_seconds": 15.746275901794434,
+      "copy_rows": 2000000,
+      "copy_start_epoch": 1792704117.787162,
+      "engine_oom": false,
+      "image": "lake-replication-bulk-performance:qualification_20261022_203158",
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "log_sha256": "290a92cb01778da2b0b6e7535b135c0403f9d82017c997bcee29a33a990f0cf5",
+      "observer_interval_ms": 500,
+      "offered_interval_ms": 500,
+      "profile": "single_copy",
+      "queue_required": false,
+      "repetition": 5,
+      "status": "passed",
+      "stream_rows_per_transaction": 20,
+      "stream_transactions": 120,
+      "streams": [
+        {
+          "catchup_seconds": 0.12699580192565918,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.7159090042114258,
+          "p95_publication_ms": 263.28301429748535,
+          "source_max_schedule_lateness_seconds": 0.010129540984053165
+        },
+        {
+          "catchup_seconds": 0.12751007080078125,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.7139301300048828,
+          "p95_publication_ms": 252.3040771484375,
+          "source_max_schedule_lateness_seconds": 0.11573716599377804
+        },
+        {
+          "catchup_seconds": 0.1213839054107666,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 31,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.7160229682922363,
+          "p95_publication_ms": 249.73320960998535,
+          "source_max_schedule_lateness_seconds": 0.11845799998263828
+        }
+      ],
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "unexpected_pg_crash": false,
+      "variant": "bulk_only"
+    }
+  ],
+  "cleanup_audit": {
+    "method": "docker ps -a --filter name=bulk-performance; docker volume ls --filter label=com.docker.compose.project=<each project>",
+    "remaining_matching_containers": [],
+    "remaining_volumes_for_both_projects": []
+  },
+  "comparison_alias": {
+    "bounded": "bulk_only (legacy analysis helper label only; raw cases retain bulk_only)"
+  },
+  "excluded_startup_attempt": {
+    "accepted_cases": 0,
+    "log_sha256": {
+      "build.log": "52415e9508b83d745b32a8f66cc5f7fe238b4d44eb7ce946b269a90b1072f66a",
+      "steady-1-unbounded/compose.log": "b1d223647703ef94dee80e255bb0ab6d144055c0f5bef7ca5a052f1ac1e88394"
+    },
+    "path": ".qualification/qualification_20261022_202910_bulk_performance",
+    "raw_results_sha256": "eb355b21b2dbb4f188b18f28bd68f91b9cec4c78872dd2455ba3c241dc3649db",
+    "reason": "Engine health check failed before any workload measurements. Exact same image identities on retry; root cause not established.",
+    "source_snapshot": ".qualification/qualification_20261022_202910_bulk_performance/sources",
+    "status": "error"
+  },
+  "images": {
+    "bulk_only": "sha256:ddf2a8b27ea9caf70f20e25a04a6da2be1263be814f151a58cee185684691268",
+    "unbounded": "sha256:452f3682a42e6abd1af015512f3ad5dac72b0facbaf2b2ae417217b5e2173a4e"
+  },
+  "inputs": {
+    "experiments/admission/Dockerfile.reserved": "3a6b3f3222396440f7006a511fe842e7a7b5141c5135ffc3ab9b46b9064c39d0",
+    "experiments/admission/README.md": "4ea1c9b91e40699dd0447afade62ab3e5ec2e2282b673ffbbc882bb0bc12d7a8",
+    "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+    "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+    "experiments/admission/admission_measure.py": "7024e2edef57f0bb34692e8e2e6ecbe1f13d061a126c765ce71603040ad1d7e3",
+    "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+    "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+    "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+    "experiments/admission/operational_probe.py": "bc406cec7ade3c6b5e27316f5f15d26667d9cc93bb088944a52ac0a6d0c57992",
+    "experiments/admission/performance_probe.py": "5a86395d0dabddceb209883b4e3dea578a73b0ad933427bb54ba35b6f2d8a7c5",
+    "experiments/admission/reserved.c.inc": "7f4d664da9114b73148d435d4a0181f1ee83709b2108f4721d056045d10e930b",
+    "experiments/admission/reserved.sql": "8708e7d21cac8f63d7acd911723b607c5bcceda2240756a40c01335ba070e08c",
+    "experiments/admission/reserved_probe.py": "b964ef7385f83c0d4d289aef075a2b0e20f39420031b1bd78090a53c6ad5575f",
+    "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+    "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+    "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+    "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+    "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+    "experiments/admission/test_performance_probe.py": "22058b4427fe5f8e095e47a22518c3cd2cf8474cb24e8990f1e155df1f9150c7",
+    "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759",
+    "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+    "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+    "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+    "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+    "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+    "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+    "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+    "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+    "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+    "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+    "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+    "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+    "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+    "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+    "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+    "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+    "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+    "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+    "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+    "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+    "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+    "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+    "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d"
+  },
+  "local_checks": {
+    "log_sha256": "feb8e14c0e2eac1d3c6db3be9f7516112d56b4550b2d39f741f4b79141be9542",
+    "make_check": "passed before measurement after final code changes"
+  },
+  "log_sha256": {
+    "build.log": "9ae1f497314a7833e6ab333019f80fc64f39488483dc6cbb9c22bf5020d492c5",
+    "catchup-1-bulk_only/compose.log": "c5b81017ef3ca46d8ff5366dc77f836e0ef01a26aae91b89d90313c9d128bba4",
+    "catchup-1-unbounded/compose.log": "3c6c489712ce9ae3e9903262972f231fa38b85bbac66f215a1f012b124492079",
+    "catchup-2-bulk_only/compose.log": "20e17ab6a1365d0bce2109c481809fcc0ce14e8c299354228f1b526c109a0f90",
+    "catchup-2-unbounded/compose.log": "f5cea511a83ed8230983137283bdfe2f06b13260509b212610af9d0a249cbf75",
+    "catchup-3-bulk_only/compose.log": "53bca43611c882843a3512211e6be5066cb764a273a6d20f96c667188f58a62b",
+    "catchup-3-unbounded/compose.log": "2f3cad0a4691e8270917f04c317a357108b556b6dfed9d92db4b8d6affe2c484",
+    "catchup-4-bulk_only/compose.log": "00f5eac97bd1d177027e3871c4e7dc3666f1d5871b28b7c507e8e7b916595f37",
+    "catchup-4-unbounded/compose.log": "88d46d8e0c1ad1bb7e008f16ef01e3a540971d3c4995d2944cd1e211e5d4cee7",
+    "catchup-5-bulk_only/compose.log": "10eb3cc525eee417edf5cb3a286cbd42c765047e688b2f425b2d6c6798b82e95",
+    "catchup-5-unbounded/compose.log": "13e225276a1761cafa9ed4cc84983a7e34d73c3ea07e791a5573e0c31ed1a17e",
+    "single_copy-1-bulk_only/compose.log": "e778d2e1185411405a9d87111851273c53445483a9bdc55e183e235642af9b0e",
+    "single_copy-1-unbounded/compose.log": "598a82324dddbd553febae1bbea1b98484239dd746068b03f414aa21d6d1fc84",
+    "single_copy-2-bulk_only/compose.log": "c7f5d8405149b3200175ce9584e45787e4bce0b1eac70447c5e21ccc79798b8b",
+    "single_copy-2-unbounded/compose.log": "ad385a76c3d33f43287a28f6d3fd54077a3a252d3e43145215b825da6c839a37",
+    "single_copy-3-bulk_only/compose.log": "0a2db2870255949e57f45fd7db9279667fc51bfe940ee7ef24c8b3cd934be121",
+    "single_copy-3-unbounded/compose.log": "4a9935300c85bae0494c203851720744994f322dc0635b895fb2c811058ab4e0",
+    "single_copy-4-bulk_only/compose.log": "158b1170550d60499bfe387d6de34b25517387ec7392e1d0bc22325b1fb83f1e",
+    "single_copy-4-unbounded/compose.log": "b0fbffdfdcfe2ba895c0f33c587157a52a61fd0d5f192970f03a0528802cdda4",
+    "single_copy-5-bulk_only/compose.log": "290a92cb01778da2b0b6e7535b135c0403f9d82017c997bcee29a33a990f0cf5",
+    "single_copy-5-unbounded/compose.log": "ed59d4d00d92ec6118ad9b9398fc67647490ef5a327c91ea8488419527edc16f",
+    "steady-1-bulk_only/compose.log": "60ee26e1236f13923f0d03e695a7e6829033e45cda0b1dd74ef3acea483ef068",
+    "steady-1-unbounded/compose.log": "b217bd446e61c9d381dae0039c304494452c69e81d808210b0d6a634b2d219ac",
+    "steady-2-bulk_only/compose.log": "76b265d5bce013370c118f058615b2d61ab2c36fd5d1bd361b59a15a5a4a5442",
+    "steady-2-unbounded/compose.log": "6a19ebaf066150231ed3fd09a70f034d22ce28501dc8921a6ca81f29a69b23dc",
+    "steady-3-bulk_only/compose.log": "20225d3fa8febd7e71f3c5eab44e7d3043b988907716b7188ba53e7a4575d0ab",
+    "steady-3-unbounded/compose.log": "96013b973f824a056dac3090a47f372a4b5b7f3bd3e91b3a351d28634ee48961",
+    "steady-4-bulk_only/compose.log": "c46c8b05c662c7eee3b53a135e948deec243eb5330b8b29ad23b222d02c6b49c",
+    "steady-4-unbounded/compose.log": "17a85feb353e46bb06419a5e80dbe913233d6783aec47a2641bab47c782a6de7",
+    "steady-5-bulk_only/compose.log": "497ddbb5d6e69c552a726b14f3476ff2685e1684d3d47f90a9e7d4817a16ccef",
+    "steady-5-unbounded/compose.log": "467551fbe702afdbe7f1d22d1d0ab72be86be6d9b845c0d648ac1ad5b496d16b"
+  },
+  "production_changed": false,
+  "profiles": [
+    "steady",
+    "catchup",
+    "single_copy"
+  ],
+  "protocol": {
+    "catchup_interval_ms": 100,
+    "catchup_throughput_ratio_floor": 0.95,
+    "idle_seconds": 5,
+    "observer": "journal",
+    "order": "alternating AB/BA by repetition",
+    "p95_ratio_limit": 1.1,
+    "pairs": 5,
+    "payload_bytes": 128,
+    "poll_ms": 100,
+    "rows_per_transaction": 100,
+    "single_copy_duration_ratio_limit": 1.1,
+    "single_copy_rows": 2000000,
+    "single_copy_stream_transactions": 120,
+    "steady_interval_ms": 500,
+    "transactions": 120,
+    "warmup_transactions": 10
+  },
+  "raw_results_sha256": "7b277f6c3844de2a69d30d52dede9b89e6e81b7f5cff91be9f7532d82c0b97e5",
+  "raw_run": ".qualification/qualification_20261022_203158_bulk_performance",
+  "scope": "Five alternating paired cohorts for the current bulk-only candidate.",
+  "source_snapshot": ".qualification/qualification_20261022_203158_bulk_performance/sources",
+  "status": "passed"
+}

@@ -1,0 +1,3368 @@
+{
+  "scope": "Current-runtime engine admission diagnostics, Linux arm64; not release or statistical capacity qualification",
+  "decision": "Keep production scheduling unchanged until qualification. Recommend bulk-only admission as the candidate: four-copy baseline misses streaming p95, while one admitted bulk transaction with unrestricted streaming passes the same diagnostic, restart and lock checks. Reserved streaming serialization is not recommended.",
+  "production_source_unchanged": true,
+  "production_source_matches_commit": "9cfee8fb7d1ca581b089ac649852152f508c0ae9",
+  "cleanup_commit": "851f09e",
+  "runs": {
+    "first_lock_checks": {
+      "status": "passed",
+      "scope": "Experimental engine-only admission on the migrated runtime; not release qualification",
+      "parameters": {
+        "cases": [
+          "locks"
+        ],
+        "copy_rows": 2000000,
+        "stream_transactions": 120,
+        "variants": [
+          "reserved",
+          "bounded"
+        ]
+      },
+      "production_changed": false,
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "ff6f844b494e8901bf8e9e58a35bf746d09079ea3033e564ee57f53f20eca6a0",
+        "experiments/admission/README.md": "55188c54fb3278763c50bee71252fc5119843202dbf03fa94df5bd0fb2d1d0bf",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "0ace3ec12147be5fd042fb0fb884e1f9918fa7f9fbcfa9099d2b15d3334548a6",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/reserved.c.inc": "55fb3c9e874d8063c307f21498e0a1818c317204beabbb62230685b43f0e3896",
+        "experiments/admission/reserved.sql": "e35418a97257ecab87464b710b8bae1d279c0237f43775860dadbb50368845d2",
+        "experiments/admission/reserved_probe.py": "64596eefdaf08497211b39288fe3e36283482843ef181ba28e4d9f3592c8d927",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759"
+      },
+      "images": {
+        "bounded": "sha256:720ea97a1e16b4e28b44af7f611851a43c080ac47e78cf8edc3b4d6b1a7e6da8",
+        "reserved": "sha256:645c767ce31efaab4af15fbd0924a288377ebb80d2da3cc9a97a557577fb3538",
+        "unbounded": "sha256:452f3682a42e6abd1af015512f3ad5dac72b0facbaf2b2ae417217b5e2173a4e"
+      },
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "2",
+            "expected": "2",
+            "name": "admitted count reaches 2",
+            "passed": true
+          },
+          {
+            "actual": "bulk,stream",
+            "expected": "bulk,stream",
+            "name": "both admission lanes are held across databases",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "PostgreSQL-only control work bypasses engine admission",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "same-lane timeout is interruptible",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "waiting_for_writer count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "cross-lane transaction fails before waiting",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued cancellation returns promptly",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "7",
+            "expected": "7",
+            "name": "only seven engine functions acquire permits",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": false,
+            "expected": false,
+            "name": "global engine gate queues streaming behind bulk",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "PostgreSQL-only control work bypasses engine admission",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "same-lane timeout is interruptible",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "waiting_for_writer count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued cancellation returns promptly",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "7",
+            "expected": "7",
+            "name": "only seven engine functions acquire permits",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_054553",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "raw_result": ".qualification/qualification_20261022_054553_reserved_admission/results.json",
+      "raw_result_sha256": "88251a7f1be1aa6fb04ae3039ac2692a2ff6a412a0f26dfc3851e48115f4a1f3",
+      "source_snapshot": ".qualification/qualification_20261022_054553_reserved_admission/sources",
+      "cases": [
+        {
+          "variant": "reserved",
+          "case": "locks",
+          "status": "passed",
+          "raw_case_sha256": "0b7fe4c25c8eb7287b68f1416bcfc8d098de7aacde7c0e4ebcc8e119ab567f24",
+          "compose_log_sha256": "e30efd20a3869438123dcaf5a0525be37f3329064b2cd7b8b68d386537c38413",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "cleanup_returncode": 0
+        },
+        {
+          "variant": "bounded",
+          "case": "locks",
+          "status": "passed",
+          "raw_case_sha256": "0b7fe4c25c8eb7287b68f1416bcfc8d098de7aacde7c0e4ebcc8e119ab567f24",
+          "compose_log_sha256": "ca7b1385177cb721f5baa70f38a990ec6e09a8e527ec153f8929693cf668dce2",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "cleanup_returncode": 0
+        }
+      ]
+    },
+    "baseline_and_first_policy": {
+      "status": "completed_with_findings",
+      "scope": "Experimental engine-only admission on the migrated runtime; not release qualification",
+      "parameters": {
+        "cases": [
+          "scale",
+          "fairness"
+        ],
+        "copy_rows": 2000000,
+        "stream_transactions": 120,
+        "variants": [
+          "unbounded",
+          "reserved"
+        ]
+      },
+      "production_changed": false,
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "ff6f844b494e8901bf8e9e58a35bf746d09079ea3033e564ee57f53f20eca6a0",
+        "experiments/admission/README.md": "55188c54fb3278763c50bee71252fc5119843202dbf03fa94df5bd0fb2d1d0bf",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "0ace3ec12147be5fd042fb0fb884e1f9918fa7f9fbcfa9099d2b15d3334548a6",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/reserved.c.inc": "55fb3c9e874d8063c307f21498e0a1818c317204beabbb62230685b43f0e3896",
+        "experiments/admission/reserved.sql": "e35418a97257ecab87464b710b8bae1d279c0237f43775860dadbb50368845d2",
+        "experiments/admission/reserved_probe.py": "64596eefdaf08497211b39288fe3e36283482843ef181ba28e4d9f3592c8d927",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759"
+      },
+      "images": {
+        "reserved": "sha256:645c767ce31efaab4af15fbd0924a288377ebb80d2da3cc9a97a557577fb3538",
+        "unbounded": "sha256:452f3682a42e6abd1af015512f3ad5dac72b0facbaf2b2ae417217b5e2173a4e"
+      },
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_0 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_1 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_2 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_3 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_4 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_5 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_6 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_7 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_8 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_9 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_10 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_11 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_12 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_13 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_14 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_15 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "one wrapper per enabled subscription",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "live all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "restarted all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "all disabled wrappers drain",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "disabled source slots release",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "native cleanup removes every source slot",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_1 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_2 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "analytics exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_0 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_1 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_2 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_3 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_4 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_5 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_6 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_7 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_8 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_9 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_10 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_11 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_12 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_13 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_14 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_15 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "one wrapper per enabled subscription",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "live all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "restarted all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "all disabled wrappers drain",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "disabled source slots release",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "native cleanup removes every source slot",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_1 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_2 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "analytics exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy exact final Iceberg rows",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_054732",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "raw_result": ".qualification/qualification_20261022_054732_reserved_admission/results.json",
+      "raw_result_sha256": "8e194ce0cf879778fcf0ca3c6ad47997051c96e555d87c225410626d51eb19dd",
+      "source_snapshot": ".qualification/qualification_20261022_054732_reserved_admission/sources",
+      "cases": [
+        {
+          "variant": "unbounded",
+          "case": "scale",
+          "status": "passed",
+          "raw_case_sha256": "9917575f41e9969b8110c31a8e5b24d1d3653289f7c85296a3d010c8def9b8b6",
+          "compose_log_sha256": "c7d86e83800b3c2436d9f297f8cd509063eb354b805286740b7a053fa34a0639",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "databases": 4,
+          "subscriptions": 16,
+          "worker_budget": 64,
+          "setup_until_all_streaming_seconds": 4.156807541003218,
+          "live_all_visible_seconds": 1.488474292011233,
+          "restarted_all_visible_seconds": 1.9489653750060825,
+          "engine_memory_snapshots_bytes": {
+            "empty_inventory": 184696832,
+            "active_inventory": 195268608,
+            "restart_inventory": 189399040,
+            "disabled_inventory": 187518976
+          },
+          "memory_observations_are_not_peaks": true
+        },
+        {
+          "variant": "unbounded",
+          "case": "fairness",
+          "status": "passed",
+          "raw_case_sha256": "6ff618ea2f2be8aadba08f92d1089839b2f58e4ffdc119435f263b0cd7b82821",
+          "compose_log_sha256": "469d9bc40e30038f86155a8a194d7d7e33a06fad3b531d5338986061db1b3e9b",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "copy_rows": 2000000,
+          "stream_transactions": 120,
+          "copy_elapsed_seconds": 16.54913902282715,
+          "checks": {
+            "all_stream_targets_pass": true,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "waiting_observed": true
+          },
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "catchup_seconds": 0.1657087802886963,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 33,
+              "database": "analytics",
+              "max_publication_gap_seconds": 0.6458001136779785,
+              "p95_publication_ms": 266.79515838623047,
+              "source_max_schedule_lateness_seconds": 0.01379824998730328
+            },
+            {
+              "catchup_seconds": 0.16040301322937012,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 33,
+              "database": "fair_stream_1",
+              "max_publication_gap_seconds": 0.6462619304656982,
+              "p95_publication_ms": 260.1819038391113,
+              "source_max_schedule_lateness_seconds": 0.04843258399341721
+            },
+            {
+              "catchup_seconds": 0.1544339656829834,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 33,
+              "database": "fair_stream_2",
+              "max_publication_gap_seconds": 0.6459879875183105,
+              "p95_publication_ms": 258.07881355285645,
+              "source_max_schedule_lateness_seconds": 0.05342849998851307
+            }
+          ],
+          "sampled_max_admitted": 0,
+          "samples_with_both_lanes_admitted": 0,
+          "samples_with_streaming_databases_waiting_for_bulk": 0
+        },
+        {
+          "variant": "reserved",
+          "case": "scale",
+          "status": "passed",
+          "raw_case_sha256": "59588d0ba3f264d22ba39c3bb842dab00cc22794a9e61b8f4d5df48c6e2d1183",
+          "compose_log_sha256": "579014ce4adf137acb048721567dfa7f51e92c7d2635c0e68387cbcca67df585",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "databases": 4,
+          "subscriptions": 16,
+          "worker_budget": 64,
+          "setup_until_all_streaming_seconds": 3.754998707998311,
+          "live_all_visible_seconds": 2.480825332997483,
+          "restarted_all_visible_seconds": 1.901732041995274,
+          "engine_memory_snapshots_bytes": {
+            "empty_inventory": 141742080,
+            "active_inventory": 145117184,
+            "restart_inventory": 153362432,
+            "disabled_inventory": 153604096
+          },
+          "memory_observations_are_not_peaks": true
+        },
+        {
+          "variant": "reserved",
+          "case": "fairness",
+          "status": "finding",
+          "raw_case_sha256": "568d2c4d3b140efb6ef08ee0b46023e69bc90b578964dffff1e9ecddca10ce71",
+          "compose_log_sha256": "f45157c7155a7fda4bf536f2e1e8f7edc106be924f115ea1f73bff2241e5db32",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "copy_rows": 2000000,
+          "stream_transactions": 120,
+          "copy_elapsed_seconds": 16.15421199798584,
+          "checks": {
+            "all_stream_targets_pass": false,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "waiting_observed": true
+          },
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "catchup_seconds": 0.26697611808776855,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": false,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 26,
+              "database": "analytics",
+              "max_publication_gap_seconds": 3.72284197807312,
+              "p95_publication_ms": 2148.771047592163,
+              "source_max_schedule_lateness_seconds": 0.005223500003921799
+            },
+            {
+              "catchup_seconds": 0.1467740535736084,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": false,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 26,
+              "database": "fair_stream_1",
+              "max_publication_gap_seconds": 3.7165911197662354,
+              "p95_publication_ms": 2255.3231716156006,
+              "source_max_schedule_lateness_seconds": 0.022038417009753175
+            },
+            {
+              "catchup_seconds": 0.2036120891571045,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": false,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 26,
+              "database": "fair_stream_2",
+              "max_publication_gap_seconds": 3.941649913787842,
+              "p95_publication_ms": 2332.698106765747,
+              "source_max_schedule_lateness_seconds": 0.1201709590095561
+            }
+          ],
+          "sampled_max_admitted": 1,
+          "samples_with_both_lanes_admitted": 0,
+          "samples_with_streaming_databases_waiting_for_bulk": 6
+        }
+      ]
+    },
+    "revised_lock_checks": {
+      "status": "passed",
+      "scope": "Experimental engine-only admission on the migrated runtime; not release qualification",
+      "parameters": {
+        "cases": [
+          "locks"
+        ],
+        "copy_rows": 2000000,
+        "stream_transactions": 120,
+        "variants": [
+          "reserved",
+          "bounded"
+        ]
+      },
+      "production_changed": false,
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "ff6f844b494e8901bf8e9e58a35bf746d09079ea3033e564ee57f53f20eca6a0",
+        "experiments/admission/README.md": "6712ebc5b8ce2989489d395922a078916caee48f4287149f3292499e5dfa3eab",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "0ace3ec12147be5fd042fb0fb884e1f9918fa7f9fbcfa9099d2b15d3334548a6",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/reserved.c.inc": "55fb3c9e874d8063c307f21498e0a1818c317204beabbb62230685b43f0e3896",
+        "experiments/admission/reserved.sql": "b85062b2e9955643e008eed34b7b04d22b5c35a70db6cd24916f932a89e026a4",
+        "experiments/admission/reserved_probe.py": "34ce461629120a68096b2d36824a2be5fbd4cb042d072a5522af2fef2aaea848",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759"
+      },
+      "images": {
+        "bounded": "sha256:88adf492227fe74bf48d57e80300a7e14e63733a65910ced887b8fee57839b31",
+        "reserved": "sha256:4a10f80c216dbe6074cb685c2f58276b11babec7a5aacd2e185d73e0b08270b6",
+        "unbounded": "sha256:452f3682a42e6abd1af015512f3ad5dac72b0facbaf2b2ae417217b5e2173a4e"
+      },
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "metadata fixture reaches streaming",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "metadata fixture stops before permit checks",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "2",
+            "expected": "2",
+            "name": "admitted count reaches 2",
+            "passed": true
+          },
+          {
+            "actual": "bulk,stream",
+            "expected": "bulk,stream",
+            "name": "both admission lanes are held across databases",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "PostgreSQL-only control work bypasses engine admission",
+            "passed": true
+          },
+          {
+            "actual": [
+              "meta_items",
+              "ready"
+            ],
+            "expected": [
+              "meta_items",
+              "ready"
+            ],
+            "name": "existing-table and ready-schema paths bypass engine admission",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "same-lane timeout is interruptible",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "waiting_for_writer count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "cross-lane transaction fails before waiting",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued cancellation returns promptly",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "7",
+            "expected": "7",
+            "name": "only seven engine functions acquire permits",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "metadata fixture reaches streaming",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "metadata fixture stops before permit checks",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": false,
+            "expected": false,
+            "name": "global engine gate queues streaming behind bulk",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "PostgreSQL-only control work bypasses engine admission",
+            "passed": true
+          },
+          {
+            "actual": [
+              "meta_items",
+              "ready"
+            ],
+            "expected": [
+              "meta_items",
+              "ready"
+            ],
+            "name": "existing-table and ready-schema paths bypass engine admission",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "same-lane timeout is interruptible",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "waiting_for_writer count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued cancellation returns promptly",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "7",
+            "expected": "7",
+            "name": "only seven engine functions acquire permits",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_055643",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "raw_result": ".qualification/qualification_20261022_055643_reserved_admission/results.json",
+      "raw_result_sha256": "eb38f43ddc9100f1ed7de14a3b0fd1ed5828ad75d23d0f9d90cc070dec4c4759",
+      "source_snapshot": ".qualification/qualification_20261022_055643_reserved_admission/sources",
+      "cases": [
+        {
+          "variant": "reserved",
+          "case": "locks",
+          "status": "passed",
+          "raw_case_sha256": "0b7fe4c25c8eb7287b68f1416bcfc8d098de7aacde7c0e4ebcc8e119ab567f24",
+          "compose_log_sha256": "c1b860b2a4c458bcc2915839dcecbe1bfe8a3ee2e74323496e224a9594b3f1ce",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "cleanup_returncode": 0
+        },
+        {
+          "variant": "bounded",
+          "case": "locks",
+          "status": "passed",
+          "raw_case_sha256": "0b7fe4c25c8eb7287b68f1416bcfc8d098de7aacde7c0e4ebcc8e119ab567f24",
+          "compose_log_sha256": "36e310d2e6987e7855af03ab8b8c7917d99b40dcd175eb14a798c776aa7e3fac",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "cleanup_returncode": 0
+        }
+      ]
+    },
+    "revised_policy": {
+      "status": "passed",
+      "scope": "Experimental engine-only admission on the migrated runtime; not release qualification",
+      "parameters": {
+        "cases": [
+          "scale",
+          "fairness"
+        ],
+        "copy_rows": 2000000,
+        "stream_transactions": 120,
+        "variants": [
+          "reserved"
+        ]
+      },
+      "production_changed": false,
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "ff6f844b494e8901bf8e9e58a35bf746d09079ea3033e564ee57f53f20eca6a0",
+        "experiments/admission/README.md": "6712ebc5b8ce2989489d395922a078916caee48f4287149f3292499e5dfa3eab",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "0ace3ec12147be5fd042fb0fb884e1f9918fa7f9fbcfa9099d2b15d3334548a6",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/reserved.c.inc": "55fb3c9e874d8063c307f21498e0a1818c317204beabbb62230685b43f0e3896",
+        "experiments/admission/reserved.sql": "b85062b2e9955643e008eed34b7b04d22b5c35a70db6cd24916f932a89e026a4",
+        "experiments/admission/reserved_probe.py": "34ce461629120a68096b2d36824a2be5fbd4cb042d072a5522af2fef2aaea848",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759"
+      },
+      "images": {
+        "reserved": "sha256:4a10f80c216dbe6074cb685c2f58276b11babec7a5aacd2e185d73e0b08270b6",
+        "unbounded": "sha256:452f3682a42e6abd1af015512f3ad5dac72b0facbaf2b2ae417217b5e2173a4e"
+      },
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_0 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_1 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_2 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_3 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_4 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_5 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_6 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_7 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_8 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_9 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_10 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_11 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_12 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_13 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_14 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_15 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "one wrapper per enabled subscription",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "live all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "restarted all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "all disabled wrappers drain",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "disabled source slots release",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "native cleanup removes every source slot",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_1 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_2 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "analytics exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy exact final Iceberg rows",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_055907",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "raw_result": ".qualification/qualification_20261022_055907_reserved_admission/results.json",
+      "raw_result_sha256": "b5721fa03e9c6642fcadde915ac63a6279e109017b6dbf7071afef45c716edab",
+      "source_snapshot": ".qualification/qualification_20261022_055907_reserved_admission/sources",
+      "cases": [
+        {
+          "variant": "reserved",
+          "case": "scale",
+          "status": "passed",
+          "raw_case_sha256": "63273042b1826adf23223dd0745c424b99ed208eadc8cf02b5386e6e0d0725d2",
+          "compose_log_sha256": "2ab9853f92ce9c4efe87ec5ca50af9b182307e685731e9c83e7ecdb0e37af0ec",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "databases": 4,
+          "subscriptions": 16,
+          "worker_budget": 64,
+          "setup_until_all_streaming_seconds": 3.5717185829998925,
+          "live_all_visible_seconds": 1.8045649580017198,
+          "restarted_all_visible_seconds": 1.7666104169911705,
+          "engine_memory_snapshots_bytes": {
+            "empty_inventory": 142336000,
+            "active_inventory": 147644416,
+            "restart_inventory": 151560192,
+            "disabled_inventory": 151904256
+          },
+          "memory_observations_are_not_peaks": true
+        },
+        {
+          "variant": "reserved",
+          "case": "fairness",
+          "status": "passed",
+          "raw_case_sha256": "6274c5b4c3e1b9c7653f01ab91d20389caed35f94f87bcb5db792c9f496710c0",
+          "compose_log_sha256": "c894de8422d8cb7cc53cfde61e6fb2557d6207b2c1ee0534faff07e83250ef29",
+          "failure_marker_count": 0,
+          "failure_markers": [],
+          "copy_rows": 2000000,
+          "stream_transactions": 120,
+          "copy_elapsed_seconds": 17.650805950164795,
+          "checks": {
+            "all_stream_targets_pass": true,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "waiting_observed": true
+          },
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "catchup_seconds": 0.32158684730529785,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 35,
+              "database": "analytics",
+              "max_publication_gap_seconds": 1.2498598098754883,
+              "p95_publication_ms": 1404.038906097412,
+              "source_max_schedule_lateness_seconds": 0.014734959011548199
+            },
+            {
+              "catchup_seconds": 0.495028018951416,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 35,
+              "database": "fair_stream_1",
+              "max_publication_gap_seconds": 1.0427868366241455,
+              "p95_publication_ms": 1092.4959182739258,
+              "source_max_schedule_lateness_seconds": 0.05643250000139233
+            },
+            {
+              "catchup_seconds": 0.42894601821899414,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 35,
+              "database": "fair_stream_2",
+              "max_publication_gap_seconds": 1.3115298748016357,
+              "p95_publication_ms": 1262.1140480041504,
+              "source_max_schedule_lateness_seconds": 0.0665854590042727
+            }
+          ],
+          "sampled_max_admitted": 2,
+          "samples_with_both_lanes_admitted": 3,
+          "samples_with_streaming_databases_waiting_for_bulk": 0
+        }
+      ]
+    },
+    "concurrent_copy_baseline": {
+      "status": "completed_with_findings",
+      "scope": "Experimental engine-only admission on the migrated runtime; not release qualification",
+      "parameters": {
+        "bulk_copies": 4,
+        "cases": [
+          "fairness"
+        ],
+        "copy_rows": 2000000,
+        "stream_transactions": 120,
+        "variants": [
+          "unbounded"
+        ]
+      },
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "ff6f844b494e8901bf8e9e58a35bf746d09079ea3033e564ee57f53f20eca6a0",
+        "experiments/admission/README.md": "ef1ce2a29d6af7ddd8610d837d4f5c14af26cdd90b56f9ebe70bd1651708eba8",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "d157185aaae2f2a7f4884be6394509a0617590561bded053777bd60192453090",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/reserved.c.inc": "55fb3c9e874d8063c307f21498e0a1818c317204beabbb62230685b43f0e3896",
+        "experiments/admission/reserved.sql": "b85062b2e9955643e008eed34b7b04d22b5c35a70db6cd24916f932a89e026a4",
+        "experiments/admission/reserved_probe.py": "36076ff02c38fd755f847ce87210351f55f505394c65fe70c9763db7c9c19924",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759"
+      },
+      "images": {
+        "unbounded": "sha256:452f3682a42e6abd1af015512f3ad5dac72b0facbaf2b2ae417217b5e2173a4e"
+      },
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_1 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_2 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "analytics exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 0 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 3 exact final Iceberg rows",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_060830",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "raw_result": ".qualification/qualification_20261022_060830_reserved_admission/results.json",
+      "raw_result_sha256": "3440e205221b8e831858038d450466d013883904c3233b7a7137406204a84801",
+      "cases": [
+        {
+          "status": "finding",
+          "variant": "unbounded",
+          "case": "fairness",
+          "copy_rows": 2000000,
+          "bulk_copies": 4,
+          "stream_transactions": 120,
+          "copy_elapsed_seconds": 37.340802907943726,
+          "checks": {
+            "all_stream_targets_pass": false,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "publication_overlap_observed": true,
+            "waiting_observed": true
+          },
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "max_active_copy_publications": 4,
+          "streams": [
+            {
+              "catchup_seconds": 0.15252208709716797,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": false,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 68,
+              "database": "analytics",
+              "max_publication_gap_seconds": 0.9304690361022949,
+              "p95_publication_ms": 3360.229015350342,
+              "source_max_schedule_lateness_seconds": 0.005425832991022617
+            },
+            {
+              "catchup_seconds": 0.14922595024108887,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": false,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 68,
+              "database": "fair_stream_1",
+              "max_publication_gap_seconds": 0.8250138759613037,
+              "p95_publication_ms": 3313.347101211548,
+              "source_max_schedule_lateness_seconds": 0.154506291000871
+            },
+            {
+              "catchup_seconds": 0.1458430290222168,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": false,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 68,
+              "database": "fair_stream_2",
+              "max_publication_gap_seconds": 0.8739500045776367,
+              "p95_publication_ms": 3071.084976196289,
+              "source_max_schedule_lateness_seconds": 0.15813070800504647
+            }
+          ],
+          "max_active_copy_publications_while_source_offered": 4,
+          "publication_backend_count_is_function_activity_not_internal_engine_execution": true,
+          "compose_log_sha256": "c8f770a80c990d4414607cd8a0cdd1d834b4fde226cdd991575108359100a847",
+          "failure_marker_count": 0,
+          "raw_case_sha256": "6bde11ed984c8ba69cf171b612bde3033612bd4a85db9910195d112d7752ff59"
+        }
+      ],
+      "source_snapshot": ".qualification/qualification_20261022_060830_reserved_admission/sources"
+    },
+    "bulk_only_capacity": {
+      "status": "passed",
+      "scope": "Experimental engine-only admission on the migrated runtime; not release qualification",
+      "parameters": {
+        "bulk_copies": 4,
+        "cases": [
+          "locks",
+          "scale",
+          "fairness"
+        ],
+        "copy_rows": 2000000,
+        "stream_transactions": 120,
+        "variants": [
+          "bulk_only"
+        ]
+      },
+      "inputs": {
+        "experiments/admission/Dockerfile.reserved": "3a6b3f3222396440f7006a511fe842e7a7b5141c5135ffc3ab9b46b9064c39d0",
+        "experiments/admission/README.md": "ef1ce2a29d6af7ddd8610d837d4f5c14af26cdd90b56f9ebe70bd1651708eba8",
+        "experiments/admission/admission.c.inc": "16abb70ea607d169c47471e73a69eb604c2d7bfc238d89f248a8937a1b43bc21",
+        "experiments/admission/admission.sql": "2a7f78d7f3866d90454cceb5013cee67299a6f3c3f60e80d0b9166d2d17ef80d",
+        "experiments/admission/admission_measure.py": "3a334b1266bc1d93a79e1eb5415c249fbbd9a51f0f0c2fe06c94660381f7287e",
+        "experiments/admission/admission_probe.py": "786145c610f0a253f0c6fd6835b66d0de583c12ec7676d1bdefc5e8d60c2a67b",
+        "experiments/admission/analyze.py": "cdf18e3395ff32dbcb9442c5f9999db4a883ad825b0f726ee21214ade18b8a4c",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/reserved.c.inc": "7f4d664da9114b73148d435d4a0181f1ee83709b2108f4721d056045d10e930b",
+        "experiments/admission/reserved.sql": "b85062b2e9955643e008eed34b7b04d22b5c35a70db6cd24916f932a89e026a4",
+        "experiments/admission/reserved_probe.py": "b964ef7385f83c0d4d289aef075a2b0e20f39420031b1bd78090a53c6ad5575f",
+        "experiments/admission/sample.py": "679fcb7f3f70f0f39aa36b28ce8e45221e7c097fc123b93f39c07b85635458a4",
+        "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+        "experiments/admission/test_admission_timing.py": "8e900889060a0888aa4d6085c11fca02eb98379633878944fc6d271f97fa5c34",
+        "experiments/admission/test_analyze.py": "5cbe11875675c1482a9abc31cfb03f65680d717d4ad80d6d26d6068394aab1e9",
+        "experiments/admission/test_compare.py": "9b5d43b291b2ef2292302af69d470cd1a96326603f0fad969259eb5ea3e4c88b",
+        "extensions/lake_replication/lake_replication.c": "a1ad8fde2aab6c441551c1134d1f8372ee6b3027db886ccf33bd2eed46492759"
+      },
+      "images": {
+        "bulk_only": "sha256:6b3f19486f7e1d5e3b0f7b9295bb23a9b24f2ad627010295e0328a2dc23d6d10",
+        "unbounded": "sha256:452f3682a42e6abd1af015512f3ad5dac72b0facbaf2b2ae417217b5e2173a4e"
+      },
+      "archive_provenance": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+        "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "checks": [
+          {
+            "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+            "name": "release archive checksum",
+            "passed": true
+          },
+          {
+            "actual": "arm64",
+            "expected": "arm64",
+            "name": "archive architecture matches qualification host",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "metadata fixture reaches streaming",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "metadata fixture stops before permit checks",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "admitted count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "bulk",
+            "expected": "bulk",
+            "name": "streaming preserves its independent capacity across databases",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "PostgreSQL-only control work bypasses engine admission",
+            "passed": true
+          },
+          {
+            "actual": [
+              "meta_items",
+              "ready"
+            ],
+            "expected": [
+              "meta_items",
+              "ready"
+            ],
+            "name": "existing-table and ready-schema paths bypass engine admission",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "same-lane timeout is interruptible",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "waiting_for_writer count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "waiting_for_writer count reaches 1",
+            "passed": true
+          },
+          {
+            "actual": true,
+            "expected": true,
+            "name": "queued cancellation returns promptly",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "admitted count reaches 0",
+            "passed": true
+          },
+          {
+            "actual": "7",
+            "expected": "7",
+            "name": "only seven engine functions acquire permits",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_0 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_1 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_2 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_3 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_4 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_5 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_6 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_7 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_8 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_9 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_10 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_11 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics/scale_sub_12 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_1/scale_sub_13 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_2/scale_sub_14 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "scale_db_3/scale_sub_15 initial copy",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "one wrapper per enabled subscription",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "live",
+            "expected": "live",
+            "name": "live actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "live all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 0",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 1",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 2",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 3",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 4",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 5",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 6",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 7",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 8",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 9",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 10",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 11",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 12",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 13",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 14",
+            "passed": true
+          },
+          {
+            "actual": "restarted",
+            "expected": "restarted",
+            "name": "restarted actual Iceberg rows 15",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "1",
+            "expected": "1",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "16",
+            "expected": "16",
+            "name": "restarted all wrappers present",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "all disabled wrappers drain",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "disabled source slots release",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "native cleanup removes every source slot",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "analytics replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_1 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_2 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "0",
+            "expected": "0",
+            "name": "scale_db_3 replication owner count",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "analytics is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_1 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "streaming",
+            "expected": "streaming",
+            "name": "fair_stream_2 is streaming before large copy",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "analytics exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2400|2400|t",
+            "expected": "2400|2400|t",
+            "name": "fair_stream_2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 0 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 1 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 2 exact final Iceberg rows",
+            "passed": true
+          },
+          {
+            "actual": "2000000|2000000|1|2000000|2000001000000|t",
+            "expected": "2000000|2000000|1|2000000|2000001000000|t",
+            "name": "large copy 3 exact final Iceberg rows",
+            "passed": true
+          }
+        ],
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "run": "qualification_20261022_061312",
+        "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+      },
+      "raw_result": ".qualification/qualification_20261022_061312_reserved_admission/results.json",
+      "raw_result_sha256": "407463908ad3518661ec4015b2214b46ea847ecab415eaddd5ebbf337c674836",
+      "source_snapshot": ".qualification/qualification_20261022_061312_reserved_admission/sources",
+      "cases": [
+        {
+          "status": "passed",
+          "variant": "bulk_only",
+          "case": "locks",
+          "raw_case_sha256": "0b7fe4c25c8eb7287b68f1416bcfc8d098de7aacde7c0e4ebcc8e119ab567f24",
+          "compose_log_sha256": "ac39e43a3ad205b0f01fd9412088429588a8f250928811e61ab25b974a1f80dc",
+          "failure_marker_count": 0,
+          "cleanup_returncode": 0
+        },
+        {
+          "status": "passed",
+          "variant": "bulk_only",
+          "case": "scale",
+          "raw_case_sha256": "b02de0d54531a200467980565f85d67473204c34707d0b602b52082d2510bca0",
+          "compose_log_sha256": "17ad98ec78f490c7c0b2e7f0c0c37f19de399e7e90688ed16b3078baeac735b9",
+          "failure_marker_count": 0,
+          "databases": 4,
+          "subscriptions": 16,
+          "worker_budget": 64,
+          "setup_until_all_streaming_seconds": 4.026179750013398,
+          "live_all_visible_seconds": 2.0693189589946996,
+          "restarted_all_visible_seconds": 2.1186600830114912
+        },
+        {
+          "status": "passed",
+          "variant": "bulk_only",
+          "case": "fairness",
+          "raw_case_sha256": "c457174752385df9f1c3785145c30a0660ee0989084a0dbf5f3469d0e89ee0f8",
+          "compose_log_sha256": "07274ab190472d64ec1c32eeec506d03fba9468cc775351bad93b9aec2bf1c7f",
+          "failure_marker_count": 0,
+          "copy_rows": 2000000,
+          "bulk_copies": 4,
+          "stream_transactions": 120,
+          "copy_elapsed_seconds": 42.5667769908905,
+          "checks": {
+            "all_stream_targets_pass": true,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "publication_overlap_observed": true,
+            "waiting_observed": true
+          },
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "max_active_copy_publications": 4,
+          "streams": [
+            {
+              "catchup_seconds": 0.11590981483459473,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 84,
+              "database": "analytics",
+              "max_publication_gap_seconds": 0.8115708827972412,
+              "p95_publication_ms": 874.3197917938232,
+              "source_max_schedule_lateness_seconds": 0.0101218749769032
+            },
+            {
+              "catchup_seconds": 0.09941411018371582,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 84,
+              "database": "fair_stream_1",
+              "max_publication_gap_seconds": 0.809135913848877,
+              "p95_publication_ms": 923.8159656524658,
+              "source_max_schedule_lateness_seconds": 0.08367958400049247
+            },
+            {
+              "catchup_seconds": 0.09709692001342773,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 84,
+              "database": "fair_stream_2",
+              "max_publication_gap_seconds": 0.7841308116912842,
+              "p95_publication_ms": 908.9479446411133,
+              "source_max_schedule_lateness_seconds": 0.08789704198716208
+            }
+          ],
+          "sampled_max_admitted": 1,
+          "sampled_max_queued_bulk": 3,
+          "sampled_stream_permits": 0,
+          "samples_with_queued_bulk": 25,
+          "max_active_copy_publications_while_source_offered": 4,
+          "publication_backend_count_includes_permit_waiters": true
+        }
+      ]
+    }
+  },
+  "final_cleanup_audit": {
+    "containers_remaining": [],
+    "volumes_remaining": [],
+    "scope": "All six local admission runs, including concurrent-copy baseline and bulk-only follow-up"
+  },
+  "validation": {
+    "make_check": "passed",
+    "log": "/tmp/lake-bulk-only-final-check.log"
+  }
+}
