@@ -113,8 +113,8 @@ bundle from a clean checkout:
 
 ```sh
 make install-bundle
-tar -xzf dist/lake_replication-0.1.0-beta.2.tar.gz -C /tmp
-cd /tmp/lake_replication-0.1.0-beta.2
+tar -xzf dist/lake_replication-0.1.0-beta.3.tar.gz -C /tmp
+cd /tmp/lake_replication-0.1.0-beta.3
 sudo ./install.sh
 ```
 

@@ -1,0 +1,9 @@
+ARG QUAL_IMAGE
+FROM ${QUAL_IMAGE}
+USER root
+COPY extensions/lake_replication /stream-pool/extensions/lake_replication
+COPY migrations /stream-pool/migrations
+COPY experiments/admission/stream_pool.c.inc experiments/admission/stream_pool.sql /stream-pool/
+RUN cat /stream-pool/stream_pool.c.inc >> /stream-pool/extensions/lake_replication/lake_replication.c \
+ && make -C /stream-pool/extensions/lake_replication clean all install \
+ && cat /stream-pool/stream_pool.sql >> "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.3.sql"

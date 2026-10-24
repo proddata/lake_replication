@@ -162,7 +162,7 @@ dependencies = [
 
 [[package]]
 name = "lake-replication-worker"
-version = "0.1.0-beta.2"
+version = "0.1.0-beta.3"
 dependencies = [
  "libc",
  "postgres-protocol",

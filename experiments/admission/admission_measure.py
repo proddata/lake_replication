@@ -74,6 +74,7 @@ def fairness(args, variant, image, text, directory):
     q.COMPOSE_FILE.write_text(text)
     q.ENV['QUALIFICATION_DESTINATION_IMAGE'] = image
     bulk_copies = getattr(args, 'bulk_copies', 1)
+    admission_view = getattr(args, 'admission_view', 'lake_replication.prototype_writer_admission')
     copy_names = ['fair_copy'] + [f'fair_copy_{i}' for i in range(1, bulk_copies)]
     result = dict(variant=variant, image=image, copy_rows=args.copy_rows, bulk_copies=bulk_copies,
         stream_transactions=args.stream_transactions, stream_rows_per_transaction=20,
@@ -162,7 +163,7 @@ def fairness(args, variant, image, text, directory):
             if bulk_copies > 1:
                 sample['active_copy_publications'] = int(monitor.query("SELECT count(*) FROM pg_stat_activity WHERE state='active' AND query LIKE 'SELECT lake_replication.finish_initial_sync_group(%'")[0])
             if variant in ('bounded', 'reserved', 'bulk_only'):
-                sample['admission'] = json.loads(monitor.query("SELECT coalesce(jsonb_agg(t),'[]'::jsonb) FROM (SELECT * FROM lake_replication.prototype_writer_admission)t")[0])
+                sample['admission'] = json.loads(monitor.query(f"SELECT coalesce(jsonb_agg(t),'[]'::jsonb) FROM (SELECT * FROM {admission_view})t")[0])
                 held = [row for row in sample['admission'] if row['admission_state'] == 'admitted']
                 if len(held) > (2 if variant == 'reserved' else 1):
                     raise AssertionError('engine admission capacity exceeded')

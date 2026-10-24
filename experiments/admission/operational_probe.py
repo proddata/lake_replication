@@ -19,6 +19,7 @@ p = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(p)
 q, c, m = p.q, p.c, p.m
 CLIENTS = []
+ADMIT = 'lake_replication.experiment_admit_engine(true)'
 
 
 def sql(statement):
@@ -84,7 +85,7 @@ def schema_state(subscription):
 def schema_case(result):
     subscription, version = pending_schema()
     owner = client()
-    owner.query('BEGIN; SELECT lake_replication.experiment_admit_engine(true)')
+    owner.query(f'BEGIN; SELECT {ADMIT}')
     attempted = q.sql_result('destination', 'analytics', f"SET lock_timeout='250ms'; SELECT lake_replication.reconcile_relation_schema({subscription},100,{version})", check_result=False)
     result['timeout_observation'] = dict(returncode=attempted.returncode,
         state=schema_state(subscription), response=attempted.stdout.strip(), error=attempted.stderr.strip())
@@ -110,7 +111,7 @@ def schema_case(result):
     schema = client()
     schema.query("\\set VERBOSITY verbose\nSET deadlock_timeout='100ms'")
     schema_pid = schema.query('SELECT pg_backend_pid()')[0]
-    owner.query("SET deadlock_timeout='10s'; BEGIN; SELECT lake_replication.experiment_admit_engine(true)")
+    owner.query(f"SET deadlock_timeout='10s'; BEGIN; SELECT {ADMIT}")
     monitor = client()
     with ThreadPoolExecutor(max_workers=2) as pool:
         pending = pool.submit(schema.query, f'SELECT lake_replication.reconcile_relation_schema({subscription},100,{version})')
@@ -144,7 +145,7 @@ def rebuild_case(result):
     rebuild = client()
     rebuild_pid = rebuild.query('SELECT pg_backend_pid()')[0]
     owner = client()
-    owner.query('BEGIN; SELECT lake_replication.experiment_admit_engine(true)')
+    owner.query(f'BEGIN; SELECT {ADMIT}')
     monitor = client()
     with ThreadPoolExecutor(max_workers=1) as pool:
         queued = pool.submit(rebuild.query, promote)
@@ -160,7 +161,7 @@ def rebuild_case(result):
     q.check('canceled rebuild preserves old subscription state', sql(f'SELECT state FROM lake_replication.subscriptions WHERE subscription_id={old}'), 'paused')
     q.check('canceled rebuild records no promotion', sql('SELECT count(*) FROM lake_replication.rebuild_promotions'), '0')
     rebuild = client()
-    owner.query('BEGIN; SELECT lake_replication.experiment_admit_engine(true)')
+    owner.query(f'BEGIN; SELECT {ADMIT}')
     with ThreadPoolExecutor(max_workers=2) as pool:
         schema_job = pool.submit(schema.query, f'SELECT lake_replication.reconcile_relation_schema({schema_sub},100,{version})')
         # Observe the schema waiter before submitting an explicit transaction
@@ -227,6 +228,8 @@ def main():
     parser.add_argument('--cases', nargs='+', choices=('schema','rebuild','cancel'), default=['schema','rebuild','cancel'])
     parser.add_argument('--rows', type=int, default=2000000)
     args = parser.parse_args()
+    if q.VERSION != '0.1.0-beta.2':
+        parser.error('historical beta.2 overlay: run with VERSION=0.1.0-beta.2; use tests/admission/probe.py for production packages')
     if args.rows < 500000:
         parser.error('use at least 500000 rows to observe real engine publication')
     q.RESULTS = ROOT/'.qualification'/(q.RUN+'_bulk_operations')

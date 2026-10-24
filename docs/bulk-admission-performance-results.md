@@ -1,5 +1,9 @@
 # Bulk-only admission: paired performance qualification
 
+Historical prototype qualification. The policy is now implemented in the
+[beta.3 production candidate](stream-pool-migration-results.md); its package
+qualification is tracked separately.
+
 The bulk-only candidate passes the local paired performance gates. Combined
 with the [operational checks](bulk-admission-operations-results.md) and the
 [four-copy diagnostic](engine-admission-results.md), these results support

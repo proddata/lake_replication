@@ -99,6 +99,50 @@ GRANT SELECT ON lake_replication.subscription_status,
 TO replication_monitor;
 ```
 
+## Engine admission
+
+Beta.3 serializes managed bulk engine transactions across destination databases.
+Destination creation, additive schema changes, initial-copy publication and
+rebuild promotion share one permit held through commit. Streaming publication
+does not request the bulk permit; it has four independent transaction slots.
+PostgreSQL staging requests neither.
+
+As `lake_replication_admin` or an authorized database operator, inspect holders
+and waiters with:
+
+```sql
+SELECT pid, database_name, admission_state, waitstart,
+       wait_event_type, wait_event
+FROM lake_replication.bulk_admission
+ORDER BY waitstart NULLS LAST, pid;
+```
+
+An empty view means no managed bulk transaction holds or waits for the permit;
+streaming workers can still be active. A queued bulk operation is normal while
+another copy or schema transaction commits. Cancellation, transaction rollback
+and backend exit release the permit. Temporary schema lock contention propagates
+as a retryable SQL error rather than durably pausing the subscription; an
+incompatible schema still requires operator attention.
+
+Inspect streaming holders and waiters with:
+
+```sql
+SELECT pid, database_name, slot, admission_state, waitstart,
+       wait_event_type, wait_event
+FROM lake_replication.stream_admission
+ORDER BY slot, waitstart NULLS LAST;
+```
+
+Four streaming engine transactions may be admitted alongside the bulk transaction.
+Nested publication/apply calls reuse their transaction's slot. A request tries any
+free slot, then joins one slot's native queue if the pool is full; this does not
+promise one global FIFO. Cancellation, rollback and backend exit release slots.
+These limits apply within this PostgreSQL instance to managed SQL entry points.
+
+These limits do not bound staging memory, connections, retained source WAL or
+application SQL sent directly to the engine. Continue monitoring source WAL and
+journal backlog while copies wait.
+
 ## Suggested alerts
 
 Tune lag thresholds to the workload and service-level objective. These are

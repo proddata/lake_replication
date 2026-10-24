@@ -11,7 +11,7 @@ PG_LAKE_REV ?= $(shell git -C vendor/pg_lake rev-parse HEAD)
 
 .PHONY: upstream-source
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop performance-test failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test empty-filtered-test receiver-progress-test lifecycle-test lifecycle-upgrade-test lifecycle-fault-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop performance-test failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test empty-filtered-test receiver-progress-test admission-test lifecycle-test lifecycle-upgrade-test lifecycle-fault-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
 upstream-source:
 	python3 deploy/prepare-upstream.py $(PG_LAKE_REV)
 
@@ -77,6 +77,9 @@ streaming-test:
 
 lifecycle-fault-test:
 	python3 tests/lifecycle/faults.py
+
+admission-test:
+	python3 tests/admission/probe.py
 
 lifecycle-test:
 	python3 tests/lifecycle/probe.py
@@ -158,6 +161,7 @@ check:
 	python3 -m py_compile tests/transport/probe.py
 	python3 -m py_compile tests/publisher/probe.py
 	python3 -m py_compile tests/mutations/probe.py
+	python3 -m py_compile tests/admission/probe.py tests/admission/pool_cases.py
 	python3 -m py_compile tests/lifecycle/probe.py tests/lifecycle/cases.py tests/lifecycle/faults.py tests/lifecycle/upgrade.py
 	python3 -m py_compile tests/streaming/probe.py tests/streaming/empty_filtered.py
 	python3 -m py_compile tests/toast/probe.py
@@ -183,6 +187,7 @@ check:
 	python3 -m py_compile tests/qualification/probe.py
 	python3 -m py_compile tests/qualification/compatibility.py
 	$(MAKE) -C extensions/lake_replication generate
+	python3 -m unittest discover -s tests/admission -p 'test_*.py'
 	! grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0.sql
 	! grep -q '0017_common_parameterized_types.sql' extensions/lake_replication/lake_replication--0.1.0.sql
 	! grep -q '0018_postgres_integration.sql' extensions/lake_replication/lake_replication--0.1.0.sql

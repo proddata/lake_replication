@@ -24,8 +24,11 @@ The generated SQL files are build output. Version boundaries are explicit:
 
 - `0.1.0`: migrations 0001–0015.
 - Frozen `0.1.0-beta.1`: migrations 0001–0021 plus config-dump registration.
-- `0.1.0-beta.2`: migrations 0001–0023 plus config-dump registration.
+- Frozen `0.1.0-beta.2`: migrations 0001–0023 plus config-dump registration.
 - `beta.1` to `beta.2`: 0022 (empty commits) and 0023 (base lifecycle).
+- `0.1.0-beta.3`: migrations 0001–0024 plus config-dump registration.
+- `beta.2` to `beta.3`: 0024 (one bulk transaction and four streaming transactions). Earlier versions
+  upgrade through the preserved beta.2 paths.
 
 Both development-baseline upgrade paths are shipped. The beta.1 scripts match
 the previously qualified archive; an already-fixed beta.1 installation can also
@@ -38,3 +41,12 @@ copied metadata cannot authorize dispatch or deletion of the original source slo
 The migration generator validates/removes each outer transaction wrapper because
 PostgreSQL executes extension scripts inside its own transaction. Released version
 boundaries must not be edited in place.
+
+Bulk destination creation, schema changes, initial-copy publication and rebuild
+promotion share one instance-wide transaction permit. Streaming publication has
+a separate pool of four transaction slots. PostgreSQL staging requests neither. Permits last through commit and use native
+PostgreSQL cancellation/rollback cleanup. Administrators can inspect
+`lake_replication.bulk_admission` and `lake_replication.stream_admission` for
+holders and waiters. Streaming slots use separate native queues rather than one
+global FIFO. This policy does not
+bound total memory or arbitrary application engine queries.

@@ -1,5 +1,9 @@
 # Bulk-only admission: operational qualification
 
+Historical prototype qualification. The policy is now implemented in the
+[beta.3 production candidate](stream-pool-migration-results.md); its package
+qualification is tracked separately.
+
 The corrected experimental policy passes 39 operational assertions covering
 schema contention, rebuild rollback and cancellation during an actual engine
 copy request. Production scheduling remains unchanged. The subsequent

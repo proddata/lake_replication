@@ -143,6 +143,7 @@
 #include "lib/stringinfo.h"
 #include "postmaster/bgworker.h"
 #include "storage/latch.h"
+#include "storage/lock.h"
 #include "storage/ipc.h"
 #include <libpq-fe.h>
 
@@ -1765,4 +1766,47 @@ _PG_init(void)
 
 	prev_ProcessUtility = ProcessUtility_hook;
 	ProcessUtility_hook = lake_ProcessUtility;
+}
+
+/* One instance-wide bulk transaction, including engine commit. PostgreSQL owns
+ * interruptible waits, savepoint rollback and backend-death cleanup. Streaming
+ * and PostgreSQL staging do not request this permit. This is not authorization
+ * or a bound on total engine/staging memory.
+ */
+PG_FUNCTION_INFO_V1(lake_replication_admit_bulk);
+
+Datum
+lake_replication_admit_bulk(PG_FUNCTION_ARGS)
+{
+    LOCKTAG tag;
+
+    SET_LOCKTAG_ADVISORY(tag, InvalidOid, 0x4c524550U, 2, 1);
+    if (!LockHeldByMe(&tag, ExclusiveLock, false))
+        (void) LockAcquire(&tag, ExclusiveLock, false, false);
+    PG_RETURN_VOID();
+}
+
+/* Four managed streaming transactions: use any available transaction slot. If full,
+ * join one slot's native queue. This bounds concurrency but does not promise a
+ * single global FIFO; PostgreSQL owns cancellation and rollback cleanup.
+ */
+PG_FUNCTION_INFO_V1(lake_replication_admit_stream);
+
+Datum
+lake_replication_admit_stream(PG_FUNCTION_ARGS)
+{
+    LOCKTAG tags[4];
+    int i;
+
+    for (i = 0; i < 4; i++)
+    {
+        SET_LOCKTAG_ADVISORY(tags[i], InvalidOid, 0x4c524550U, 3 + i, 1);
+        if (LockHeldByMe(&tags[i], ExclusiveLock, false))
+            PG_RETURN_VOID();
+    }
+    for (i = 0; i < 4; i++)
+        if (LockAcquire(&tags[i], ExclusiveLock, false, true) != LOCKACQUIRE_NOT_AVAIL)
+            PG_RETURN_VOID();
+    (void) LockAcquire(&tags[MyProcPid % 4], ExclusiveLock, false, false);
+    PG_RETURN_VOID();
 }

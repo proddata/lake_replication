@@ -113,6 +113,16 @@ def scale_case(databases, subscriptions, budget, image, text, directory):
         raise
     finally:
         try:
+            # Capture state before cleanup, especially an exited engine or a
+            # receiver retry that can otherwise look like eventual stale rows.
+            workers = q.compose('exec', '-T', 'destination', 'sh', '-ec',
+                "find /worker-logs -type f -name '*.log' -exec cat {} +", check_result=False)
+            (directory / 'workers.jsonl').write_text(workers.stdout)
+            ids = q.compose('ps', '-a', '-q', check_result=False).stdout.split()
+            if ids:
+                states = q.command(['docker', 'inspect', '--format',
+                    '{{.Name}} {{json .State}}', *ids], check_result=False)
+                (directory / 'container-states.jsonl').write_text(states.stdout)
             logs = q.compose('logs', '--no-color', check_result=False)
             (directory / 'compose.log').write_text(logs.stdout + logs.stderr)
         finally:

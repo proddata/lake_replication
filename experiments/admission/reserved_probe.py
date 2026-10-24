@@ -142,6 +142,8 @@ def main():
     parser.add_argument('--stream-transactions', type=int, default=120)
     parser.add_argument('--bulk-copies', type=int, default=1)
     args = parser.parse_args()
+    if q.VERSION != '0.1.0-beta.2':
+        parser.error('historical beta.2 overlay: run with VERSION=0.1.0-beta.2; use tests/admission/probe.py for production packages')
     if args.copy_rows < 1 or args.stream_transactions < 20 or not 1 <= args.bulk_copies <= 4:
         parser.error('positive copy size, 1..4 bulk copies and at least 20 streaming transactions required')
     q.RESULTS = ROOT / '.qualification' / (q.RUN + '_reserved_admission')

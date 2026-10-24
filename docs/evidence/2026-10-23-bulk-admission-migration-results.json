@@ -1,0 +1,3192 @@
+{
+  "archive": "dist/bulk-beta3-aligned/lake_replication-0.1.0-beta.3.tar.gz",
+  "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+  "cleanup_audit": {
+    "remaining_qualification_containers": [],
+    "remaining_qualification_volumes": [],
+    "scope": "all qualification_20261023 fixture projects; unrelated lab resources preserved"
+  },
+  "engine_failure": {
+    "container_state": {
+      "ExitCode": 139,
+      "FinishedAt": "2026-10-23T05:02:53.296071501Z",
+      "OOMKilled": false,
+      "StartedAt": "2026-10-23T05:02:07.533791508Z",
+      "Status": "exited"
+    },
+    "error_line": "2026-10-23T05:02:53Z ERROR unrecoverable failure from duckdb; terminating: Out of Memory Error: could not allocate block of size 76.5 MiB (1.7 GiB/1.8 GiB used)",
+    "first_failure_cause_independently_known": false,
+    "first_failure_log_lost": true,
+    "reproduction_logs_preserved": true
+  },
+  "excluded_development_runs": [
+    {
+      "accepted_final_assertions": 0,
+      "raw_results_sha256": "f5a4f299dd9442c1baa4c0fafe3107c8732fee7c9a387d65ba9e976185893897",
+      "raw_run": ".qualification/qualification_20261023_044208_production_admission",
+      "reason": "Upgrade harness overwrote the candidate tag with the old image. Also predates worker version alignment.",
+      "status": "error"
+    },
+    {
+      "accepted_final_assertions": 0,
+      "raw_results_sha256": "1a6bf1bcf28216ba248c3044e142f495159a20d865a369e081f3c6db56f804a4",
+      "raw_run": ".qualification/qualification_20261023_044646_production_admission",
+      "reason": "Corrected handoff passed, but superseded by worker version alignment and final archive qualification.",
+      "status": "passed"
+    }
+  ],
+  "existing_package_lane_assertions": 279,
+  "existing_package_lanes": [
+    {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.3.tar.gz",
+      "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+      "checks": [
+        {
+          "actual": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "expected": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "0.1.0:true",
+          "expected": "0.1.0:true",
+          "name": "development baseline excludes beta observability schema",
+          "passed": true
+        },
+        {
+          "actual": "0.1.0-beta.3:upgrade_fixture:0/10:degraded",
+          "expected": "0.1.0-beta.3:upgrade_fixture:0/10:degraded",
+          "name": "extension upgrades in place and preserves control-plane state",
+          "passed": true
+        },
+        {
+          "actual": "numeric(12,2):character varying(32)",
+          "expected": "numeric(12,2):character varying(32)",
+          "name": "extension upgrade installs common parameterized type resolution",
+          "passed": true
+        },
+        {
+          "actual": "true:1",
+          "expected": "true:1",
+          "name": "extension upgrade adds per-subscription credential metadata",
+          "passed": true
+        },
+        {
+          "actual": "19:1",
+          "expected": "19:1",
+          "name": "upgrade registers durable extension state for logical backup",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "logical backup contains durable state but not regenerated seed mappings",
+          "passed": true
+        },
+        {
+          "actual": "0.1.0-beta.3:1:1",
+          "expected": "0.1.0-beta.3:1:1",
+          "name": "logical backup restores extension versions and durable control state",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "no unsupported SQL downgrade path is advertised",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "admin can use narrowly scoped origin helpers",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "read-all role cannot invoke origin-management helper",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "different databases get different launcher processes",
+          "passed": true
+        },
+        {
+          "actual": "pg_extension_base",
+          "expected": "pg_extension_base",
+          "name": "only pg_extension_base is explicitly preloaded",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "no session preload is needed",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "no configured launcher database is needed",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "legacy static launcher is absent",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "rolled-back extension creation leaves no registration",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "rolled-back extension drop resumes the worker",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "committed extension drop stops the launcher",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "extension recreation registers exactly one worker",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "unsupported enabled fails instead of being ignored",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "unsupported copy_data fails instead of being ignored",
+          "passed": true
+        },
+        {
+          "actual": "0:0",
+          "expected": "0:0",
+          "name": "rolled-back subscriptions leave no source slots or control rows",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "subscription notice does not expose the source password",
+          "passed": true
+        },
+        {
+          "actual": "/credentials/destination-only.env:1",
+          "expected": "/credentials/destination-only.env:1",
+          "name": "subscription records its selected credential file",
+          "passed": true
+        },
+        {
+          "actual": "lake_source:true",
+          "expected": "lake_source:true",
+          "name": "postgres URI credentials are stored for workers without a source password file",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "pending cleanup contains no connection or password columns",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "pg_read_all_data cannot read stored connection secrets or invoke the worker getter",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "relative per-subscription credential paths are rejected without mutation",
+          "passed": true
+        },
+        {
+          "actual": "initial",
+          "expected": "initial",
+          "name": "initial copy reaches the artifact-installed destination",
+          "passed": true
+        },
+        {
+          "actual": "pgoutput:logical:false:true",
+          "expected": "pgoutput:logical:false:true",
+          "name": "initial sync automatically creates a persistent source pgoutput slot",
+          "passed": true
+        },
+        {
+          "actual": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+          "expected": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+          "name": "common parameterized types retain schema and values",
+          "passed": true
+        },
+        {
+          "actual": "healthy:streaming",
+          "expected": "healthy:streaming",
+          "name": "subscription becomes healthy",
+          "passed": true
+        },
+        {
+          "actual": "12",
+          "expected": "12",
+          "name": "all documented metrics are exported",
+          "passed": true
+        },
+        {
+          "actual": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+          "expected": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+          "name": "live insert and update replicate",
+          "passed": true
+        },
+        {
+          "actual": "numeric(6,2):1=1.25,2=NULL",
+          "expected": "numeric(6,2):1=1.25,2=NULL",
+          "name": "nullable parameterized column is added and replicated online",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "supervisor stops before the source password changes",
+          "passed": true
+        },
+        {
+          "actual": "/credentials/destination-only.env:2:true:running",
+          "expected": "/credentials/destination-only.env:2:true:running",
+          "name": "postgresql URI credential rotation replaces the subscription supervisor",
+          "passed": true
+        },
+        {
+          "actual": "rotated-credential",
+          "expected": "rotated-credential",
+          "name": "replication authenticates with the rotated credential",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "supervisor stops before restoring the source password",
+          "passed": true
+        },
+        {
+          "actual": "/credentials/destination-only.env:3:true:running",
+          "expected": "/credentials/destination-only.env:3:true:running",
+          "name": "CONNECTION can return to the original password",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "disable reaches stopped state",
+          "passed": true
+        },
+        {
+          "actual": "while-disabled",
+          "expected": "while-disabled",
+          "name": "enable catches up changes made while stopped",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "destination is ready after container restart",
+          "passed": true
+        },
+        {
+          "actual": "after-restart",
+          "expected": "after-restart",
+          "name": "launcher resumes replication after restart",
+          "passed": true
+        },
+        {
+          "actual": "degraded:backoff:true:true:true:true:true",
+          "expected": "degraded:backoff:true:true:true:true:true",
+          "name": "source outage becomes observable retry state",
+          "passed": true
+        },
+        {
+          "actual": "0:true:true",
+          "expected": "0:true:true",
+          "name": "retry metrics mark the subscription unhealthy",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "source is ready after outage",
+          "passed": true
+        },
+        {
+          "actual": "healthy:running:0:true:true:true",
+          "expected": "healthy:running:0:true:true:true",
+          "name": "subscription recovers while retaining last-failure evidence",
+          "passed": true
+        },
+        {
+          "actual": "after-source-outage",
+          "expected": "after-source-outage",
+          "name": "replication resumes after source outage",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "structured worker logs emitted",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "structured failure and recovery events emitted",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "credential values absent from worker logs",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "drop removes the source replication slot",
+          "passed": true
+        },
+        {
+          "actual": "snapshot",
+          "expected": "snapshot",
+          "name": "pre-created slot supplies a snapshot copy",
+          "passed": true
+        },
+        {
+          "actual": "streamed",
+          "expected": "streamed",
+          "name": "pre-created slot streams later changes",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "temporary snapshot slot is released",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "drop removes the pre-created slot",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "interrupted initial copy keeps staged rows",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "initial copy restarts from a fresh snapshot",
+          "passed": true
+        },
+        {
+          "actual": "one,two,three",
+          "expected": "one,two,three",
+          "name": "restarted copy publishes each source row once",
+          "passed": true
+        },
+        {
+          "actual": "true:1",
+          "expected": "true:1",
+          "name": "restarted copy advances the checkpoint and retains one source slot",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "persistent slot streams after restarted copy",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "recovered stream publishes new changes",
+          "passed": true
+        },
+        {
+          "actual": "after-restart",
+          "expected": "after-restart",
+          "name": "change after interrupted copy appears at destination",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "churn subscription finishes its initial copy",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn starts with all subscription wrappers retired",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "disable explicitly reaps a paused supervisor in the shared runtime",
+          "passed": true
+        },
+        {
+          "actual": "2026-10-23 05:15:39.109627+00",
+          "expected": "2026-10-23 05:15:39.109627+00",
+          "name": "paused supervisor disable does not restart PostgreSQL",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 1 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 1 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 2 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 2 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 3 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 3 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 4 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 4 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 5 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 5 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 6 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 6 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 7 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 7 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 8 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 8 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 9 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 9 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "churn cycle 10 starts exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "churn cycle 10 retires its wrapper",
+          "passed": true
+        },
+        {
+          "actual": {
+            "total_bytes": 8192,
+            "used_bytes": 240
+          },
+          "expected": {
+            "total_bytes": 8192,
+            "used_bytes": 240
+          },
+          "name": "retired handles return to the original memory usage",
+          "passed": true
+        },
+        {
+          "actual": "one",
+          "expected": "one",
+          "name": "analytics replication reaches one",
+          "passed": true
+        },
+        {
+          "actual": "one",
+          "expected": "one",
+          "name": "lifecycle_second replication reaches one",
+          "passed": true
+        },
+        {
+          "actual": "one,two",
+          "expected": "one,two",
+          "name": "analytics replication reaches one,two",
+          "passed": true
+        },
+        {
+          "actual": "one,two",
+          "expected": "one,two",
+          "name": "lifecycle_second replication reaches one,two",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "terminated base launcher is replaced",
+          "passed": true
+        },
+        {
+          "actual": "2026-10-23 05:15:39.109627+00",
+          "expected": "2026-10-23 05:15:39.109627+00",
+          "name": "launcher termination does not restart PostgreSQL",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "disable works after launcher replacement",
+          "passed": true
+        },
+        {
+          "actual": "one,two,three",
+          "expected": "one,two,three",
+          "name": "analytics replication reaches one,two,three",
+          "passed": true
+        },
+        {
+          "actual": "one,two,three",
+          "expected": "one,two,three",
+          "name": "lifecycle_second replication reaches one,two,three",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analytics has database-scoped worker log files",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "lifecycle_second has database-scoped worker log files",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "registered workers do not start in a template database",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "template clone discovers its registered launcher",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "drop database fails while an ordinary client is connected",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "failed database drop resumes its launcher",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "committed database drop completes",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "cloned subscription stays stopped",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "cloned subscription is rejected with a durable diagnostic",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "attempted enable of inherited binding is fenced",
+          "passed": true
+        },
+        {
+          "actual": "1478",
+          "expected": "1478",
+          "name": "unchanged binding errors do not rewrite subscription rows",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "matching name cannot bypass copied database OID fence",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "copied binding cannot authorize source slot cleanup",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "copy cleanup rejection preserves original source slot",
+          "passed": true
+        },
+        {
+          "actual": "one,two,three",
+          "expected": "one,two,three",
+          "name": "lifecycle_drop replication reaches one,two,three",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "extension drop removes its replication worker connections",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "extension drop explicitly terminates a paused external supervisor",
+          "passed": true
+        },
+        {
+          "actual": "2026-10-23 05:16:08.638478+00",
+          "expected": "2026-10-23 05:16:08.638478+00",
+          "name": "active extension drop does not restart PostgreSQL",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "uninstaller removes only project program files",
+          "passed": true
+        }
+      ],
+      "cleanup_returncode": 0,
+      "findings": [],
+      "handle_churn": {
+        "after": {
+          "total_bytes": 8192,
+          "used_bytes": 240
+        },
+        "before": {
+          "total_bytes": 8192,
+          "used_bytes": 240
+        },
+        "cycles": 10
+      },
+      "inputs": {
+        "extensions/lake_replication/lake_replication.c": "6ad43ecf71081e43e6e851ea8d79603c75eb478a80b0f29f44a554fafee8692c",
+        "extensions/lake_replication/lake_replication.control": "feffa2494a6b024236ef009deb34f86d547c89c1fa2aee4be925f79d3aab1145",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "944a1d0f8300967e7d6e95e8c6b64ec9ddfc918eae94cc9f5bc82d0d5fdb6dfa",
+        "tests/lifecycle/cases.py": "85f6881ca3aed649d77398314b09931e454c9ab34ad472d1052ea0858044b995",
+        "tests/lifecycle/probe.py": "1d019cc85969e0e261454f3d412ada30b3c16eff15faa0704b241c0a9caaac26",
+        "tests/lifecycle/upgrade.py": "58963ceebddd1103e216341da09f9fceee03aa7b10b03ef7e11638911373108c",
+        "tests/qualification/probe.py": "882204d6b543bf489510282f88eadeb964f5dfabea6d7fb4d8a69b1dd17519d0",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "1b4f1b1e307f3d90ff754bc9c6f8cc67283dab2d65f65ca6bfdf8e90a2fb27e1",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+        "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6",
+        "worker/src/wire.rs": "d555faf6d03a021b93761335e93eb1957d0d4a8c5f533254fc5db0300d01071c"
+      },
+      "log_sha256": {
+        "compose.log": "1d9d88dd2ae63309ae534610dc53ceb662c01ca1c9e140c9847a11ae7b433364",
+        "worker.jsonl": "53a11ef0ff88ee30c2e6014c1dccc6b1c7d05c67b3bdf24ad5447ce33068444e",
+        "workers.jsonl": "25d6a3e8ae48409748f3c2cce24253816dd3686016464c69c6cf2de81ba1a182"
+      },
+      "new_archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3.tar.gz",
+        "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+        "source_revision": "5f0f92df1fdd4fe22e78bda4717aadcae086b442-dirty"
+      },
+      "new_image": "sha256:4527d4f36d92aca572b626305ce2c764c0b7149de3c748c3e9ff05b418582083",
+      "passed": true,
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "raw_results_sha256": "fb54af808811b583dcadeb104d151de288bbc0f15ff6c46c45c8ba5ef0a927c5",
+      "raw_run": ".qualification/qualification_20261023_051434_base_lifecycle",
+      "run": "qualification_20261023_051434",
+      "scope": "Production pg_extension_base migration; actual exported archives",
+      "source_revision": "5f0f92df1fdd4fe22e78bda4717aadcae086b442-dirty",
+      "status": "passed",
+      "worker_log_events": [
+        "batch_published",
+        "copy_chunk_staged",
+        "cycle_failed",
+        "initial_copy_completed",
+        "replication_started",
+        "snapshot_acquired",
+        "stopped",
+        "table_copied",
+        "transaction_staged"
+      ],
+      "worker_log_records": 34
+    },
+    {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+      "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+      "checkpoint_before_upgrade": "0/1C25308",
+      "checks": [
+        {
+          "actual": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "expected": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+          "expected": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "one",
+          "expected": "one",
+          "name": "upgraded replication reaches one",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "packaged release starts through its static launcher",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "packaged release has no replication base registration",
+          "passed": true
+        },
+        {
+          "actual": "/usr/local/bin/lake-replication-supervisor",
+          "expected": "/usr/local/bin/lake-replication-supervisor",
+          "name": "preflight can inspect the real old supervisor executable",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "old subscription stops before package replacement",
+          "passed": true
+        },
+        {
+          "actual": "false",
+          "expected": "false",
+          "name": "old source slot is inactive before replacement",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "old external worker executables are gone before replacement",
+          "passed": true
+        },
+        {
+          "actual": "2026-10-23 05:17:12.977235+00",
+          "expected": "2026-10-23 05:17:12.977235+00",
+          "name": "old subscription drain does not restart PostgreSQL",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "new package starts the existing database",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "package replacement used a server restart",
+          "passed": true
+        },
+        {
+          "actual": "pg_extension_base,lake_replication",
+          "expected": "pg_extension_base,lake_replication",
+          "name": "old explicit preload setting is retained",
+          "passed": true
+        },
+        {
+          "actual": "analytics",
+          "expected": "analytics",
+          "name": "old single-database setting is retained",
+          "passed": true
+        },
+        {
+          "actual": "lake_replication",
+          "expected": "lake_replication",
+          "name": "old session preload setting is retained",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "new binary does not register the old static owner",
+          "passed": true
+        },
+        {
+          "actual": "0.1.0-beta.1",
+          "expected": "0.1.0-beta.1",
+          "name": "metadata stays on the old version until SQL upgrade",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "subscription remains durably stopped during handoff",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "no base owner starts before registration",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "SQL migration refuses enabled legacy subscriptions",
+          "passed": true
+        },
+        {
+          "actual": "0.1.0-beta.1",
+          "expected": "0.1.0-beta.1",
+          "name": "rolled-back upgrade preserves the old SQL version",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "rolled-back upgrade leaves no durable base registration",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "rolled-back upgrade leaves no base owner",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "rolled-back upgrade leaves no worker dispatch",
+          "passed": true
+        },
+        {
+          "actual": "one",
+          "expected": "one",
+          "name": "upgraded replication reaches one",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "legacy binding upgrade requires explicit verified adoption",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "adopted original destination has valid origin",
+          "passed": true
+        },
+        {
+          "actual": "0.1.0-beta.3",
+          "expected": "0.1.0-beta.3",
+          "name": "SQL upgrade commits the prototype version",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "SQL upgrade records exactly one registration",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "committed upgrade starts exactly one base owner",
+          "passed": true
+        },
+        {
+          "actual": "stopped",
+          "expected": "stopped",
+          "name": "committed upgrade keeps dispatch stopped until explicit enable",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "committed upgrade has no subscription wrapper before enable",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "base dependency is explicit after real upgrade",
+          "passed": true
+        },
+        {
+          "actual": "0/1C25308",
+          "expected": "0/1C25308",
+          "name": "SQL upgrade preserves the replication checkpoint",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "SQL upgrade preserves the completed copy",
+          "passed": true
+        },
+        {
+          "actual": "one,two,three",
+          "expected": "one,two,three",
+          "name": "upgraded replication reaches one,two,three",
+          "passed": true
+        },
+        {
+          "actual": "one,two,three,four",
+          "expected": "one,two,three,four",
+          "name": "upgraded replication reaches one,two,three,four",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "handoff retains exactly one source slot",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "handoff does not repeat the initial copy",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "upgraded database restarts",
+          "passed": true
+        },
+        {
+          "actual": "one,two,three,four,five",
+          "expected": "one,two,three,four,five",
+          "name": "upgraded replication reaches one,two,three,four,five",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "restart keeps exactly one base owner",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "restart keeps the legacy owner absent",
+          "passed": true
+        },
+        {
+          "actual": "5:5",
+          "expected": "5:5",
+          "name": "post-upgrade rows are unique",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "post-upgrade drop releases the retained source slot",
+          "passed": true
+        }
+      ],
+      "cleanup_returncode": 0,
+      "findings": [],
+      "inputs": {
+        "extensions/lake_replication/lake_replication.c": "6ad43ecf71081e43e6e851ea8d79603c75eb478a80b0f29f44a554fafee8692c",
+        "extensions/lake_replication/lake_replication.control": "feffa2494a6b024236ef009deb34f86d547c89c1fa2aee4be925f79d3aab1145",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "944a1d0f8300967e7d6e95e8c6b64ec9ddfc918eae94cc9f5bc82d0d5fdb6dfa",
+        "tests/lifecycle/cases.py": "85f6881ca3aed649d77398314b09931e454c9ab34ad472d1052ea0858044b995",
+        "tests/lifecycle/probe.py": "1d019cc85969e0e261454f3d412ada30b3c16eff15faa0704b241c0a9caaac26",
+        "tests/lifecycle/upgrade.py": "58963ceebddd1103e216341da09f9fceee03aa7b10b03ef7e11638911373108c",
+        "tests/qualification/probe.py": "882204d6b543bf489510282f88eadeb964f5dfabea6d7fb4d8a69b1dd17519d0",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "1b4f1b1e307f3d90ff754bc9c6f8cc67283dab2d65f65ca6bfdf8e90a2fb27e1",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+        "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6",
+        "worker/src/wire.rs": "d555faf6d03a021b93761335e93eb1957d0d4a8c5f533254fc5db0300d01071c"
+      },
+      "log_sha256": {
+        "compose.log": "6e3250f920b0c62372194450e89151cac30f5dc8a308da749f9a08bc883bab11",
+        "workers.jsonl": "93354de7cb25e1abb4acbc8cd79a99b5776c75ff85089cd89442e26f7bb4ea9a"
+      },
+      "new_archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3.tar.gz",
+        "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+        "source_revision": "5f0f92df1fdd4fe22e78bda4717aadcae086b442-dirty"
+      },
+      "new_image": "sha256:4527d4f36d92aca572b626305ce2c764c0b7149de3c748c3e9ff05b418582083",
+      "old_archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.1-linux-arm64.tar.gz",
+        "archive_sha256": "9e7d0a89d5ac60507666895004fceb46b9e94d0b9bbcc65c7d2d73b454864302",
+        "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9"
+      },
+      "passed": true,
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "raw_results_sha256": "fe44166bf14f20196b9f99935ff7273864d4cf91e9f7a1c61b7ed0aec1c42a52",
+      "raw_run": ".qualification/qualification_20261023_051630_base_upgrade",
+      "run": "qualification_20261023_051630",
+      "scope": "Production pg_extension_base migration; actual exported archives",
+      "source_revision": "85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9",
+      "status": "passed"
+    },
+    {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.3.tar.gz",
+      "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+      "checks": [
+        {
+          "actual": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "expected": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "fault fixture completes initial copy",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "supervisor fault starts with one wrapper",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "supervisor fault locates its receiver",
+          "passed": true
+        },
+        {
+          "actual": "2:2",
+          "expected": "2:2",
+          "name": "supervisor SIGKILL resumes publication",
+          "passed": true
+        },
+        {
+          "actual": "2026-10-23 05:18:23.584015+00",
+          "expected": "2026-10-23 05:18:23.584015+00",
+          "name": "supervisor SIGKILL preserves postmaster",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "supervisor SIGKILL leaves exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "supervisor victim is reaped",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "supervisor crash reaps its old receiver descendant",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "receiver fault starts with one wrapper",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "receiver fault locates its receiver",
+          "passed": true
+        },
+        {
+          "actual": "3:3",
+          "expected": "3:3",
+          "name": "receiver SIGKILL resumes publication",
+          "passed": true
+        },
+        {
+          "actual": "2026-10-23 05:18:23.584015+00",
+          "expected": "2026-10-23 05:18:23.584015+00",
+          "name": "receiver SIGKILL preserves postmaster",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "receiver SIGKILL leaves exactly one wrapper",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "receiver victim is reaped",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "fault fixture cleans its source slot",
+          "passed": true
+        }
+      ],
+      "cleanup_returncode": 0,
+      "inputs": {
+        "extensions/lake_replication/lake_replication.c": "6ad43ecf71081e43e6e851ea8d79603c75eb478a80b0f29f44a554fafee8692c",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "tests/lifecycle/faults.py": "e05143bffd3458724222609fcb7c3c94f16db43dcb2aa207f6330bdb41dc1427",
+        "tests/qualification/probe.py": "882204d6b543bf489510282f88eadeb964f5dfabea6d7fb4d8a69b1dd17519d0",
+        "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6"
+      },
+      "log_sha256": {
+        "compose.log": "7f0d86a3f2684842464ded6d54a93f3d177b0e6517d14174f556e822450eefcd",
+        "workers.jsonl": "b3dd49bad7213f2de50164bf6d3224efeba127e3b4586aecfc85508f231d1b54"
+      },
+      "passed": true,
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "raw_results_sha256": "9b7b74dca733c42faffb72cae2f10c28be74a0e757d3cef1e07096e058a3e02a",
+      "raw_run": ".qualification/qualification_20261023_051743_base_faults",
+      "run": "qualification_20261023_051743",
+      "scope": "Packaged production base lifecycle; forced Rust supervisor/receiver SIGKILL, not PostgreSQL wrapper SIGKILL",
+      "source_revision": "5f0f92df1fdd4fe22e78bda4717aadcae086b442-dirty",
+      "status": "passed"
+    },
+    {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.3.tar.gz",
+      "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+      "checks": [
+        {
+          "actual": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "expected": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "analytics empty stream commits zero changes",
+          "passed": true
+        },
+        {
+          "actual": "0/140:0/0",
+          "expected": "0/140:0/0",
+          "name": "analytics staging preserves unpublished predecessor",
+          "passed": true
+        },
+        {
+          "actual": "0:0",
+          "expected": "0:0",
+          "name": "analytics zero-change transaction has no change rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "analytics replay commits idempotently",
+          "passed": true
+        },
+        {
+          "actual": "2",
+          "expected": "2",
+          "name": "analytics replay keeps exactly two transactions",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analytics conflicting replay fails closed",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "analytics conflict retains stream for retry",
+          "passed": true
+        },
+        {
+          "actual": "0/120:0/120:1:1",
+          "expected": "0/120:0/120:1:1",
+          "name": "analytics transaction limit selects predecessor first",
+          "passed": true
+        },
+        {
+          "actual": "2:1",
+          "expected": "2:1",
+          "name": "analytics mixed batch counts empty commits against transaction limit",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analytics empty replay cannot replace a data transaction",
+          "passed": true
+        },
+        {
+          "actual": "0/140",
+          "expected": "0/140",
+          "name": "analytics rolled-back staging does not advance checkpoint",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analytics feedback cannot acknowledge rolled-back empty commit",
+          "passed": true
+        },
+        {
+          "actual": "0/140:0/140:1:0",
+          "expected": "0/140:0/140:1:0",
+          "name": "analytics empty trailing transaction remains selectable",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "analytics no-op publication can roll back",
+          "passed": true
+        },
+        {
+          "actual": "0/120",
+          "expected": "0/120",
+          "name": "analytics rollback retains old publication checkpoint",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "analytics empty-only batch publishes no target rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "analytics publication replay is idempotent",
+          "passed": true
+        },
+        {
+          "actual": "0/140:0/140",
+          "expected": "0/140:0/140",
+          "name": "analytics aborted empty stream does not advance checkpoint",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analytics older empty commit cannot regress staging",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "analytics ordinary empty commit also journals safely",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "upgraded empty stream commits zero changes",
+          "passed": true
+        },
+        {
+          "actual": "0/140:0/0",
+          "expected": "0/140:0/0",
+          "name": "upgraded staging preserves unpublished predecessor",
+          "passed": true
+        },
+        {
+          "actual": "0:0",
+          "expected": "0:0",
+          "name": "upgraded zero-change transaction has no change rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "upgraded replay commits idempotently",
+          "passed": true
+        },
+        {
+          "actual": "2",
+          "expected": "2",
+          "name": "upgraded replay keeps exactly two transactions",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "upgraded conflicting replay fails closed",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "upgraded conflict retains stream for retry",
+          "passed": true
+        },
+        {
+          "actual": "0/120:0/120:1:1",
+          "expected": "0/120:0/120:1:1",
+          "name": "upgraded transaction limit selects predecessor first",
+          "passed": true
+        },
+        {
+          "actual": "2:1",
+          "expected": "2:1",
+          "name": "upgraded mixed batch counts empty commits against transaction limit",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "upgraded empty replay cannot replace a data transaction",
+          "passed": true
+        },
+        {
+          "actual": "0/140",
+          "expected": "0/140",
+          "name": "upgraded rolled-back staging does not advance checkpoint",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "upgraded feedback cannot acknowledge rolled-back empty commit",
+          "passed": true
+        },
+        {
+          "actual": "0/140:0/140:1:0",
+          "expected": "0/140:0/140:1:0",
+          "name": "upgraded empty trailing transaction remains selectable",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "upgraded no-op publication can roll back",
+          "passed": true
+        },
+        {
+          "actual": "0/120",
+          "expected": "0/120",
+          "name": "upgraded rollback retains old publication checkpoint",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "upgraded empty-only batch publishes no target rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "upgraded publication replay is idempotent",
+          "passed": true
+        },
+        {
+          "actual": "0/140:0/140",
+          "expected": "0/140:0/140",
+          "name": "upgraded aborted empty stream does not advance checkpoint",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "upgraded older empty commit cannot regress staging",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "upgraded ordinary empty commit also journals safely",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "receiver succeeds",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "receiver succeeds",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "real pgoutput delivered empty streamed commit",
+          "passed": true
+        },
+        {
+          "actual": "2:1",
+          "expected": "2:1",
+          "name": "wire journal retains earlier unpublished data and no-op",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "wire feedback acknowledges durable staging only",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "destination recovers",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "restart retains zero-change staged transaction",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "publisher succeeds",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "mixed batch publishes included row once",
+          "passed": true
+        },
+        {
+          "actual": "2:2",
+          "expected": "2:2",
+          "name": "restart publication consumes both commits",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "receiver succeeds",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "publisher succeeds",
+          "passed": true
+        },
+        {
+          "actual": "before-filtered,after-restart",
+          "expected": "before-filtered,after-restart",
+          "name": "receiver resumes after empty commit and restart",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "receiver succeeds",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "second empty stream is observed",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "publisher succeeds",
+          "passed": true
+        },
+        {
+          "actual": "2",
+          "expected": "2",
+          "name": "empty-only batch leaves included data intact",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "all checkpoints converge after trailing empty commit",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "no durable stream fragments remain",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "uncommitted empty stream is durably retained",
+          "passed": true
+        },
+        {
+          "actual": "0/20298B8",
+          "expected": "0/20298B8",
+          "name": "uncommitted empty stream does not advance staging",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "receiver loss leaves durable stream",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "source commits while receiver is down",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "receiver succeeds",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "publisher succeeds",
+          "passed": true
+        },
+        {
+          "actual": "3",
+          "expected": "3",
+          "name": "restarted receiver replays empty stream exactly once",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "interrupted stream leaves no fragments",
+          "passed": true
+        },
+        {
+          "actual": "2",
+          "expected": "2",
+          "name": "restart preserves real target rows",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "source never acknowledges beyond durable journal",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "receiver succeeds",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "nonempty streamed transaction still stages all relevant changes",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "publisher succeeds",
+          "passed": true
+        },
+        {
+          "actual": "1,2,3,4",
+          "expected": "1,2,3,4",
+          "name": "mixed streamed transaction publishes relevant changes only",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "native subscription completes initial copy",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "native idle receiver connects",
+          "passed": true
+        },
+        {
+          "actual": "411",
+          "expected": "411",
+          "name": "idle native receiver retains its connection beyond 200ms",
+          "passed": true
+        },
+        {
+          "actual": "initial,after-unrelated-bulk",
+          "expected": "initial,after-unrelated-bulk",
+          "name": "native supervisor progresses beyond two-million-row excluded commit",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "native runtime publishes the filtered commit",
+          "passed": true
+        },
+        {
+          "actual": "false",
+          "expected": "false",
+          "name": "disable releases persistent receiver slot",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "disable completes within five seconds",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "standalone receiver stages while supervisor is disabled",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "real transaction is durable but unpublished",
+          "passed": true
+        },
+        {
+          "actual": "3",
+          "expected": "3",
+          "name": "enable resumes once",
+          "passed": true
+        },
+        {
+          "actual": "true",
+          "expected": "true",
+          "name": "source outage is reported",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "source recovers",
+          "passed": true
+        },
+        {
+          "actual": "1,2,3,4",
+          "expected": "1,2,3,4",
+          "name": "persistent receiver recovers after source outage",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "native receiver retains an uncommitted stream",
+          "passed": true
+        },
+        {
+          "actual": "false",
+          "expected": "false",
+          "name": "disable interrupts streamed receive promptly",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "stream disable completes within five seconds",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "source commits after supervised stream interruption",
+          "passed": true
+        },
+        {
+          "actual": "1,2,3,4,5",
+          "expected": "1,2,3,4,5",
+          "name": "enabled receiver replays interrupted stream exactly once",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "replayed native stream clears fragments",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "drop completes within five seconds",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "native drop releases its source slot",
+          "passed": true
+        }
+      ],
+      "cleanup_returncode": 0,
+      "current_workers": false,
+      "image": "sha256:1df49a81cb4d1e1b2f7c805edadb54624bcdc6a47d2dbd6fb9f05778347c6bce",
+      "inputs": {
+        "Cargo.lock": "458cc7d5c8d93c63eddb892c843a4fc98d0aa7126457280c5d36ed6c8dcd70cf",
+        "extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+        "extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "13745ca969dfc5756a32f0b09578fcf7490dd6e1a8a7f967fa2ef733bfbbaba3",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+        "extensions/lake_replication/lake_replication--0.1.0-beta.3.sql": "fe4a286254847db45e4658e80c6bc7dc8af9cf6636f95a964fd5bea9b1285de8",
+        "extensions/lake_replication/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "tests/streaming/empty_filtered.py": "dc9b5b830916235782bebf283aa01406fcdf0b40e610729ff60ed9f82003c1b4"
+      },
+      "log_sha256": {
+        "native-workers.jsonl": "1cacded92fc37ac0d00919177122f2ed56f2ee9006074545e18d5ca2d3533d18",
+        "publisher.jsonl": "14db9a42c72eac20b70e29206deeab9bf7927083971e77e62053958adf55b400",
+        "receiver.jsonl": "b67abfee898bbe54dd3ff8b55e1cfd5c410e1044ad35705f294bfdc13a48018e"
+      },
+      "logs": "storage-1  | INFO: Formatting 1st pool, 1 set(s), 1 drives per set.\nstorage-1  | INFO: WARNING: Host local has more than 0 drives of set. A host failure will result in data becoming unavailable.\nstorage-1  | MinIO Object Storage Server\nstorage-1  | Copyright: 2015-2026 MinIO, Inc.\nstorage-1  | License: GNU AGPLv3 - https://www.gnu.org/licenses/agpl-3.0.html\nstorage-1  | Version: RELEASE.2025-04-22T22-12-26Z (go1.24.2 linux/arm64)\nstorage-1  | \nstorage-1  | API: http://172.22.0.4:9000  http://127.0.0.1:9000 \nstorage-1  | WebUI: http://172.22.0.4:33847 http://127.0.0.1:33847  \nstorage-1  | \nstorage-1  | Docs: https://docs.min.io\ndestination-1  | The files belonging to this database system will be owned by user \"postgres\".\ndestination-1  | This user must also own the server process.\ndestination-1  | \ndestination-1  | The database cluster will be initialized with locale \"en_US.utf8\".\ndestination-1  | The default database encoding has accordingly been set to \"UTF8\".\ndestination-1  | The default text search configuration will be set to \"english\".\ndestination-1  | \ndestination-1  | Data page checksums are enabled.\ndestination-1  | \ndestination-1  | fixing permissions on existing directory /var/lib/postgresql/18/data ... ok\ndestination-1  | creating subdirectories ... ok\ndestination-1  | selecting dynamic shared memory implementation ... posix\ndestination-1  | selecting default \"max_connections\" ... 100\ndestination-1  | selecting default \"shared_buffers\" ... 128MB\ndestination-1  | selecting default time zone ... Etc/UTC\ndestination-1  | creating configuration files ... ok\ndestination-1  | running bootstrap script ... ok\ndestination-1  | performing post-bootstrap initialization ... ok\ndestination-1  | initdb: warning: enabling \"trust\" authentication for local connections\ndestination-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.\ndestination-1  | syncing data to disk ... ok\ndestination-1  | \ndestination-1  | \ndestination-1  | Success. You can now start the database server using:\ndestination-1  | \ndestination-1  |     pg_ctl -D /var/lib/postgresql/18/data -l logfile start\ndestination-1  | \ndestination-1  | waiting for server to start....2026-10-23 05:19:09.242 UTC [49] LOG:  pg_extension_base: preloading $libdir/lake_replication\ndestination-1  | 2026-10-23 05:19:09.242 UTC [49] LOG:  pg_extension_base: preloading $libdir/pg_extension_updater\ndestination-1  | 2026-10-23 05:19:09.242 UTC [49] LOG:  pg_extension_base: preloading $libdir/pg_lake_engine\ndestination-1  | 2026-10-23 05:19:09.242 UTC [49] LOG:  pg_extension_base: preloading $libdir/pg_lake_iceberg\ndestination-1  | 2026-10-23 05:19:09.243 UTC [49] LOG:  pg_extension_base: preloading $libdir/pg_lake_table\ndestination-1  | 2026-10-23 05:19:09.244 UTC [49] LOG:  pg_extension_base: preloading $libdir/pg_lake_copy\ndestination-1  | 2026-10-23 05:19:09.244 UTC [49] LOG:  pg_extension_base: preloading $libdir/pg_lake\ndestination-1  | 2026-10-23 05:19:09.252 UTC [49] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit\ndestination-1  | 2026-10-23 05:19:09.253 UTC [49] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\ndestination-1  | 2026-10-23 05:19:09.256 UTC [55] LOG:  database system was shut down at 2026-10-23 05:19:09 UTC\ndestination-1  | 2026-10-23 05:19:09.258 UTC [49] LOG:  database system is ready to accept connections\ndestination-1  | 2026-10-23 05:19:09.260 UTC [58] LOG:  pg base extension server starter started\ndestination-1  | 2026-10-23 05:19:09.260 UTC [58] LOG:  starting pg base extension database starter in database postgres\ndestination-1  | 2026-10-23 05:19:09.260 UTC [59] LOG:  pg_lake cache worker started\ndestination-1  |  done\ndestination-1  | server started\ndestination-1  | 2026-10-23 05:19:09.391 UTC [58] LOG:  starting pg base extension database starter in database analytics\ndestination-1  | CREATE DATABASE\ndestination-1  | \ndestination-1  | \ndestination-1  | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-qualification.sql\ndestination-1  | psql:/docker-entrypoint-initdb.d/20-qualification.sql:2: NOTICE:  installing required extension \"pg_lake_table\"\ndestination-1  | psql:/docker-entrypoint-initdb.d/20-qualification.sql:2: NOTICE:  installing required extension \"pg_lake_engine\"\ndestination-1  | psql:/docker-entrypoint-initdb.d/20-qualification.sql:2: NOTICE:  installing required extension \"pg_extension_base\"\ndestination-1  | psql:/docker-entrypoint-initdb.d/20-qualification.sql:2: NOTICE:  installing required extension \"pg_map\"\ndestination-1  | psql:/docker-entrypoint-initdb.d/20-qualification.sql:2: NOTICE:  installing required extension \"pg_lake_iceberg\"\ndestination-1  | psql:/docker-entrypoint-initdb.d/20-qualification.sql:2: NOTICE:  installing required extension \"btree_gist\"\ndestination-1  | psql:/docker-entrypoint-initdb.d/20-qualification.sql:2: NOTICE:  installing required extension \"pg_lake_copy\"\ndestination-1  | CREATE EXTENSION\ndestination-1  | 2026-10-23 05:19:09.671 UTC [58] LOG:  starting pg base extension database starter in database analytics\npgduck-1       | 2026-10-23T05:18:33Z LOG pgduck_server is listening on unix_socket_directory: /var/run/pgduck with port 5332, max_clients allowed 10000\npgduck-1       | 2026-10-23T05:18:33Z LOG DuckDB is using database file path: /var/lib/postgresql/.pglake/pgduck_server.db\npgduck-1       | 2026-10-23T05:18:33Z LOG Memory limit is set to: 1GB\npgduck-1       | 2026-10-23T05:18:33Z LOG Cache on write max size is set to: 1073741824\npgduck-1       | 2026-10-23T05:18:33Z LOG using DuckDB version: v1.5.5\npgduck-1       | 2026-10-23T05:19:07Z LOG pgduck_server is running with pid: 1\npgduck-1       | 2026-10-23T05:19:09Z WARNING could not determine the number of available inodes on the file system of /tmp/pgduck-cache/, managing the cache by size only: No such file or directory\nsource-1       | The files belonging to this database system will be owned by user \"postgres\".\nsource-1       | This user must also own the server process.\nsource-1       | \nsource-1       | The database cluster will be initialized with locale \"en_US.utf8\".\nsource-1       | The default database encoding has accordingly been set to \"UTF8\".\nsource-1       | The default text search configuration will be set to \"english\".\nsource-1       | \nsource-1       | Data page checksums are enabled.\nsource-1       | \nsource-1       | fixing permissions on existing directory /var/lib/postgresql/18/data ... ok\nsource-1       | creating subdirectories ... ok\nsource-1       | selecting dynamic shared memory implementation ... posix\nsource-1       | selecting default \"max_connections\" ... 100\nsource-1       | selecting default \"shared_buffers\" ... 128MB\nsource-1       | selecting default time zone ... Etc/UTC\nsource-1       | creating configuration files ... ok\nsource-1       | running bootstrap script ... ok\nsource-1       | performing post-bootstrap initialization ... ok\nstorage-init-1  | mc: <ERROR> Unable to initialize new alias from the provided credentials. Get \"http://storage:9000/probe-bsign-6htrqoc3srcesu1e0du0avzu6wqob9/?location=\": dial tcp 172.22.0.4:9000: connect: connection refused.\nstorage-init-1  | Added `qualification` successfully.\nstorage-init-1  | Bucket created successfully `qualification/lake-qualification`.\ndestination-1   | CREATE EXTENSION\ndestination-1   | 2026-10-23 05:19:09.673 UTC [70] LOG:  pg_extension_base database starter for database analytics started\ndestination-1   | 2026-10-23 05:19:09.674 UTC [70] LOG:  starting pg base extension worker 1 in database 16384\ndestination-1   | 2026-10-23 05:19:09.674 UTC [70] LOG:  pg_extension_base database starter for database analytics finished\ndestination-1   | 2026-10-23 05:19:09.676 UTC [71] LOG:  pg extension base worker 1 in database analytics started\ndestination-1   | 2026-10-23 05:19:10.679 UTC [71] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:10.679 UTC [71] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | CREATE EXTENSION\ndestination-1   | \ndestination-1   | \ndestination-1   | 2026-10-23 05:19:11.529 UTC [58] LOG:  starting pg base extension database starter in database analytics\ndestination-1   | waiting for server to shut down...2026-10-23 05:19:11.530 UTC [49] LOG:  received fast shutdown request\ndestination-1   | .2026-10-23 05:19:11.531 UTC [49] LOG:  aborting any active transactions\ndestination-1   | 2026-10-23 05:19:11.531 UTC [71] FATAL:  terminating background worker \"pg base extension worker\" due to administrator command\ndestination-1   | 2026-10-23 05:19:11.531 UTC [71] LOG:  base worker 1 in database 16384 failed 1 time(s) in a row; delaying restart by 5000 ms\ndestination-1   | 2026-10-23 05:19:11.531 UTC [59] FATAL:  terminating background worker \"pg_lake cache worker\" due to administrator command\ndestination-1   | 2026-10-23 05:19:11.531 UTC [58] WARNING:  pg base extension database starter in database analytics did not start\ndestination-1   | 2026-10-23 05:19:11.531 UTC [58] LOG:  pg base extension database starter in database analytics did not start, will retry\ndestination-1   | 2026-10-23 05:19:11.531 UTC [58] LOG:  pg base extension server starter restarting\ndestination-1   | 2026-10-23 05:19:11.532 UTC [49] LOG:  background worker \"logical replication launcher\" (PID 60) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:11.532 UTC [49] LOG:  background worker \"pg base extension worker\" (PID 71) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:11.533 UTC [49] LOG:  background worker \"pg_lake cache worker\" (PID 59) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:11.533 UTC [49] LOG:  background worker \"pg_base_extension server starter\" (PID 58) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:11.534 UTC [53] LOG:  shutting down\ndestination-1   | 2026-10-23 05:19:11.534 UTC [53] LOG:  checkpoint starting: shutdown immediate\ndestination-1   | 2026-10-23 05:19:11.603 UTC [53] LOG:  checkpoint complete: wrote 1166 buffers (7.1%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.009 s, sync=0.059 s, total=0.070 s; sync files=469, longest=0.004 s, average=0.001 s; distance=6874 kB, estimate=6874 kB; lsn=0/1E0FEF0, redo lsn=0/1E0FEF0\ndestination-1   | 2026-10-23 05:19:11.610 UTC [49] LOG:  database system is shut down\ndestination-1   |  done\ndestination-1   | server stopped\ndestination-1   | \ndestination-1   | PostgreSQL init process complete; ready for start up.\ndestination-1   | \ndestination-1   | 2026-10-23 05:19:11.642 UTC [1] LOG:  pg_extension_base: preloading $libdir/lake_replication\ndestination-1   | 2026-10-23 05:19:11.642 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_extension_updater\ndestination-1   | 2026-10-23 05:19:11.642 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_engine\ndestination-1   | 2026-10-23 05:19:11.643 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_iceberg\ndestination-1   | 2026-10-23 05:19:11.644 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_table\ndestination-1   | 2026-10-23 05:19:11.644 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_copy\ndestination-1   | 2026-10-23 05:19:11.644 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake\ndestination-1   | 2026-10-23 05:19:11.650 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit\ndestination-1   | 2026-10-23 05:19:11.650 UTC [1] LOG:  listening on IPv4 address \"0.0.0.0\", port 5432\ndestination-1   | 2026-10-23 05:19:11.651 UTC [1] LOG:  listening on IPv6 address \"::\", port 5432\ndestination-1   | 2026-10-23 05:19:11.651 UTC [1] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\ndestination-1   | 2026-10-23 05:19:11.654 UTC [86] LOG:  database system was shut down at 2026-10-23 05:19:11 UTC\ndestination-1   | 2026-10-23 05:19:11.671 UTC [1] LOG:  database system is ready to accept connections\ndestination-1   | 2026-10-23 05:19:11.677 UTC [89] LOG:  pg base extension server starter started\ndestination-1   | 2026-10-23 05:19:11.677 UTC [89] LOG:  starting pg base extension database starter in database postgres\ndestination-1   | 2026-10-23 05:19:11.677 UTC [90] LOG:  pg_lake cache worker started\ndestination-1   | 2026-10-23 05:19:11.677 UTC [89] LOG:  starting pg base extension database starter in database analytics\ndestination-1   | 2026-10-23 05:19:11.680 UTC [93] LOG:  pg_extension_base database starter for database analytics started\ndestination-1   | 2026-10-23 05:19:11.682 UTC [93] LOG:  starting pg base extension worker 1 in database 16384\ndestination-1   | 2026-10-23 05:19:11.682 UTC [93] LOG:  starting pg base extension worker 2 in database 16384\ndestination-1   | 2026-10-23 05:19:11.682 UTC [93] LOG:  pg_extension_base database starter for database analytics finished\ndestination-1   | 2026-10-23 05:19:11.683 UTC [94] LOG:  pg extension base worker 1 in database analytics started\ndestination-1   | 2026-10-23 05:19:11.683 UTC [95] LOG:  pg extension base worker 2 in database analytics started\ndestination-1   | 2026-10-23 05:19:11.683 UTC [95] LOG:  lake_replication launcher: watching database \"analytics\"\ndestination-1   | 2026-10-23 05:19:12.687 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:12.687 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:13.691 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:13.691 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:14.170 UTC [176] ERROR:  conflicting replay at commit LSN 0/130\ndestination-1   | 2026-10-23 05:19:14.170 UTC [176] CONTEXT:  PL/pgSQL function stage_transaction(bigint,bigint,pg_lsn,pg_lsn,pg_lsn,timestamp with time zone,jsonb) line 63 at RAISE\ndestination-1   | \tSQL statement \"SELECT stage_transaction(\ndestination-1   | \t        p_subscription_id, p_xid, v_stream.begin_lsn, p_commit_lsn,\ndestination-1   | \t        p_end_lsn, p_commit_time, v_changes\ndestination-1   | \t    )\"\ndestination-1   | \tPL/pgSQL function commit_stream(bigint,bigint,pg_lsn,pg_lsn,timestamp with time zone) line 13 at PERFORM\ndestination-1   | 2026-10-23 05:19:14.170 UTC [176] STATEMENT:  SELECT lake_replication.commit_stream(1,2,'0/130','0/141','2026-01-01Z')\ndestination-1   | 2026-10-23 05:19:14.612 UTC [218] ERROR:  conflicting replay at commit LSN 0/110\ndestination-1   | 2026-10-23 05:19:14.612 UTC [218] CONTEXT:  PL/pgSQL function stage_transaction(bigint,bigint,pg_lsn,pg_lsn,pg_lsn,timestamp with time zone,jsonb) line 63 at RAISE\ndestination-1   | \tSQL statement \"SELECT stage_transaction(\ndestination-1   | \t        p_subscription_id, p_xid, v_stream.begin_lsn, p_commit_lsn,\ndestination-1   | \t        p_end_lsn, p_commit_time, v_changes\ndestination-1   | \t    )\"\ndestination-1   | \tPL/pgSQL function commit_stream(bigint,bigint,pg_lsn,pg_lsn,timestamp with time zone) line 13 at PERFORM\ndestination-1   | 2026-10-23 05:19:14.612 UTC [218] STATEMENT:  SELECT lake_replication.commit_stream(1,1,'0/110','0/120','2026-01-01Z')\ndestination-1   | 2026-10-23 05:19:14.693 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:14.693 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:14.836 UTC [239] ERROR:  acknowledged LSN 0/160 exceeds staged LSN 0/140\ndestination-1   | 2026-10-23 05:19:14.836 UTC [239] CONTEXT:  PL/pgSQL function mark_acknowledged(bigint,pg_lsn) line 8 at RAISE\ndestination-1   | 2026-10-23 05:19:14.836 UTC [239] STATEMENT:  SELECT lake_replication.mark_acknowledged(1,'0/160')\ndestination-1   | 2026-10-23 05:19:15.499 UTC [313] ERROR:  new transaction end LSN 0/115 does not advance staged LSN 0/140\ndestination-1   | 2026-10-23 05:19:15.499 UTC [313] CONTEXT:  PL/pgSQL function stage_transaction(bigint,bigint,pg_lsn,pg_lsn,pg_lsn,timestamp with time zone,jsonb) line 69 at RAISE\ndestination-1   | 2026-10-23 05:19:15.499 UTC [313] STATEMENT:  SELECT lake_replication.stage_transaction(1,4,'0/100','0/105','0/115','2026-01-01Z','[]')\ndestination-1   | 2026-10-23 05:19:15.694 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:15.694 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:15.748 UTC [89] LOG:  starting pg base extension database starter in database upgraded\ndestination-1   | 2026-10-23 05:19:16.079 UTC [89] LOG:  starting pg base extension database starter in database upgraded\ndestination-1   | 2026-10-23 05:19:16.082 UTC [343] LOG:  pg_extension_base database starter for database upgraded started\ndestination-1   | 2026-10-23 05:19:16.083 UTC [343] LOG:  starting pg base extension worker 1 in database 18125\ndestination-1   | 2026-10-23 05:19:16.083 UTC [343] LOG:  pg_extension_base database starter for database upgraded finished\ndestination-1   | 2026-10-23 05:19:16.084 UTC [344] LOG:  pg extension base worker 1 in database upgraded started\ndestination-1   | 2026-10-23 05:19:17.082 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:17.082 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:17.087 UTC [344] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:17.087 UTC [344] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:17.941 UTC [89] LOG:  starting pg base extension database starter in database upgraded\ndestination-1   | 2026-10-23 05:19:17.944 UTC [356] LOG:  pg_extension_base database starter for database upgraded started\ndestination-1   | 2026-10-23 05:19:17.945 UTC [356] LOG:  starting pg base extension worker 2 in database 18125\ndestination-1   | 2026-10-23 05:19:17.945 UTC [356] LOG:  pg_extension_base database starter for database upgraded finished\ndestination-1   | 2026-10-23 05:19:17.946 UTC [357] LOG:  pg extension base worker 2 in database upgraded started\ndestination-1   | 2026-10-23 05:19:17.946 UTC [357] LOG:  lake_replication launcher: watching database \"upgraded\"\ndestination-1   | 2026-10-23 05:19:18.517 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:18.517 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:18.517 UTC [344] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:18.517 UTC [344] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:18.674 UTC [427] ERROR:  conflicting replay at commit LSN 0/130\ndestination-1   | 2026-10-23 05:19:18.674 UTC [427] CONTEXT:  PL/pgSQL function stage_transaction(bigint,bigint,pg_lsn,pg_lsn,pg_lsn,timestamp with time zone,jsonb) line 63 at RAISE\ndestination-1   | \tSQL statement \"SELECT stage_transaction(\ndestination-1   | \t        p_subscription_id, p_xid, v_stream.begin_lsn, p_commit_lsn,\ndestination-1   | \t        p_end_lsn, p_commit_time, v_changes\ndestination-1   | \t    )\"\ndestination-1   | \tPL/pgSQL function commit_stream(bigint,bigint,pg_lsn,pg_lsn,timestamp with time zone) line 13 at PERFORM\ndestination-1   | 2026-10-23 05:19:18.674 UTC [427] STATEMENT:  SELECT lake_replication.commit_stream(1,2,'0/130','0/141','2026-01-01Z')\ndestination-1   | 2026-10-23 05:19:19.125 UTC [479] ERROR:  conflicting replay at commit LSN 0/110\ndestination-1   | 2026-10-23 05:19:19.125 UTC [479] CONTEXT:  PL/pgSQL function stage_transaction(bigint,bigint,pg_lsn,pg_lsn,pg_lsn,timestamp with time zone,jsonb) line 63 at RAISE\ndestination-1   | \tSQL statement \"SELECT stage_transaction(\ndestination-1   | \t        p_subscription_id, p_xid, v_stream.begin_lsn, p_commit_lsn,\ndestination-1   | \t        p_end_lsn, p_commit_time, v_changes\ndestination-1   | \t    )\"\ndestination-1   | \tPL/pgSQL function commit_stream(bigint,bigint,pg_lsn,pg_lsn,timestamp with time zone) line 13 at PERFORM\ndestination-1   | 2026-10-23 05:19:19.125 UTC [479] STATEMENT:  SELECT lake_replication.commit_stream(1,1,'0/110','0/120','2026-01-01Z')\ndestination-1   | 2026-10-23 05:19:19.340 UTC [500] ERROR:  acknowledged LSN 0/160 exceeds staged LSN 0/140\ndestination-1   | 2026-10-23 05:19:19.340 UTC [500] CONTEXT:  PL/pgSQL function mark_acknowledged(bigint,pg_lsn) line 8 at RAISE\ndestination-1   | 2026-10-23 05:19:19.340 UTC [500] STATEMENT:  SELECT lake_replication.mark_acknowledged(1,'0/160')\ndestination-1   | 2026-10-23 05:19:19.519 UTC [344] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:19.519 UTC [344] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:19.519 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:19.519 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:20.010 UTC [563] ERROR:  new transaction end LSN 0/115 does not advance staged LSN 0/140\ndestination-1   | 2026-10-23 05:19:20.010 UTC [563] CONTEXT:  PL/pgSQL function stage_transaction(bigint,bigint,pg_lsn,pg_lsn,pg_lsn,timestamp with time zone,jsonb) line 69 at RAISE\ndestination-1   | 2026-10-23 05:19:20.010 UTC [563] STATEMENT:  SELECT lake_replication.stage_transaction(1,4,'0/100','0/105','0/115','2026-01-01Z','[]')\ndestination-1   | 2026-10-23 05:19:20.521 UTC [344] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:20.521 UTC [344] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:20.521 UTC [94] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:20.521 UTC [94] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:21.275 UTC [1] LOG:  received fast shutdown request\ndestination-1   | 2026-10-23 05:19:21.275 UTC [1] LOG:  aborting any active transactions\ndestination-1   | 2026-10-23 05:19:21.275 UTC [357] LOG:  pg extension base worker 2 in database upgraded finished\ndestination-1   | 2026-10-23 05:19:21.275 UTC [94] FATAL:  terminating background worker \"pg base extension worker\" due to administrator command\ndestination-1   | 2026-10-23 05:19:21.275 UTC [94] LOG:  base worker 1 in database 16384 failed 1 time(s) in a row; delaying restart by 5000 ms\ndestination-1   | 2026-10-23 05:19:21.275 UTC [344] FATAL:  terminating background worker \"pg base extension worker\" due to administrator command\ndestination-1   | 2026-10-23 05:19:21.275 UTC [344] LOG:  base worker 1 in database 18125 failed 1 time(s) in a row; delaying restart by 5000 ms\ndestination-1   | 2026-10-23 05:19:21.275 UTC [89] LOG:  pg base extension server starter restarting\ndestination-1   | 2026-10-23 05:19:21.275 UTC [90] FATAL:  terminating background worker \"pg_lake cache worker\" due to administrator command\ndestination-1   | 2026-10-23 05:19:21.275 UTC [95] LOG:  pg extension base worker 2 in database analytics finished\ndestination-1   | 2026-10-23 05:19:21.277 UTC [1] LOG:  background worker \"pg_base_extension server starter\" (PID 89) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:21.277 UTC [1] LOG:  background worker \"pg base extension worker\" (PID 94) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:21.277 UTC [1] LOG:  background worker \"logical replication launcher\" (PID 91) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:21.277 UTC [1] LOG:  background worker \"pg_lake cache worker\" (PID 90) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:21.277 UTC [1] LOG:  background worker \"pg base extension worker\" (PID 344) exited with exit code 1\ndestination-1   | 2026-10-23 05:19:21.278 UTC [84] LOG:  shutting down\ndestination-1   | 2026-10-23 05:19:21.278 UTC [84] LOG:  checkpoint starting: shutdown immediate\ndestination-1   | 2026-10-23 05:19:21.344 UTC [84] LOG:  checkpoint complete: wrote 1367 buffers (8.3%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.012 s, sync=0.053 s, total=0.067 s; sync files=536, longest=0.008 s, average=0.001 s; distance=7516 kB, estimate=7516 kB; lsn=0/25672E8, redo lsn=0/25672E8\ndestination-1   | 2026-10-23 05:19:21.351 UTC [1] LOG:  database system is shut down\ndestination-1   | \ndestination-1   | PostgreSQL Database directory appears to contain a database; Skipping initialization\ndestination-1   | \ndestination-1   | 2026-10-23 05:19:21.493 UTC [1] LOG:  pg_extension_base: preloading $libdir/lake_replication\ndestination-1   | 2026-10-23 05:19:21.494 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_extension_updater\ndestination-1   | 2026-10-23 05:19:21.494 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_engine\ndestination-1   | 2026-10-23 05:19:21.494 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_iceberg\ndestination-1   | 2026-10-23 05:19:21.495 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_table\ndestination-1   | 2026-10-23 05:19:21.495 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake_copy\ndestination-1   | 2026-10-23 05:19:21.495 UTC [1] LOG:  pg_extension_base: preloading $libdir/pg_lake\ndestination-1   | 2026-10-23 05:19:21.514 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit\ndestination-1   | 2026-10-23 05:19:21.515 UTC [1] LOG:  listening on IPv4 address \"0.0.0.0\", port 5432\ndestination-1   | 2026-10-23 05:19:21.515 UTC [1] LOG:  listening on IPv6 address \"::\", port 5432\ndestination-1   | 2026-10-23 05:19:21.517 UTC [1] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\ndestination-1   | 2026-10-23 05:19:21.521 UTC [32] LOG:  database system was shut down at 2026-10-23 05:19:21 UTC\ndestination-1   | 2026-10-23 05:19:21.524 UTC [1] LOG:  database system is ready to accept connections\ndestination-1   | 2026-10-23 05:19:21.528 UTC [35] LOG:  pg base extension server starter started\ndestination-1   | 2026-10-23 05:19:21.528 UTC [35] LOG:  starting pg base extension database starter in database postgres\ndestination-1   | 2026-10-23 05:19:21.529 UTC [35] LOG:  starting pg base extension database starter in database analytics\ndestination-1   | 2026-10-23 05:19:21.529 UTC [36] LOG:  pg_lake cache worker started\ndestination-1   | 2026-10-23 05:19:21.529 UTC [35] LOG:  starting pg base extension database starter in database upgraded\ndestination-1   | 2026-10-23 05:19:21.536 UTC [39] LOG:  pg_extension_base database starter for database analytics started\ndestination-1   | 2026-10-23 05:19:21.536 UTC [40] LOG:  pg_extension_base database starter for database upgraded started\ndestination-1   | 2026-10-23 05:19:21.539 UTC [40] LOG:  starting pg base extension worker 1 in database 18125\ndestination-1   | 2026-10-23 05:19:21.539 UTC [39] LOG:  starting pg base extension worker 1 in database 16384\ndestination-1   | 2026-10-23 05:19:21.539 UTC [39] LOG:  starting pg base extension worker 2 in database 16384\ndestination-1   | 2026-10-23 05:19:21.540 UTC [40] LOG:  starting pg base extension worker 2 in database 18125\ndestination-1   | 2026-10-23 05:19:21.540 UTC [39] LOG:  pg_extension_base database starter for database analytics finished\ndestination-1   | 2026-10-23 05:19:21.540 UTC [40] LOG:  pg_extension_base database starter for database upgraded finished\ndestination-1   | 2026-10-23 05:19:21.542 UTC [43] LOG:  pg extension base worker 2 in database analytics started\ndestination-1   | 2026-10-23 05:19:21.542 UTC [43] LOG:  lake_replication launcher: watching database \"analytics\"\ndestination-1   | 2026-10-23 05:19:21.542 UTC [42] LOG:  pg extension base worker 1 in database upgraded started\ndestination-1   | 2026-10-23 05:19:21.543 UTC [44] LOG:  pg extension base worker 2 in database upgraded started\ndestination-1   | 2026-10-23 05:19:21.543 UTC [44] LOG:  lake_replication launcher: watching database \"upgraded\"\ndestination-1   | 2026-10-23 05:19:21.543 UTC [41] LOG:  pg extension base worker 1 in database analytics started\ndestination-1   | 2026-10-23 05:19:21.712 UTC [65] LOG:  pg_lake_table: non-shippable object pg_catalog.jsonb_populate_record(pg_catalog.anyelement,pg_catalog.jsonb) (classid=1255 objid=3209)\ndestination-1   | 2026-10-23 05:19:21.712 UTC [65] CONTEXT:  SQL statement \"INSERT INTO public.included\ndestination-1   | \t             SELECT (jsonb_populate_record(NULL::public.included, source.new_tuple)).*\ndestination-1   | \t               FROM unnest($1::jsonb[]) AS source(new_tuple)\"\ndestination-1   | \tPL/pgSQL function apply_change_run(text,regclass,jsonb[],jsonb[]) line 18 at EXECUTE\ndestination-1   | \tPL/pgSQL function publish_insert_batch(bigint,text,pg_lsn,pg_lsn) line 117 at assignment\ndestination-1   | 2026-10-23 05:19:21.712 UTC [65] STATEMENT:  SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch(2, 'subscription-2:0/1C2CD80-0/1E2C2E8', '0/1C2CD80'::pg_lsn, '0/1E2C2E8'::pg_lsn)\ndestination-1   | 2026-10-23 05:19:22.153 UTC [96] LOG:  pg_lake_table: non-shippable object pg_catalog.jsonb_populate_record(pg_catalog.anyelement,pg_catalog.jsonb) (classid=1255 objid=3209)\ndestination-1   | 2026-10-23 05:19:22.153 UTC [96] CONTEXT:  SQL statement \"INSERT INTO public.included\ndestination-1   | \t             SELECT (jsonb_populate_record(NULL::public.included, source.new_tuple)).*\ndestination-1   | \t               FROM unnest($1::jsonb[]) AS source(new_tuple)\"\ndestination-1   | \tPL/pgSQL function apply_change_run(text,regclass,jsonb[],jsonb[]) line 18 at EXECUTE\ndestination-1   | \tPL/pgSQL function publish_insert_batch(bigint,text,pg_lsn,pg_lsn) line 117 at assignment\ndestination-1   | 2026-10-23 05:19:22.153 UTC [96] STATEMENT:  SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch(2, 'subscription-2:0/1E2C3A8-0/1E2C3A8', '0/1E2C3A8'::pg_lsn, '0/1E2C3A8'::pg_lsn)\ndestination-1   | 2026-10-23 05:19:22.545 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:22.545 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:22.546 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:22.546 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:23.546 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:23.546 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:23.547 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:23.547 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:24.548 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:24.548 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:24.554 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:24.554 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:25.550 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:25.550 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:25.554 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:25.554 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:26.553 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:26.553 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:26.556 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:26.556 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:27.556 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:27.556 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:27.557 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:27.557 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:28.559 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:28.559 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:28.560 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:28.560 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:29.564 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:29.564 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:29.564 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:29.564 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:30.569 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:30.569 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:30.569 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:30.569 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:31.570 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:31.570 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:31.570 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:31.570 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:32.481 UTC [301] LOG:  pg_lake_table: non-shippable object pg_catalog.jsonb_populate_record(pg_catalog.anyelement,pg_catalog.jsonb) (classid=1255 objid=3209)\ndestination-1   | 2026-10-23 05:19:32.481 UTC [301] CONTEXT:  SQL statement \"INSERT INTO public.included\ndestination-1   | \t             SELECT (jsonb_populate_record(NULL::public.included, source.new_tuple)).*\ndestination-1   | \t               FROM unnest($1::jsonb[]) AS source(new_tuple)\"\ndestination-1   | \tPL/pgSQL function apply_change_run(text,regclass,jsonb[],jsonb[]) line 18 at EXECUTE\nsource-1        | initdb: warning: enabling \"trust\" authentication for local connections\nsource-1        | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.\nsource-1        | syncing data to disk ... ok\nsource-1        | \nsource-1        | \nsource-1        | Success. You can now start the database server using:\nsource-1        | \nsource-1        |     pg_ctl -D /var/lib/postgresql/18/data -l logfile start\nsource-1        | \nsource-1        | waiting for server to start....2026-10-23 05:18:32.412 UTC [49] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit\nsource-1        | 2026-10-23 05:18:32.413 UTC [49] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\nsource-1        | 2026-10-23 05:18:32.417 UTC [55] LOG:  database system was shut down at 2026-10-23 05:18:32 UTC\nsource-1        | 2026-10-23 05:18:32.422 UTC [49] LOG:  database system is ready to accept connections\nsource-1        |  done\nsource-1        | server started\nsource-1        | CREATE DATABASE\nsource-1        | \nsource-1        | \ndestination-1   | \tPL/pgSQL function publish_insert_batch(bigint,text,pg_lsn,pg_lsn) line 117 at assignment\ndestination-1   | 2026-10-23 05:19:32.481 UTC [301] STATEMENT:  SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch(2, 'subscription-2:0/2424408-0/2424408', '0/2424408'::pg_lsn, '0/2424408'::pg_lsn)\ndestination-1   | 2026-10-23 05:19:32.571 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\nsource-1        | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-qualification.sh\nsource-1        | CREATE ROLE\nsource-1        | GRANT\nsource-1        | CREATE TABLE\nsource-1        | INSERT 0 1\nsource-1        | CREATE PUBLICATION\nsource-1        | GRANT\nsource-1        | GRANT\nsource-1        | \nsource-1        | waiting for server to shut down....2026-10-23 05:18:32.600 UTC [49] LOG:  received fast shutdown request\nsource-1        | 2026-10-23 05:18:32.600 UTC [49] LOG:  aborting any active transactions\nsource-1        | 2026-10-23 05:18:32.601 UTC [49] LOG:  background worker \"logical replication launcher\" (PID 58) exited with exit code 1\nsource-1        | 2026-10-23 05:18:32.601 UTC [53] LOG:  shutting down\nsource-1        | 2026-10-23 05:18:32.602 UTC [53] LOG:  checkpoint starting: shutdown immediate\nsource-1        | 2026-10-23 05:18:32.627 UTC [53] LOG:  checkpoint complete: wrote 964 buffers (5.9%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.016 s, total=0.026 s; sync files=314, longest=0.007 s, average=0.001 s; distance=4377 kB, estimate=4377 kB; lsn=0/1B9FA98, redo lsn=0/1B9FA98\nsource-1        | 2026-10-23 05:18:32.634 UTC [49] LOG:  database system is shut down\nsource-1        |  done\ndestination-1   | 2026-10-23 05:19:32.571 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:32.571 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:32.571 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:33.576 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:33.576 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:33.576 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\nsource-1        | server stopped\nsource-1        | \ndestination-1   | 2026-10-23 05:19:33.576 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | PostgreSQL init process complete; ready for start up.\ndestination-1   | 2026-10-23 05:19:33.577 UTC [43] LOG:  lake_replication launcher: started supervisor for subscription_id=3\ndestination-1   | 2026-10-23 05:19:34.577 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:34.577 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:34.582 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:34.582 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:35.582 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:35.582 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:35.583 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:35.583 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:36.584 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:36.584 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:36.584 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:36.584 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:37.586 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:37.586 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:37.586 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\nsource-1        | \nsource-1        | 2026-10-23 05:18:32.719 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit\nsource-1        | 2026-10-23 05:18:32.719 UTC [1] LOG:  listening on IPv4 address \"0.0.0.0\", port 5432\nsource-1        | 2026-10-23 05:18:32.719 UTC [1] LOG:  listening on IPv6 address \"::\", port 5432\nsource-1        | 2026-10-23 05:18:32.721 UTC [1] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\nsource-1        | 2026-10-23 05:18:32.724 UTC [74] LOG:  database system was shut down at 2026-10-23 05:18:32 UTC\nsource-1        | 2026-10-23 05:18:32.726 UTC [1] LOG:  database system is ready to accept connections\nsource-1        | 2026-10-23 05:19:20.303 UTC [277] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:20.303 UTC [277] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:20.303 UTC [277] STATEMENT:  SELECT pg_create_logical_replication_slot('filtered_slot','pgoutput')\nsource-1        | 2026-10-23 05:19:20.588 UTC [292] LOG:  starting logical decoding for slot \"filtered_slot\"\nsource-1        | 2026-10-23 05:19:20.588 UTC [292] DETAIL:  Streaming transactions committing after 0/1C2CC60, reading WAL from 0/1C2CC28.\nsource-1        | 2026-10-23 05:19:20.588 UTC [292] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:20.588 UTC [292] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:20.588 UTC [292] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:20.588 UTC [292] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:20.592 UTC [292] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:20.592 UTC [292] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:20.592 UTC [292] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:20.592 UTC [292] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:20.893 UTC [308] LOG:  starting logical decoding for slot \"filtered_slot\"\nsource-1        | 2026-10-23 05:19:20.893 UTC [308] DETAIL:  Streaming transactions committing after 0/1C2CD80, reading WAL from 0/1C2CC28.\ndestination-1   | 2026-10-23 05:19:37.586 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:38.589 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:38.589 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:38.589 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:38.589 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:39.592 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:39.592 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:39.592 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:39.592 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:40.593 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:40.593 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:40.594 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:40.594 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:41.600 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:41.600 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:41.600 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:41.600 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:42.606 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:42.606 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:42.606 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:42.606 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:43.611 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:43.611 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:20.893 UTC [308] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1C2CD80 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\ndestination-1   | 2026-10-23 05:19:43.611 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:43.611 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:44.068 UTC [43] LOG:  lake_replication launcher: started supervisor for subscription_id=3\ndestination-1   | 2026-10-23 05:19:44.613 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:44.613 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:44.613 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:44.613 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:45.615 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:45.615 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:45.615 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:45.615 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:20.893 UTC [308] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:20.893 UTC [308] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:20.893 UTC [308] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1C2CD80 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:21.055 UTC [308] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:21.055 UTC [308] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1C2CD80 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:21.055 UTC [308] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:21.055 UTC [308] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1C2CD80 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.046 UTC [316] LOG:  starting logical decoding for slot \"filtered_slot\"\nsource-1        | 2026-10-23 05:19:22.046 UTC [316] DETAIL:  Streaming transactions committing after 0/1E2C2E8, reading WAL from 0/1C2CC28.\nsource-1        | 2026-10-23 05:19:22.046 UTC [316] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C2E8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.046 UTC [316] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:22.046 UTC [316] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:22.046 UTC [316] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C2E8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.085 UTC [316] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:22.085 UTC [316] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C2E8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.085 UTC [316] LOG:  unexpected EOF on standby connection\ndestination-1   | 2026-10-23 05:19:46.618 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:46.618 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:46.622 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:46.622 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:47.623 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:47.623 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:47.623 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:47.623 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:48.624 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:48.624 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:22.085 UTC [316] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C2E8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.498 UTC [324] LOG:  starting logical decoding for slot \"filtered_slot\"\nsource-1        | 2026-10-23 05:19:22.498 UTC [324] DETAIL:  Streaming transactions committing after 0/1E2C3A8, reading WAL from 0/1C2CC28.\ndestination-1   | 2026-10-23 05:19:48.625 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\nsource-1        | 2026-10-23 05:19:22.498 UTC [324] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C3A8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.498 UTC [324] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:22.498 UTC [324] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:22.498 UTC [324] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C3A8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.678 UTC [324] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:22.678 UTC [324] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C3A8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:22.678 UTC [324] LOG:  unexpected EOF on standby connection\ndestination-1   | 2026-10-23 05:19:48.625 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:49.626 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:49.626 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:49.626 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:49.626 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:50.627 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:50.627 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:50.627 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:50.627 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:51.629 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:51.629 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:22.678 UTC [324] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/1E2C3A8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:23.120 UTC [339] LOG:  starting logical decoding for slot \"filtered_slot\"\ndestination-1   | 2026-10-23 05:19:51.629 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:51.629 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:52.634 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:52.634 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:52.635 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:52.635 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:23.120 UTC [339] DETAIL:  Streaming transactions committing after 0/20298B8, reading WAL from 0/1C2CC28.\nsource-1        | 2026-10-23 05:19:23.120 UTC [339] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/20298B8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:23.121 UTC [339] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:23.121 UTC [339] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:23.121 UTC [339] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/20298B8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:23.858 UTC [339] LOG:  unexpected EOF on standby connection\ndestination-1   | 2026-10-23 05:19:53.640 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:53.640 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:53.641 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:53.641 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:54.643 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:54.643 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:54.644 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:54.644 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:55.650 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:55.650 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:55.650 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:55.650 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:56.652 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:56.652 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:23.858 UTC [339] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/20298B8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\ndestination-1   | 2026-10-23 05:19:56.652 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\nsource-1        | 2026-10-23 05:19:31.302 UTC [373] LOG:  starting logical decoding for slot \"filtered_slot\"\nsource-1        | 2026-10-23 05:19:31.302 UTC [373] DETAIL:  Streaming transactions committing after 0/20298B8, reading WAL from 0/1C2CC28.\nsource-1        | 2026-10-23 05:19:31.302 UTC [373] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/20298B8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:31.302 UTC [373] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:31.302 UTC [373] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:31.302 UTC [373] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/20298B8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:31.509 UTC [373] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:31.509 UTC [373] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/20298B8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:31.509 UTC [373] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:31.509 UTC [373] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/20298B8 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\ndestination-1   | 2026-10-23 05:19:56.652 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:57.652 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:57.652 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:57.653 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:57.653 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:57.901 UTC [43] LOG:  lake_replication launcher: started supervisor for subscription_id=3\ndestination-1   | 2026-10-23 05:19:58.654 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:58.654 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:58.654 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:58.654 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:19:59.655 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:59.655 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:32.159 UTC [388] LOG:  starting logical decoding for slot \"filtered_slot\"\ndestination-1   | 2026-10-23 05:19:59.655 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:19:59.655 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:32.159 UTC [388] DETAIL:  Streaming transactions committing after 0/2226DD0, reading WAL from 0/1C2CC28.\ndestination-1   | 2026-10-23 05:20:00.254 UTC [729] ERROR:  could not obtain lock on row in relation \"service_status\"\nsource-1        | 2026-10-23 05:19:32.159 UTC [388] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/2226DD0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\ndestination-1   | 2026-10-23 05:20:00.254 UTC [729] STATEMENT:  SELECT ss.desired_state, s.state FROM lake_replication.service_status ss JOIN lake_replication.subscriptions s USING (subscription_id) WHERE ss.subscription_id=3 FOR SHARE OF ss NOWAIT\nsource-1        | 2026-10-23 05:19:32.159 UTC [388] LOG:  logical decoding found consistent point at 0/1C2CC28\nsource-1        | 2026-10-23 05:19:32.159 UTC [388] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:32.159 UTC [388] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/2226DD0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\ndestination-1   | 2026-10-23 05:20:00.643 UTC [726] WARNING:  lake_replication worker: supervisor for subscription_id=3 exited with status 1\nsource-1        | 2026-10-23 05:19:32.407 UTC [388] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:32.407 UTC [388] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/2226DD0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:32.407 UTC [388] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:32.407 UTC [388] STATEMENT:  START_REPLICATION SLOT \"filtered_slot\" LOGICAL 0/2226DD0 (proto_version '4', publication_names 'filtered_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:33.610 UTC [407] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:33.610 UTC [407] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:33.610 UTC [407] STATEMENT:  CREATE_REPLICATION_SLOT \"native_filtered\" LOGICAL pgoutput (SNAPSHOT 'export', FAILOVER true)\nsource-1        | 2026-10-23 05:19:33.610 UTC [407] LOG:  exported logical decoding snapshot: \"00000085-00000002-1\" with 0 transaction IDs\nsource-1        | 2026-10-23 05:19:33.610 UTC [407] STATEMENT:  CREATE_REPLICATION_SLOT \"native_filtered\" LOGICAL pgoutput (SNAPSHOT 'export', FAILOVER true)\nsource-1        | 2026-10-23 05:19:33.659 UTC [407] LOG:  unexpected EOF on client connection with an open transaction\nsource-1        | 2026-10-23 05:19:33.811 UTC [411] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:33.811 UTC [411] DETAIL:  Streaming transactions committing after 0/2432C30, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:33.811 UTC [411] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/2432C30 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:33.811 UTC [411] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:33.811 UTC [411] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:33.811 UTC [411] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/2432C30 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:38.151 UTC [411] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:38.151 UTC [411] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/2432C30 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:38.151 UTC [411] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:38.151 UTC [411] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/2432C30 (proto_version '4', publication_names 'native_pub', streaming 'true')\ndestination-1   | 2026-10-23 05:20:00.644 UTC [43] LOG:  lake_replication launcher: stopped supervisor for subscription_id=3 (worker_launch_config row is gone)\ndestination-1   | 2026-10-23 05:20:00.655 UTC [42] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:20:00.655 UTC [42] DETAIL:  Set the GUC to use catalog=object_store\ndestination-1   | 2026-10-23 05:20:00.657 UTC [41] WARNING:  pg_lake_iceberg.object_store_catalog_location_prefix is not set\ndestination-1   | 2026-10-23 05:20:00.657 UTC [41] DETAIL:  Set the GUC to use catalog=object_store\nsource-1        | 2026-10-23 05:19:38.289 UTC [465] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:38.289 UTC [465] DETAIL:  Streaming transactions committing after 0/1A2DE420, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:38.289 UTC [465] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE420 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:38.289 UTC [465] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:38.289 UTC [465] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:38.289 UTC [465] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE420 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:40.000 UTC [465] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:40.000 UTC [465] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE420 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:40.000 UTC [465] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:40.000 UTC [465] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE420 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:40.246 UTC [476] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:40.246 UTC [476] DETAIL:  Streaming transactions committing after 0/1A2DE4E8, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:40.246 UTC [476] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE4E8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:40.246 UTC [476] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:40.246 UTC [476] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:40.246 UTC [476] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE4E8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:40.959 UTC [476] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:40.959 UTC [476] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE4E8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:41.141 UTC [492] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:41.141 UTC [492] DETAIL:  Streaming transactions committing after 0/1A2DE4E8, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:41.141 UTC [492] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE4E8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:41.141 UTC [492] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:41.141 UTC [492] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:41.141 UTC [492] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE4E8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:42.898 UTC [492] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:42.898 UTC [492] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE4E8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:42.898 UTC [492] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:42.898 UTC [492] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE4E8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:44.095 UTC [511] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:44.095 UTC [511] DETAIL:  Streaming transactions committing after 0/1A2DE5A8, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:44.095 UTC [511] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE5A8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:44.095 UTC [511] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:44.095 UTC [511] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:44.095 UTC [511] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE5A8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:44.432 UTC [1] LOG:  received fast shutdown request\nsource-1        | 2026-10-23 05:19:44.432 UTC [1] LOG:  aborting any active transactions\nsource-1        | 2026-10-23 05:19:44.433 UTC [510] FATAL:  terminating connection due to administrator command\nsource-1        | 2026-10-23 05:19:44.434 UTC [1] LOG:  background worker \"logical replication launcher\" (PID 77) exited with exit code 1\nsource-1        | 2026-10-23 05:19:44.435 UTC [72] LOG:  shutting down\nsource-1        | 2026-10-23 05:19:45.219 UTC [519] FATAL:  the database system is shutting down\nsource-1        | 2026-10-23 05:19:45.648 UTC [72] LOG:  checkpoint starting: shutdown immediate\nsource-1        | 2026-10-23 05:19:45.767 UTC [72] LOG:  checkpoint complete: wrote 13215 buffers (80.7%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.060 s, sync=0.046 s, total=0.122 s; sync files=62, longest=0.043 s, average=0.001 s; distance=400634 kB, estimate=400634 kB; lsn=0/1A2DE5A8, redo lsn=0/1A2DE5A8\nsource-1        | 2026-10-23 05:19:45.791 UTC [1] LOG:  database system is shut down\nsource-1        | \nsource-1        | PostgreSQL Database directory appears to contain a database; Skipping initialization\nsource-1        | \nsource-1        | 2026-10-23 05:19:46.169 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit\nsource-1        | 2026-10-23 05:19:46.169 UTC [1] LOG:  listening on IPv4 address \"0.0.0.0\", port 5432\nsource-1        | 2026-10-23 05:19:46.169 UTC [1] LOG:  listening on IPv6 address \"::\", port 5432\nsource-1        | 2026-10-23 05:19:46.171 UTC [1] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\nsource-1        | 2026-10-23 05:19:46.175 UTC [32] LOG:  database system was shut down at 2026-10-23 05:19:45 UTC\nsource-1        | 2026-10-23 05:19:46.178 UTC [1] LOG:  database system is ready to accept connections\nsource-1        | 2026-10-23 05:19:46.808 UTC [52] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:46.808 UTC [52] DETAIL:  Streaming transactions committing after 0/1A2DE5A8, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:46.808 UTC [52] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE5A8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:46.808 UTC [52] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:46.808 UTC [52] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:46.808 UTC [52] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE5A8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:48.357 UTC [52] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:48.357 UTC [52] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE5A8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:48.357 UTC [52] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:48.357 UTC [52] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2DE5A8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:48.603 UTC [63] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:48.603 UTC [63] DETAIL:  Streaming transactions committing after 0/1A2E4180, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:48.603 UTC [63] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2E4180 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:48.603 UTC [63] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:48.603 UTC [63] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:48.603 UTC [63] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2E4180 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:50.755 UTC [63] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:50.755 UTC [63] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2E4180 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:57.933 UTC [119] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:57.933 UTC [119] DETAIL:  Streaming transactions committing after 0/1A2E4180, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:57.933 UTC [119] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2E4180 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:57.933 UTC [119] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:57.933 UTC [119] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:57.933 UTC [119] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2E4180 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:59.488 UTC [119] LOG:  could not receive data from client: Connection reset by peer\nsource-1        | 2026-10-23 05:19:59.488 UTC [119] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2E4180 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:59.488 UTC [119] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:19:59.488 UTC [119] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A2E4180 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:59.745 UTC [130] LOG:  starting logical decoding for slot \"native_filtered\"\nsource-1        | 2026-10-23 05:19:59.745 UTC [130] DETAIL:  Streaming transactions committing after 0/1A4E52C8, reading WAL from 0/2432BF8.\nsource-1        | 2026-10-23 05:19:59.745 UTC [130] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A4E52C8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:19:59.745 UTC [130] LOG:  logical decoding found consistent point at 0/2432BF8\nsource-1        | 2026-10-23 05:19:59.745 UTC [130] DETAIL:  There are no running transactions.\nsource-1        | 2026-10-23 05:19:59.745 UTC [130] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A4E52C8 (proto_version '4', publication_names 'native_pub', streaming 'true')\nsource-1        | 2026-10-23 05:20:00.207 UTC [131] ERROR:  replication slot \"native_filtered\" is active for PID 130\nsource-1        | 2026-10-23 05:20:00.207 UTC [131] CONTEXT:  SQL statement \"SELECT pg_drop_replication_slot('native_filtered')\"\nsource-1        | \tPL/pgSQL function inline_code_block line 1 at PERFORM\nsource-1        | 2026-10-23 05:20:00.207 UTC [131] STATEMENT:  DO $lake_replication_drop_slot$ BEGIN IF EXISTS (SELECT 1 FROM pg_replication_slots WHERE slot_name = 'native_filtered') THEN PERFORM pg_drop_replication_slot('native_filtered'); END IF; END $lake_replication_drop_slot$\nsource-1        | 2026-10-23 05:20:00.254 UTC [130] LOG:  unexpected EOF on standby connection\nsource-1        | 2026-10-23 05:20:00.254 UTC [130] STATEMENT:  START_REPLICATION SLOT \"native_filtered\" LOGICAL 0/1A4E52C8 (proto_version '4', publication_names 'native_pub', streaming 'true')\n",
+      "native_bulk_diagnostic": true,
+      "native_disable_seconds": 0.15443875000346452,
+      "native_drop_seconds": 0.4175239590113051,
+      "native_stream_disable_seconds": 0.7329257499950472,
+      "native_worker_logs_sha256": "1cacded92fc37ac0d00919177122f2ed56f2ee9006074545e18d5ca2d3533d18",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "raw_results_sha256": "cc74a1b3f3a5357effd30ac60fc080bb66369c7387ff118b8e3989441b3d7315",
+      "raw_run": ".qualification/qualification_20261023_051830_empty_filtered",
+      "run": "qualification_20261023_051830",
+      "scope": "Current SQL overlay; archived native binaries unchanged; not release qualification",
+      "source_revision": "5f0f92df1fdd4fe22e78bda4717aadcae086b442-dirty",
+      "status": "passed"
+    }
+  ],
+  "limitations": [
+    "Native amd64 qualification and final commit CI remain pending.",
+    "Bulk-only admission does not bound high-fan-out streaming memory.",
+    "Passing independent lanes does not override the failed resource case.",
+    "The separate four-slot streaming overlay is not production policy; performance qualification and adoption remain pending.",
+    "Release soak, security and coordinated recovery gates remain open."
+  ],
+  "local_checks": {
+    "log_sha256": "e27933ae658a24cc2fb7bf0c238580a71006e40f863742db42dc4775a0bff171",
+    "make_check": "passed"
+  },
+  "payload_sha256": {
+    "bin/lake-replication-initial-sync": "17ac6a37f8dd5ba07a285a1cec9987684c436616317e29e3c856bd30038b550c",
+    "bin/lake-replication-publisher": "b3f3fcbdda0048daa2c3ed701b6413b2ad272a3e37030f5aaf98a7325ecb5be4",
+    "bin/lake-replication-receiver": "d03db97ca1eaa75a2f8d3e0598055017e9d795479d7c66f072726e69fbe8d6e8",
+    "bin/lake-replication-supervisor": "2b9cb00219ef3f278ec28d6bfd0e0160154258e39d2db8b428c2f406677b4858",
+    "extension/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+    "extension/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+    "extension/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+    "extension/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+    "extension/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "13745ca969dfc5756a32f0b09578fcf7490dd6e1a8a7f967fa2ef733bfbbaba3",
+    "extension/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+    "extension/lake_replication--0.1.0-beta.3.sql": "fe4a286254847db45e4658e80c6bc7dc8af9cf6636f95a964fd5bea9b1285de8",
+    "extension/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+    "extension/lake_replication.control": "feffa2494a6b024236ef009deb34f86d547c89c1fa2aee4be925f79d3aab1145",
+    "lib/lake_replication.so": "9ca9d4ba054b4c6eff1b261048966986de808855e5daa2f69e8562b8824fb9e1"
+  },
+  "production_admission": {
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.3.tar.gz",
+      "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+      "source_revision": "5f0f92df1fdd4fe22e78bda4717aadcae086b442-dirty"
+    },
+    "cases": [
+      {
+        "case": "locks",
+        "cleanup_returncode": 0,
+        "status": "passed"
+      },
+      {
+        "case": "schema",
+        "cleanup_returncode": 0,
+        "deadlock_error": "psql exited: ERROR:  40P01: deadlock detected\nDETAIL:  Process 393 waits for ExclusiveLock on advisory lock [0,1280460112,2,1]; blocked by process 175.\nProcess 175 waits for ShareLock on transaction 813; blocked by process 393.\nHINT:  See server log for query details.\nCONTEXT:  SQL statement \"SELECT lake_replication.admit_bulk()\"\nPL/pgSQL function reconcile_relation_schema(bigint,oid,bigint) line 109 at PERFORM\nLOCATION:  DeadLockReport, deadlock.c:1133\n",
+        "status": "passed",
+        "timeout_observation": {
+          "error": "ERROR:  canceling statement due to lock timeout\nCONTEXT:  SQL statement \"SELECT lake_replication.admit_bulk()\"\nPL/pgSQL function reconcile_relation_schema(bigint,oid,bigint) line 109 at PERFORM",
+          "response": "SET",
+          "returncode": 3,
+          "state": "streaming:true"
+        }
+      },
+      {
+        "case": "rebuild",
+        "cleanup_returncode": 0,
+        "status": "passed"
+      },
+      {
+        "case": "cancel",
+        "cleanup_returncode": 0,
+        "engine_write_observation": {
+          "began": 1792731267.806538,
+          "line_sha256": "c181e0e5f686e5b41f9b55770951dd94ef9a1443862737afd2528d1ed3a2dc9d",
+          "logged_epoch": 1792731270.873431,
+          "operation": "COPY",
+          "pid": 148,
+          "wait_event": "Extension",
+          "wait_event_type": "Extension"
+        },
+        "status": "passed"
+      },
+      {
+        "case": "upgrade",
+        "cleanup_returncode": 0,
+        "old_archive": {
+          "architecture": "arm64",
+          "archive": "lake_replication-0.1.0-beta.2-linux-arm64.tar.gz",
+          "archive_sha256": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+          "source_revision": "0401314a1196ae304836e178340be604e8601263-dirty"
+        },
+        "status": "passed"
+      },
+      {
+        "case": "scale",
+        "cleanup_returncode": 0,
+        "databases": 4,
+        "error": "live actual Iceberg rows 0: expected 'live', got 'initial'",
+        "inventory_error": "service \"pgduck\" is not running",
+        "setup_until_all_streaming_seconds": 3.5864249159931205,
+        "status": "finding",
+        "subscriptions": 16,
+        "worker_budget": 64
+      },
+      {
+        "bulk_copies": 4,
+        "case": "fairness",
+        "checks": {
+          "all_stream_targets_pass": true,
+          "copy_progress_observed": true,
+          "copy_within_three_minutes": true,
+          "publication_overlap_observed": true,
+          "waiting_observed": true
+        },
+        "cleanup_returncode": 0,
+        "copy_commit_epoch": 1792731617.849296,
+        "copy_elapsed_seconds": 36.21361017227173,
+        "copy_rows": 2000000,
+        "copy_start_epoch": 1792731581.635686,
+        "engine_oom": false,
+        "image": "lake-replication-production-admission:qualification_20261023_045148",
+        "limits": {
+          "catchup_seconds": 5,
+          "copy_timeout_seconds": 180,
+          "max_publication_gap_seconds": 5,
+          "min_commits_during_copy": 5,
+          "p95_publication_ms": 2000
+        },
+        "log_sha256": "ea3fde44f96d72ae9252c5de403492db235dd7791051e7111e9d09813adf95c0",
+        "max_active_copy_publications": 4,
+        "observer_interval_ms": 500,
+        "offered_interval_ms": 500,
+        "status": "passed",
+        "stream_rows_per_transaction": 20,
+        "stream_transactions": 120,
+        "streams": [
+          {
+            "catchup_seconds": 0.13821792602539062,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            },
+            "commits_during_copy": 72,
+            "database": "analytics",
+            "max_publication_gap_seconds": 0.7984879016876221,
+            "p95_publication_ms": 351.978063583374,
+            "source_max_schedule_lateness_seconds": 0.010084625013405457
+          },
+          {
+            "catchup_seconds": 0.13394689559936523,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            },
+            "commits_during_copy": 72,
+            "database": "fair_stream_1",
+            "max_publication_gap_seconds": 0.8156380653381348,
+            "p95_publication_ms": 322.537899017334,
+            "source_max_schedule_lateness_seconds": 0.10096316700219177
+          },
+          {
+            "catchup_seconds": 0.12978601455688477,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            },
+            "commits_during_copy": 72,
+            "database": "fair_stream_2",
+            "max_publication_gap_seconds": 0.7990350723266602,
+            "p95_publication_ms": 310.12797355651855,
+            "source_max_schedule_lateness_seconds": 0.106884708016878
+          }
+        ],
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "unexpected_pg_crash": false,
+        "variant": "bulk_only"
+      }
+    ],
+    "checks": [
+      {
+        "actual": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+        "expected": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      },
+      {
+        "actual": "0.1.0-beta.3",
+        "expected": "0.1.0-beta.3",
+        "name": "candidate SQL version",
+        "passed": true
+      },
+      {
+        "actual": "5",
+        "expected": "5",
+        "name": "exactly five bulk entry points",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "streaming entry points do not acquire bulk admission",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "no prototype functions installed",
+        "passed": true
+      },
+      {
+        "actual": "t",
+        "expected": "t",
+        "name": "admin may invoke and inspect bulk admission",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "read-all role cannot hold bulk admission",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "nested bulk calls own one permit",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "bulk gate excludes another database and supports timeout",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "savepoint rollback releases bulk permit",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "backend death releases bulk permit",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "queued schema timeout propagates as a retryable SQL error",
+        "passed": true
+      },
+      {
+        "actual": "streaming:true",
+        "expected": "streaming:true",
+        "name": "resource timeout does not durably pause the subscription",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "timed-out DDL adds no column",
+        "passed": true
+      },
+      {
+        "actual": "ready",
+        "expected": "ready",
+        "name": "schema reconciliation succeeds after permit release",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "actual DDL relation-lock timeout propagates",
+        "passed": true
+      },
+      {
+        "actual": "streaming:true",
+        "expected": "streaming:true",
+        "name": "actual DDL contention does not durably pause metadata",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "failed DDL releases the admission permit",
+        "passed": true
+      },
+      {
+        "actual": "ready",
+        "expected": "ready",
+        "name": "DDL retry succeeds after conflicting reader leaves",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "schema lock-order victim propagates SQLSTATE 40P01",
+        "passed": true
+      },
+      {
+        "actual": "streaming:true",
+        "expected": "streaming:true",
+        "name": "deadlock abort preserves streaming metadata",
+        "passed": true
+      },
+      {
+        "actual": "ready",
+        "expected": "ready",
+        "name": "deadlock retry can perform the additive DDL",
+        "passed": true
+      },
+      {
+        "actual": "1:row-1:NULL,2:row-2:NULL",
+        "expected": "1:row-1:NULL,2:row-2:NULL",
+        "name": "successful schema retry preserves exact original rows",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "genuine incompatible source schema still pauses replication",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "queued rebuild cancellation propagates",
+        "passed": true
+      },
+      {
+        "actual": "paused",
+        "expected": "paused",
+        "name": "canceled rebuild preserves old subscription state",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "canceled rebuild records no promotion",
+        "passed": true
+      },
+      {
+        "actual": [
+          "ready"
+        ],
+        "expected": [
+          "ready"
+        ],
+        "name": "concurrent independent schema operation completes",
+        "passed": true
+      },
+      {
+        "actual": [
+          "1"
+        ],
+        "expected": [
+          "1"
+        ],
+        "name": "concurrent rebuild performs one real rename group",
+        "passed": true
+      },
+      {
+        "actual": [
+          "3"
+        ],
+        "expected": [
+          "3"
+        ],
+        "name": "rebuilt canonical rows are visible in owning transaction",
+        "passed": true
+      },
+      {
+        "actual": "2",
+        "expected": "2",
+        "name": "rebuild rollback restores original table contents",
+        "passed": true
+      },
+      {
+        "actual": "3",
+        "expected": "3",
+        "name": "rebuild rollback preserves shadow table contents",
+        "passed": true
+      },
+      {
+        "actual": "t",
+        "expected": "t",
+        "name": "rebuild rollback removes backup rename",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "rebuild rollback removes promotion metadata",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "rebuild retry commits exactly one promotion",
+        "passed": true
+      },
+      {
+        "actual": "3:2",
+        "expected": "3:2",
+        "name": "promotion commits canonical and retained backup data",
+        "passed": true
+      },
+      {
+        "actual": "disabled:streaming",
+        "expected": "disabled:streaming",
+        "name": "promotion disables the old subscription only",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "independent schema changes survive rebuild rollback",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "copy cancellation observes a real engine write request",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "active copy backend accepts cancellation",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "canceled subscription wrapper drains",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "cancellation releases its bulk permit",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "canceled copy preserves all zero checkpoints",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "canceled copy publishes no partial Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "canceled native source slot remains inactive",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "native restart completes a fresh initial copy",
+        "passed": true
+      },
+      {
+        "actual": "2000000:2000000:1:2000000:true",
+        "expected": "2000000:2000000:1:2000000:true",
+        "name": "native copy recovery restores exact IDs and payloads",
+        "passed": true
+      },
+      {
+        "actual": "2000001",
+        "expected": "2000001",
+        "name": "recovered copy continues live replication",
+        "passed": true
+      },
+      {
+        "actual": "2026-10-23 04:54:10.719487+00",
+        "expected": "2026-10-23 04:54:10.719487+00",
+        "name": "copy cancellation preserves the PostgreSQL postmaster",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "recovered subscription drops its source slot",
+        "passed": true
+      },
+      {
+        "actual": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "expected": "963e6dd28b4b20fa443e9f43a72f510bb7d7a73c1297ef66d510b610bf69d17e",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      },
+      {
+        "actual": "0.1.0-beta.2",
+        "expected": "0.1.0-beta.2",
+        "name": "starts unchanged beta.2 SQL",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "beta.2 native copy completes",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "beta.2 wrapper drains before replacement",
+        "passed": true
+      },
+      {
+        "actual": "0.1.0-beta.2:true",
+        "expected": "0.1.0-beta.2:true",
+        "name": "upgrade rollback preserves beta.2 version and no helper",
+        "passed": true
+      },
+      {
+        "actual": "0.1.0-beta.3",
+        "expected": "0.1.0-beta.3",
+        "name": "candidate SQL version",
+        "passed": true
+      },
+      {
+        "actual": "5",
+        "expected": "5",
+        "name": "exactly five bulk entry points",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "streaming entry points do not acquire bulk admission",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "no prototype functions installed",
+        "passed": true
+      },
+      {
+        "actual": "t",
+        "expected": "t",
+        "name": "admin may invoke and inspect bulk admission",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "read-all role cannot hold bulk admission",
+        "passed": true
+      },
+      {
+        "actual": "0/1BCA9D8",
+        "expected": "0/1BCA9D8",
+        "name": "upgrade preserves published checkpoint",
+        "passed": true
+      },
+      {
+        "actual": "1:1",
+        "expected": "1:1",
+        "name": "upgrade preserves original Iceberg data",
+        "passed": true
+      },
+      {
+        "actual": "stopped",
+        "expected": "stopped",
+        "name": "upgrade leaves native subscription disabled",
+        "passed": true
+      },
+      {
+        "actual": "1,2",
+        "expected": "1,2",
+        "name": "upgraded native subscription catches up",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "upgraded subscription removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "analytics replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_1 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_2 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_3 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_0 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_1 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_2 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_3 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_4 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_5 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_6 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_7 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_8 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_9 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_10 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_11 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_12 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_13 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_14 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_15 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "16",
+        "expected": "16",
+        "name": "one wrapper per enabled subscription",
+        "passed": true
+      },
+      {
+        "actual": "initial",
+        "expected": "live",
+        "name": "live actual Iceberg rows 0",
+        "passed": false
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_1 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "fair_stream_2 is streaming before large copy",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "analytics exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2400|2400|t",
+        "expected": "2400|2400|t",
+        "name": "fair_stream_2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 0 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 1 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 2 exact final Iceberg rows",
+        "passed": true
+      },
+      {
+        "actual": "2000000|2000000|1|2000000|2000001000000|t",
+        "expected": "2000000|2000000|1|2000000|2000001000000|t",
+        "name": "large copy 3 exact final Iceberg rows",
+        "passed": true
+      }
+    ],
+    "image_id": "sha256:4527d4f36d92aca572b626305ce2c764c0b7149de3c748c3e9ff05b418582083",
+    "inputs": {
+      "Cargo.lock": "458cc7d5c8d93c63eddb892c843a4fc98d0aa7126457280c5d36ed6c8dcd70cf",
+      "experiments/admission/admission_measure.py": "7024e2edef57f0bb34692e8e2e6ecbe1f13d061a126c765ce71603040ad1d7e3",
+      "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+      "experiments/admission/operational_probe.py": "7ae5e60b00f203b6ab35a892d53544a38cb5e8516f962991a8f2cdc0dadeea08",
+      "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+      "experiments/admission/scale.py": "b146c30a41f1af9b75ed796cabb1a0275b3061568469ba9a4e7001b672f1f980",
+      "extensions/lake_replication/Makefile": "2b849426e1c3bf328267a5b513005b85f55f99f131932e0085cb8a9f772db85a",
+      "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+      "extensions/lake_replication/lake_replication.c": "6ad43ecf71081e43e6e851ea8d79603c75eb478a80b0f29f44a554fafee8692c",
+      "extensions/lake_replication/lake_replication.control": "feffa2494a6b024236ef009deb34f86d547c89c1fa2aee4be925f79d3aab1145",
+      "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+      "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+      "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+      "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+      "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+      "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+      "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+      "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+      "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+      "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+      "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+      "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+      "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+      "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+      "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+      "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+      "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+      "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+      "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+      "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+      "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+      "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+      "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+      "migrations/0024_bulk_admission.sql": "944a1d0f8300967e7d6e95e8c6b64ec9ddfc918eae94cc9f5bc82d0d5fdb6dfa",
+      "tests/admission/probe.py": "5bfa7b4db326041d52615216a4b46b1ad7bba8bb36751716ac4d764b27460f56",
+      "tests/qualification/probe.py": "882204d6b543bf489510282f88eadeb964f5dfabea6d7fb4d8a69b1dd17519d0",
+      "worker/Cargo.toml": "c83017184de77e96bd058b486f2a8634fdfeb8c902eb2694ff49aa5e26cdac68",
+      "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+      "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+      "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+      "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+      "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+      "worker/src/main.rs": "1b4f1b1e307f3d90ff754bc9c6f8cc67283dab2d65f65ca6bfdf8e90a2fb27e1",
+      "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+      "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+      "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6",
+      "worker/src/wire.rs": "d555faf6d03a021b93761335e93eb1957d0d4a8c5f533254fc5db0300d01071c"
+    },
+    "log_sha256": {
+      "cancel/compose.log": "d2ee9066dafb8d942ce37940689b005c5915a1fd583a22c0fd35b89052ffda11",
+      "fairness/compose.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "locks/compose.log": "716d0acde042b0f2ca98f4412e761a089c523b4da4478df82d26bc4faf759375",
+      "rebuild/compose.log": "343884620671d4fb7e9c3bc62eb0378e730647f04031f0a962ff2b5c59792edf",
+      "scale/compose.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "schema/compose.log": "8506eb7cdd1593a8b72413db6ffc342ca8ff3a76e676449c7f7990454724a2f7",
+      "upgrade/compose.log": "a87d9cb0dfa74859b6c9969f1ae94344572056029e10c57bcd88b5ffeb75a401"
+    },
+    "parameters": {
+      "cases": [
+        "locks",
+        "schema",
+        "rebuild",
+        "cancel",
+        "upgrade",
+        "scale",
+        "fairness"
+      ],
+      "old_archive": "/Users/georg/Developer/proddata/pg_lake_replication/dist/release/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz"
+    },
+    "raw_results_sha256": "5f30c31ea1a63823affa97f978714227ddc783994ef552eac6b071a35951c443",
+    "raw_run": ".qualification/qualification_20261023_045148_production_admission",
+    "scope": "Qualify exported production bulk-admission packages; no SQL or binary overlay.",
+    "source_snapshot": ".qualification/qualification_20261023_045148_production_admission/sources",
+    "status": "completed_with_findings"
+  },
+  "resource_reproduction": {
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.3.tar.gz",
+      "archive_sha256": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+      "source_revision": "5f0f92df1fdd4fe22e78bda4717aadcae086b442-dirty"
+    },
+    "cases": [
+      {
+        "case": "scale",
+        "cleanup_returncode": 0,
+        "databases": 4,
+        "error": "restarted actual Iceberg rows 0: expected 'restarted', got 'live'",
+        "inventory_error": "service \"pgduck\" is not running",
+        "live_all_visible_seconds": 1.8541553329851013,
+        "setup_until_all_streaming_seconds": 3.6353409169823863,
+        "status": "finding",
+        "subscriptions": 16,
+        "worker_budget": 64
+      }
+    ],
+    "checks": [
+      {
+        "actual": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+        "expected": "ea10f47b5cedf7084fa34dd682c2df14d23f21d5c9d5e3bf2a312411e4a7ec37",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "analytics replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_1 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_2 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_3 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_0 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_1 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_2 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_3 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_4 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_5 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_6 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_7 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_8 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_9 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_10 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_11 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "analytics/scale_sub_12 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_1/scale_sub_13 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_2/scale_sub_14 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "scale_db_3/scale_sub_15 initial copy",
+        "passed": true
+      },
+      {
+        "actual": "16",
+        "expected": "16",
+        "name": "one wrapper per enabled subscription",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 0",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 1",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 2",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 3",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 4",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 5",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 6",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 7",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 8",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 9",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 10",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 11",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 12",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 13",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 14",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "live",
+        "name": "live actual Iceberg rows 15",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "analytics replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_1 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_2 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "scale_db_3 replication owner count",
+        "passed": true
+      },
+      {
+        "actual": "16",
+        "expected": "16",
+        "name": "live all wrappers present",
+        "passed": true
+      },
+      {
+        "actual": "live",
+        "expected": "restarted",
+        "name": "restarted actual Iceberg rows 0",
+        "passed": false
+      }
+    ],
+    "image_id": "sha256:4527d4f36d92aca572b626305ce2c764c0b7149de3c748c3e9ff05b418582083",
+    "inputs": {
+      "Cargo.lock": "458cc7d5c8d93c63eddb892c843a4fc98d0aa7126457280c5d36ed6c8dcd70cf",
+      "experiments/admission/admission_measure.py": "7024e2edef57f0bb34692e8e2e6ecbe1f13d061a126c765ce71603040ad1d7e3",
+      "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+      "experiments/admission/operational_probe.py": "7ae5e60b00f203b6ab35a892d53544a38cb5e8516f962991a8f2cdc0dadeea08",
+      "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+      "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+      "extensions/lake_replication/Makefile": "2b849426e1c3bf328267a5b513005b85f55f99f131932e0085cb8a9f772db85a",
+      "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+      "extensions/lake_replication/lake_replication.c": "6ad43ecf71081e43e6e851ea8d79603c75eb478a80b0f29f44a554fafee8692c",
+      "extensions/lake_replication/lake_replication.control": "feffa2494a6b024236ef009deb34f86d547c89c1fa2aee4be925f79d3aab1145",
+      "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+      "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+      "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+      "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+      "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+      "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+      "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+      "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+      "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+      "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+      "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+      "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+      "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+      "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+      "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+      "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+      "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+      "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+      "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+      "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+      "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+      "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+      "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+      "migrations/0024_bulk_admission.sql": "944a1d0f8300967e7d6e95e8c6b64ec9ddfc918eae94cc9f5bc82d0d5fdb6dfa",
+      "tests/admission/probe.py": "50e1617b083d58f690ea3d99f87c0ceb296a2de6da9b321502186d44f0c5496c",
+      "tests/qualification/probe.py": "882204d6b543bf489510282f88eadeb964f5dfabea6d7fb4d8a69b1dd17519d0",
+      "worker/Cargo.toml": "c83017184de77e96bd058b486f2a8634fdfeb8c902eb2694ff49aa5e26cdac68",
+      "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+      "worker/src/initial_sync.rs": "94a7d5c03ee0aa27a45786283888a21e246d9252552af0807ad66c518c051a2b",
+      "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+      "worker/src/lib.rs": "45273c4413f65a0797db3dbf54262f19abe9dff77158b9cc39b90a8c7799e097",
+      "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+      "worker/src/main.rs": "1b4f1b1e307f3d90ff754bc9c6f8cc67283dab2d65f65ca6bfdf8e90a2fb27e1",
+      "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+      "worker/src/publisher.rs": "004f69cb97d9ad33ac3113ce73230aad40ffa9dea741cad0e1a33aaaec2fd74b",
+      "worker/src/supervisor.rs": "6ec881c4d645f10beec9acb18d0b3081db6d0f6a008552af88c5d58a599a2dd6",
+      "worker/src/wire.rs": "d555faf6d03a021b93761335e93eb1957d0d4a8c5f533254fc5db0300d01071c"
+    },
+    "log_sha256": {
+      "scale/compose.log": "af4dd76aaf1c38181f0342ad02d95f9756c7f1b8ad0642ff8f523c77b03c6920",
+      "scale/container-states.jsonl": "6db432844444bc0db6cd65d558b77c5748013703ccff17f059e471490976ab31",
+      "scale/workers.jsonl": "2dbc2e35c309d90d4fb8b01797454525b1fa739b93735c8ce62e105400d10ef1"
+    },
+    "parameters": {
+      "cases": [
+        "scale"
+      ],
+      "old_archive": "/Users/georg/Developer/proddata/pg_lake_replication/dist/release/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz"
+    },
+    "raw_results_sha256": "7adc9ee549aecb0d31d83edbc0b95d515e3ba2ffcc6d92d3539d7327dbc8adbd",
+    "raw_run": ".qualification/qualification_20261023_050203_production_admission",
+    "scope": "Qualify exported production bulk-admission packages; no SQL or binary overlay.",
+    "source_snapshot": ".qualification/qualification_20261023_050203_production_admission/sources",
+    "status": "completed_with_findings"
+  },
+  "status": "blocked_by_reproduced_streaming_engine_oom"
+}

@@ -28,7 +28,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       ARTIFACT_RUN_ID: ${{ inputs.artifact_run_id }}
-      QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.2-linux-${{ matrix.arch }}.tar.gz
+      QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.3-linux-${{ matrix.arch }}.tar.gz
     steps:
       - name: Resolve the successful candidate CI revision
         id: candidate
@@ -93,6 +93,20 @@ jobs:
         run: make lifecycle-fault-test
       - name: Receiver regressions with archived binaries and current SQL overlay
         run: python3 tests/streaming/empty_filtered.py --native-bulk
+      - name: Check out the preserved beta.2 source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 9cfee8fb7d1ca581b089ac649852152f508c0ae9
+          path: .qualification/beta2-source
+      - name: Build the beta.2 package for admission upgrade qualification
+        working-directory: .qualification/beta2-source
+        env:
+          ARCHES: ${{ matrix.arch }}
+        run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/beta2-artifacts"
+      - name: Production bulk admission and beta.2 upgrade
+        env:
+          OLD_ARCHIVE: ${{ github.workspace }}/.qualification/beta2-artifacts/lake_replication-0.1.0-beta.2-linux-${{ matrix.arch }}.tar.gz
+        run: python3 tests/admission/probe.py --old-archive "$OLD_ARCHIVE"
       - name: Check out the preserved beta.1 source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -104,7 +118,7 @@ jobs:
         env:
           ARCHES: ${{ matrix.arch }}
         run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/legacy-artifacts"
-      - name: Packaged beta.1 to beta.2 handoff
+      - name: Packaged beta.1 to beta.3 handoff
         env:
           OLD_ARCHIVE: ${{ github.workspace }}/.qualification/legacy-artifacts/lake_replication-0.1.0-beta.1-linux-${{ matrix.arch }}.tar.gz
         run: python3 tests/lifecycle/probe.py --upgrade --old-archive "$OLD_ARCHIVE"
@@ -116,6 +130,7 @@ jobs:
           path: |
             .qualification/
             !.qualification/legacy-source/
+            !.qualification/beta2-source/
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 30

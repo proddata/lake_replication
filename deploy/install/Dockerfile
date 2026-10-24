@@ -20,7 +20,7 @@ RUN make -C /src/extensions/lake_replication all \
 
 FROM debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251 AS assembler
 ARG TARGETARCH
-ARG VERSION=0.1.0-beta.2
+ARG VERSION=0.1.0-beta.3
 ARG REVISION=unknown
 WORKDIR /bundle/lake_replication-${VERSION}
 COPY --from=worker-builder \
@@ -40,6 +40,8 @@ COPY --from=extension-builder \
     /src/extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.1.sql \
     /src/extensions/lake_replication/lake_replication--0.1.0--0.1.0-beta.2.sql \
     /src/extensions/lake_replication/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql \
+    /src/extensions/lake_replication/lake_replication--0.1.0-beta.3.sql \
+    /src/extensions/lake_replication/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql \
     payload/extension/
 COPY deploy/install/install.sh deploy/install/uninstall.sh \
      deploy/install/README.md deploy/install/COMPATIBILITY.md ./
@@ -59,7 +61,7 @@ RUN cd /bundle \
        > lake_replication-${VERSION}.tar.gz.sha256
 
 FROM scratch AS bundle
-ARG VERSION=0.1.0-beta.2
+ARG VERSION=0.1.0-beta.3
 COPY --from=assembler /bundle/lake_replication-${VERSION} /lake_replication-${VERSION}
 COPY --from=assembler /bundle/lake_replication-${VERSION}.tar.gz /lake_replication-${VERSION}.tar.gz
 COPY --from=assembler /bundle/lake_replication-${VERSION}.tar.gz.sha256 /lake_replication-${VERSION}.tar.gz.sha256

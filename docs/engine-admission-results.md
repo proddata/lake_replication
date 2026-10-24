@@ -1,5 +1,9 @@
 # Current-runtime engine admission results
 
+Historical prototype qualification. The policy is now implemented in the
+[beta.3 production candidate](stream-pool-migration-results.md); its package
+qualification is tracked separately.
+
 Bulk-only admission is the candidate to qualify next. Four concurrent large
 copies expose a current streaming-latency finding; limiting bulk work to one
 transaction while leaving streaming unrestricted passes that same diagnostic.

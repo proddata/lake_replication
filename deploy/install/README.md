@@ -60,11 +60,18 @@ with:
 
 ```sql
 BEGIN;
--- Only after verifying this is the original destination and draining workers:
+-- For beta.1/baseline bindings, only after verifying the original destination:
 SET LOCAL lake_replication.allow_legacy_binding_upgrade = on;
-ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2';
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3';
 COMMIT;
 ```
+
+Beta.2 bindings already record their origin and do not need the legacy adoption
+setting. The beta.3 migration adds one bulk permit and four streaming slots while
+preserving checkpoints and completed copies. Keep all installed databases drained
+until their SQL upgrades finish; enabled subscriptions are rejected by the
+admission migration. Inspect `lake_replication.bulk_admission` and
+`lake_replication.stream_admission` for holders and waiters.
 
 ## Removal
 
@@ -98,7 +105,7 @@ dirty source tree so its recorded revision is unambiguous. For a local test of
 uncommitted packaging changes, opt in explicitly with
 `ALLOW_DIRTY=1 make install-bundles`.
 
-Pushing a version tag such as `v0.1.0-beta.2` runs the release workflow. The tag must
+Pushing a version tag such as `v0.1.0-beta.3` runs the release workflow. The tag must
 match the worker and SQL-extension versions. The workflow builds both bundles,
 generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
 keylessly signs every archive, SBOM, and checksum manifest with Sigstore

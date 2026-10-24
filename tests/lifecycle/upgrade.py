@@ -6,7 +6,7 @@ import time
 from urllib.parse import quote
 
 q = None
-TARGET_VERSION = '0.1.0-beta.2'
+TARGET_VERSION = '0.1.0-beta.3'
 LAUNCHER_COUNT_SQL = "SELECT count(*) FROM extension_base.list_base_workers() w JOIN pg_extension e ON e.oid=w.extension_id WHERE e.extname='lake_replication' AND w.database_id=(SELECT oid FROM pg_database WHERE datname=current_database()) AND w.pid>0"
 
 

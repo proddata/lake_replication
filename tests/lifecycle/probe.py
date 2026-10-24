@@ -64,20 +64,20 @@ def upgrade(new_image,old_archive):
     q.sql('destination','analytics',"ALTER DATABASE analytics SET session_preload_libraries='lake_replication'")
     u=module('legacy_upgrade',Path(__file__).with_name('upgrade.py'))
     u.q=q
-    u.TARGET_VERSION='0.1.0-beta.2'
+    u.TARGET_VERSION='0.1.0-beta.3'
     # Reuse the packaged handoff assertions with the explicit adoption gate.
     original=q.sql
     def sql(service,db,statement,**kwargs):
-        if statement == "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2'":
+        if statement == "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'":
             denied=q.sql_result(service,db,statement,check_result=False)
             q.check('legacy binding upgrade requires explicit verified adoption',denied.returncode!=0 and 'explicit verified adoption' in denied.stderr,True)
             statement="BEGIN; SET LOCAL lake_replication.allow_legacy_binding_upgrade=on; "+statement+"; COMMIT"
-        elif "BEGIN; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2'; ROLLBACK" == statement:
+        elif "BEGIN; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'; ROLLBACK" == statement:
             original(service,db,"UPDATE lake_replication.worker_launch_config SET desired_state='running'")
-            denied=q.sql_result(service,db,"BEGIN; SET LOCAL lake_replication.allow_legacy_binding_upgrade=on; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2'",check_result=False)
+            denied=q.sql_result(service,db,"BEGIN; SET LOCAL lake_replication.allow_legacy_binding_upgrade=on; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'",check_result=False)
             q.check('SQL migration refuses enabled legacy subscriptions',denied.returncode!=0 and 'stop subscriptions and restart' in denied.stderr,True)
             original(service,db,"UPDATE lake_replication.worker_launch_config SET desired_state='stopped'")
-            statement="BEGIN; SET LOCAL lake_replication.allow_legacy_binding_upgrade=on; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.2'; ROLLBACK"
+            statement="BEGIN; SET LOCAL lake_replication.allow_legacy_binding_upgrade=on; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'; ROLLBACK"
         result=original(service,db,statement,**kwargs)
         if statement.startswith("BEGIN; SET LOCAL lake_replication.allow_legacy_binding_upgrade=on;") and statement.endswith('; COMMIT'):
             q.check('adopted original destination has valid origin',original(service,db,'SELECT lake_replication.worker_binding_matches(subscription_id)::text FROM lake_replication.worker_launch_config'),'true')

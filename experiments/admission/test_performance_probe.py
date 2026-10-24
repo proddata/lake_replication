@@ -8,10 +8,10 @@ sys.path.insert(0, str(Path(__file__).parent))
 import performance_probe as probe
 
 
-def copies():
+def copies(variants=probe.VARIANTS):
     return [dict(profile='single_copy', repetition=i, variant=v, status='passed',
                  timing_validation={'valid': True},copy_elapsed_seconds=10)
-            for i in range(1,6) for v in probe.VARIANTS]
+            for i in range(1,6) for v in variants]
 
 
 class PerformanceGateTests(unittest.TestCase):
@@ -40,3 +40,20 @@ class PerformanceGateTests(unittest.TestCase):
             cases[0][key] = value
             with self.assertRaisesRegex(ValueError,'invalid copy case'):
                 probe.analyze(cases,['single_copy'])
+
+
+class NamedCandidateTests(unittest.TestCase):
+    def test_stream_pool_ratio_uses_the_named_candidate(self):
+        variants = ('bulk_only', 'stream_pool')
+        cases = copies(variants)
+        for case in cases:
+            if case['variant'] == 'stream_pool':
+                case['copy_elapsed_seconds'] = 12
+        result = probe.analyze(cases, ['single_copy'], variants)
+        self.assertEqual(result['profiles']['single_copy']['copy_duration']['median_ratio'], 1.2)
+        self.assertFalse(result['all_requested_gates_pass'])
+        self.assertEqual(result['variants'], list(variants))
+
+    def test_wrong_candidate_labels_cannot_complete_a_cohort(self):
+        with self.assertRaisesRegex(ValueError, 'five complete pairs'):
+            probe.analyze(copies(), ['single_copy'], ('bulk_only', 'stream_pool'))
