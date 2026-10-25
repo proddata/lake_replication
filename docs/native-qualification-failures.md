@@ -57,3 +57,34 @@ QUALIFICATION_ARCHIVE=/absolute/path/to/candidate.tar.gz \
 
 Use `--fairness-copies 4` for the unchanged release workload. Resolve the cause
 before changing runtime admission policy or claiming a performance pass.
+
+## Local constrained-CPU diagnostic
+
+The unchanged `8bcd5b2` ARM64 CI archive was also exercised using the instrumented
+`02e34ff` harness, with source, destination, engine and storage containers sharing
+CPU affinity `0-3`. The host observer was outside that affinity restriction.
+Both runs used fresh volumes and identical harness inputs. The order was four
+copies followed by one copy; these are single observations, not a paired
+statistical qualification. [Evidence and exact fixture driver](evidence/2026-10-25-local-copy-contention.json)
+retain input hashes and activity/pressure summaries.
+
+| Simultaneous copies | Copy duration | Streaming p95 range | Result |
+|---|---:|---:|---|
+| Four | 44.46 s | 1,521–2,005 ms | Finding: one stream exceeded the unchanged 2,000 ms limit |
+| One | 16.05 s | 250–265 ms | Passed |
+
+All exact data checks and timing audits passed. Neither run observed an engine
+OOM, PostgreSQL crash or streaming-admission waiter. The four-copy activity
+samples included concurrent staging calls waiting on WAL initialization,
+WAL writes and data-file writes; destination CPU pressure increased during the
+run. This supports investigating contention outside engine admission. It does
+not establish which resource caused the much larger native-run slowdown or
+prove that serializing staging is the right fix.
+
+At harness revision `02e34ff`, [CI 40198268702](https://github.com/proddata/lake_replication/actions/runs/40198268702)
+passed checks and both native bundle builds. The
+[native one/four/one diagnostic](https://github.com/proddata/lake_replication/actions/runs/40198461763)
+and [full native qualification rerun](https://github.com/proddata/lake_replication/actions/runs/40198597757)
+were dispatched against those bundles. Their results remain pending in this
+report; the cache cleanup is implemented but not yet verified by a completed
+full native run. Production runtime and timing limits are unchanged.
