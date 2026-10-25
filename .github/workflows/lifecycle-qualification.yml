@@ -87,6 +87,8 @@ jobs:
               'receiver_sql_overlay_identical_to_archive': True,
           }, indent=2) + '\n')
           PY
+      - name: Build and verify source-pinned storage fixtures
+        run: python3 tests/qualification/storage_preflight.py
       - name: Fresh packaged lifecycle
         run: make lifecycle-test
       - name: Forced Rust child crashes

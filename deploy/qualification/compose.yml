@@ -143,7 +143,7 @@ services:
       - pgduck-socket:/var/run/pgduck
 
   storage:
-    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e
+    image: ${QUALIFICATION_STORAGE_IMAGE:?build the pinned qualification fixtures}
     command: server /data
     environment:
       MINIO_ROOT_USER: lake-qualification
@@ -152,7 +152,7 @@ services:
       - object-data:/data
 
   storage-init:
-    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3
+    image: ${QUALIFICATION_STORAGE_INIT_IMAGE:?build the pinned qualification fixtures}
     depends_on:
       - storage
     entrypoint: [/bin/sh, -ec]

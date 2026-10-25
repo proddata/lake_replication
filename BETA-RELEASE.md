@@ -19,7 +19,7 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [Run 39684380344](https://github.com/proddata/lake_replication/actions/runs/39684380344) passed checks and both native bundle builds on beta.2 commit `9cfee8f`. Candidate-specific remote runtime qualification is pending. The manual packaged lifecycle workflow covers both architectures, including fresh lifecycle, receiver regressions, forced child crashes and a rebuilt beta.1 handoff. Retain its results, then run CI on the final release commit. |
+| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [Run 40111505304](https://github.com/proddata/lake_replication/actions/runs/40111505304) passed checks and both native beta.3 bundle builds at `fdb3484`. Packaged run 40111702797 was cancelled after confirming the registry access failure that broke the previous run. The [source-pinned fixture fix](docs/qualification-storage-fixtures.md) passes a local preflight and 119 fresh lifecycle checks against the CI artifact; rerun CI and both native package lanes on the corrected final revision. |
 | G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | The final local beta.3 arm64 archive passes 457 packaged checks with one bulk permit and four streaming slots. Native amd64 and final-commit CI qualification remain pending. See [production pool migration](docs/stream-pool-migration-results.md). |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The final pooled beta.3 arm64 archive passes 119 fresh lifecycle checks on private clean volumes with no SQL/binary overlay, including restore, management and uninstall. See [production qualification](docs/stream-pool-migration-results.md). Native amd64 remains a G1 requirement. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Bulk-only admission reproduced a fatal sixteen-stream OOM at 2 GB. The adopted four-slot streaming pool passes 457 final packaged arm64 checks, including that live/restart workload and four-copy coexistence. [Performance evidence](docs/stream-pool-performance-results.md) retains the first inconclusive copy cohort and fixed ten-pair extension. Both native architectures, final-commit qualification and the packaged RC soak remain required. See [production migration](docs/stream-pool-migration-results.md). |
@@ -56,7 +56,7 @@ intentional non-goal for this beta.
 
 ## Execution order
 
-1. Commit the pooled beta.3 candidate and run CI on that exact revision.
+1. Run CI on the source-fixture correction; the beta.3 runtime commit and both native bundle builds already pass.
 2. Qualify both native CI-built packages with all admission, lifecycle and upgrade lanes.
 3. Close G4 compatibility, G6 supply-chain review and the G7 physical/object-store recovery drill.
 4. Run the G3 24-hour release-candidate soak from the packaged build.

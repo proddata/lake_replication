@@ -1,0 +1,48 @@
+# Qualification fixtures only; neither image is part of the shipped bundle.
+FROM --platform=$BUILDPLATFORM golang:1.24.2-bookworm@sha256:79390b5e5af9ee6e7b1173ee3eac7fadf6751a545297672916b59bfa0ecf6f71 AS minio-builder
+ARG TARGETARCH
+ENV CGO_ENABLED=0 GOTOOLCHAIN=local
+WORKDIR /src
+RUN git init . \
+ && git remote add origin https://github.com/minio/minio.git \
+ && git fetch --depth 1 origin 0d7408fc9969caf07de6a8c3a84f9fbb10a6739e \
+ && git checkout --detach FETCH_HEAD \
+ && test "$(git rev-parse HEAD)" = 0d7408fc9969caf07de6a8c3a84f9fbb10a6739e
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    GOOS=linux GOARCH=$TARGETARCH go build -p 2 -trimpath -buildvcs=false -ldflags='-s -w' -o /out/minio .
+
+FROM --platform=$BUILDPLATFORM golang:1.24.2-bookworm@sha256:79390b5e5af9ee6e7b1173ee3eac7fadf6751a545297672916b59bfa0ecf6f71 AS mc-builder
+ARG TARGETARCH
+ENV CGO_ENABLED=0 GOTOOLCHAIN=local
+WORKDIR /src
+RUN git init . \
+ && git remote add origin https://github.com/minio/mc.git \
+ && git fetch --depth 1 origin b00526b153a31b36767991a4f5ce2cced435ee8e \
+ && git checkout --detach FETCH_HEAD \
+ && test "$(git rev-parse HEAD)" = b00526b153a31b36767991a4f5ce2cced435ee8e
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    GOOS=linux GOARCH=$TARGETARCH go build -p 2 -trimpath -buildvcs=false -ldflags='-s -w' -o /out/mc .
+
+FROM debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251 AS minio
+ARG FIXTURE_RECIPE_SHA
+LABEL org.opencontainers.image.source="https://github.com/minio/minio" \
+      org.opencontainers.image.revision="0d7408fc9969caf07de6a8c3a84f9fbb10a6739e" \
+      org.opencontainers.image.version="RELEASE.2025-04-22T22-12-26Z-source" \
+      io.lake-replication.fixture.recipe=$FIXTURE_RECIPE_SHA
+COPY --from=minio-builder /out/minio /usr/local/bin/minio
+COPY --from=minio-builder /src/LICENSE /usr/share/licenses/minio/LICENSE
+COPY --from=minio-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+ENTRYPOINT ["/usr/local/bin/minio"]
+
+FROM debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251 AS mc
+ARG FIXTURE_RECIPE_SHA
+LABEL org.opencontainers.image.source="https://github.com/minio/mc" \
+      org.opencontainers.image.revision="b00526b153a31b36767991a4f5ce2cced435ee8e" \
+      org.opencontainers.image.version="RELEASE.2025-04-16T18-13-26Z-source" \
+      io.lake-replication.fixture.recipe=$FIXTURE_RECIPE_SHA
+COPY --from=mc-builder /out/mc /usr/local/bin/mc
+COPY --from=mc-builder /src/LICENSE /usr/share/licenses/mc/LICENSE
+COPY --from=mc-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+ENTRYPOINT ["/usr/local/bin/mc"]

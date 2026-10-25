@@ -72,6 +72,8 @@ jobs:
         with:
           name: install-bundle-amd64
           path: dist/release
+      - name: Build and verify source-pinned storage fixtures
+        run: python3 tests/qualification/storage_preflight.py
       - name: Qualify amd64 archive on PostgreSQL 18 with pg_lake
         env:
           QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.3-linux-amd64.tar.gz

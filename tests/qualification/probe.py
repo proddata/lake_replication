@@ -7,6 +7,7 @@ mounted into the running source or destination containers.
 """
 
 import hashlib
+import importlib.util
 import json
 import os
 import platform
@@ -194,7 +195,17 @@ def verify_archive(archive):
     EVIDENCE["source_revision"] = metadata["SOURCE_REVISION"]
 
 
+def build_storage_images():
+    spec=importlib.util.spec_from_file_location('qualification_storage',ROOT/'tests/qualification/storage.py')
+    storage=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(storage)
+    return storage.ensure(command,ENV,EVIDENCE,ROOT,RESULTS,native_architecture())
+
+
 def build_images(archive, context):
+    # Fail before the expensive prerequisite compilation if S3 fixtures cannot
+    # be prepared. Reuse only locally verified source/recipe/architecture IDs.
+    build_storage_images()
     base_exists = command(
         ["docker", "image", "inspect", BASE_IMAGE], check_result=False
     ).returncode == 0

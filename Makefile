@@ -184,7 +184,8 @@ check:
 	python3 -m py_compile tests/postgres_integration/probe.py
 	python3 -m py_compile tests/extension/probe.py
 	python3 -m py_compile tests/install/probe.py
-	python3 -m py_compile tests/qualification/probe.py
+	python3 -m py_compile tests/qualification/probe.py tests/qualification/storage.py tests/qualification/storage_preflight.py
+	python3 -m unittest discover -s tests/qualification -p 'test_*.py'
 	python3 -m py_compile tests/qualification/compatibility.py
 	$(MAKE) -C extensions/lake_replication generate
 	python3 -m unittest discover -s tests/admission -p 'test_*.py'
@@ -216,4 +217,4 @@ check:
 	AUTH_LAB_ADMIN_PASSWORD=check AUTH_LAB_SOURCE_PASSWORD=check $(SCRAM_COMPOSE) config --quiet
 	TLS_LAB_ADMIN_PASSWORD=check TLS_LAB_SOURCE_PASSWORD=check $(TLS_COMPOSE) config --quiet
 	$(POC_COMPOSE) config --quiet
-	QUALIFICATION_SOURCE_IMAGE=check QUALIFICATION_DESTINATION_IMAGE=check QUAL_ADMIN_PASSWORD=check QUAL_SOURCE_PASSWORD=check QUAL_ROTATED_SOURCE_PASSWORD=check-rotated $(QUALIFICATION_COMPOSE) config --quiet
+	QUALIFICATION_SOURCE_IMAGE=check QUALIFICATION_DESTINATION_IMAGE=check QUALIFICATION_STORAGE_IMAGE=check QUALIFICATION_STORAGE_INIT_IMAGE=check QUAL_ADMIN_PASSWORD=check QUAL_SOURCE_PASSWORD=check QUAL_ROTATED_SOURCE_PASSWORD=check-rotated $(QUALIFICATION_COMPOSE) config --quiet

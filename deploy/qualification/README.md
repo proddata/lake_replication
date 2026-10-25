@@ -34,7 +34,7 @@ To qualify an already downloaded native archive, keep its adjacent
 `.sha256` file and select it explicitly:
 
 ```sh
-QUALIFICATION_ARCHIVE=/path/to/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz \
+QUALIFICATION_ARCHIVE=/path/to/lake_replication-0.1.0-beta.3-linux-arm64.tar.gz \
   make qualification-test
 ```
 
@@ -108,3 +108,21 @@ The defaults are commits `8180647d4535fdb1ed223f92f301ba6094a8ec3e` and
 more distinct full commit SHAs via the space-separated
 `COMPATIBILITY_PG_LAKE_REVISIONS` variable. A base image is cached separately
 for each revision; the first run of a new revision is therefore expensive.
+
+## Storage fixture preparation
+
+Qualification builds MinIO server/client fixtures from the pinned upstream source
+revisions in `tests/qualification/Dockerfile.storage`; it no longer depends on
+unavailable public MinIO container images. Run the S3 preflight before an
+expensive first prerequisite build:
+
+```sh
+python3 tests/qualification/storage_preflight.py
+```
+
+The native workflows perform this automatically. Image IDs, source revisions,
+recipe hash and architecture are retained in qualification evidence. These test
+images are not part of the shipped runtime. See [provenance and limits](../../docs/qualification-storage-fixtures.md).
+`QUALIFICATION_STORAGE_IMAGE` and `QUALIFICATION_STORAGE_INIT_IMAGE` may select
+already available local fixtures; explicit overrides are recorded and must match
+the host architecture.
