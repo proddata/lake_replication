@@ -8,6 +8,12 @@ on:
         required: true
         type: string
 
+      fairness_diagnostic:
+        description: Run one/four/one-copy controls only (does not qualify a release)
+        required: false
+        default: false
+        type: boolean
+
 permissions:
   contents: read
   actions: read
@@ -89,38 +95,78 @@ jobs:
           PY
       - name: Build and verify source-pinned storage fixtures
         run: python3 tests/qualification/storage_preflight.py
+      - name: Reclaim storage fixture build cache
+        run: |
+          mkdir -p .qualification/disk
+          df -h > .qualification/disk/before-storage-cache-cleanup.txt
+          docker system df >> .qualification/disk/before-storage-cache-cleanup.txt
+          docker builder prune --all --force
+          df -h > .qualification/disk/after-storage-cache-cleanup.txt
+      - name: Controlled copy-contention diagnostic
+        if: ${{ inputs.fairness_diagnostic }}
+        run: |
+          # Each invocation uses fresh volumes and the same archived package.
+          # Run both controls even if a previous case reports a finding.
+          status=0
+          for copies in 1 4 1; do
+            python3 tests/admission/probe.py --cases fairness --fairness-copies "$copies" || status=1
+          done
+          exit "$status"
       - name: Fresh packaged lifecycle
+        if: ${{ !inputs.fairness_diagnostic }}
         run: make lifecycle-test
       - name: Forced Rust child crashes
+        if: ${{ !inputs.fairness_diagnostic }}
         run: make lifecycle-fault-test
       - name: Receiver regressions with archived binaries and current SQL overlay
+        if: ${{ !inputs.fairness_diagnostic }}
         run: python3 tests/streaming/empty_filtered.py --native-bulk
       - name: Check out the preserved beta.2 source
+        if: ${{ !inputs.fairness_diagnostic }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: 9cfee8fb7d1ca581b089ac649852152f508c0ae9
           path: .qualification/beta2-source
+      - name: Reclaim prerequisite build cache before beta.2 build
+        if: ${{ !inputs.fairness_diagnostic }}
+        run: |
+          df -h > .qualification/disk/before-beta2-cache-cleanup.txt
+          docker system df >> .qualification/disk/before-beta2-cache-cleanup.txt
+          # Preserve tagged pg_lake/source/storage/runtime images and volumes.
+          docker builder prune --all --force
+          df -h > .qualification/disk/after-beta2-cache-cleanup.txt
       - name: Build the beta.2 package for admission upgrade qualification
+        if: ${{ !inputs.fairness_diagnostic }}
         working-directory: .qualification/beta2-source
         env:
           ARCHES: ${{ matrix.arch }}
         run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/beta2-artifacts"
       - name: Production bulk admission and beta.2 upgrade
+        if: ${{ !inputs.fairness_diagnostic }}
         env:
           OLD_ARCHIVE: ${{ github.workspace }}/.qualification/beta2-artifacts/lake_replication-0.1.0-beta.2-linux-${{ matrix.arch }}.tar.gz
         run: python3 tests/admission/probe.py --old-archive "$OLD_ARCHIVE"
       - name: Check out the preserved beta.1 source
+        if: ${{ !inputs.fairness_diagnostic }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: 85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9
           path: .qualification/legacy-source
-      - uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+      - name: Reclaim build cache before beta.1 build
+        if: ${{ !inputs.fairness_diagnostic }}
+        run: |
+          df -h > .qualification/disk/before-beta1-cache-cleanup.txt
+          docker system df >> .qualification/disk/before-beta1-cache-cleanup.txt
+          docker builder prune --all --force
+          df -h > .qualification/disk/after-beta1-cache-cleanup.txt
       - name: Build the real beta.1 package for this architecture
+        if: ${{ !inputs.fairness_diagnostic }}
         working-directory: .qualification/legacy-source
         env:
           ARCHES: ${{ matrix.arch }}
         run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/legacy-artifacts"
       - name: Packaged beta.1 to beta.3 handoff
+        if: ${{ !inputs.fairness_diagnostic }}
         env:
           OLD_ARCHIVE: ${{ github.workspace }}/.qualification/legacy-artifacts/lake_replication-0.1.0-beta.1-linux-${{ matrix.arch }}.tar.gz
         run: python3 tests/lifecycle/probe.py --upgrade --old-archive "$OLD_ARCHIVE"

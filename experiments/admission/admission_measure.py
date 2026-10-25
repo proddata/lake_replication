@@ -87,6 +87,7 @@ def fairness(args, variant, image, text, directory):
     commits = [[], [], []]
     errors = []
     trace = []
+    resource_trace = []
     names = ['analytics', 'fair_stream_1', 'fair_stream_2']
     try:
         q.compose('up', '-d', '--wait', '--wait-timeout', '300', timeout=600)
@@ -169,6 +170,23 @@ def fairness(args, variant, image, text, directory):
                     raise AssertionError('engine admission capacity exceeded')
                 if variant == 'reserved' and len({row['lane'] for row in held}) != len(held):
                     raise AssertionError('multiple admitted writers in one lane')
+            sample['stream_admission'] = json.loads(monitor.query(
+                "SELECT coalesce(jsonb_agg(t),'[]'::jsonb) FROM (SELECT * FROM lake_replication.stream_admission)t")[0]) if getattr(args, 'capture_stream_admission', False) else None
+            if not resource_trace or sample['elapsed_seconds'] - resource_trace[-1]['elapsed_seconds'] >= 10:
+                activity = json.loads(monitor.query("SELECT coalesce(jsonb_agg(t),'[]'::jsonb) FROM ("
+                    "SELECT backend_type,wait_event_type,wait_event,CASE "
+                    "WHEN query LIKE 'SELECT lake_replication.append_initial_copy_rows%' THEN 'copy_staging' "
+                    "WHEN query LIKE 'SELECT lake_replication.finish_initial_sync_group%' THEN 'copy_publication' "
+                    "WHEN query LIKE 'SELECT lake_replication.publish_insert_batch%' THEN 'stream_publication' "
+                    "WHEN query LIKE 'SELECT lake_replication.apply_change_run%' THEN 'stream_apply' "
+                    "ELSE 'other' END AS phase,count(*) FROM pg_stat_activity "
+                    "WHERE state='active' AND pid<>pg_backend_pid() GROUP BY 1,2,3,4)t")[0])
+                resource_trace.append(dict(elapsed_seconds=sample['elapsed_seconds'],activity=activity,
+                    services={service: c.resources(service) for service in ('destination','pgduck')},
+                    source_storage={service: q.compose('exec','-T',service,'sh','-ec',
+                        'for f in cpu.stat cpu.max cpu.pressure io.pressure io.stat memory.current memory.events; do '
+                        'echo "$f"; cat "/sys/fs/cgroup/$f"; done; df -k /tmp').stdout
+                        for service in ('source','storage')}))
             trace.append(sample)
             if not producer.is_alive() and all(row['published_transactions'] == args.stream_transactions for row in sample['streams']) and sample['copy']['state'] == 'streaming':
                 break
@@ -234,6 +252,7 @@ def fairness(args, variant, image, text, directory):
         if producer:
             producer.join(timeout=125)
         result['trace'] = trace
+        result['resource_trace'] = resource_trace
         result['source_transactions'] = commits
         for client in clients:
             try:

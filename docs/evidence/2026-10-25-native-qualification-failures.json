@@ -1,0 +1,178 @@
+{
+  "run_id": 40175931014,
+  "url": "https://github.com/proddata/lake_replication/actions/runs/40175931014",
+  "revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5",
+  "status": "failed",
+  "architectures": {
+    "arm64": {
+      "lanes": {
+        "qualification_20261025_081606_storage_preflight": {
+          "sha256": "da0703381555dd38101aa55bf8b0121e30938d921b9b81130c5a1b8666e24ba0",
+          "status": "passed",
+          "checks_passed": 2,
+          "checks_failed": 0
+        },
+        "qualification_20261025_081844_base_lifecycle": {
+          "sha256": "9cba0ebbd55a8f954e0e1831dd686c67bfdea01cb4ad1a7429672122aa4572b5",
+          "status": "passed",
+          "checks_passed": 119,
+          "checks_failed": 0
+        },
+        "qualification_20261025_090523_base_faults": {
+          "sha256": "0300bb05ef2c76566c0516a4ac5edbd4f6b32c556e394835e33dc75aab2769d1",
+          "status": "passed",
+          "checks_passed": 17,
+          "checks_failed": 0
+        },
+        "qualification_20261025_090541_empty_filtered": {
+          "sha256": "301ae4bcc7b9bc7ae1b0441cb1af54e5e148cb2a327435c74333769cf3747a9f",
+          "status": "passed",
+          "checks_passed": 96,
+          "checks_failed": 0
+        },
+        "qualification_20261025_090814_production_admission": {
+          "sha256": "e4f0bfc6c9b87b0cd3e7cc24eda82afe2e5433e8fc521aeedcb62ee2f0cb12ce",
+          "status": "completed_with_findings",
+          "checks_passed": 178,
+          "checks_failed": 0,
+          "cases": [
+            {
+              "case": "locks",
+              "status": "passed"
+            },
+            {
+              "case": "pool",
+              "status": "passed"
+            },
+            {
+              "case": "schema",
+              "status": "passed"
+            },
+            {
+              "case": "rebuild",
+              "status": "passed"
+            },
+            {
+              "case": "cancel",
+              "status": "passed"
+            },
+            {
+              "case": "upgrade",
+              "status": "passed"
+            },
+            {
+              "case": "scale",
+              "status": "passed"
+            },
+            {
+              "case": "fairness",
+              "status": "finding"
+            }
+          ]
+        }
+      },
+      "fairness": {
+        "status": "finding",
+        "checks": {
+          "all_stream_targets_pass": false,
+          "copy_progress_observed": true,
+          "copy_within_three_minutes": true,
+          "publication_overlap_observed": true,
+          "waiting_observed": true
+        },
+        "limits": {
+          "catchup_seconds": 5,
+          "copy_timeout_seconds": 180,
+          "max_publication_gap_seconds": 5,
+          "min_commits_during_copy": 5,
+          "p95_publication_ms": 2000
+        },
+        "copy_elapsed_seconds": 173.32161211967468,
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "streams": [
+          {
+            "catchup_seconds": 91.82038187980652,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": false,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": false
+            },
+            "commits_during_copy": 109,
+            "database": "analytics",
+            "max_publication_gap_seconds": 3.4227118492126465,
+            "p95_publication_ms": 91023.93794059753,
+            "source_max_schedule_lateness_seconds": 0.6258842090001053
+          },
+          {
+            "catchup_seconds": 94.14164090156555,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": false,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": false
+            },
+            "commits_during_copy": 109,
+            "database": "fair_stream_1",
+            "max_publication_gap_seconds": 3.352970838546753,
+            "p95_publication_ms": 94141.64090156555,
+            "source_max_schedule_lateness_seconds": 0.678906616000404
+          },
+          {
+            "catchup_seconds": 96.85190510749817,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": false,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": false
+            },
+            "commits_during_copy": 109,
+            "database": "fair_stream_2",
+            "max_publication_gap_seconds": 3.793773889541626,
+            "p95_publication_ms": 96155.16304969788,
+            "source_max_schedule_lateness_seconds": 0.723767298000439
+          }
+        ]
+      }
+    },
+    "amd64": {
+      "lanes": {
+        "qualification_20261025_081610_storage_preflight": {
+          "sha256": "0ecd656ac2fe39712d33de9616659fa158efd37caf5807cb08a1bd6724871840",
+          "status": "passed",
+          "checks_passed": 2,
+          "checks_failed": 0
+        },
+        "qualification_20261025_082006_base_lifecycle": {
+          "sha256": "d617310a260c54c0848785f001ce965aea161ba5215161b884df659391b2ee1c",
+          "status": "passed",
+          "checks_passed": 119,
+          "checks_failed": 0
+        },
+        "qualification_20261025_093411_base_faults": {
+          "sha256": "430fe03fb8a1de69153c6d188080e60c78293921f0a1663fd22d4c75c002e8d7",
+          "status": "passed",
+          "checks_passed": 17,
+          "checks_failed": 0
+        },
+        "qualification_20261025_093433_empty_filtered": {
+          "sha256": "542f099c15bb55d20b4a291d24089ec517fa05db6d360e44e9f9f856b39732e5",
+          "status": "passed",
+          "checks_passed": 96,
+          "checks_failed": 0
+        }
+      },
+      "build_failure": "No space left on device building beta.2 fixture; admission and beta.1 upgrade not run"
+    }
+  },
+  "interpretation": "Data checks pass in completed lanes. ARM64 four-copy latency fails unchanged limits, cause unconfirmed. AMD64 runner disk failure prevents remaining qualification. This is not release approval."
+}
