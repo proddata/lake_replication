@@ -8,6 +8,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -125,7 +126,7 @@ def wire():
     try:
         check('uncommitted empty stream is durably retained',q.wait_for('destination','analytics',f'SELECT count(*) FROM lake_replication.streamed_transactions WHERE subscription_id={sub}','1',timeout=6),'1')
         check('uncommitted empty stream does not advance staging',sql(f'SELECT staged_lsn FROM lake_replication.checkpoints WHERE subscription_id={sub}'),before)
-        q.compose('exec','-T','destination','pkill','-KILL','-f','^/usr/local/bin/lake-replication-receiver$')
+        q.compose('exec','-T','destination','pkill','-KILL','-f','^/usr/local/bin/lake-replication-receiver$',timeout=15)
         receiver.communicate(timeout=10)
         check('receiver loss leaves durable stream',sql(f'SELECT count(*) FROM lake_replication.streamed_transactions WHERE subscription_id={sub}'),'1')
         _,errors=source.communicate(timeout=20)
@@ -144,11 +145,84 @@ def wire():
         check('mixed streamed transaction publishes relevant changes only',sql("SELECT string_agg(id::text,',' ORDER BY id) FROM included"),'1,2,3,4')
     finally:
         if receiver.poll() is None:
-            q.compose('exec','-T','destination','pkill','-KILL','-f','^/usr/local/bin/lake-replication-receiver$',check_result=False)
-            receiver.communicate(timeout=10)
-        if source.poll() is None:
-            source.terminate()
-            source.communicate(timeout=10)
+            try:
+                q.compose('exec','-T','destination','pkill','-KILL','-f',
+                          '^/usr/local/bin/lake-replication-receiver$',check_result=False,timeout=15)
+            except Exception as error:
+                q.EVIDENCE.setdefault('cleanup_errors',[]).append(dict(
+                    operation='kill interrupted receiver',error_type=type(error).__name__,error=str(error)))
+            stop_exec(receiver)
+        stop_exec(source)
+
+
+def stop_exec(process):
+    """Bound local docker-exec cleanup; fixture teardown handles container children."""
+    if process.poll() is not None:
+        return
+    process.terminate()
+    try:
+        process.communicate(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        try:
+            process.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            q.EVIDENCE.setdefault('cleanup_errors',[]).append(dict(
+                operation='reap docker exec',error='local docker exec did not exit after kill'))
+
+
+def finalize_evidence(native_bulk):
+    """Preserve the primary result even if Docker/log collection is unresponsive."""
+    primary_status=q.EVIDENCE.get('status','error')
+    q.EVIDENCE['test_status']=primary_status
+    q.EVIDENCE['status']='finalizing'
+    def persist():
+        (q.RESULTS/'results.json').write_text(json.dumps(q.EVIDENCE,indent=2)+'\n')
+    def collect(operation, callback):
+        try:
+            return callback()
+        except Exception as error:
+            q.EVIDENCE.setdefault('cleanup_errors',[]).append(dict(
+                operation=operation,error_type=type(error).__name__,error=str(error)))
+            q.EVIDENCE['status']='error'
+            return None
+        finally:
+            persist()
+    persist()
+    def host_resources():
+        # These host reads remain available when docker exec itself is stuck.
+        disk=os.statvfs(q.RESULTS)
+        snapshot=dict(load_average=os.getloadavg(),
+                      available_disk_bytes=disk.f_bavail*disk.f_frsize,
+                      free_inodes=disk.f_favail)
+        for name in ('meminfo','pressure/cpu','pressure/memory','pressure/io'):
+            path=Path('/proc')/name
+            if path.exists():
+                snapshot[name]=path.read_text()
+        q.EVIDENCE['host_resources']=snapshot
+    collect('capture host resources',host_resources)
+    if native_bulk:
+        def worker_logs():
+            logs=q.compose('exec','-T','destination','sh','-ec',
+                "find /worker-logs -type f -name '*.log' -exec cat {} +",check_result=False,timeout=20)
+            (q.RESULTS/'native-workers.jsonl').write_text(logs.stdout+logs.stderr)
+            q.EVIDENCE['native_worker_logs_returncode']=logs.returncode
+            q.EVIDENCE['native_worker_logs_sha256']=hashlib.sha256((logs.stdout+logs.stderr).encode()).hexdigest()
+            if logs.returncode:
+                raise RuntimeError('worker log collection failed')
+        collect('collect worker logs',worker_logs)
+    def compose_logs():
+        logs=q.compose('logs','--no-color',check_result=False,timeout=20)
+        q.EVIDENCE['logs']=logs.stdout+logs.stderr
+        if logs.returncode:
+            raise RuntimeError('compose log collection failed')
+    collect('collect compose logs',compose_logs)
+    cleanup=collect('remove fixture',lambda:q.compose('down','-v','--remove-orphans',
+                                                    check_result=False,timeout=60))
+    q.EVIDENCE['cleanup_returncode']=cleanup.returncode if cleanup is not None else None
+    q.EVIDENCE['status']='passed' if (primary_status=='passed' and cleanup is not None
+        and cleanup.returncode==0 and not q.EVIDENCE.get('cleanup_errors')) else 'error'
+    persist()
 
 
 def native():
@@ -258,14 +332,7 @@ def main():
         q.EVIDENCE.update(status='error',error=str(error))
         print(str(error),file=sys.stderr)
     finally:
-        if args.native_bulk:
-            logs=q.compose('exec','-T','destination','sh','-ec',"find /worker-logs -type f -name '*.log' -exec cat {} +",check_result=False).stdout
-            (q.RESULTS/'native-workers.jsonl').write_text(logs)
-            q.EVIDENCE['native_worker_logs_sha256']=hashlib.sha256(logs.encode()).hexdigest()
-        q.EVIDENCE['logs']=q.compose('logs','--no-color',check_result=False).stdout
-        cleanup=q.compose('down','-v','--remove-orphans',check_result=False)
-        q.EVIDENCE['cleanup_returncode']=cleanup.returncode
-        (q.RESULTS/'results.json').write_text(json.dumps(q.EVIDENCE,indent=2)+'\n')
+        finalize_evidence(args.native_bulk)
         print('Evidence:',q.RESULTS,flush=True)
     return 0 if q.EVIDENCE['status']=='passed' else 1
 

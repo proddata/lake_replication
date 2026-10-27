@@ -85,6 +85,8 @@ At harness revision `02e34ff`, [CI 40198268702](https://github.com/proddata/lake
 passed checks and both native bundle builds. The
 [native one/four/one diagnostic](https://github.com/proddata/lake_replication/actions/runs/40198461763)
 and [full native qualification rerun](https://github.com/proddata/lake_replication/actions/runs/40198597757)
-were dispatched against those bundles. Their results remain pending in this
-report; the cache cleanup is implemented but not yet verified by a completed
-full native run. Production runtime and timing limits are unchanged.
+were dispatched against those bundles. Both runs subsequently failed. See the [completed native results and local
+investigation](local-copy-contention-investigation.md): native single-copy
+controls also failed, and a local two-CPU four-copy workload reproduces a backlog.
+Staging pacing passes that local case at the cost of longer copy time.
+Production runtime and timing limits remain unchanged.

@@ -161,9 +161,10 @@ check:
 	python3 -m py_compile tests/transport/probe.py
 	python3 -m py_compile tests/publisher/probe.py
 	python3 -m py_compile tests/mutations/probe.py
-	python3 -m py_compile tests/admission/probe.py tests/admission/pool_cases.py
+	python3 -m py_compile tests/admission/probe.py tests/admission/pool_cases.py tests/admission/contention.py
 	python3 -m py_compile tests/lifecycle/probe.py tests/lifecycle/cases.py tests/lifecycle/faults.py tests/lifecycle/upgrade.py
 	python3 -m py_compile tests/streaming/probe.py tests/streaming/empty_filtered.py
+	python3 -m unittest discover -s tests/streaming -p 'test_*.py'
 	python3 -m py_compile tests/toast/probe.py
 	python3 -m py_compile tests/initial_sync/probe.py
 	python3 -m py_compile tests/multi_table/probe.py
