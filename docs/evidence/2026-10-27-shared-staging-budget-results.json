@@ -1,0 +1,2410 @@
+{
+  "scope": "Isolated shared-staging-budget prototype; not production or release qualification",
+  "date": "2026-10-27",
+  "machine": "User-reported Apple M5; Linux Docker VM; approximately 7.65 GiB memory",
+  "decision": "Static rate is not ready for production: valid reduced-capacity S1 fails; interrupted-run OOM remains open.",
+  "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702",
+  "cases": [
+    {
+      "raw_results": ".qualification/qualification_20261027_053740_production_admission/fairness/results.json",
+      "raw_sha256": "49ec01b3757940e07839fb10918a05f6066d51563d0b16da2ade43739fa9d08a",
+      "raw_status": "error",
+      "usable_timing": false,
+      "error": "copy/streaming did not finish within the bounded observation window",
+      "offered_load_valid": false,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:5cc03feb9b8e568e4cf80d55822b5477eecb95e3a0f165651e5c1cb72c05e6f9",
+      "profile_affinity": [
+        0,
+        1
+      ],
+      "topology": {
+        "destination": "0-1",
+        "pgduck": "0-1",
+        "source": "2",
+        "storage": "3"
+      },
+      "rate_bytes_per_second": 0,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": null,
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 0,
+          "singleton": true
+        }
+      },
+      "audit": {
+        "valid": false,
+        "checks": {
+          "stable_measurement_clock": true,
+          "stats_captured": false,
+          "worker_logs_captured": false,
+          "all_chunks_reserved_once": false,
+          "exact_serialized_bytes_reserved": false,
+          "bounded_reservation_wait": false,
+          "configuration_matches_request": true,
+          "accounting_only_never_slept": false
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": null,
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "49ec01b3757940e07839fb10918a05f6066d51563d0b16da2ade43739fa9d08a",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [],
+      "inputs": {
+        "tests/admission/Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "tests/admission/staging_budget.py": "9b82016da735a366f34785373492e0640ef6cb5c98500323b55631955a7d6f8c",
+        "tests/admission/staging_budget.rs": "e1e54115ccb353fca039469d835ac97e8f362782c0d11877e8f84fcc1ac0904f",
+        "tests/admission/staging_budget.sql": "ac6e4576967a2342e32f214c3c7ab4a213e88ff6c7d2b1f40f4abf283bf3e242"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "e1e54115ccb353fca039469d835ac97e8f362782c0d11877e8f84fcc1ac0904f"
+      },
+      "exclusion": "No valid performance claim: bootstrap/accounting failure or clock discontinuity; memory/crash observations remain retained."
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_054513_production_admission/fairness/results.json",
+      "raw_sha256": "abfc450246206a94671257337d5d4e42638981881ef03389656ff1fe0361d9aa",
+      "raw_status": "finding",
+      "usable_timing": true,
+      "error": null,
+      "offered_load_valid": true,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "shared budget permits one initial burst",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "shared budget accounts first queued debt",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "shared budget accumulates global debt",
+          "passed": true
+        },
+        {
+          "actual": 1.5,
+          "expected": 1.5,
+          "name": "another database consumes the same budget",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "oversized request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "oversized request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "excess reservation horizon fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "excess reservation horizon leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "zero request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "zero request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "budget transaction rollback restores credit",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "budget contention supports lock timeout",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "abandoned credit refills without explicit release",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "backward clock grants no extra credit",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "forward clock restores at most one burst",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "forward clock cannot create unlimited credit",
+          "passed": true
+        },
+        {
+          "actual": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "expected": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "name": "concurrent requests share one aggregate rate",
+          "passed": true
+        },
+        {
+          "actual": "2048:4",
+          "expected": "2048:4",
+          "name": "concurrent accounting loses no bytes",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "native copy reaches the shared budget",
+          "passed": true
+        },
+        {
+          "actual": "2",
+          "expected": "2",
+          "name": "native copy reserves before staging",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disable interrupts budget sleep",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget waiter stages no rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget worker releases coordinator connection",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "budgeted native copy resumes",
+          "passed": true
+        },
+        {
+          "actual": "10:55",
+          "expected": "10:55",
+          "name": "budgeted retry preserves exact data",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "budgeted drop removes source slot",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "analytics exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 0 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 3 exact final Iceberg rows",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:92f4727c3c3b9983356fe87802676bb85e3fa610338470aecbb5e0ed95da2044",
+      "profile_affinity": [
+        0,
+        1
+      ],
+      "topology": {
+        "destination": "0-1",
+        "pgduck": "0-1",
+        "source": "2",
+        "storage": "3"
+      },
+      "rate_bytes_per_second": 0,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": 262144,
+          "max_wait_seconds": 0,
+          "refilled_at": "2026-10-27T05:46:52.68275+00:00",
+          "requests": 8000,
+          "reserved_bytes": 1267563584,
+          "singleton": true,
+          "sum_wait_seconds": 0
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 0,
+          "singleton": true
+        },
+        "worker_log_sha256": "449bb0b50d2e230b7d09180265e0abb1c451aafda19b9bb6137fe367fa0128a2"
+      },
+      "audit": {
+        "valid": true,
+        "checks": {
+          "stable_measurement_clock": true,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": true,
+          "exact_serialized_bytes_reserved": true,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "accounting_only_never_slept": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": null,
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "abfc450246206a94671257337d5d4e42638981881ef03389656ff1fe0361d9aa",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "shared budget permits one initial burst",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "shared budget accounts first queued debt",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "shared budget accumulates global debt",
+          "passed": true
+        },
+        {
+          "actual": 1.5,
+          "expected": 1.5,
+          "name": "another database consumes the same budget",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "oversized request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "oversized request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "excess reservation horizon fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "excess reservation horizon leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "zero request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "zero request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "budget transaction rollback restores credit",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "budget contention supports lock timeout",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "abandoned credit refills without explicit release",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "backward clock grants no extra credit",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "forward clock restores at most one burst",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "forward clock cannot create unlimited credit",
+          "passed": true
+        },
+        {
+          "actual": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "expected": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "name": "concurrent requests share one aggregate rate",
+          "passed": true
+        },
+        {
+          "actual": "2048:4",
+          "expected": "2048:4",
+          "name": "concurrent accounting loses no bytes",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "native copy reaches the shared budget",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disable interrupts budget sleep",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget waiter stages no rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget worker releases coordinator connection",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "budgeted native copy resumes",
+          "passed": true
+        },
+        {
+          "actual": "10:55",
+          "expected": "10:55",
+          "name": "budgeted retry preserves exact data",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "budgeted drop removes source slot",
+          "passed": true
+        }
+      ],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f",
+        "staging_budget.sql": "ac6e4576967a2342e32f214c3c7ab4a213e88ff6c7d2b1f40f4abf283bf3e242"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f"
+      },
+      "copy_elapsed_seconds": 55.69844102859497,
+      "checks": {
+        "all_stream_targets_pass": false,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": true,
+        "waiting_observed": true
+      },
+      "streams": [
+        {
+          "catchup_seconds": 0.19716906547546387,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.7999250888824463,
+          "p95_publication_ms": 2834.275960922241,
+          "source_max_schedule_lateness_seconds": 0.010143374995095655
+        },
+        {
+          "catchup_seconds": 0.20160484313964844,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.750136137008667,
+          "p95_publication_ms": 2771.4831829071045,
+          "source_max_schedule_lateness_seconds": 0.061643124994589016
+        },
+        {
+          "catchup_seconds": 0.17688894271850586,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.8117740154266357,
+          "p95_publication_ms": 2709.7880840301514,
+          "source_max_schedule_lateness_seconds": 0.06275658300728537
+        }
+      ]
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_054909_production_admission/fairness/results.json",
+      "raw_sha256": "c1531786d5d0ebbc37fdff94bfb5bbbe45d33e086fac7844b0107bba924816ee",
+      "raw_status": "passed",
+      "usable_timing": true,
+      "error": null,
+      "offered_load_valid": true,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "analytics exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 0 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 3 exact final Iceberg rows",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:92f4727c3c3b9983356fe87802676bb85e3fa610338470aecbb5e0ed95da2044",
+      "profile_affinity": [
+        0,
+        1
+      ],
+      "topology": {
+        "destination": "0-1",
+        "pgduck": "0-1",
+        "source": "2",
+        "storage": "3"
+      },
+      "rate_bytes_per_second": 25165824,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": 105143,
+          "first_reserved_at": "2026-10-27T05:49:47.526029+00:00",
+          "max_wait_seconds": 0.02033904209645589,
+          "refilled_at": "2026-10-27T05:50:40.055155+00:00",
+          "requests": 8000,
+          "reserved_bytes": 1267563584,
+          "singleton": true,
+          "sum_wait_seconds": 99.01063233234366
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 25165824,
+          "singleton": true
+        },
+        "worker_log_sha256": "e7696b70d15d4d5ac9f79384d939e05869943065f28ee3ec561f68b3337f3b29"
+      },
+      "audit": {
+        "valid": true,
+        "checks": {
+          "stable_measurement_clock": true,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": true,
+          "exact_serialized_bytes_reserved": true,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "one_aggregate_reservation_envelope": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": {
+          "clock_span_seconds": 52.529126,
+          "last_reservation_wait_seconds": 0.0,
+          "allowed_bytes_with_1ms_clock_tolerance": 1322226049.613824,
+          "copy_duration_lower_bound_seconds": 50.35803476969401
+        },
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "c1531786d5d0ebbc37fdff94bfb5bbbe45d33e086fac7844b0107bba924816ee",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f",
+        "staging_budget.sql": "ffbbb1591938550ec3f2e8fc6548c2f546e08e87c7d3792e9443f527fbb26f5d"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f"
+      },
+      "copy_elapsed_seconds": 67.40430808067322,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": true,
+        "waiting_observed": true
+      },
+      "streams": [
+        {
+          "catchup_seconds": 0.20059418678283691,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.7311630249023438,
+          "p95_publication_ms": 1084.4388008117676,
+          "source_max_schedule_lateness_seconds": 0.01014674999169074
+        },
+        {
+          "catchup_seconds": 0.19089317321777344,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.7316150665283203,
+          "p95_publication_ms": 1613.8880252838135,
+          "source_max_schedule_lateness_seconds": 0.09778366700629704
+        },
+        {
+          "catchup_seconds": 0.1275920867919922,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.728085994720459,
+          "p95_publication_ms": 1501.101016998291,
+          "source_max_schedule_lateness_seconds": 0.09887583399540745
+        }
+      ]
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_055136_production_admission/fairness/results.json",
+      "raw_sha256": "c45884eb3b7202c39449c77b41013fe0434fa5f2425d5404c034696b251db00a",
+      "raw_status": "passed",
+      "usable_timing": true,
+      "error": null,
+      "offered_load_valid": true,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "analytics exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 0 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 3 exact final Iceberg rows",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:92f4727c3c3b9983356fe87802676bb85e3fa610338470aecbb5e0ed95da2044",
+      "profile_affinity": [
+        0,
+        1
+      ],
+      "topology": {
+        "destination": "0-1",
+        "pgduck": "0-1",
+        "source": "2",
+        "storage": "3"
+      },
+      "rate_bytes_per_second": 16777216,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": -31114.78995200008,
+          "first_reserved_at": "2026-10-27T05:52:18.464257+00:00",
+          "max_wait_seconds": 0.03311959778213496,
+          "refilled_at": "2026-10-27T05:53:35.316655+00:00",
+          "requests": 8000,
+          "reserved_bytes": 1267563584,
+          "singleton": true,
+          "sum_wait_seconds": 220.8866019786637
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 16777216,
+          "singleton": true
+        },
+        "worker_log_sha256": "6cda1ca55ba7233861516f10188eac672b870a179e94e83077862b164a0ffda7"
+      },
+      "audit": {
+        "valid": true,
+        "checks": {
+          "stable_measurement_clock": true,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": true,
+          "exact_serialized_bytes_reserved": true,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "one_aggregate_reservation_envelope": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": {
+          "clock_span_seconds": 76.852398,
+          "last_reservation_wait_seconds": 0.0018545860023498582,
+          "allowed_bytes_with_1ms_clock_tolerance": 1289679317.36992,
+          "copy_duration_lower_bound_seconds": 75.53705215454102
+        },
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "c45884eb3b7202c39449c77b41013fe0434fa5f2425d5404c034696b251db00a",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f",
+        "staging_budget.sql": "ffbbb1591938550ec3f2e8fc6548c2f546e08e87c7d3792e9443f527fbb26f5d"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f"
+      },
+      "copy_elapsed_seconds": 87.45831203460693,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": true,
+        "waiting_observed": true
+      },
+      "streams": [
+        {
+          "catchup_seconds": 0.19763684272766113,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.8256330490112305,
+          "p95_publication_ms": 803.6389350891113,
+          "source_max_schedule_lateness_seconds": 0.010175666975555941
+        },
+        {
+          "catchup_seconds": 0.25790905952453613,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.7968409061431885,
+          "p95_publication_ms": 819.5619583129883,
+          "source_max_schedule_lateness_seconds": 0.21187074997578748
+        },
+        {
+          "catchup_seconds": 0.1931748390197754,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.7501177787780762,
+          "p95_publication_ms": 755.7468414306641,
+          "source_max_schedule_lateness_seconds": 0.21392720798030496
+        }
+      ]
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_055429_production_admission/fairness/results.json",
+      "raw_sha256": "3b12b44801f44d7f62ba809f0ac281ae5914fd5de64a3da8a02bc06b14d98ff4",
+      "raw_status": "passed",
+      "usable_timing": true,
+      "error": null,
+      "offered_load_valid": true,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "analytics exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 0 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 3 exact final Iceberg rows",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:92f4727c3c3b9983356fe87802676bb85e3fa610338470aecbb5e0ed95da2044",
+      "profile_affinity": [
+        0,
+        1
+      ],
+      "topology": {
+        "destination": "0-1",
+        "pgduck": "0-1",
+        "source": "0-1",
+        "storage": "0-1"
+      },
+      "rate_bytes_per_second": 16777216,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": 95298.472832,
+          "first_reserved_at": "2026-10-27T05:55:14.507666+00:00",
+          "max_wait_seconds": 0.032906992893219036,
+          "refilled_at": "2026-10-27T05:56:31.458495+00:00",
+          "requests": 8000,
+          "reserved_bytes": 1267563584,
+          "singleton": true,
+          "sum_wait_seconds": 206.87766811018025
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 16777216,
+          "singleton": true
+        },
+        "worker_log_sha256": "25d197d964d684865bf26ff2f59cdfb3f880257953fe11b8e9fd894e2125d266"
+      },
+      "audit": {
+        "valid": true,
+        "checks": {
+          "stable_measurement_clock": true,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": true,
+          "exact_serialized_bytes_reserved": true,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "one_aggregate_reservation_envelope": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": {
+          "clock_span_seconds": 76.950829,
+          "last_reservation_wait_seconds": 0.0,
+          "allowed_bytes_with_1ms_clock_tolerance": 1291299600.728064,
+          "copy_duration_lower_bound_seconds": 75.53705215454102
+        },
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "3b12b44801f44d7f62ba809f0ac281ae5914fd5de64a3da8a02bc06b14d98ff4",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f",
+        "staging_budget.sql": "ffbbb1591938550ec3f2e8fc6548c2f546e08e87c7d3792e9443f527fbb26f5d"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f"
+      },
+      "copy_elapsed_seconds": 90.14701008796692,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": true,
+        "waiting_observed": true
+      },
+      "streams": [
+        {
+          "catchup_seconds": 0.23742318153381348,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "analytics",
+          "max_publication_gap_seconds": 0.8299150466918945,
+          "p95_publication_ms": 1737.602949142456,
+          "source_max_schedule_lateness_seconds": 0.010107250011060387
+        },
+        {
+          "catchup_seconds": 0.2378990650177002,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 0.8223729133605957,
+          "p95_publication_ms": 1661.081075668335,
+          "source_max_schedule_lateness_seconds": 0.14232279200223275
+        },
+        {
+          "catchup_seconds": 0.11011004447937012,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 0.8946270942687988,
+          "p95_publication_ms": 1692.4059391021729,
+          "source_max_schedule_lateness_seconds": 0.17872004199307412
+        }
+      ]
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_055702_production_admission/fairness/results.json",
+      "raw_sha256": "92b6c94e32050870b9b3f5c9ccdb876554dc19c61d730540e74b33bc0af674b6",
+      "raw_status": "finding",
+      "usable_timing": true,
+      "error": null,
+      "offered_load_valid": false,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "shared budget permits one initial burst",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "shared budget accounts first queued debt",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "shared budget accumulates global debt",
+          "passed": true
+        },
+        {
+          "actual": 1.5,
+          "expected": 1.5,
+          "name": "another database consumes the same budget",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "oversized request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "oversized request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "excess reservation horizon fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "excess reservation horizon leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "zero request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "zero request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "budget transaction rollback restores credit",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "budget contention supports lock timeout",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "abandoned credit refills without explicit release",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "backward clock grants no extra credit",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "forward clock restores at most one burst",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "forward clock cannot create unlimited credit",
+          "passed": true
+        },
+        {
+          "actual": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "expected": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "name": "concurrent requests share one aggregate rate",
+          "passed": true
+        },
+        {
+          "actual": "2048:4",
+          "expected": "2048:4",
+          "name": "concurrent accounting loses no bytes",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "native copy reaches the shared budget",
+          "passed": true
+        },
+        {
+          "actual": "2",
+          "expected": "2",
+          "name": "native copy reserves before staging",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disable interrupts budget sleep",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget waiter stages no rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget worker releases coordinator connection",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "budgeted native copy resumes",
+          "passed": true
+        },
+        {
+          "actual": "10:55",
+          "expected": "10:55",
+          "name": "budgeted retry preserves exact data",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "budgeted drop removes source slot",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "analytics exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 0 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 3 exact final Iceberg rows",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:92f4727c3c3b9983356fe87802676bb85e3fa610338470aecbb5e0ed95da2044",
+      "profile_affinity": [
+        0,
+        1
+      ],
+      "topology": {
+        "destination": "0-1",
+        "pgduck": "0-1",
+        "source": "0-1",
+        "storage": "0-1"
+      },
+      "rate_bytes_per_second": 0,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": 262144,
+          "first_reserved_at": "2026-10-27T05:57:52.890111+00:00",
+          "max_wait_seconds": 0,
+          "refilled_at": "2026-10-27T05:58:48.070045+00:00",
+          "requests": 8000,
+          "reserved_bytes": 1267563584,
+          "singleton": true,
+          "sum_wait_seconds": 0
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 0,
+          "singleton": true
+        },
+        "worker_log_sha256": "9599cc6af7888b3b38876944fc8e79876d87939465c93d75095acefbb0d244e8"
+      },
+      "audit": {
+        "valid": true,
+        "checks": {
+          "stable_measurement_clock": true,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": true,
+          "exact_serialized_bytes_reserved": true,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "accounting_only_never_slept": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": null,
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "92b6c94e32050870b9b3f5c9ccdb876554dc19c61d730540e74b33bc0af674b6",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "shared budget permits one initial burst",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "shared budget accounts first queued debt",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "shared budget accumulates global debt",
+          "passed": true
+        },
+        {
+          "actual": 1.5,
+          "expected": 1.5,
+          "name": "another database consumes the same budget",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "oversized request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "oversized request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "excess reservation horizon fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "excess reservation horizon leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "zero request fails closed",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "zero request leaves accounting unchanged",
+          "passed": true
+        },
+        {
+          "actual": "2560:4",
+          "expected": "2560:4",
+          "name": "budget transaction rollback restores credit",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "budget contention supports lock timeout",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "abandoned credit refills without explicit release",
+          "passed": true
+        },
+        {
+          "actual": 0.5,
+          "expected": 0.5,
+          "name": "backward clock grants no extra credit",
+          "passed": true
+        },
+        {
+          "actual": 0.0,
+          "expected": 0.0,
+          "name": "forward clock restores at most one burst",
+          "passed": true
+        },
+        {
+          "actual": 1.0,
+          "expected": 1.0,
+          "name": "forward clock cannot create unlimited credit",
+          "passed": true
+        },
+        {
+          "actual": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "expected": [
+            0.0,
+            0.0,
+            0.5,
+            1.0
+          ],
+          "name": "concurrent requests share one aggregate rate",
+          "passed": true
+        },
+        {
+          "actual": "2048:4",
+          "expected": "2048:4",
+          "name": "concurrent accounting loses no bytes",
+          "passed": true
+        },
+        {
+          "actual": "1",
+          "expected": "1",
+          "name": "native copy reaches the shared budget",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disable interrupts budget sleep",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget waiter stages no rows",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "disabled budget worker releases coordinator connection",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "budgeted native copy resumes",
+          "passed": true
+        },
+        {
+          "actual": "10:55",
+          "expected": "10:55",
+          "name": "budgeted retry preserves exact data",
+          "passed": true
+        },
+        {
+          "actual": "0",
+          "expected": "0",
+          "name": "budgeted drop removes source slot",
+          "passed": true
+        }
+      ],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f",
+        "staging_budget.sql": "ffbbb1591938550ec3f2e8fc6548c2f546e08e87c7d3792e9443f527fbb26f5d"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f"
+      },
+      "copy_elapsed_seconds": 69.28801989555359,
+      "checks": {
+        "all_stream_targets_pass": false,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": false,
+        "waiting_observed": true
+      },
+      "streams": [
+        {
+          "catchup_seconds": 13.931393146514893,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": false,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 109,
+          "database": "analytics",
+          "max_publication_gap_seconds": 2.660001039505005,
+          "p95_publication_ms": 16897.56202697754,
+          "source_max_schedule_lateness_seconds": 0.4077205419889651
+        },
+        {
+          "catchup_seconds": 13.744807004928589,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": false,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": false
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 1.8261840343475342,
+          "p95_publication_ms": 16762.092113494873,
+          "source_max_schedule_lateness_seconds": 0.5617915829934645
+        },
+        {
+          "catchup_seconds": 12.580786943435669,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": false,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": false
+          },
+          "commits_during_copy": 109,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 2.3476099967956543,
+          "p95_publication_ms": 15084.475994110107,
+          "source_max_schedule_lateness_seconds": 0.6963086249888875
+        }
+      ]
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_060032_production_admission/fairness/results.json",
+      "raw_sha256": "947c6e75a2dadf35561bc3ed229f167f1b55a70eba28a5389f6a711142266389",
+      "raw_status": "finding",
+      "usable_timing": false,
+      "error": null,
+      "offered_load_valid": true,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "analytics exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 0 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 3 exact final Iceberg rows",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:92f4727c3c3b9983356fe87802676bb85e3fa610338470aecbb5e0ed95da2044",
+      "profile_affinity": [
+        0
+      ],
+      "topology": {
+        "destination": "0",
+        "pgduck": "0",
+        "source": "0",
+        "storage": "0"
+      },
+      "rate_bytes_per_second": 16777216,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": 103143,
+          "first_reserved_at": "2026-10-27T06:10:49.199413+00:00",
+          "max_wait_seconds": 0.03267537748718262,
+          "refilled_at": "2026-10-27T07:17:44.840081+00:00",
+          "requests": 8000,
+          "reserved_bytes": 1267563584,
+          "singleton": true,
+          "sum_wait_seconds": 14.16363933657455
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 16777216,
+          "singleton": true
+        },
+        "worker_log_sha256": "819f3df1f0e63aeaaf6339838ad459c3e50558313356ce97f827f6fa3ef5cad6"
+      },
+      "audit": {
+        "valid": false,
+        "checks": {
+          "stable_measurement_clock": false,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": true,
+          "exact_serialized_bytes_reserved": true,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "one_aggregate_reservation_envelope": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": {
+          "clock_span_seconds": 4015.640668,
+          "last_reservation_wait_seconds": 0.0,
+          "allowed_bytes_with_1ms_clock_tolerance": 67371549786.63629,
+          "copy_duration_lower_bound_seconds": 75.53705215454102
+        },
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "947c6e75a2dadf35561bc3ed229f167f1b55a70eba28a5389f6a711142266389",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace"
+        ],
+        "tolerance_seconds": 1.0,
+        "valid": false
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f",
+        "staging_budget.sql": "ffbbb1591938550ec3f2e8fc6548c2f546e08e87c7d3792e9443f527fbb26f5d"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f"
+      },
+      "exclusion": "No valid performance claim: bootstrap/accounting failure or clock discontinuity; memory/crash observations remain retained."
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_190322_production_admission/fairness/results.json",
+      "raw_sha256": "a85bff661f2f62857b0b5189117f2ad221f3f6e799463d7b8799e840ad3fdced",
+      "raw_status": "error",
+      "usable_timing": false,
+      "error": "service \"pgduck\" is not running",
+      "offered_load_valid": false,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:92f4727c3c3b9983356fe87802676bb85e3fa610338470aecbb5e0ed95da2044",
+      "profile_affinity": [
+        0
+      ],
+      "topology": {
+        "destination": "0",
+        "pgduck": "0",
+        "source": "0",
+        "storage": "0"
+      },
+      "rate_bytes_per_second": 16777216,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": 104143,
+          "first_reserved_at": "2026-10-27T20:12:39.551171+00:00",
+          "max_wait_seconds": 0.03134734131240845,
+          "refilled_at": "2026-10-27T21:04:15.873313+00:00",
+          "requests": 3504,
+          "reserved_bytes": 553193448,
+          "singleton": true,
+          "sum_wait_seconds": 4.136847575828555
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 16777216,
+          "singleton": true
+        },
+        "worker_log_sha256": "dfcbfb2bd4f50628e38356ea4e889ad34cbf27c97210db9ea21667350889b4a8"
+      },
+      "audit": {
+        "valid": false,
+        "checks": {
+          "stable_measurement_clock": false,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": false,
+          "exact_serialized_bytes_reserved": false,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "one_aggregate_reservation_envelope": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": {
+          "clock_span_seconds": 3096.322142,
+          "last_reservation_wait_seconds": 0.0,
+          "allowed_bytes_with_1ms_clock_tolerance": 51947944303.132675,
+          "copy_duration_lower_bound_seconds": 75.53705215454102
+        },
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "a85bff661f2f62857b0b5189117f2ad221f3f6e799463d7b8799e840ad3fdced",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace",
+          "copy observer wall clock differs from monotonic trace"
+        ],
+        "tolerance_seconds": 1.0,
+        "valid": false
+      },
+      "engine_oom": true,
+      "unexpected_pg_crash": false,
+      "operational_checks": [],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f",
+        "staging_budget.sql": "ffbbb1591938550ec3f2e8fc6548c2f546e08e87c7d3792e9443f527fbb26f5d"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f"
+      },
+      "exclusion": "No valid performance claim: bootstrap/accounting failure or clock discontinuity; memory/crash observations remain retained."
+    },
+    {
+      "raw_results": ".qualification/qualification_20261027_222041_production_admission/fairness/results.json",
+      "raw_sha256": "b2f9b1aa30364b11ce22ca1e2d3ede7b3ed10f5144e397fb4ffab098ff9ea775",
+      "raw_status": "finding",
+      "usable_timing": true,
+      "error": null,
+      "offered_load_valid": true,
+      "all_check_results": [
+        {
+          "actual": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "expected": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+          "name": "release archive checksum",
+          "passed": true
+        },
+        {
+          "actual": "arm64",
+          "expected": "arm64",
+          "name": "archive architecture matches qualification host",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "analytics is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_1 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "streaming",
+          "expected": "streaming",
+          "name": "fair_stream_2 is streaming before large copy",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "analytics exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2400|2400|t",
+          "expected": "2400|2400|t",
+          "name": "fair_stream_2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 0 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 1 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 2 exact final Iceberg rows",
+          "passed": true
+        },
+        {
+          "actual": "2000000|2000000|1|2000000|2000001000000|t",
+          "expected": "2000000|2000000|1|2000000|2000001000000|t",
+          "name": "large copy 3 exact final Iceberg rows",
+          "passed": true
+        }
+      ],
+      "runtime_scope_correction": "Budget runs use an overlaid initial-sync Rust binary; old pause-only header text is obsolete.",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.3-linux-arm64.tar.gz",
+        "archive_sha256": "4494a0ce95c45613753abd4529dc00ec04f446516a76a012eb15ce6e98be7164",
+        "source_revision": "8bcd5b218da761ed737f0fcb2b82e9487566ccf5"
+      },
+      "image_id": "sha256:e301cac4759cb98cf85a7deda30062b6611a5f83e9bc856789893d2304563069",
+      "profile_affinity": [
+        0
+      ],
+      "topology": {
+        "destination": "0",
+        "pgduck": "0",
+        "source": "0",
+        "storage": "0"
+      },
+      "rate_bytes_per_second": 16777216,
+      "burst_bytes": 262144,
+      "stats": {
+        "credit": {
+          "available_bytes": -26447.54035200001,
+          "first_reserved_at": "2026-10-27T22:21:43.766881+00:00",
+          "max_wait_seconds": 0.03242893433761596,
+          "refilled_at": "2026-10-27T22:23:46.625717+00:00",
+          "requests": 8000,
+          "reserved_bytes": 1267563584,
+          "singleton": true,
+          "sum_wait_seconds": 17.684730493267047
+        },
+        "settings": {
+          "burst_bytes": 262144,
+          "max_wait_seconds": 2,
+          "rate_bytes_per_second": 16777216,
+          "singleton": true
+        },
+        "worker_log_sha256": "e52dc2643f541d15f3eb9902cc62c24fb87f320b7526ae81dd31a573aba45594"
+      },
+      "audit": {
+        "valid": true,
+        "checks": {
+          "stable_measurement_clock": true,
+          "stats_captured": true,
+          "worker_logs_captured": true,
+          "all_chunks_reserved_once": true,
+          "exact_serialized_bytes_reserved": true,
+          "bounded_reservation_wait": true,
+          "configuration_matches_request": true,
+          "one_aggregate_reservation_envelope": true
+        },
+        "expected_bytes": 1267563584,
+        "expected_requests": 8000,
+        "reservation_envelope": {
+          "clock_span_seconds": 122.858836,
+          "last_reservation_wait_seconds": 0.0015763962478637702,
+          "allowed_bytes_with_1ms_clock_tolerance": 2061534597.8369281,
+          "copy_duration_lower_bound_seconds": 75.53705215454102
+        },
+        "scope": "Eligibility reservations, not a hard instantaneous backend-write rate cap",
+        "raw_results_sha256": "b2f9b1aa30364b11ce22ca1e2d3ede7b3ed10f5144e397fb4ffab098ff9ea775",
+        "analysis_source_sha256": "6bce1bfcec71bd108351361611a8341a8aae901cf4a93b62b94ccc6e94c0a702"
+      },
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "operational_checks": [],
+      "inputs": {
+        "Dockerfile.staging-budget": "7c9743722cad5f5a7db54b311a49c14b66cd403e9737ff6b027cd1bedc5a4ded",
+        "budget_operations.py": "c2ffbc7f33c558179497f1d7fa6bba4b82ad7d19302f3c92c8e7203330e2d6b0",
+        "staging_budget.py": "6b5c6c0b172682ce4fd4c98dbe697b45609320f7c07586ff6923220bd64b737c",
+        "staging_budget.rs": "14e68761f212b98149d356f80ac59de9b3bb3d63b06275b3390aeb46a763f645",
+        "staging_budget.sql": "ffbbb1591938550ec3f2e8fc6548c2f546e08e87c7d3792e9443f527fbb26f5d"
+      },
+      "overlaid_source_hashes": {
+        "worker/src/initial_sync.rs": "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee",
+        "worker/src/staging_budget.rs": "14e68761f212b98149d356f80ac59de9b3bb3d63b06275b3390aeb46a763f645"
+      },
+      "copy_elapsed_seconds": 137.45811820030212,
+      "checks": {
+        "all_stream_targets_pass": false,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": true,
+        "waiting_observed": true
+      },
+      "streams": [
+        {
+          "catchup_seconds": 55.23611402511597,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": false,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 108,
+          "database": "analytics",
+          "max_publication_gap_seconds": 2.1621758937835693,
+          "p95_publication_ms": 52588.64498138428,
+          "source_max_schedule_lateness_seconds": 0.005170499993255362
+        },
+        {
+          "catchup_seconds": 56.61348104476929,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": false,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 108,
+          "database": "fair_stream_1",
+          "max_publication_gap_seconds": 1.8664798736572266,
+          "p95_publication_ms": 54454.22911643982,
+          "source_max_schedule_lateness_seconds": 0.09271366699249484
+        },
+        {
+          "catchup_seconds": 56.90806198120117,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": false,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          },
+          "commits_during_copy": 108,
+          "database": "fair_stream_2",
+          "max_publication_gap_seconds": 1.84440016746521,
+          "p95_publication_ms": 54859.38787460327,
+          "source_max_schedule_lateness_seconds": 0.09367191698402166
+        }
+      ]
+    }
+  ],
+  "source_variants": {
+    "b46b4d506ec3f358eeb547387fe14f98961ca61a7a80eb2ea27f95e60e91faee": {
+      "path": "worker/src/initial_sync.rs",
+      "source": "mod staging_budget;\nuse lake_replication_worker::credentials::Settings;\nuse lake_replication_worker::logging::event as log_event;\nuse lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};\nuse std::env;\nuse std::sync::atomic::{AtomicBool, Ordering};\nuse std::thread;\nuse std::time::Duration;\n\nfn main() {\n    if let Err(error) = run() {\n        log_event(\n            \"initial_sync\",\n            \"ERROR\",\n            \"process_failed\",\n            &error.to_string(),\n            &[],\n        );\n        std::process::exit(1);\n    }\n}\n\nfn run() -> Result<(), Box<dyn std::error::Error>> {\n    let config = Config::from_env()?;\n    let mut sync_guard = Client::connect_secure(\n        config.destination_address.as_str(),\n        &config.destination_user,\n        &config.destination_database,\n        false,\n        config.destination_password.as_deref(),\n        config.destination_tls.as_ref(),\n    )?;\n    let lock_rows = sync_guard.simple_query(&format!(\n        \"SELECT pg_try_advisory_lock(hashtextextended({}, 0))::text\",\n        sql_literal(&format!(\n            \"lake_replication_initial_sync:{}\",\n            config.subscription_id\n        ))\n    ))?;\n    if single_value(&lock_rows, \"initial-sync lock\")? != \"true\" {\n        log_event(\n            \"initial_sync\",\n            \"INFO\",\n            \"already_running\",\n            \"another initial copy owns this subscription\",\n            &[(\"subscription_id\", config.subscription_id.to_string())],\n        );\n        return Ok(());\n    }\n    let reset_rows = sync_guard.simple_query(&format!(\n        \"SELECT lake_replication.reset_incomplete_initial_sync({})::text\",\n        config.subscription_id\n    ))?;\n    let reset_count = single_value(&reset_rows, \"reset incomplete initial copy\")?;\n    if reset_count != \"0\" {\n        log_event(\n            \"initial_sync\",\n            \"WARN\",\n            \"incomplete_copy_reset\",\n            &format!(\"discarded {reset_count} incomplete table copies before restart\"),\n            &[(\"subscription_id\", config.subscription_id.to_string())],\n        );\n    }\n    let mut destination = Client::connect_secure(\n        config.destination_address.as_str(),\n        &config.destination_user,\n        &config.destination_database,\n        false,\n        config.destination_password.as_deref(),\n        config.destination_tls.as_ref(),\n    )?;\n\n    let mut source = Client::connect_secure(\n        config.source_address.as_str(),\n        &config.source_user,\n        &config.source_database,\n        false,\n        config.source_password.as_deref(),\n        config.source_tls.as_ref(),\n    )?;\n    let persistent_slot_rows = source.simple_query(&format!(\n        \"SELECT EXISTS(SELECT 1 FROM pg_replication_slots WHERE slot_name={})::text\",\n        sql_literal(&config.slot)\n    ))?;\n    let persistent_slot_exists =\n        single_value(&persistent_slot_rows, \"persistent slot lookup\")? == \"true\";\n    let mut slot_owner = Client::connect_secure(\n        config.source_address.as_str(),\n        &config.source_user,\n        &config.source_database,\n        true,\n        config.source_password.as_deref(),\n        config.source_tls.as_ref(),\n    )?;\n    let slot_rows = if config.create_slot && !persistent_slot_exists {\n        slot_owner.simple_query(&format!(\n            \"CREATE_REPLICATION_SLOT {} LOGICAL pgoutput (SNAPSHOT 'export', FAILOVER {})\",\n            quote_identifier(&config.slot),\n            config.slot_failover\n        ))?\n    } else {\n        // The persistent slot was created separately, possibly on this same\n        // server. A temporary slot supplies a fresh exported snapshot while\n        // the existing slot retains WAL from before that snapshot.\n        let sync_slot = format!(\n            \"lake_sync_{}_{}\",\n            config.subscription_id,\n            std::process::id()\n        );\n        slot_owner.simple_query(&format!(\n            \"CREATE_REPLICATION_SLOT {} TEMPORARY LOGICAL pgoutput (SNAPSHOT 'export')\",\n            quote_identifier(&sync_slot)\n        ))?\n    };\n    let slot_row = slot_rows.first().ok_or(\"slot creation returned no row\")?;\n    let consistent_lsn = field(slot_row, 1, \"consistent_point\")?.to_owned();\n    let snapshot_name = field(slot_row, 2, \"snapshot_name\")?.to_owned();\n\n    if persistent_slot_exists || !config.create_slot {\n        validate_existing_slot(&mut source, &config, &consistent_lsn)?;\n    }\n    source.simple_query(\"BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY\")?;\n    source.simple_query(&format!(\n        \"SET TRANSACTION SNAPSHOT {}\",\n        sql_literal(&snapshot_name)\n    ))?;\n    let mut plans = discover_tables(&mut source, &config)?;\n    if plans.is_empty() {\n        return Err(\"publication contains no eligible tables\".into());\n    }\n    source.simple_query(\"COMMIT\")?;\n\n    for plan in &mut plans {\n        let registered = destination.simple_query(&format!(\n            \"SELECT lake_replication.register_relation({}, {}, {}, {}, {}, {}::jsonb)::text\",\n            config.subscription_id,\n            plan.relation_id,\n            sql_literal(&plan.source.schema),\n            sql_literal(&plan.source.relation),\n            sql_literal(&plan.replica_identity),\n            sql_literal(&plan.columns),\n        ))?;\n        plan.schema_version = single_value(&registered, \"register_relation\")?.parse()?;\n        destination.simple_query(&format!(\n            \"SELECT lake_replication.register_type_contract({}, {}, {}, {}, {}::jsonb)\",\n            config.subscription_id,\n            plan.relation_id,\n            plan.schema_version,\n            config.type_mapping_version,\n            sql_literal(&plan.type_contract),\n        ))?;\n        destination.simple_query(&format!(\n            \"SELECT lake_replication.ensure_iceberg_destination({}, {}, {}, {}, {}, {})::text\",\n            config.subscription_id,\n            plan.relation_id,\n            plan.schema_version,\n            sql_literal(&plan.destination.schema),\n            sql_literal(&plan.destination.relation),\n            config.create_missing_destinations,\n        ))?;\n        destination.simple_query(&format!(\n            \"SELECT lake_replication.begin_initial_copy({}, {}, {}, {}::regclass, {}::pg_lsn, {}, {})\",\n            config.subscription_id,\n            plan.relation_id,\n            plan.schema_version,\n            sql_literal(&plan.destination.sql()),\n            sql_literal(&consistent_lsn),\n            sql_literal(&snapshot_name),\n            config.overwrite_destination,\n        ))?;\n    }\n\n    log_event(\n        \"initial_sync\",\n        \"INFO\",\n        \"snapshot_acquired\",\n        &format!(\n            \"snapshot={} consistent_lsn={} tables={}\",\n            snapshot_name,\n            consistent_lsn,\n            plans.len()\n        ),\n        &[\n            (\"subscription_id\", config.subscription_id.to_string()),\n            (\"snapshot\", snapshot_name.clone()),\n            (\"consistent_lsn\", consistent_lsn.clone()),\n            (\"tables\", plans.len().to_string()),\n        ],\n    );\n    if config.pause_after_snapshot_ms > 0 {\n        thread::sleep(Duration::from_millis(config.pause_after_snapshot_ms));\n    }\n\n    let mut total_rows = 0_u64;\n    for plan in &plans {\n        match copy_table_with_retry(\n            &mut sync_guard,\n            &mut destination,\n            &config,\n            plan,\n            &snapshot_name,\n            &consistent_lsn,\n        ) {\n            Ok(copied) => total_rows += copied,\n            Err(error) => {\n                for failed_plan in &plans {\n                    mark_copy_failed(\n                        &mut destination,\n                        &config,\n                        failed_plan.relation_id,\n                        failed_plan.schema_version,\n                        &error.to_string(),\n                    )?;\n                }\n                return Err(error.into());\n            }\n        }\n    }\n\n    sync_guard.simple_query(\"SELECT 1\")?;\n    if persistent_slot_exists || !config.create_slot {\n        // Check again on a fresh connection: the copy connection still uses\n        // the exported snapshot and cannot see concurrent slot changes.\n        let mut source_check = Client::connect_secure(\n            config.source_address.as_str(),\n            &config.source_user,\n            &config.source_database,\n            false,\n            config.source_password.as_deref(),\n            config.source_tls.as_ref(),\n        )?;\n        validate_existing_slot(&mut source_check, &config, &consistent_lsn)?;\n    }\n    let completed = destination.simple_query(&format!(\n        \"SELECT lake_replication.finish_initial_sync_group({}, {})::text\",\n        config.subscription_id,\n        plans.len()\n    ))?;\n    let completed = single_value(&completed, \"finish_initial_sync_group\")?;\n    log_event(\n        \"initial_sync\",\n        \"INFO\",\n        \"initial_copy_completed\",\n        &format!(\n            \"initial copy ready tables={} rows={}/{} consistent_lsn={}\",\n            plans.len(),\n            completed,\n            total_rows,\n            consistent_lsn\n        ),\n        &[\n            (\"subscription_id\", config.subscription_id.to_string()),\n            (\"tables\", plans.len().to_string()),\n            (\"tables_completed\", completed.to_owned()),\n            (\"rows\", total_rows.to_string()),\n            (\"consistent_lsn\", consistent_lsn.clone()),\n        ],\n    );\n    Ok(())\n}\n\nfn copy_table_with_retry(\n    sync_guard: &mut Client,\n    destination: &mut Client,\n    config: &Config,\n    plan: &TablePlan,\n    snapshot_name: &str,\n    consistent_lsn: &str,\n) -> Result<u64, WireError> {\n    for attempt in 0..=config.table_copy_retries {\n        let result = (|| {\n            let mut source = Client::connect_secure(\n                config.source_address.as_str(),\n                &config.source_user,\n                &config.source_database,\n                false,\n                config.source_password.as_deref(),\n                config.source_tls.as_ref(),\n            )?;\n            source.simple_query(\"BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY\")?;\n            source.simple_query(&format!(\n                \"SET TRANSACTION SNAPSHOT {}\",\n                sql_literal(snapshot_name)\n            ))?;\n            let copied = copy_table(&mut source, destination, config, plan)?;\n            source.simple_query(\"COMMIT\")?;\n            Ok(copied)\n        })();\n        match result {\n            Ok(copied) => return Ok(copied),\n            Err(_error) if attempt < config.table_copy_retries => {\n                // A lost guard means another worker may have taken over and\n                // reset staging. Never reconnect and write in that case.\n                sync_guard.simple_query(\"SELECT 1\")?;\n                log_event(\n                    \"initial_sync\",\n                    \"WARN\",\n                    \"table_copy_retry\",\n                    &format!(\n                        \"retrying table={} attempt={}\",\n                        plan.source.sql(),\n                        attempt + 1\n                    ),\n                    &[\n                        (\"subscription_id\", config.subscription_id.to_string()),\n                        (\"table\", plan.source.sql()),\n                        (\"attempt\", (attempt + 1).to_string()),\n                    ],\n                );\n                // A COPY failure can leave either wire connection unusable.\n                // The snapshot owner is independent and stays open, so both\n                // sessions can be replaced without changing the copy point.\n                *destination = Client::connect_secure(\n                    config.destination_address.as_str(),\n                    &config.destination_user,\n                    &config.destination_database,\n                    false,\n                    config.destination_password.as_deref(),\n                    config.destination_tls.as_ref(),\n                )?;\n                destination.simple_query(&format!(\n                    \"SELECT lake_replication.reset_initial_copy({}, {}, {})\",\n                    config.subscription_id, plan.relation_id, plan.schema_version\n                ))?;\n                destination.simple_query(&format!(\n                    \"SELECT lake_replication.begin_initial_copy({}, {}, {}, {}::regclass, {}::pg_lsn, {}, {})\",\n                    config.subscription_id,\n                    plan.relation_id,\n                    plan.schema_version,\n                    sql_literal(&plan.destination.sql()),\n                    sql_literal(consistent_lsn),\n                    sql_literal(snapshot_name),\n                    config.overwrite_destination,\n                ))?;\n                thread::sleep(Duration::from_millis(100 * u64::from(attempt + 1)));\n            }\n            Err(error) => return Err(error),\n        }\n    }\n    unreachable!(\"the retry loop always returns after its final attempt\")\n}\n\nfn validate_existing_slot(\n    source: &mut Client,\n    config: &Config,\n    consistent_lsn: &str,\n) -> Result<(), Box<dyn std::error::Error>> {\n    let rows = source.simple_query(&format!(\n        \"SELECT plugin::text, slot_type, database::text, temporary::text, active::text, \\\n         COALESCE(wal_status, ''), COALESCE(invalidation_reason, ''), \\\n         COALESCE(confirmed_flush_lsn, '0/0')::text \\\n         FROM pg_replication_slots WHERE slot_name = {}\",\n        sql_literal(&config.slot)\n    ))?;\n    let row = rows.first().ok_or_else(|| {\n        format!(\n            \"pre-created logical replication slot {} does not exist\",\n            config.slot\n        )\n    })?;\n    if field(row, 0, \"plugin\")? != \"pgoutput\"\n        || field(row, 1, \"slot_type\")? != \"logical\"\n        || field(row, 2, \"database\")? != config.source_database\n        || field(row, 3, \"temporary\")? != \"false\"\n        || field(row, 4, \"active\")? != \"false\"\n        || field(row, 5, \"wal_status\")? == \"lost\"\n        || !field(row, 6, \"invalidation_reason\")?.is_empty()\n    {\n        return Err(format!(\n            \"pre-created slot {} is not a usable inactive persistent pgoutput slot for {}\",\n            config.slot, config.source_database\n        )\n        .into());\n    }\n    let confirmed = parse_slot_lsn(field(row, 7, \"confirmed_flush_lsn\")?)?;\n    let snapshot = parse_slot_lsn(consistent_lsn)?;\n    if confirmed > snapshot {\n        return Err(format!(\n            \"pre-created slot {} has advanced beyond initial-copy snapshot {}\",\n            config.slot, consistent_lsn\n        )\n        .into());\n    }\n    Ok(())\n}\n\nfn parse_slot_lsn(value: &str) -> Result<u64, Box<dyn std::error::Error>> {\n    let (high, low) = value.split_once('/').ok_or(\"invalid source LSN\")?;\n    Ok((u64::from_str_radix(high, 16)? << 32) | u64::from_str_radix(low, 16)?)\n}\n\nfn copy_table(\n    source: &mut Client,\n    destination: &mut Client,\n    config: &Config,\n    plan: &TablePlan,\n) -> Result<u64, WireError> {\n    let mut decoder = HexCopyDecoder::default();\n    let mut pending_rows = Vec::with_capacity(config.chunk_rows);\n    let mut pending_bytes = 0_usize;\n    let mut copied = 0_u64;\n    let filter = if plan.row_filter.is_empty() {\n        String::new()\n    } else {\n        format!(\" WHERE ({})\", plan.row_filter)\n    };\n    source.copy_out(\n        &format!(\n            \"COPY (\n                SELECT encode(convert_to((\n                    SELECT jsonb_object_agg(entry.key, entry.value)\n                      FROM jsonb_each(to_jsonb(source_row)) AS entry\n                     WHERE entry.key = ANY({})\n                )::text, 'UTF8'), 'hex')\n                  FROM {} AS source_row{}\n             ) TO STDOUT\",\n            plan.selected_names_sql,\n            plan.source.sql(),\n            filter,\n        ),\n        |data| {\n            decoder.push(data, |row| {\n                if !pending_rows.is_empty()\n                    && pending_bytes.saturating_add(row.len()) > config.chunk_bytes\n                {\n                    stage_rows(\n                        destination,\n                        config,\n                        plan.relation_id,\n                        plan.schema_version,\n                        &mut copied,\n                        &mut pending_rows,\n                        &mut pending_bytes,\n                    )?;\n                }\n                pending_bytes = pending_bytes.saturating_add(row.len());\n                pending_rows.push(row);\n                if pending_rows.len() == config.chunk_rows || pending_bytes >= config.chunk_bytes {\n                    stage_rows(\n                        destination,\n                        config,\n                        plan.relation_id,\n                        plan.schema_version,\n                        &mut copied,\n                        &mut pending_rows,\n                        &mut pending_bytes,\n                    )?;\n                }\n                Ok(())\n            })\n        },\n    )?;\n    decoder.finish()?;\n    if !pending_rows.is_empty() {\n        stage_rows(\n            destination,\n            config,\n            plan.relation_id,\n            plan.schema_version,\n            &mut copied,\n            &mut pending_rows,\n            &mut pending_bytes,\n        )?;\n    }\n    log_event(\n        \"initial_sync\",\n        \"INFO\",\n        \"table_copied\",\n        &format!(\"copied table={} rows={copied}\", plan.source.sql()),\n        &[\n            (\"subscription_id\", config.subscription_id.to_string()),\n            (\"table\", plan.source.sql()),\n            (\"rows\", copied.to_string()),\n        ],\n    );\n    Ok(copied)\n}\n\nfn discover_tables(\n    source: &mut Client,\n    config: &Config,\n) -> Result<Vec<TablePlan>, Box<dyn std::error::Error>> {\n    let (predicate, publication_join) = if config.discover_publication {\n        (\n            format!(\"pt.pubname = {}\", sql_literal(&config.publication)),\n            \"JOIN pg_publication_tables pt\n               ON pt.schemaname = n.nspname AND pt.tablename = c.relname\n             JOIN pg_attribute a ON a.attrelid = c.oid\n                                AND a.attnum > 0 AND NOT a.attisdropped\n                                AND a.attname = ANY(pt.attnames)\"\n                .to_owned(),\n        )\n    } else {\n        let table = QualifiedName::parse(\n            config\n                .source_table\n                .as_deref()\n                .ok_or(\"LAKE_SOURCE_TABLE is required outside discovery mode\")?,\n        )?;\n        (\n            format!(\n                \"n.nspname = {} AND c.relname = {}\",\n                sql_literal(&table.schema),\n                sql_literal(&table.relation)\n            ),\n            \"JOIN pg_attribute a ON a.attrelid = c.oid\n                                AND a.attnum > 0 AND NOT a.attisdropped\n             CROSS JOIN LATERAL (\n                 SELECT n.nspname AS schemaname, c.relname AS tablename,\n                        ARRAY(SELECT attname FROM pg_attribute\n                               WHERE attrelid=c.oid AND attnum > 0 AND NOT attisdropped\n                               ORDER BY attnum)::name[] AS attnames,\n                        NULL::text AS rowfilter\n             ) pt\"\n                .to_owned(),\n        )\n    };\n    let rows = source.simple_query(&format!(\n        \"SELECT c.oid::text, c.relreplident::text,\n                jsonb_agg(jsonb_build_object(\n                    'flags', CASE WHEN EXISTS (\n                        SELECT 1 FROM pg_index i\n                         WHERE i.indrelid = c.oid\n                           AND (i.indisprimary OR i.indisreplident)\n                           AND a.attnum = ANY(i.indkey)\n                    ) THEN 1 ELSE 0 END,\n                    'name', a.attname,\n                    'type_oid', a.atttypid::integer,\n                    'type_modifier', a.atttypmod\n                ) ORDER BY a.attnum)::text,\n                n.nspname::text, c.relname::text,\n                format('ARRAY[%s]::text[]',\n                    string_agg(quote_literal(a.attname), ', ' ORDER BY a.attnum)),\n                coalesce(pt.rowfilter, ''),\n                jsonb_agg(jsonb_build_object(\n                    'name', a.attname,\n                    'source_type', format_type(a.atttypid, a.atttypmod),\n                    'not_null', a.attnotnull,\n                    'generated', a.attgenerated <> ''\n                ) ORDER BY a.attnum)::text\n           FROM pg_class c\n           JOIN pg_namespace n ON n.oid = c.relnamespace\n           {publication_join}\n          WHERE c.relkind IN ('r', 'p') AND {predicate}\n          GROUP BY c.oid, c.relreplident, n.nspname, c.relname, pt.rowfilter\n          ORDER BY n.nspname, c.relname\"\n    ))?;\n\n    let mut plans = Vec::with_capacity(rows.len());\n    for row in rows {\n        let source_name = QualifiedName {\n            schema: field(&row, 3, \"source schema\")?.to_owned(),\n            relation: field(&row, 4, \"source relation\")?.to_owned(),\n        };\n        let destination = if config.discover_publication {\n            QualifiedName {\n                schema: config\n                    .destination_schema\n                    .as_ref()\n                    .ok_or(\"LAKE_DESTINATION_SCHEMA is required in discovery mode\")?\n                    .to_owned(),\n                relation: format!(\n                    \"{}{}\",\n                    source_name.relation, config.destination_table_suffix\n                ),\n            }\n        } else {\n            QualifiedName::parse(\n                config\n                    .destination_table\n                    .as_deref()\n                    .ok_or(\"LAKE_DESTINATION_TABLE is required outside discovery mode\")?,\n            )?\n        };\n        plans.push(TablePlan {\n            relation_id: field(&row, 0, \"relation OID\")?.parse()?,\n            replica_identity: field(&row, 1, \"replica identity\")?.to_owned(),\n            columns: field(&row, 2, \"source columns\")?.to_owned(),\n            source: source_name,\n            destination,\n            selected_names_sql: field(&row, 5, \"publication columns\")?.to_owned(),\n            row_filter: field(&row, 6, \"publication row filter\")?.to_owned(),\n            type_contract: field(&row, 7, \"source type contract\")?.to_owned(),\n            schema_version: 0,\n        });\n    }\n    Ok(plans)\n}\n\nstruct TablePlan {\n    relation_id: u32,\n    replica_identity: String,\n    columns: String,\n    source: QualifiedName,\n    destination: QualifiedName,\n    selected_names_sql: String,\n    row_filter: String,\n    type_contract: String,\n    schema_version: i64,\n}\n\nfn stage_rows(\n    destination: &mut Client,\n    config: &Config,\n    relation_id: u32,\n    schema_version: i64,\n    copied: &mut u64,\n    rows: &mut Vec<String>,\n    pending_bytes: &mut usize,\n) -> Result<(), WireError> {\n    let json_rows = json_array(rows);\n    staging_budget::admit(json_rows.len(), config)?;\n    destination.simple_query(&format!(\n        \"SELECT lake_replication.append_initial_copy_rows({}, {}, {}, {}, {}::jsonb)::text\",\n        config.subscription_id,\n        relation_id,\n        schema_version,\n        copied,\n        sql_literal(&json_rows),\n    ))?;\n    *copied += rows.len() as u64;\n    rows.clear();\n    *pending_bytes = 0;\n    log_event(\n        \"initial_sync\",\n        \"INFO\",\n        \"copy_chunk_staged\",\n        &format!(\"staged initial rows={copied}\"),\n        &[\n            (\"subscription_id\", config.subscription_id.to_string()),\n            (\"relation_id\", relation_id.to_string()),\n            (\"rows_copied\", copied.to_string()),\n        ],\n    );\n    if config.pause_after_chunk_ms > 0 {\n        thread::sleep(Duration::from_millis(config.pause_after_chunk_ms));\n    }\n    if config.fail_after_rows > 0 && *copied >= config.fail_after_rows {\n        return Err(WireError::Protocol(format!(\n            \"injected failure after {copied} rows\"\n        )));\n    }\n    if config.fail_once_after_rows > 0\n        && *copied >= config.fail_once_after_rows\n        && !config.fail_once_triggered.swap(true, Ordering::SeqCst)\n    {\n        return Err(WireError::Protocol(format!(\n            \"injected one-time failure after {copied} rows\"\n        )));\n    }\n    Ok(())\n}\n\nfn mark_copy_failed(\n    destination: &mut Client,\n    config: &Config,\n    relation_id: u32,\n    schema_version: i64,\n    error: &str,\n) -> Result<(), WireError> {\n    destination.simple_query(&format!(\n        \"SELECT lake_replication.fail_initial_copy({}, {}, {}, {})\",\n        config.subscription_id,\n        relation_id,\n        schema_version,\n        sql_literal(error),\n    ))?;\n    Ok(())\n}\n\nstruct Config {\n    source_address: String,\n    destination_address: String,\n    source_user: String,\n    source_password: Option<String>,\n    source_tls: Option<TlsConfig>,\n    destination_user: String,\n    destination_password: Option<String>,\n    destination_tls: Option<TlsConfig>,\n    source_database: String,\n    destination_database: String,\n    slot: String,\n    publication: String,\n    subscription_id: i64,\n    source_table: Option<String>,\n    destination_table: Option<String>,\n    destination_schema: Option<String>,\n    discover_publication: bool,\n    create_missing_destinations: bool,\n    type_mapping_version: i32,\n    destination_table_suffix: String,\n    overwrite_destination: bool,\n    chunk_rows: usize,\n    chunk_bytes: usize,\n    fail_after_rows: u64,\n    fail_once_after_rows: u64,\n    fail_once_triggered: AtomicBool,\n    pause_after_snapshot_ms: u64,\n    pause_after_chunk_ms: u64,\n    slot_failover: bool,\n    create_slot: bool,\n    table_copy_retries: u32,\n}\n\nimpl Config {\n    fn from_env() -> Result<Self, Box<dyn std::error::Error>> {\n        let mut settings = Settings::from_env()?;\n        let legacy_user = value(\"LAKE_USER\", \"postgres\");\n        let source_address = value(\"LAKE_SOURCE_ADDRESS\", \"127.0.0.1:55434\");\n        let destination_address = value(\"LAKE_DESTINATION_ADDRESS\", \"127.0.0.1:55434\");\n        let destination_user = settings.value(\"LAKE_DESTINATION_USER\", &legacy_user);\n        let destination_password = settings.optional(\"LAKE_DESTINATION_PASSWORD\");\n        let destination_tls = tls_config(&settings, \"LAKE_DESTINATION\", &[&destination_address])?;\n        let destination_database = value(\"LAKE_DESTINATION_DATABASE\", \"analytics\");\n        let subscription_id: i64 = required(\"LAKE_SUBSCRIPTION_ID\")?.parse()?;\n        settings.load_subscription_source_credentials(\n            subscription_id,\n            &destination_address,\n            &destination_user,\n            &destination_database,\n            destination_password.as_deref(),\n            destination_tls.as_ref(),\n        )?;\n        let config = Self {\n            source_tls: tls_config(&settings, \"LAKE_SOURCE\", &[&source_address])?,\n            destination_tls,\n            source_address,\n            destination_address,\n            source_user: settings.value(\"LAKE_SOURCE_USER\", &legacy_user),\n            source_password: settings.optional(\"LAKE_SOURCE_PASSWORD\"),\n            destination_user,\n            destination_password,\n            source_database: value(\"LAKE_SOURCE_DATABASE\", \"application\"),\n            destination_database,\n            slot: required(\"LAKE_SLOT\")?,\n            publication: required(\"LAKE_PUBLICATION\")?,\n            subscription_id,\n            source_table: env::var(\"LAKE_SOURCE_TABLE\").ok(),\n            destination_table: env::var(\"LAKE_DESTINATION_TABLE\").ok(),\n            destination_schema: env::var(\"LAKE_DESTINATION_SCHEMA\").ok(),\n            discover_publication: value(\"LAKE_DISCOVER_PUBLICATION\", \"0\") == \"1\",\n            create_missing_destinations: value(\"LAKE_CREATE_TABLES_USING_ICEBERG\", \"0\") == \"1\",\n            type_mapping_version: value(\"LAKE_TYPE_MAPPING_VERSION\", \"1\").parse()?,\n            destination_table_suffix: value(\"LAKE_DESTINATION_TABLE_SUFFIX\", \"\"),\n            overwrite_destination: value(\"LAKE_OVERWRITE_DESTINATION\", \"0\") == \"1\",\n            chunk_rows: value(\"LAKE_INITIAL_COPY_CHUNK_ROWS\", \"1000\").parse()?,\n            chunk_bytes: value(\"LAKE_INITIAL_COPY_CHUNK_BYTES\", \"8388608\").parse()?,\n            fail_after_rows: value(\"LAKE_INITIAL_COPY_FAIL_AFTER_ROWS\", \"0\").parse()?,\n            fail_once_after_rows: value(\"LAKE_INITIAL_COPY_FAIL_ONCE_AFTER_ROWS\", \"0\").parse()?,\n            fail_once_triggered: AtomicBool::new(false),\n            pause_after_snapshot_ms: value(\"LAKE_INITIAL_COPY_PAUSE_MS\", \"0\").parse()?,\n            pause_after_chunk_ms: value(\"LAKE_INITIAL_COPY_CHUNK_PAUSE_MS\", \"0\").parse()?,\n            slot_failover: value(\"LAKE_SLOT_FAILOVER\", \"1\") == \"1\",\n            create_slot: value(\"LAKE_CREATE_SLOT\", \"1\") == \"1\",\n            table_copy_retries: value(\"LAKE_INITIAL_COPY_TABLE_RETRIES\", \"2\").parse()?,\n        };\n        if config.chunk_rows == 0 || config.chunk_bytes == 0 || config.type_mapping_version <= 0 {\n            return Err(\"initial-copy row and byte chunk limits must be positive\".into());\n        }\n        Ok(config)\n    }\n}\n\nfn tls_config(\n    settings: &Settings,\n    prefix: &str,\n    addresses: &[&str],\n) -> Result<Option<TlsConfig>, Box<dyn std::error::Error>> {\n    let default_mode = if addresses.iter().all(|address| address_is_loopback(address)) {\n        \"disable\"\n    } else {\n        \"verify-full\"\n    };\n    match settings\n        .value(&format!(\"{prefix}_TLS_MODE\"), default_mode)\n        .as_str()\n    {\n        \"disable\" => Ok(None),\n        \"verify-full\" => Ok(Some(TlsConfig::verify_full(\n            settings.required(&format!(\"{prefix}_TLS_ROOT_CERT\"))?,\n            settings.optional(&format!(\"{prefix}_TLS_SERVER_NAME\")),\n        ))),\n        mode => Err(format!(\n            \"unsupported {prefix}_TLS_MODE {mode}; expected disable or verify-full\"\n        )\n        .into()),\n    }\n}\n\nstruct QualifiedName {\n    schema: String,\n    relation: String,\n}\n\nimpl QualifiedName {\n    fn parse(value: &str) -> Result<Self, Box<dyn std::error::Error>> {\n        let (schema, relation) = value\n            .split_once('.')\n            .ok_or(\"table name must be schema-qualified\")?;\n        if schema.is_empty() || relation.is_empty() || relation.contains('.') {\n            return Err(\"table name must contain exactly one non-empty qualifier\".into());\n        }\n        Ok(Self {\n            schema: schema.to_owned(),\n            relation: relation.to_owned(),\n        })\n    }\n\n    fn sql(&self) -> String {\n        format!(\n            \"{}.{}\",\n            quote_identifier(&self.schema),\n            quote_identifier(&self.relation)\n        )\n    }\n}\n\nfn json_array(rows: &[String]) -> String {\n    let mut result = String::from(\"[\");\n    for (index, row) in rows.iter().enumerate() {\n        if index > 0 {\n            result.push(',');\n        }\n        result.push_str(row);\n    }\n    result.push(']');\n    result\n}\n\n#[derive(Default)]\nstruct HexCopyDecoder {\n    pending: Vec<u8>,\n}\n\nimpl HexCopyDecoder {\n    fn push<F>(&mut self, bytes: &[u8], mut consume: F) -> Result<(), WireError>\n    where\n        F: FnMut(String) -> Result<(), WireError>,\n    {\n        self.pending.extend_from_slice(bytes);\n        while let Some(newline) = self.pending.iter().position(|byte| *byte == b'\\n') {\n            let line: Vec<u8> = self.pending.drain(..=newline).collect();\n            let text = decode_hex(&line[..line.len() - 1])?;\n            consume(text)?;\n        }\n        Ok(())\n    }\n\n    fn finish(&self) -> Result<(), WireError> {\n        if self.pending.is_empty() {\n            Ok(())\n        } else {\n            Err(WireError::Protocol(\n                \"COPY OUT ended with a partial row\".into(),\n            ))\n        }\n    }\n}\n\nfn decode_hex(bytes: &[u8]) -> Result<String, WireError> {\n    if bytes.len() % 2 != 0 {\n        return Err(WireError::Protocol(\"odd-length hex COPY row\".into()));\n    }\n    let mut decoded = Vec::with_capacity(bytes.len() / 2);\n    for pair in bytes.chunks_exact(2) {\n        let high = hex_digit(pair[0])?;\n        let low = hex_digit(pair[1])?;\n        decoded.push((high << 4) | low);\n    }\n    String::from_utf8(decoded).map_err(|_| WireError::Protocol(\"non-UTF-8 JSON row\".into()))\n}\n\nfn hex_digit(byte: u8) -> Result<u8, WireError> {\n    match byte {\n        b'0'..=b'9' => Ok(byte - b'0'),\n        b'a'..=b'f' => Ok(byte - b'a' + 10),\n        b'A'..=b'F' => Ok(byte - b'A' + 10),\n        _ => Err(WireError::Protocol(\"invalid hex COPY row\".into())),\n    }\n}\n\nfn required(name: &str) -> Result<String, Box<dyn std::error::Error>> {\n    env::var(name).map_err(|_| format!(\"required environment variable {name} is not set\").into())\n}\n\nfn value(name: &str, default: &str) -> String {\n    env::var(name).unwrap_or_else(|_| default.to_owned())\n}\n\nfn field<'a>(\n    row: &'a [Option<String>],\n    index: usize,\n    name: &str,\n) -> Result<&'a str, Box<dyn std::error::Error>> {\n    row.get(index)\n        .and_then(Option::as_deref)\n        .ok_or_else(|| format!(\"missing {name}\").into())\n}\n\nfn single_value<'a>(\n    rows: &'a [Vec<Option<String>>],\n    operation: &str,\n) -> Result<&'a str, Box<dyn std::error::Error>> {\n    rows.first()\n        .and_then(|row| row.first())\n        .and_then(Option::as_deref)\n        .ok_or_else(|| format!(\"{operation} returned no value\").into())\n}\n\nfn sql_literal(value: &str) -> String {\n    format!(\"'{}'\", value.replace('\\'', \"''\"))\n}\n\nfn quote_identifier(value: &str) -> String {\n    format!(\"\\\"{}\\\"\", value.replace('\\\"', \"\\\"\\\"\"))\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    #[test]\n    fn qualified_names_are_quoted() {\n        let name = QualifiedName::parse(\"odd schema.a\\\"b\").unwrap();\n        assert_eq!(name.sql(), \"\\\"odd schema\\\".\\\"a\\\"\\\"b\\\"\");\n    }\n\n    #[test]\n    fn malformed_qualified_names_are_rejected() {\n        assert!(QualifiedName::parse(\"unqualified\").is_err());\n        assert!(QualifiedName::parse(\"a.b.c\").is_err());\n    }\n\n    #[test]\n    fn copy_rows_can_cross_wire_frames() {\n        let mut decoder = HexCopyDecoder::default();\n        let mut rows = Vec::new();\n        decoder\n            .push(b\"7b2261223a\", |row| {\n                rows.push(row);\n                Ok(())\n            })\n            .unwrap();\n        decoder\n            .push(b\"317d\\n7b2262223a226e5c5c6e227d\\n\", |row| {\n                rows.push(row);\n                Ok(())\n            })\n            .unwrap();\n        decoder.finish().unwrap();\n        assert_eq!(rows, [r#\"{\"a\":1}\"#, r#\"{\"b\":\"n\\\\n\"}\"#]);\n    }\n}\n"
+    },
+    "e1e54115ccb353fca039469d835ac97e8f362782c0d11877e8f84fcc1ac0904f": {
+      "path": "worker/src/staging_budget.rs",
+      "source": "//! Diagnostic hook injected only into a disposable initial-sync build.\nuse super::Config;\nuse lake_replication_worker::wire::{Client, Error};\nuse std::cell::RefCell;\nuse std::time::Duration;\n\nthread_local! {\n    static CLIENT: RefCell<Option<Client>> = const { RefCell::new(None) };\n}\n\npub fn admit(bytes: usize, config: &Config) -> Result<(), Error> {\n    let database = std::env::var(\"LAKE_DIAGNOSTIC_STAGING_DATABASE\")\n        .map_err(|_| Error::Protocol(\"diagnostic budget database is required\".into()))?;\n    let delay = CLIENT.with(|cell| {\n        let mut stored = cell.borrow_mut();\n        if stored.is_none() {\n            let mut client = Client::connect_secure(\n                &config.destination_address, &config.destination_user, &database, false,\n                config.destination_password.as_deref(), config.destination_tls.as_ref(),\n            )?;\n            client.set_read_timeout(Some(Duration::from_secs(6)))?;\n            client.simple_query(\"SET application_name='diagnostic_staging_budget'; SET statement_timeout='5s'; SET lock_timeout='2s'\")?;\n            *stored = Some(client);\n        }\n        let result = stored.as_mut().unwrap().simple_query(&format!(\n            \"SELECT staging_budget.reserve({bytes})::text\"));\n        match result {\n            Ok(rows) => rows.first().and_then(|r| r.first()).and_then(Option::as_ref)\n                .ok_or_else(|| Error::Protocol(\"budget returned no wait time\".into()))?\n                .parse::<f64>().map_err(|_| Error::Protocol(\"invalid budget wait time\".into())),\n            Err(error) => { *stored = None; Err(error) }\n        }\n    })?;\n    if !delay.is_finite() || !(0.0..=2.0).contains(&delay) {\n        return Err(Error::Protocol(\"budget wait exceeds diagnostic horizon\".into()));\n    }\n    // There is no open PostgreSQL transaction while sleeping. The supervisor\n    // can kill this child promptly; abandoned credit expires as time refills it.\n    std::thread::sleep(Duration::from_secs_f64(delay));\n    Ok(())\n}\n"
+    },
+    "735d460184ca46a738897c318a17b7f85616fb190b9e4c0a77b211bdb3a816a0": {
+      "path": "budget-installed.sql",
+      "source": "-- Disposable diagnostic coordinator, not an extension migration.\nCREATE SCHEMA staging_budget;\nREVOKE ALL ON SCHEMA staging_budget FROM PUBLIC;\nCREATE TABLE staging_budget.settings (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    rate_bytes_per_second bigint NOT NULL CHECK (rate_bytes_per_second >= 0),\n    burst_bytes bigint NOT NULL CHECK (burst_bytes > 0),\n    max_wait_seconds double precision NOT NULL CHECK (max_wait_seconds > 0)\n);\nINSERT INTO staging_budget.settings VALUES (true, 0, 262144, 2.0);\n-- Credit is ephemeral resource state. A database crash resets it to one burst;\n-- source rows/checkpoints remain governed by the unchanged production SQL.\nCREATE UNLOGGED TABLE staging_budget.credit (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    available_bytes double precision NOT NULL,\n    refilled_at timestamptz NOT NULL,\n    reserved_bytes bigint NOT NULL DEFAULT 0,\n    requests bigint NOT NULL DEFAULT 0,\n    sum_wait_seconds double precision NOT NULL DEFAULT 0,\n    max_wait_seconds double precision NOT NULL DEFAULT 0\n);\nCREATE FUNCTION staging_budget.reserve_at(p_bytes bigint, p_now timestamptz)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\n    bucket credit%ROWTYPE;\n    tokens double precision;\n    delay double precision;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    IF p_bytes <= 0 OR p_bytes > config.burst_bytes OR p_now IS NULL THEN\n        RAISE EXCEPTION 'request must fit the positive diagnostic burst size'\n            USING ERRCODE='22023';\n    END IF;\n    INSERT INTO credit(singleton,available_bytes,refilled_at)\n        VALUES(true,config.burst_bytes,p_now) ON CONFLICT DO NOTHING;\n    SELECT * INTO STRICT bucket FROM credit WHERE singleton FOR UPDATE;\n    IF config.rate_bytes_per_second=0 THEN\n        tokens:=config.burst_bytes;\n        delay:=0;\n    ELSE\n        tokens:=least(config.burst_bytes, bucket.available_bytes +\n            greatest(0,extract(epoch FROM p_now-bucket.refilled_at)) * config.rate_bytes_per_second);\n        tokens:=tokens-p_bytes;\n        delay:=greatest(0,-tokens/config.rate_bytes_per_second);\n        IF delay > config.max_wait_seconds THEN\n            RAISE EXCEPTION 'diagnostic budget reservation exceeds bounded wait horizon'\n                USING ERRCODE='55000';\n        END IF;\n    END IF;\n    UPDATE credit SET available_bytes=tokens,\n        refilled_at=greatest(p_now,bucket.refilled_at),\n        reserved_bytes=reserved_bytes+p_bytes, requests=requests+1,\n        sum_wait_seconds=sum_wait_seconds+delay,\n        max_wait_seconds=greatest(max_wait_seconds,delay)\n    WHERE singleton;\n    RETURN delay;\nEND;\n$$;\n-- Refresh the clock after obtaining the row lock. Queued requests must not\n-- reserve using a time sampled before another transaction's reservation.\nCREATE FUNCTION staging_budget.reserve(p_bytes bigint)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    INSERT INTO credit(singleton,available_bytes,refilled_at)\n        VALUES(true,config.burst_bytes,clock_timestamp()) ON CONFLICT DO NOTHING;\n    PERFORM 1 FROM credit WHERE singleton FOR UPDATE;\n    RETURN reserve_at(p_bytes,clock_timestamp());\nEND;\n$$;\nREVOKE ALL ON ALL FUNCTIONS IN SCHEMA staging_budget FROM PUBLIC;\n"
+    },
+    "bda440a4658b84de42c7dcff6e358e708e9d29ae0d4e16fd78f7d7f095dcdb6f": {
+      "path": "worker/src/staging_budget.rs",
+      "source": "//! Diagnostic hook injected only into a disposable initial-sync build.\nuse super::Config;\nuse lake_replication_worker::wire::{Client, Error};\nuse std::cell::RefCell;\nuse std::time::Duration;\n\nthread_local! {\n    static CLIENT: RefCell<Option<Client>> = const { RefCell::new(None) };\n}\n\npub fn admit(bytes: usize, config: &Config) -> Result<(), Error> {\n    let database = std::env::var(\"LAKE_DIAGNOSTIC_STAGING_DATABASE\")\n        .map_err(|_| Error::Protocol(\"diagnostic budget database is required\".into()))?;\n    let delay = CLIENT.with(|cell| {\n        let mut stored = cell.borrow_mut();\n        if stored.is_none() {\n            let mut client = Client::connect_named_secure(\n                &config.destination_address, &config.destination_user, &database, false, \"diagnostic_staging_budget\",\n                config.destination_password.as_deref(), config.destination_tls.as_ref(),\n            )?;\n            client.set_read_timeout(Some(Duration::from_secs(6)))?;\n            client.simple_query(\"SET statement_timeout='5s'; SET lock_timeout='2s'\")?;\n            *stored = Some(client);\n        }\n        let result = stored.as_mut().unwrap().simple_query(&format!(\n            \"SELECT staging_budget.reserve({bytes})::text\"));\n        match result {\n            Ok(rows) => rows.first().and_then(|r| r.first()).and_then(Option::as_ref)\n                .ok_or_else(|| Error::Protocol(\"budget returned no wait time\".into()))?\n                .parse::<f64>().map_err(|_| Error::Protocol(\"invalid budget wait time\".into())),\n            Err(error) => { *stored = None; Err(error) }\n        }\n    })?;\n    if !delay.is_finite() || !(0.0..=2.0).contains(&delay) {\n        return Err(Error::Protocol(\"budget wait exceeds diagnostic horizon\".into()));\n    }\n    // There is no open PostgreSQL transaction while sleeping. The supervisor\n    // can kill this child promptly; abandoned credit expires as time refills it.\n    std::thread::sleep(Duration::from_secs_f64(delay));\n    Ok(())\n}\n"
+    },
+    "e2dd87d139d467c0648d9fe20441740c4132236b79661a82ec3d5a1fa41d6428": {
+      "path": "budget-installed.sql",
+      "source": "-- Disposable diagnostic coordinator, not an extension migration.\nCREATE SCHEMA staging_budget;\nREVOKE ALL ON SCHEMA staging_budget FROM PUBLIC;\nCREATE TABLE staging_budget.settings (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    rate_bytes_per_second bigint NOT NULL CHECK (rate_bytes_per_second >= 0),\n    burst_bytes bigint NOT NULL CHECK (burst_bytes > 0),\n    max_wait_seconds double precision NOT NULL CHECK (max_wait_seconds > 0)\n);\nINSERT INTO staging_budget.settings VALUES (true, 25165824, 262144, 2.0);\n-- Credit is ephemeral resource state. A database crash resets it to one burst;\n-- source rows/checkpoints remain governed by the unchanged production SQL.\nCREATE UNLOGGED TABLE staging_budget.credit (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    available_bytes double precision NOT NULL,\n    refilled_at timestamptz NOT NULL,\n    first_reserved_at timestamptz NOT NULL,\n    reserved_bytes bigint NOT NULL DEFAULT 0,\n    requests bigint NOT NULL DEFAULT 0,\n    sum_wait_seconds double precision NOT NULL DEFAULT 0,\n    max_wait_seconds double precision NOT NULL DEFAULT 0\n);\nCREATE FUNCTION staging_budget.reserve_at(p_bytes bigint, p_now timestamptz)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\n    bucket credit%ROWTYPE;\n    tokens double precision;\n    delay double precision;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    IF p_bytes <= 0 OR p_bytes > config.burst_bytes OR p_now IS NULL THEN\n        RAISE EXCEPTION 'request must fit the positive diagnostic burst size'\n            USING ERRCODE='22023';\n    END IF;\n    INSERT INTO credit(singleton,available_bytes,refilled_at,first_reserved_at)\n        VALUES(true,config.burst_bytes,p_now,p_now) ON CONFLICT DO NOTHING;\n    SELECT * INTO STRICT bucket FROM credit WHERE singleton FOR UPDATE;\n    IF config.rate_bytes_per_second=0 THEN\n        tokens:=config.burst_bytes;\n        delay:=0;\n    ELSE\n        tokens:=least(config.burst_bytes, bucket.available_bytes +\n            greatest(0,extract(epoch FROM p_now-bucket.refilled_at)) * config.rate_bytes_per_second);\n        tokens:=tokens-p_bytes;\n        delay:=greatest(0,-tokens/config.rate_bytes_per_second);\n        IF delay > config.max_wait_seconds THEN\n            RAISE EXCEPTION 'diagnostic budget reservation exceeds bounded wait horizon'\n                USING ERRCODE='55000';\n        END IF;\n    END IF;\n    UPDATE credit SET available_bytes=tokens,\n        refilled_at=greatest(p_now,bucket.refilled_at),\n        reserved_bytes=reserved_bytes+p_bytes, requests=requests+1,\n        sum_wait_seconds=sum_wait_seconds+delay,\n        max_wait_seconds=greatest(max_wait_seconds,delay)\n    WHERE singleton;\n    RETURN delay;\nEND;\n$$;\n-- Refresh the clock after obtaining the row lock. Queued requests must not\n-- reserve using a time sampled before another transaction's reservation.\nCREATE FUNCTION staging_budget.reserve(p_bytes bigint)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    INSERT INTO credit(singleton,available_bytes,refilled_at,first_reserved_at)\n        VALUES(true,config.burst_bytes,clock_timestamp(),clock_timestamp()) ON CONFLICT DO NOTHING;\n    PERFORM 1 FROM credit WHERE singleton FOR UPDATE;\n    RETURN reserve_at(p_bytes,clock_timestamp());\nEND;\n$$;\nREVOKE ALL ON ALL FUNCTIONS IN SCHEMA staging_budget FROM PUBLIC;\n"
+    },
+    "55e10808b09bce9e5988b9efcd9313ebad4f5b8059902819d5c0fb437104380c": {
+      "path": "budget-installed.sql",
+      "source": "-- Disposable diagnostic coordinator, not an extension migration.\nCREATE SCHEMA staging_budget;\nREVOKE ALL ON SCHEMA staging_budget FROM PUBLIC;\nCREATE TABLE staging_budget.settings (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    rate_bytes_per_second bigint NOT NULL CHECK (rate_bytes_per_second >= 0),\n    burst_bytes bigint NOT NULL CHECK (burst_bytes > 0),\n    max_wait_seconds double precision NOT NULL CHECK (max_wait_seconds > 0)\n);\nINSERT INTO staging_budget.settings VALUES (true, 16777216, 262144, 2.0);\n-- Credit is ephemeral resource state. A database crash resets it to one burst;\n-- source rows/checkpoints remain governed by the unchanged production SQL.\nCREATE UNLOGGED TABLE staging_budget.credit (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    available_bytes double precision NOT NULL,\n    refilled_at timestamptz NOT NULL,\n    first_reserved_at timestamptz NOT NULL,\n    reserved_bytes bigint NOT NULL DEFAULT 0,\n    requests bigint NOT NULL DEFAULT 0,\n    sum_wait_seconds double precision NOT NULL DEFAULT 0,\n    max_wait_seconds double precision NOT NULL DEFAULT 0\n);\nCREATE FUNCTION staging_budget.reserve_at(p_bytes bigint, p_now timestamptz)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\n    bucket credit%ROWTYPE;\n    tokens double precision;\n    delay double precision;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    IF p_bytes <= 0 OR p_bytes > config.burst_bytes OR p_now IS NULL THEN\n        RAISE EXCEPTION 'request must fit the positive diagnostic burst size'\n            USING ERRCODE='22023';\n    END IF;\n    INSERT INTO credit(singleton,available_bytes,refilled_at,first_reserved_at)\n        VALUES(true,config.burst_bytes,p_now,p_now) ON CONFLICT DO NOTHING;\n    SELECT * INTO STRICT bucket FROM credit WHERE singleton FOR UPDATE;\n    IF config.rate_bytes_per_second=0 THEN\n        tokens:=config.burst_bytes;\n        delay:=0;\n    ELSE\n        tokens:=least(config.burst_bytes, bucket.available_bytes +\n            greatest(0,extract(epoch FROM p_now-bucket.refilled_at)) * config.rate_bytes_per_second);\n        tokens:=tokens-p_bytes;\n        delay:=greatest(0,-tokens/config.rate_bytes_per_second);\n        IF delay > config.max_wait_seconds THEN\n            RAISE EXCEPTION 'diagnostic budget reservation exceeds bounded wait horizon'\n                USING ERRCODE='55000';\n        END IF;\n    END IF;\n    UPDATE credit SET available_bytes=tokens,\n        refilled_at=greatest(p_now,bucket.refilled_at),\n        reserved_bytes=reserved_bytes+p_bytes, requests=requests+1,\n        sum_wait_seconds=sum_wait_seconds+delay,\n        max_wait_seconds=greatest(max_wait_seconds,delay)\n    WHERE singleton;\n    RETURN delay;\nEND;\n$$;\n-- Refresh the clock after obtaining the row lock. Queued requests must not\n-- reserve using a time sampled before another transaction's reservation.\nCREATE FUNCTION staging_budget.reserve(p_bytes bigint)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    INSERT INTO credit(singleton,available_bytes,refilled_at,first_reserved_at)\n        VALUES(true,config.burst_bytes,clock_timestamp(),clock_timestamp()) ON CONFLICT DO NOTHING;\n    PERFORM 1 FROM credit WHERE singleton FOR UPDATE;\n    RETURN reserve_at(p_bytes,clock_timestamp());\nEND;\n$$;\nREVOKE ALL ON ALL FUNCTIONS IN SCHEMA staging_budget FROM PUBLIC;\n"
+    },
+    "31d4b3f396a5ac90af0c80b7542e8429dd044bc0a6977642f49e1499c9f42416": {
+      "path": "budget-installed.sql",
+      "source": "-- Disposable diagnostic coordinator, not an extension migration.\nCREATE SCHEMA staging_budget;\nREVOKE ALL ON SCHEMA staging_budget FROM PUBLIC;\nCREATE TABLE staging_budget.settings (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    rate_bytes_per_second bigint NOT NULL CHECK (rate_bytes_per_second >= 0),\n    burst_bytes bigint NOT NULL CHECK (burst_bytes > 0),\n    max_wait_seconds double precision NOT NULL CHECK (max_wait_seconds > 0)\n);\nINSERT INTO staging_budget.settings VALUES (true, 0, 262144, 2.0);\n-- Credit is ephemeral resource state. A database crash resets it to one burst;\n-- source rows/checkpoints remain governed by the unchanged production SQL.\nCREATE UNLOGGED TABLE staging_budget.credit (\n    singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),\n    available_bytes double precision NOT NULL,\n    refilled_at timestamptz NOT NULL,\n    first_reserved_at timestamptz NOT NULL,\n    reserved_bytes bigint NOT NULL DEFAULT 0,\n    requests bigint NOT NULL DEFAULT 0,\n    sum_wait_seconds double precision NOT NULL DEFAULT 0,\n    max_wait_seconds double precision NOT NULL DEFAULT 0\n);\nCREATE FUNCTION staging_budget.reserve_at(p_bytes bigint, p_now timestamptz)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\n    bucket credit%ROWTYPE;\n    tokens double precision;\n    delay double precision;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    IF p_bytes <= 0 OR p_bytes > config.burst_bytes OR p_now IS NULL THEN\n        RAISE EXCEPTION 'request must fit the positive diagnostic burst size'\n            USING ERRCODE='22023';\n    END IF;\n    INSERT INTO credit(singleton,available_bytes,refilled_at,first_reserved_at)\n        VALUES(true,config.burst_bytes,p_now,p_now) ON CONFLICT DO NOTHING;\n    SELECT * INTO STRICT bucket FROM credit WHERE singleton FOR UPDATE;\n    IF config.rate_bytes_per_second=0 THEN\n        tokens:=config.burst_bytes;\n        delay:=0;\n    ELSE\n        tokens:=least(config.burst_bytes, bucket.available_bytes +\n            greatest(0,extract(epoch FROM p_now-bucket.refilled_at)) * config.rate_bytes_per_second);\n        tokens:=tokens-p_bytes;\n        delay:=greatest(0,-tokens/config.rate_bytes_per_second);\n        IF delay > config.max_wait_seconds THEN\n            RAISE EXCEPTION 'diagnostic budget reservation exceeds bounded wait horizon'\n                USING ERRCODE='55000';\n        END IF;\n    END IF;\n    UPDATE credit SET available_bytes=tokens,\n        refilled_at=greatest(p_now,bucket.refilled_at),\n        reserved_bytes=reserved_bytes+p_bytes, requests=requests+1,\n        sum_wait_seconds=sum_wait_seconds+delay,\n        max_wait_seconds=greatest(max_wait_seconds,delay)\n    WHERE singleton;\n    RETURN delay;\nEND;\n$$;\n-- Refresh the clock after obtaining the row lock. Queued requests must not\n-- reserve using a time sampled before another transaction's reservation.\nCREATE FUNCTION staging_budget.reserve(p_bytes bigint)\nRETURNS double precision LANGUAGE plpgsql\nSET search_path=pg_catalog,staging_budget AS $$\nDECLARE\n    config settings%ROWTYPE;\nBEGIN\n    SELECT * INTO STRICT config FROM settings;\n    INSERT INTO credit(singleton,available_bytes,refilled_at,first_reserved_at)\n        VALUES(true,config.burst_bytes,clock_timestamp(),clock_timestamp()) ON CONFLICT DO NOTHING;\n    PERFORM 1 FROM credit WHERE singleton FOR UPDATE;\n    RETURN reserve_at(p_bytes,clock_timestamp());\nEND;\n$$;\nREVOKE ALL ON ALL FUNCTIONS IN SCHEMA staging_budget FROM PUBLIC;\n"
+    },
+    "14e68761f212b98149d356f80ac59de9b3bb3d63b06275b3390aeb46a763f645": {
+      "path": "worker/src/staging_budget.rs",
+      "source": "//! Diagnostic hook injected only into a disposable initial-sync build.\nuse super::Config;\nuse lake_replication_worker::wire::{Client, Error};\nuse std::cell::RefCell;\nuse std::time::Duration;\n\nthread_local! {\n    static CLIENT: RefCell<Option<Client>> = const { RefCell::new(None) };\n}\n\npub fn admit(bytes: usize, config: &Config) -> Result<(), Error> {\n    let database = std::env::var(\"LAKE_DIAGNOSTIC_STAGING_DATABASE\")\n        .map_err(|_| Error::Protocol(\"diagnostic budget database is required\".into()))?;\n    let delay = CLIENT.with(|cell| {\n        let mut stored = cell.borrow_mut();\n        if stored.is_none() {\n            let mut client = Client::connect_named_secure(\n                &config.destination_address, &config.destination_user, &database, false, \"diagnostic_staging_budget\",\n                config.destination_password.as_deref(), config.destination_tls.as_ref(),\n            )?;\n            client.set_read_timeout(Some(Duration::from_secs(6)))?;\n            client.simple_query(\"SET statement_timeout='5s'; SET lock_timeout='2s'\")?;\n            *stored = Some(client);\n        }\n        let result = stored.as_mut().unwrap().simple_query(&format!(\n            \"SELECT staging_budget.reserve({bytes})::text\"));\n        match result {\n            Ok(rows) => rows.first().and_then(|r| r.first()).and_then(Option::as_ref)\n                .ok_or_else(|| Error::Protocol(\"budget returned no wait time\".into()))?\n                .parse::<f64>().map_err(|_| Error::Protocol(\"invalid budget wait time\".into())),\n            Err(error) => { *stored = None; Err(error) }\n        }\n    })?;\n    if !delay.is_finite() || !(0.0..=2.0).contains(&delay) {\n        return Err(Error::Protocol(\"budget wait exceeds diagnostic horizon\".into()));\n    }\n    // The coordinator committed and the destination append has not begun. The\n    // source COPY snapshot remains open. The supervisor can kill this child\n    // promptly; abandoned credit expires as time refills it.\n    std::thread::sleep(Duration::from_secs_f64(delay));\n    Ok(())\n}\n"
+    }
+  }
+}

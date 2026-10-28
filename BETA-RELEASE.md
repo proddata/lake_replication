@@ -56,7 +56,7 @@ intentional non-goal for this beta.
 
 ## Execution order
 
-1. Complete the [local contention investigation](docs/local-copy-contention-investigation.md): retain the two-CPU reproduction and pacing tradeoff, verify bounded receiver-test failure capture, and define a staging resource budget before another long native run. Keep the failed native performance gate; the AMD64 Docker/receiver hang remains unresolved.
+1. The [local investigation](docs/local-copy-contention-investigation.md) and [shared-budget prototype](docs/shared-staging-budget-prototype.md) are retained. Shared accounting and cancellation pass; a static 16 MiB/s limit helps two-CPU profiles but fails valid one-CPU lag checks. Define a capacity-aware policy/resource contract locally and investigate the interrupted-run engine OOM before another long native run. Keep the failed native gate; the AMD64 Docker/receiver hang remains unresolved.
 2. Qualify both native CI-built packages with all admission, lifecycle and upgrade lanes.
 3. Close G4 compatibility, G6 supply-chain review and the G7 physical/object-store recovery drill.
 4. Run the G3 24-hour release-candidate soak from the packaged build.

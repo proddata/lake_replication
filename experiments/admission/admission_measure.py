@@ -188,6 +188,10 @@ def fairness(args, variant, image, text, directory):
                         'echo "$f"; cat "/sys/fs/cgroup/$f"; done; df -k /tmp').stdout
                         for service in ('source','storage')}))
             trace.append(sample)
+            if getattr(args, 'abort_on_clock_step', False) and len(trace)>1:
+                origin=trace[0]['copy']['observed_epoch']-trace[0]['elapsed_seconds']
+                if abs(sample['copy']['observed_epoch']-sample['elapsed_seconds']-origin)>1:
+                    raise RuntimeError('clock discontinuity invalidates this local measurement')
             if not producer.is_alive() and all(row['published_transactions'] == args.stream_transactions for row in sample['streams']) and sample['copy']['state'] == 'streaming':
                 break
             stop.wait(.5)
