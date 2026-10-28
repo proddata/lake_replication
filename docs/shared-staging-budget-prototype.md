@@ -159,3 +159,8 @@ The next local policy comparison needs either pressure-aware aggregate control
 or an explicit, measured capacity/configuration contract, plus the independent
 resume/OOM investigation. No production worker/migration changed, no default
 rate was selected, and no new remote workflow was dispatched.
+
+
+Follow-up [streaming-only controls](streaming-only-capacity-baseline.md) pass
+on S2; S1 has one p95 finding and one passing repeat. This supports a further
+isolated pressure-aware experiment while keeping baseline variability explicit.

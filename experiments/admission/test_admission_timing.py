@@ -50,3 +50,11 @@ class AdmissionClockTests(unittest.TestCase):
         self.assertTrue(measure.fairness_timing_validation(case)['valid'])
         stepped=copy.deepcopy(case);stepped['trace'][1]['copy']['observed_epoch']+=570
         self.assertFalse(measure.fairness_timing_validation(stepped)['valid'])
+
+    def test_stream_only_observer_preserves_clock_audit_without_a_copy(self):
+        case=dict(trace=[dict(elapsed_seconds=5,copy=None,observer_epoch=1005),
+                         dict(elapsed_seconds=6,copy=None,observer_epoch=1006)],
+                  source_transactions=[[dict(insert_started_seconds=0,commit_epoch=1000.02)]])
+        self.assertTrue(measure.fairness_timing_validation(case)['valid'])
+        case['trace'][1]['observer_epoch']+=570
+        self.assertFalse(measure.fairness_timing_validation(case)['valid'])

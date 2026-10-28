@@ -98,13 +98,14 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cases',nargs='+',choices=['locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'],default=['locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'])
     parser.add_argument('--old-archive',type=Path,default=ROOT/f'dist/release/lake_replication-0.1.0-beta.2-linux-{q.native_architecture()}.tar.gz')
-    parser.add_argument('--fairness-copies',type=int,choices=[1,4],default=4,help='One-copy diagnostic control or the unchanged four-copy release case')
+    parser.add_argument('--fairness-copies',type=int,choices=[0,1,4],default=4,help='Zero/one-copy diagnostic control or the unchanged four-copy release case')
     args=parser.parse_args()
     root=ROOT/'.qualification'/(q.RUN+'_production_admission');root.mkdir(parents=True);q.RESULTS=root
     q.PROJECT+='-production-admission';q.SOURCE_IMAGE+='-production-admission';q.DESTINATION_IMAGE+='-production-admission'
     q.ENV.update(QUALIFICATION_SOURCE_IMAGE=q.SOURCE_IMAGE,QUALIFICATION_DESTINATION_IMAGE=q.DESTINATION_IMAGE)
     result=dict(status='running',scope=__doc__,cases=[],parameters={**vars(args),'old_archive':str(args.old_archive)})
     paths=[Path(__file__),Path(__file__).with_name('pool_cases.py'),ROOT/'experiments/admission/operational_probe.py',ROOT/'experiments/admission/reserved_probe.py',ROOT/'experiments/admission/admission_measure.py',ROOT/'experiments/admission/compare.py',ROOT/'experiments/admission/sample.py',ROOT/'experiments/admission/scale.py',ROOT/'tests/qualification/probe.py',ROOT/'Cargo.lock',ROOT/'worker/Cargo.toml',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),*[ROOT/'extensions/lake_replication'/name for name in ['lake_replication.c','lake_replication.control','Makefile','build-extension-sql.sh']]]
+    paths.extend(getattr(m, 'diagnostic_sources', []))
     result['inputs']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     for path in paths:
         snapshot=root/'sources'/path.relative_to(ROOT);snapshot.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,snapshot)

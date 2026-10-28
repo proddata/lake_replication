@@ -39,15 +39,19 @@ def timing_validation(work, tolerance_seconds=1.0):
     return dict(valid=not errors,tolerance_seconds=tolerance_seconds,errors=errors[:8])
 
 
+def observer_epoch(sample):
+    return sample['observer_epoch'] if 'observer_epoch' in sample else sample['copy']['observed_epoch']
+
+
 def fairness_timing_validation(case, tolerance_seconds=1.0):
     trace=case['trace']
     if not trace:
         return dict(valid=False,errors=['no timing trace'])
-    origin=trace[0]['copy']['observed_epoch']-trace[0]['elapsed_seconds']
+    origin=observer_epoch(trace[0])-trace[0]['elapsed_seconds']
     errors=[]
     for sample in trace:
-        if abs(sample['copy']['observed_epoch']-origin-sample['elapsed_seconds'])>tolerance_seconds:
-            errors.append('copy observer wall clock differs from monotonic trace')
+        if abs(observer_epoch(sample)-origin-sample['elapsed_seconds'])>tolerance_seconds:
+            errors.append('observer wall clock differs from monotonic trace')
     for stream in case['source_transactions']:
         for index,row in enumerate(stream):
             end=stream[index+1]['insert_started_seconds'] if index+1<len(stream) else trace[-1]['elapsed_seconds']
@@ -75,12 +79,16 @@ def fairness(args, variant, image, text, directory):
     q.ENV['QUALIFICATION_DESTINATION_IMAGE'] = image
     bulk_copies = getattr(args, 'bulk_copies', 1)
     admission_view = getattr(args, 'admission_view', 'lake_replication.prototype_writer_admission')
-    copy_names = ['fair_copy'] + [f'fair_copy_{i}' for i in range(1, bulk_copies)]
-    result = dict(variant=variant, image=image, copy_rows=args.copy_rows, bulk_copies=bulk_copies,
+    copy_names = ['fair_copy' if i == 0 else f'fair_copy_{i}' for i in range(bulk_copies)]
+    result = dict(streams=[], variant=variant, image=image, copy_rows=args.copy_rows, bulk_copies=bulk_copies,
         stream_transactions=args.stream_transactions, stream_rows_per_transaction=20,
         offered_interval_ms=500, observer_interval_ms=500,
         limits=dict(p95_publication_ms=2000, max_publication_gap_seconds=5,
                     min_commits_during_copy=5, catchup_seconds=5, copy_timeout_seconds=180))
+    if not bulk_copies:
+        result.update(workload='streaming_only', copy_rows=0)
+        for key in ('min_commits_during_copy', 'copy_timeout_seconds'):
+            del result['limits'][key]
     clients = []
     producer = None
     stop = threading.Event()
@@ -103,15 +111,15 @@ def fairness(args, variant, image, text, directory):
                 'CREATE PUBLICATION fair_copy_pub FOR TABLE fair_big; GRANT SELECT ON fair_big TO lake_source')
         # Dataset preparation precedes all measured slots. The optional old
         # ordering retains a separate empty-filtered-stream receiver reproducer.
-        if not args.seed_after_subscriptions:
+        if bulk_copies and not args.seed_after_subscriptions:
             seed_big()
         for i, db in enumerate(names):
             source.query(f'CREATE TABLE fair_items_{i}(id bigint PRIMARY KEY,tx integer,payload text); '
                 f'CREATE PUBLICATION fair_pub_{i} FOR TABLE fair_items_{i}; GRANT SELECT ON fair_items_{i} TO lake_source')
             q.sql('destination', db, f"CREATE SUBSCRIPTION fair_sub_{i} CONNECTION '{connection}' PUBLICATION fair_pub_{i} WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
-            q.check(db + ' is streaming before large copy', q.wait_for('destination', db,
+            q.check(db + (' is streaming before large copy' if bulk_copies else ' is streaming before measurement'), q.wait_for('destination', db,
                 f"SELECT state FROM lake_replication.subscriptions WHERE subscription_name='fair_sub_{i}'", 'streaming'), 'streaming')
-        if args.seed_after_subscriptions:
+        if bulk_copies and args.seed_after_subscriptions:
             seed_big()
         destinations = [c.Psql('destination', db) for db in names]
         copies = [c.Psql('destination', db) for db in copy_names]
@@ -145,22 +153,35 @@ def fairness(args, variant, image, text, directory):
             if errors:
                 raise RuntimeError(errors[0])
             sample = dict(elapsed_seconds=time.monotonic() - started, streams=[])
-            for dest in destinations:
-                values = dest.query("SELECT count(*),extract(epoch FROM clock_timestamp()) FROM lake_replication.transactions WHERE state='published'")[0].split('|')
-                sample['streams'].append(dict(published_transactions=int(values[0]), observed_epoch=float(values[1])))
+            for stream_index, dest in enumerate(destinations):
+                pressure = getattr(args, 'pressure_observer', None)
+                if pressure:
+                    known_commits = list(commits[stream_index])
+                    values = dest.query(pressure.SQL)[0].split('|')
+                    sample['streams'].append(pressure.sample(values, known_commits))
+                else:
+                    values = dest.query("SELECT count(*),extract(epoch FROM clock_timestamp()) FROM lake_replication.transactions WHERE state='published'")[0].split('|')
+                    sample['streams'].append(dict(published_transactions=int(values[0]), observed_epoch=float(values[1])))
                 diagnostic=dest.query("SELECT coalesce(last_error,'') FROM lake_replication.service_status")
                 if diagnostic and 'has no changes' in diagnostic[0] and 'streamed transaction' in diagnostic[0]:
                     result['receiver_error']=diagnostic[0]
                     raise RuntimeError('empty filtered streamed transaction prevents receiver progress')
+            if getattr(args, 'capture_receiver_progress', False):
+                sample['receiver_progress'] = json.loads(monitor.query(
+                    "SELECT coalesce(jsonb_agg(s),'[]'::jsonb) FROM receiver_progress.snapshots() s")[0])
             sample['copies'] = []
             for copy in copies:
                 values = copy.query("SELECT coalesce((SELECT state FROM lake_replication.subscriptions WHERE subscription_name LIKE 'fair_copy_sub%'),'absent'),coalesce(max(rows_copied),0),coalesce(min(extract(epoch FROM started_at)),0),coalesce(max(extract(epoch FROM pg_xact_commit_timestamp(xmin))),0),extract(epoch FROM clock_timestamp()) FROM lake_replication.initial_copies")[0].split('|')
                 sample['copies'].append(dict(state=values[0], rows_copied=int(values[1]), started_epoch=float(values[2]), last_row_commit_epoch=float(values[3]), observed_epoch=float(values[4])))
-            sample['copy'] = dict(state='streaming' if all(x['state']=='streaming' for x in sample['copies']) else 'copying',
-                rows_copied=sum(x['rows_copied'] for x in sample['copies']),
-                started_epoch=min(x['started_epoch'] for x in sample['copies']),
-                last_row_commit_epoch=max(x['last_row_commit_epoch'] for x in sample['copies']),
-                observed_epoch=max(x['observed_epoch'] for x in sample['copies']))
+            sample['observer_epoch'] = max(x['observed_epoch'] for x in sample['streams'])
+            sample['copy'] = None
+            if bulk_copies:
+                sample['copy'] = dict(state='streaming' if all(x['state']=='streaming' for x in sample['copies']) else 'copying',
+                    rows_copied=sum(x['rows_copied'] for x in sample['copies']),
+                    started_epoch=min(x['started_epoch'] for x in sample['copies']),
+                    last_row_commit_epoch=max(x['last_row_commit_epoch'] for x in sample['copies']),
+                    observed_epoch=max(x['observed_epoch'] for x in sample['copies']))
+                sample['observer_epoch'] = sample['copy']['observed_epoch']
             if bulk_copies > 1:
                 sample['active_copy_publications'] = int(monitor.query("SELECT count(*) FROM pg_stat_activity WHERE state='active' AND query LIKE 'SELECT lake_replication.finish_initial_sync_group(%'")[0])
             if variant in ('bounded', 'reserved', 'bulk_only'):
@@ -189,21 +210,23 @@ def fairness(args, variant, image, text, directory):
                         for service in ('source','storage')}))
             trace.append(sample)
             if getattr(args, 'abort_on_clock_step', False) and len(trace)>1:
-                origin=trace[0]['copy']['observed_epoch']-trace[0]['elapsed_seconds']
-                if abs(sample['copy']['observed_epoch']-sample['elapsed_seconds']-origin)>1:
+                origin=observer_epoch(trace[0])-trace[0]['elapsed_seconds']
+                if abs(observer_epoch(sample)-sample['elapsed_seconds']-origin)>1:
                     raise RuntimeError('clock discontinuity invalidates this local measurement')
-            if not producer.is_alive() and all(row['published_transactions'] == args.stream_transactions for row in sample['streams']) and sample['copy']['state'] == 'streaming':
+            if not producer.is_alive() and all(row['published_transactions'] == args.stream_transactions for row in sample['streams']) and (not bulk_copies or sample['copy']['state'] == 'streaming'):
                 break
             stop.wait(.5)
         else:
             raise TimeoutError('copy/streaming did not finish within the bounded observation window')
         producer.join(timeout=10)
-        copy_start = trace[-1]['copy']['started_epoch']
-        copy_end = trace[-1]['copy']['last_row_commit_epoch']
-        if not (0 < copy_start < copy_end):
-            raise AssertionError('no valid measured initial-copy interval')
-        result.update(copy_start_epoch=copy_start, copy_commit_epoch=copy_end,
-            copy_elapsed_seconds=copy_end-copy_start, streams=[], source_transactions=commits)
+        copy_start = copy_end = None
+        if bulk_copies:
+            copy_start = trace[-1]['copy']['started_epoch']
+            copy_end = trace[-1]['copy']['last_row_commit_epoch']
+            if not (0 < copy_start < copy_end):
+                raise AssertionError('no valid measured initial-copy interval')
+            result.update(copy_start_epoch=copy_start, copy_commit_epoch=copy_end,
+                copy_elapsed_seconds=copy_end-copy_start, streams=[], source_transactions=commits)
         for i, dest in enumerate(destinations):
             published = dest.query("SELECT xid::text,extract(epoch FROM pg_xact_commit_timestamp(xmin)) FROM lake_replication.transactions WHERE state='published' ORDER BY xid")
             mapping = {int(row.split('|')[0]): float(row.split('|')[1]) for row in published}
@@ -212,7 +235,7 @@ def fairness(args, variant, image, text, directory):
             points = [dict(**tx, publication_commit_epoch=mapping[tx['xid']], lag_ms=1000*(mapping[tx['xid']]-tx['commit_epoch'])) for tx in commits[i]]
             if any(tx['lag_ms'] < 0 for tx in points):
                 raise AssertionError('negative commit lag')
-            during = [tx for tx in points if copy_start <= tx['publication_commit_epoch'] <= copy_end]
+            during = [tx for tx in points if copy_start <= tx['publication_commit_epoch'] <= copy_end] if bulk_copies else None
             ordered = sorted(tx['publication_commit_epoch'] for tx in points)
             # Boundaries include first source commit and the last publication;
             # the offered source is continuously active in between, then drains.
@@ -223,13 +246,15 @@ def fairness(args, variant, image, text, directory):
             lateness = max(tx['insert_started_seconds']-(tx['transaction']-1)*.5 for tx in points)
             summary = dict(database=names[i], transactions=points,
                 p95_publication_ms=p95, max_publication_gap_seconds=max(gaps),
-                commits_during_copy=len(during), catchup_seconds=catchup,
+                commits_during_copy=len(during) if during is not None else None, catchup_seconds=catchup,
                 source_max_schedule_lateness_seconds=lateness)
             summary['checks'] = dict(p95_below_two_seconds=p95<2000,
                 max_gap_within_five_seconds=max(gaps)<=5,
-                at_least_five_commits_during_copy=len(during)>=5,
+                at_least_five_commits_during_copy=len(during)>=5 if during is not None else None,
                 catchup_within_five_seconds=catchup<=5,
                 source_schedule_within_one_interval=lateness<=.5)
+            if not bulk_copies:
+                del summary['checks']['at_least_five_commits_during_copy']
             result['streams'].append(summary)
             expected = args.stream_transactions*20
             actual = dest.query(f"SELECT count(*),count(DISTINCT id),bool_and((id>tx::bigint*20 AND id<=(tx::bigint+1)*20 AND tx BETWEEN 1 AND {args.stream_transactions} AND payload=repeat('x',128)) IS TRUE) FROM fair_items_{i}")[0]
@@ -238,10 +263,12 @@ def fairness(args, variant, image, text, directory):
         for i, copy in enumerate(copies):
             q.check(f'large copy {i} exact final Iceberg rows', copy.query("SELECT count(*),count(DISTINCT id),min(id),max(id),sum(id),bool_and(payload=repeat('b',128)) FROM fair_big")[0], f'{n}|{n}|1|{n}|{n*(n+1)//2}|t')
         result['after'] = s.inventory()
-        result['checks'] = dict(all_stream_targets_pass=all(all(row['checks'].values()) for row in result['streams']),
-            copy_within_three_minutes=copy_end-copy_start<=180,
-            copy_progress_observed=sum(sample['copy']['rows_copied']>0 and sample['copy']['state']!='streaming' for sample in trace)>=2,
-            waiting_observed=any(any(row['admission_state']=='waiting_for_writer' for row in sample.get('admission',[])) for sample in trace) if variant in ('bounded','reserved','bulk_only') and getattr(args, 'require_queue', True) else True)
+        result['checks'] = dict(all_stream_targets_pass=all(all(row['checks'].values()) for row in result['streams']))
+        if bulk_copies:
+            result['checks'].update(
+                copy_within_three_minutes=copy_end-copy_start<=180,
+                copy_progress_observed=sum(sample['copy']['rows_copied']>0 and sample['copy']['state']!='streaming' for sample in trace)>=2,
+                waiting_observed=any(any(row['admission_state']=='waiting_for_writer' for row in sample.get('admission',[])) for sample in trace) if variant in ('bounded','reserved','bulk_only') and getattr(args, 'require_queue', True) else True)
         result['status'] = 'passed' if all(result['checks'].values()) else 'finding'
         if bulk_copies > 1:
             result['max_active_copy_publications'] = max(x['active_copy_publications'] for x in trace)

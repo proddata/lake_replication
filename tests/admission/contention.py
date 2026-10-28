@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Local CPU-constrained staging diagnostics, not release qualification.
 
-The default uses the archive unchanged. Optional modes add a per-copy pause
-wrapper or an initial-sync Rust overlay with a shared byte coordinator.
+The default uses the archive unchanged. Optional modes add a per-copy pause,
+a shared staging byte coordinator, or receiver progress snapshots.
 Production sources and migrations are never edited by this driver.
 """
 import argparse
@@ -19,13 +19,16 @@ def main():
     root=Path(__file__).resolve().parents[2]
     driver_source=Path(__file__).read_bytes()
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--copies',type=int,choices=[1,4],default=4)
+    parser.add_argument('--copies',type=int,choices=[0,1,4],default=4)
     parser.add_argument('--cpuset',default='0-1',help='Shared source/destination/engine/storage CPU affinity')
     parser.add_argument('--source-cpuset',help='Optional separate source CPU affinity for topology controls')
     parser.add_argument('--storage-cpuset',help='Optional separate storage CPU affinity for topology controls')
     parser.add_argument('--budget-mib',type=int,help='Isolated shared byte-budget prototype; zero measures coordinator overhead only')
     parser.add_argument('--burst-kib',type=int,default=256,help='Shared diagnostic burst and maximum chunk size')
     parser.add_argument('--budget-operations',action='store_true',help='Run deterministic and cross-database budget checks before measurement')
+    parser.add_argument('--receiver-operations',action='store_true',help='Run receiver progress lifecycle checks before measurement')
+    parser.add_argument('--receiver-progress',action='store_true',help='Build isolated receiver progress telemetry; requires stream pressure observation')
+    parser.add_argument('--capture-stream-pressure',action='store_true',help='Compare destination queues against the fixture commit prefix; diagnostic only')
     parser.add_argument('--pause-ms',type=int,default=0,help='Experimental pause after each 1000-row chunk; zero uses the unchanged image')
     args=parser.parse_args()
     for value in (args.cpuset,args.source_cpuset,args.storage_cpuset):
@@ -44,6 +47,12 @@ def main():
         parser.error('choose shared budget or per-copy pause, not both')
     if args.budget_operations and args.budget_mib is None:
         parser.error('budget-operations requires budget-mib')
+    if args.copies == 0 and (args.budget_mib is not None or args.pause_ms):
+        parser.error('streaming-only control cannot include copy pacing')
+    if args.receiver_progress and (not args.capture_stream_pressure or args.budget_mib is not None or args.pause_ms):
+        parser.error('receiver-progress requires capture-stream-pressure and cannot combine with pacing overlays')
+    if args.receiver_operations and not args.receiver_progress:
+        parser.error('receiver-operations requires receiver-progress')
     pause=args.pause_ms
     spec=importlib.util.spec_from_file_location('production_probe',root/'tests/admission/probe.py')
     p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
@@ -57,10 +66,24 @@ def main():
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
         budget=module.Prototype(p.q,root,args.budget_mib,args.burst_kib)
 
+    receiver=None
+    if args.receiver_progress:
+        spec=importlib.util.spec_from_file_location('receiver_progress',Path(__file__).with_name('receiver_progress.py'))
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        receiver=module.Prototype(p.q,root)
+
     def compose(*values,**kwargs):
+        if values and values[0]=='down' and receiver and receiver.installed and not receiver.captured:
+            receiver.capture()
         if values and values[0]=='down' and budget and budget.installed and not budget.captured:
             budget.capture()
         result=original_compose(*values,**kwargs)
+        if values and values[0]=='up' and receiver and not receiver.installed:
+            receiver.install()
+            if args.receiver_operations:
+                spec=importlib.util.spec_from_file_location('receiver_operations',Path(__file__).with_name('receiver_operations.py'))
+                operations=importlib.util.module_from_spec(spec);spec.loader.exec_module(operations)
+                operations.run(receiver,p.c)
         if values and values[0]=='up' and budget and not budget.installed:
             budget.install()
             if args.budget_operations:
@@ -69,6 +92,11 @@ def main():
 
     def fairness(options,*values,**kwargs):
         options.abort_on_clock_step=True
+        options.capture_receiver_progress=bool(receiver)
+        if args.capture_stream_pressure:
+            spec=importlib.util.spec_from_file_location('pressure',Path(__file__).with_name('pressure.py'))
+            pressure=importlib.util.module_from_spec(spec);spec.loader.exec_module(pressure)
+            options.pressure_observer=pressure
         return original_fairness(options,*values,**kwargs)
 
     def compose_text():
@@ -79,6 +107,9 @@ def main():
 
     def build_images(archive,context):
         original_build(archive,context)
+        if receiver:
+            receiver.build()
+            return
         if budget:
             budget.build()
             return
@@ -90,14 +121,34 @@ def main():
             (directory/'Dockerfile').write_text('FROM '+p.q.DESTINATION_IMAGE+'\nUSER root\nRUN mv /usr/local/bin/lake-replication-initial-sync /usr/local/bin/lake-replication-initial-sync-unpaced\nCOPY --chmod=0755 initial-sync /usr/local/bin/lake-replication-initial-sync\n')
             p.q.command(['docker','build','-t',p.q.DESTINATION_IMAGE,str(directory)],timeout=300)
 
+    p.m.diagnostic_sources=[Path(__file__).with_name('pressure.py')] if args.capture_stream_pressure else []
+    if receiver:
+        p.m.diagnostic_sources.extend(root/'tests/admission'/name for name in ['receiver_operations.py','receiver_results.py'])
+        p.m.diagnostic_sources.extend(root/'tests/admission'/name for name in receiver.inputs)
     p.m.compose_text=compose_text
     p.m.fairness=fairness
     p.q.build_images=build_images
     p.q.compose=compose
     sys.argv=[sys.argv[0],'--cases','fairness','--fairness-copies',str(args.copies)]
     code=p.main()
-    metadata={'scope':__doc__,'image_overlay':pause>0 or budget is not None,'pause_ms_per_1000_row_chunk':pause,'service_cpu_affinity':affinity,
+    metadata={'scope':__doc__,'image_overlay':pause>0 or budget is not None or receiver is not None,'pause_ms_per_1000_row_chunk':pause,'service_cpu_affinity':affinity,
+              'capture_stream_pressure':args.capture_stream_pressure,
               'driver_sha256':hashlib.sha256(driver_source).hexdigest()}
+    if receiver:
+        metadata['receiver_progress']=receiver.metadata()
+    receiver_audit=None
+    receiver_analysis_source=None
+    if receiver:
+        spec=importlib.util.spec_from_file_location('receiver_results',Path(__file__).with_name('receiver_results.py'))
+        analysis=importlib.util.module_from_spec(spec);spec.loader.exec_module(analysis)
+        receiver_analysis_source=hashlib.sha256(Path(analysis.__file__).read_bytes()).hexdigest()
+        case_path=p.q.RESULTS/'fairness/results.json'
+        observed=json.loads(case_path.read_text()) if case_path.exists() else {}
+        observed['diagnostic']=metadata
+        receiver_audit=analysis.audit(observed)
+        metadata['receiver_progress']['audit']=receiver_audit
+        print('RECEIVER AUDIT', 'passed' if receiver_audit['valid'] else 'failed',flush=True)
+        if not receiver_audit['valid']:code=1
     audit=None
     analysis_source=None
     if budget:
@@ -119,13 +170,17 @@ def main():
         if not path.exists():
             continue
         data=json.loads(path.read_text());data['diagnostic']=metadata
-        if audit is not None and not audit['valid']:
+        if (audit is not None and not audit['valid']) or (receiver_audit is not None and not receiver_audit['valid']):
             data['status']='error'
         data['scope']=__doc__;path.write_text(json.dumps(data,indent=2,sort_keys=True)+'\n')
     if audit is not None and (p.q.RESULTS/'fairness/results.json').exists():
         audited={**audit,'analysis_source_sha256':analysis_source,
             'raw_results_sha256':hashlib.sha256((p.q.RESULTS/'fairness/results.json').read_bytes()).hexdigest()}
         (p.q.RESULTS/'fairness/budget-analysis.json').write_text(json.dumps(audited,indent=2)+'\n')
+    if receiver_audit is not None and (p.q.RESULTS/'fairness/results.json').exists():
+        result={**receiver_audit,'analysis_source_sha256':receiver_analysis_source,
+            'raw_results_sha256':hashlib.sha256((p.q.RESULTS/'fairness/results.json').read_bytes()).hexdigest()}
+        (p.q.RESULTS/'fairness/receiver-audit.json').write_text(json.dumps(result,indent=2)+'\n')
     (p.q.RESULTS/'diagnostic-driver.py').write_bytes(driver_source)
     return code
 
