@@ -169,6 +169,9 @@ def fairness(args, variant, image, text, directory):
             if getattr(args, 'capture_receiver_progress', False):
                 sample['receiver_progress'] = json.loads(monitor.query(
                     "SELECT coalesce(jsonb_agg(s),'[]'::jsonb) FROM receiver_progress.snapshots() s")[0])
+            if getattr(args, 'capture_staging_gate', False):
+                sample['staging_gate'] = json.loads(monitor.query(
+                    "SELECT coalesce(jsonb_agg(s),'[]'::jsonb) FROM staging_gate.activity s")[0])
             sample['copies'] = []
             for copy in copies:
                 values = copy.query("SELECT coalesce((SELECT state FROM lake_replication.subscriptions WHERE subscription_name LIKE 'fair_copy_sub%'),'absent'),coalesce(max(rows_copied),0),coalesce(min(extract(epoch FROM started_at)),0),coalesce(max(extract(epoch FROM pg_xact_commit_timestamp(xmin))),0),extract(epoch FROM clock_timestamp()) FROM lake_replication.initial_copies")[0].split('|')
@@ -197,6 +200,7 @@ def fairness(args, variant, image, text, directory):
                 activity = json.loads(monitor.query("SELECT coalesce(jsonb_agg(t),'[]'::jsonb) FROM ("
                     "SELECT backend_type,wait_event_type,wait_event,CASE "
                     "WHEN query LIKE 'SELECT lake_replication.append_initial_copy_rows%' THEN 'copy_staging' "
+                    "WHEN query LIKE '%SELECT staging_gate.admit();%' THEN 'copy_staging_transaction' "
                     "WHEN query LIKE 'SELECT lake_replication.finish_initial_sync_group%' THEN 'copy_publication' "
                     "WHEN query LIKE 'SELECT lake_replication.publish_insert_batch%' THEN 'stream_publication' "
                     "WHEN query LIKE 'SELECT lake_replication.apply_change_run%' THEN 'stream_apply' "

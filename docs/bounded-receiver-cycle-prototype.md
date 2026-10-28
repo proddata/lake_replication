@@ -136,3 +136,11 @@ Before promotion, also enforce a managed byte/count admission contract and test
 slow publication, short source timeouts, concurrent subscriptions, stop/drop,
 crash recovery and both native architectures. The earlier interrupted-run OOM
 and the isolated control's transient receiver error remain open findings.
+
+
+The follow-up [staging admission experiment](staging-gate-prototype.md) now
+passes repeated shared-two-CPU runs and one single-CPU sensitivity run with
+this bounded receiver. Its accounting control and original-lifetime comparison
+retain failures. It also exposes and addresses a disconnected-backend lock-wait
+cleanup gap in the isolated append transaction. Production promotion remains
+separate from these prototype results.

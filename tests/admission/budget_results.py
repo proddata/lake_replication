@@ -6,21 +6,25 @@ import json
 from pathlib import Path
 
 
-def audit(case):
-    budget=case['diagnostic']['shared_byte_budget']
-    stats=budget['stats']
-    state=stats.get('credit') or {}
-    rows,copies=case['copy_rows'],case['bulk_copies']
+def expected_accounting(rows,copies):
     # PG jsonb::text uses these separators for the fixed id/payload fixture.
     base=len(json.dumps({'id':0,'payload':'b'*128}))-1
     digits=sum((min(rows,10**width-1)-10**(width-1)+1)*width
                for width in range(1,len(str(rows))+1))
     chunks=(rows+999)//1000
     expected_bytes=copies*(rows*base+digits+rows+chunks)
+    return copies*chunks,expected_bytes
+
+
+def audit(case):
+    budget=case['diagnostic']['shared_byte_budget']
+    stats=budget['stats']
+    state=stats.get('credit') or {}
+    requests,expected_bytes=expected_accounting(case['copy_rows'],case['bulk_copies'])
     checks={'stable_measurement_clock':case.get('timing_validation',{}).get('valid',False),
             'stats_captured':not stats.get('error') and bool(state),
             'worker_logs_captured':bool(stats.get('worker_log_sha256')),
-            'all_chunks_reserved_once':state.get('requests')==copies*chunks,
+            'all_chunks_reserved_once':state.get('requests')==requests,
             'exact_serialized_bytes_reserved':state.get('reserved_bytes')==expected_bytes,
             'bounded_reservation_wait':0<=state.get('max_wait_seconds',float('inf'))<=2.0}
     rate=budget['rate_bytes_per_second']
@@ -43,7 +47,7 @@ def audit(case):
     else:
         checks['one_aggregate_reservation_envelope']=False
     return {'valid':all(checks.values()),'checks':checks,'expected_bytes':expected_bytes,
-            'expected_requests':copies*chunks,'reservation_envelope':envelope,
+            'expected_requests':requests,'reservation_envelope':envelope,
             'scope':'Eligibility reservations, not a hard instantaneous backend-write rate cap'}
 
 

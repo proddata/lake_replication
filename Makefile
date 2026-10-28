@@ -162,7 +162,7 @@ check:
 	python3 -m py_compile tests/publisher/probe.py
 	python3 -m py_compile tests/mutations/probe.py
 	rustfmt --edition 2024 --check tests/admission/staging_budget.rs tests/admission/receiver_progress.rs tests/admission/cycle_timing.rs
-	python3 -m py_compile tests/admission/probe.py tests/admission/pool_cases.py tests/admission/contention.py tests/admission/staging_budget.py tests/admission/budget_operations.py tests/admission/budget_results.py tests/admission/pressure.py tests/admission/receiver_progress.py tests/admission/receiver_operations.py tests/admission/receiver_results.py tests/admission/cycle_results.py
+	python3 -m py_compile tests/admission/probe.py tests/admission/pool_cases.py tests/admission/contention.py tests/admission/staging_budget.py tests/admission/budget_operations.py tests/admission/budget_results.py tests/admission/pressure.py tests/admission/receiver_progress.py tests/admission/receiver_operations.py tests/admission/receiver_results.py tests/admission/cycle_results.py tests/admission/staging_gate.py tests/admission/staging_gate_operations.py tests/admission/staging_gate_results.py
 	python3 -m py_compile tests/lifecycle/probe.py tests/lifecycle/cases.py tests/lifecycle/faults.py tests/lifecycle/upgrade.py
 	python3 -m py_compile tests/streaming/probe.py tests/streaming/empty_filtered.py
 	python3 -m unittest discover -s tests/streaming -p 'test_*.py'

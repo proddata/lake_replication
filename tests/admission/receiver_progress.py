@@ -9,12 +9,13 @@ SQL = "SELECT coalesce(jsonb_agg(s),'[]'::jsonb) FROM receiver_progress.snapshot
 
 
 class Prototype:
-    def __init__(self,q,root,cycle_timing=False,receiver_batch=1):
+    def __init__(self,q,root,cycle_timing=False,receiver_batch=1,staging_gate=None):
         if receiver_batch not in (1,64) or (receiver_batch>1 and not cycle_timing):
             raise ValueError('bounded receiver mode requires cycle timing and a supported transaction limit')
         self.q,self.root=q,root
         self.cycle_timing=cycle_timing
         self.receiver_batch=receiver_batch
+        self.staging_gate=staging_gate
         self.installed=self.captured=False
         self.inputs={name:(root/'tests/admission'/name).read_bytes() for name in
             ['receiver_progress.py','receiver_progress.rs','receiver_progress.sql','Dockerfile.receiver-progress']}
@@ -71,6 +72,8 @@ class Prototype:
                 supervisor.write_text('mod cycle_timing;\n'+source[:begin]+body+source[end:])
                 module=context/'worker/src/cycle_timing.rs';module.write_bytes(self.inputs['cycle_timing.rs'])
                 sources.extend([supervisor,module])
+            if self.staging_gate:
+                sources.append(self.staging_gate.prepare(context))
             for p in sources:
                 relative=str(p.relative_to(context));self.sources[relative]=hashlib.sha256(p.read_bytes()).hexdigest()
                 dest=q.RESULTS/'receiver-sources'/relative;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(p.read_bytes())
@@ -79,8 +82,13 @@ class Prototype:
             built=q.command(['docker','build','-t',builder,str(context)],timeout=1200)
             (q.RESULTS/'receiver-build.log').write_text(built.stdout+built.stderr)
             extra=('COPY --from='+builder+' /src/target/release/lake-replication-supervisor /usr/local/bin/lake-replication-supervisor\n') if self.cycle_timing else ''
+            if self.staging_gate:extra+=self.staging_gate.overlay(builder)
             (context/'Dockerfile.overlay').write_text('FROM '+q.DESTINATION_IMAGE+'\nUSER root\nCOPY --from='+builder+' /src/target/release/lake-replication-receiver /usr/local/bin/lake-replication-receiver\n'+extra+'LABEL io.lake-replication.diagnostic="receiver-progress"\n')
             q.command(['docker','build','-f',str(context/'Dockerfile.overlay'),'-t',q.DESTINATION_IMAGE,str(context)],timeout=300)
+            if self.staging_gate:
+                result=q.command(['docker','run','--rm','--network','none','--entrypoint','sha256sum',q.DESTINATION_IMAGE,'/qualification/staging_gate.so'],timeout=60)
+                self.staging_gate.binary_sha256=result.stdout.split()[0]
+                (q.RESULTS/'staging-gate-binary.sha256').write_text(result.stdout)
 
     def install(self):
         self.q.sql('destination','analytics',self.inputs['receiver_progress.sql'].decode())
