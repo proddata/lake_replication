@@ -18,6 +18,8 @@ def audit(case):
             'final_snapshot_capture_succeeded':isinstance(case.get('diagnostic',{}).get('receiver_progress',{}).get('final'),list),
             'one_record_per_subscription':True,'snapshot_clocks_consistent':True,
             'durable_frontier_never_regresses':True,'valid_record_fields':True}
+    limit=case.get('diagnostic',{}).get('receiver_progress',{}).get('journal_pending_limit')
+    checks['sampled_journal_count_limit_respected']=(limit is None or (bool(trace) and all(point.get('streams') and all(isinstance(stream.get('destination_pending_transactions'),int) and 0<=stream['destination_pending_transactions']<=limit for stream in point['streams']) for point in trace)))
     previous={};generations=set();maximum=0
     for point in trace:
         records=point.get('receiver_progress',[]);maximum=max(maximum,len(records));keys=set()

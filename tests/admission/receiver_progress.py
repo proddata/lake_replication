@@ -9,11 +9,16 @@ SQL = "SELECT coalesce(jsonb_agg(s),'[]'::jsonb) FROM receiver_progress.snapshot
 
 
 class Prototype:
-    def __init__(self,q,root):
+    def __init__(self,q,root,cycle_timing=False,receiver_batch=1):
+        if receiver_batch not in (1,64) or (receiver_batch>1 and not cycle_timing):
+            raise ValueError('bounded receiver mode requires cycle timing and a supported transaction limit')
         self.q,self.root=q,root
+        self.cycle_timing=cycle_timing
+        self.receiver_batch=receiver_batch
         self.installed=self.captured=False
         self.inputs={name:(root/'tests/admission'/name).read_bytes() for name in
             ['receiver_progress.py','receiver_progress.rs','receiver_progress.sql','Dockerfile.receiver-progress']}
+        if cycle_timing:self.inputs['cycle_timing.rs']=(root/'tests/admission/cycle_timing.rs').read_bytes()
         self.sources={}
 
     def build(self):
@@ -36,16 +41,45 @@ class Prototype:
                 if source.count(anchor)!=count:raise RuntimeError('unexpected receiver hook count: '+anchor.strip())
                 # The hook before decode must run before the match, others after.
                 source=source.replace(anchor,extra+anchor if 'match copy_data' in anchor else anchor+extra)
+            if self.receiver_batch>1:
+                anchor='                        progress.committing(transaction.end_lsn, transaction.commit_time_micros)?;\n'
+                if source.count(anchor)!=2:raise RuntimeError('journal guard must cover both commit formats')
+                source=source.replace(anchor,anchor+'                        progress.wait_for_journal(&mut destination, 8)?;\n')
             path.write_text('mod receiver_progress;\n'+source)
             (context/'worker/src/receiver_progress.rs').write_bytes(self.inputs['receiver_progress.rs'])
-            for p in [path,context/'worker/src/receiver_progress.rs']:
+            sources=[path,context/'worker/src/receiver_progress.rs']
+            if self.cycle_timing:
+                supervisor=context/'worker/src/supervisor.rs'
+                source=supervisor.read_text()
+                begin=source.index('fn run_cycle(');end=source.index('// All return/error paths release',begin)
+                body=source[begin:end]
+                replacements=[
+                    ('    let source_address = source_preflight(destination, config, busy)?;',
+                     '    let timing = cycle_timing::Cycle::new(&config.destination_database, config.subscription_id);\n    let source_address = source_preflight(destination, config, busy)?;\n    timing.mark("preflight_finished");'),
+                    ('    let mut published = 0;', '    timing.mark("receiver_spawned");\n    let mut published = 0;'),
+                    ('        // DROP holds', '        if status.is_some() { timing.mark("receiver_exit_detected"); }\n        // DROP holds'),
+                    ('            let output = Command::new(publisher)', '            timing.mark("publisher_started");\n            let output = Command::new(publisher)'),
+                    ('            ensure_success("publisher", &output).map_err(CycleError::Retry)?;',
+                     '            timing.mark("publisher_finished");\n            ensure_success("publisher", &output).map_err(CycleError::Retry)?;')]
+                for old,new in replacements:
+                    if body.count(old)!=1:raise RuntimeError('unexpected supervisor timing hook: '+old)
+                    body=body.replace(old,new)
+                if self.receiver_batch>1:
+                    anchor='.env("LAKE_MAX_TRANSACTIONS", "1")'
+                    if body.count(anchor)!=1:raise RuntimeError('receiver transaction limit hook not unique')
+                    body=body.replace(anchor,'.env("LAKE_MAX_TRANSACTIONS", "'+str(self.receiver_batch)+'")')
+                supervisor.write_text('mod cycle_timing;\n'+source[:begin]+body+source[end:])
+                module=context/'worker/src/cycle_timing.rs';module.write_bytes(self.inputs['cycle_timing.rs'])
+                sources.extend([supervisor,module])
+            for p in sources:
                 relative=str(p.relative_to(context));self.sources[relative]=hashlib.sha256(p.read_bytes()).hexdigest()
                 dest=q.RESULTS/'receiver-sources'/relative;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(p.read_bytes())
             (context/'Dockerfile').write_bytes(self.inputs['Dockerfile.receiver-progress'])
             builder='lake-replication-receiver-progress-builder:'+q.RUN
             built=q.command(['docker','build','-t',builder,str(context)],timeout=1200)
             (q.RESULTS/'receiver-build.log').write_text(built.stdout+built.stderr)
-            (context/'Dockerfile.overlay').write_text('FROM '+q.DESTINATION_IMAGE+'\nUSER root\nCOPY --from='+builder+' /src/target/release/lake-replication-receiver /usr/local/bin/lake-replication-receiver\nLABEL io.lake-replication.diagnostic="receiver-progress"\n')
+            extra=('COPY --from='+builder+' /src/target/release/lake-replication-supervisor /usr/local/bin/lake-replication-supervisor\n') if self.cycle_timing else ''
+            (context/'Dockerfile.overlay').write_text('FROM '+q.DESTINATION_IMAGE+'\nUSER root\nCOPY --from='+builder+' /src/target/release/lake-replication-receiver /usr/local/bin/lake-replication-receiver\n'+extra+'LABEL io.lake-replication.diagnostic="receiver-progress"\n')
             q.command(['docker','build','-f',str(context/'Dockerfile.overlay'),'-t',q.DESTINATION_IMAGE,str(context)],timeout=300)
 
     def install(self):
@@ -60,8 +94,24 @@ class Prototype:
             self.final=json.loads(result.stdout)
             (self.q.RESULTS/'receiver-final.json').write_text(json.dumps(self.final,indent=2)+'\n')
         except Exception as error:self.final={'error':str(error)}
+        if self.cycle_timing:
+            try:self.capture_cycles()
+            except Exception as error:
+                (self.q.RESULTS/'cycle-capture-error.txt').write_text(str(error)+'\n')
+
+    def capture_cycles(self):
+        q=self.q
+        timings=[]
+        for database in ['analytics','fair_stream_1','fair_stream_2']:
+            result=q.compose('exec','-T','destination','psql','-XqAt','-U','postgres','-d',database,'-c',
+                "SELECT jsonb_build_object('database',current_database(),'database_oid',(SELECT oid FROM pg_database WHERE datname=current_database()),'transactions',(SELECT coalesce(jsonb_agg(jsonb_build_object('xid',xid,'end_lsn',end_lsn,'source_commit_epoch',extract(epoch FROM commit_time),'journal_insert_epoch',extract(epoch FROM staged_at),'publication_commit_epoch',extract(epoch FROM pg_xact_commit_timestamp(xmin)))),'[]'::jsonb) FROM lake_replication.transactions WHERE state='published'))",timeout=15)
+            timings.append(json.loads(result.stdout))
+        (q.RESULTS/'cycle-transactions.json').write_text(json.dumps(timings,indent=2)+'\n')
+        result=q.compose('exec','-T','destination','psql','-XqAt','-U','postgres','-d','analytics','-c',
+            "SELECT coalesce(jsonb_object_agg(name,pg_read_file('/worker-logs/'||name)),'{}'::jsonb) FROM pg_ls_dir('/worker-logs') f(name) WHERE name ~ '^lake_replication_db[0-9]+_[0-9]+_supervisor[.]log$'",timeout=20)
+        (q.RESULTS/'cycle-worker-logs.json').write_text(result.stdout+'\n')
 
     def metadata(self):
-        return {'scope':'Receiver-only file telemetry overlay; no checkpoint/acknowledgement semantics changed',
-                'inputs':{n:hashlib.sha256(b).hexdigest() for n,b in self.inputs.items()},
+        return {'scope':('Isolated receiver lifetime/journal backpressure experiment; durable feedback ordering retained' if self.receiver_batch>1 else 'Receiver telemetry overlay; durable feedback ordering retained'),
+                'cycle_timing':self.cycle_timing,'receiver_transaction_limit':self.receiver_batch,'journal_pending_limit':8 if self.receiver_batch>1 else None,'inputs':{n:hashlib.sha256(b).hexdigest() for n,b in self.inputs.items()},
                 'overlaid_sources':self.sources,'final':getattr(self,'final',None)}

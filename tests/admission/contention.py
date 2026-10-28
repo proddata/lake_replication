@@ -26,6 +26,8 @@ def main():
     parser.add_argument('--budget-mib',type=int,help='Isolated shared byte-budget prototype; zero measures coordinator overhead only')
     parser.add_argument('--burst-kib',type=int,default=256,help='Shared diagnostic burst and maximum chunk size')
     parser.add_argument('--budget-operations',action='store_true',help='Run deterministic and cross-database budget checks before measurement')
+    parser.add_argument('--receiver-batch',type=int,choices=[1,64],default=1,help='Isolated receiver lifetime; 64 requires cycle timing and guards eight unpublished transactions')
+    parser.add_argument('--cycle-timing',action='store_true',help='Instrument supervisor phases and retain transaction/log timing; requires receiver-progress')
     parser.add_argument('--receiver-operations',action='store_true',help='Run receiver progress lifecycle checks before measurement')
     parser.add_argument('--receiver-progress',action='store_true',help='Build isolated receiver progress telemetry; requires stream pressure observation')
     parser.add_argument('--capture-stream-pressure',action='store_true',help='Compare destination queues against the fixture commit prefix; diagnostic only')
@@ -53,6 +55,10 @@ def main():
         parser.error('receiver-progress requires capture-stream-pressure and cannot combine with pacing overlays')
     if args.receiver_operations and not args.receiver_progress:
         parser.error('receiver-operations requires receiver-progress')
+    if args.cycle_timing and not args.receiver_progress:
+        parser.error('cycle-timing requires receiver-progress')
+    if args.receiver_batch>1 and not args.cycle_timing:
+        parser.error('receiver-batch 64 requires cycle-timing')
     pause=args.pause_ms
     spec=importlib.util.spec_from_file_location('production_probe',root/'tests/admission/probe.py')
     p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
@@ -70,7 +76,7 @@ def main():
     if args.receiver_progress:
         spec=importlib.util.spec_from_file_location('receiver_progress',Path(__file__).with_name('receiver_progress.py'))
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-        receiver=module.Prototype(p.q,root)
+        receiver=module.Prototype(p.q,root,args.cycle_timing,args.receiver_batch)
 
     def compose(*values,**kwargs):
         if values and values[0]=='down' and receiver and receiver.installed and not receiver.captured:
@@ -125,6 +131,8 @@ def main():
     if receiver:
         p.m.diagnostic_sources.extend(root/'tests/admission'/name for name in ['receiver_operations.py','receiver_results.py'])
         p.m.diagnostic_sources.extend(root/'tests/admission'/name for name in receiver.inputs)
+    if args.cycle_timing:
+        p.m.diagnostic_sources.append(root/'tests/admission/cycle_results.py')
     p.m.compose_text=compose_text
     p.m.fairness=fairness
     p.q.build_images=build_images
@@ -146,6 +154,18 @@ def main():
         observed=json.loads(case_path.read_text()) if case_path.exists() else {}
         observed['diagnostic']=metadata
         receiver_audit=analysis.audit(observed)
+        if args.cycle_timing:
+            try:
+                spec=importlib.util.spec_from_file_location('cycle_results',Path(__file__).with_name('cycle_results.py'))
+                cycles=importlib.util.module_from_spec(spec);spec.loader.exec_module(cycles)
+                cycle_audit=cycles.analyze(observed,
+                    json.loads((p.q.RESULTS/'cycle-transactions.json').read_text()),
+                    json.loads((p.q.RESULTS/'cycle-worker-logs.json').read_text()))
+            except Exception as error:cycle_audit={'valid':False,'error':str(error)}
+            cycle_audit['analysis_source_sha256']=hashlib.sha256(Path(__file__).with_name('cycle_results.py').read_bytes()).hexdigest()
+            metadata['receiver_progress']['cycle_analysis']=cycle_audit
+            receiver_audit['checks']['cycle_timing_capture_valid']=cycle_audit['valid']
+            receiver_audit['valid'] &= cycle_audit['valid']
         metadata['receiver_progress']['audit']=receiver_audit
         print('RECEIVER AUDIT', 'passed' if receiver_audit['valid'] else 'failed',flush=True)
         if not receiver_audit['valid']:code=1

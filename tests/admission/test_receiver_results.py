@@ -32,3 +32,11 @@ class ReceiverAuditTests(unittest.TestCase):
     def test_failed_final_capture_invalidates_otherwise_complete_trace(self):
         case=fixture();case['diagnostic']['receiver_progress']['final']={'error':'timeout'}
         self.assertFalse(r.audit(case)['valid'])
+
+    def test_sampled_journal_overflow_invalidates_bounded_prototype(self):
+        case=fixture();case['diagnostic']['receiver_progress']['journal_pending_limit']=8
+        self.assertFalse(r.audit(case)['valid'])
+        case['trace'][0]['streams']=[{'destination_pending_transactions':9}]
+        self.assertFalse(r.audit(case)['valid'])
+        case['trace'][0]['streams'][0]['destination_pending_transactions']=8
+        self.assertTrue(r.audit(case)['valid'])

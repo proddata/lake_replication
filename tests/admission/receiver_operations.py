@@ -62,6 +62,8 @@ def run(receiver,c):
         q.check('restart exposes a new receiver generation',wait(f"({latest}->>'started_epoch')::numeric>{old['started_epoch']}"),'true')
         q.check('receiver generations replace one subscription record',q.sql('destination','analytics',"SELECT count(*) FROM receiver_progress.snapshots() s WHERE s->>'database'='receiver_ops'"),'1')
         q.check('restart publishes exact committed source data',q.wait_for('destination','receiver_ops',"SELECT count(*)||':'||sum(id) FROM receiver_ops_src",'1:1',timeout=30),'1:1')
+        if receiver.receiver_batch>1:
+            bounded_queue(receiver,c,latest)
         dst('DROP SUBSCRIPTION receiver_ops_sub')
         q.check('telemetry fixture drop removes slot',src("SELECT count(*) FROM pg_replication_slots WHERE slot_name='receiver_ops_sub'"),'0')
         # Records persist intentionally; age/generation must be checked by readers.
@@ -72,3 +74,32 @@ def run(receiver,c):
     finally:
         for connection in [owner,source]:
             if connection:connection.close()
+
+
+def bounded_queue(receiver,c,latest):
+    """Prove journal backpressure and exact replay while engine work is blocked."""
+    q=receiver.q
+    def dst(text):return q.sql('destination','receiver_ops',text)
+    holders=[]
+    try:
+        for _ in range(4):
+            holder=c.Psql('destination','analytics');holders.append(holder)
+            holder.query('BEGIN; SELECT lake_replication.admit_stream()')
+        for number in range(2,18):
+            q.sql('source','application',f'INSERT INTO receiver_ops_src VALUES({number})')
+        q.check('blocked publisher fills only eight unpublished transactions',q.wait_for('destination','receiver_ops',"SELECT count(*) FROM lake_replication.transactions WHERE state<>'published'",'8',timeout=15),'8')
+        condition='SELECT coalesce(('+latest+"->>'phase')='journal_backpressure',false)::text"
+        q.check('receiver waits on journal backpressure',q.wait_for('destination','analytics',condition,'true',timeout=15),'true')
+        import json
+        before=json.loads(q.sql('destination','analytics','SELECT '+latest))
+        clock='SELECT (('+latest+"->>'snapshot_epoch')::numeric>"+str(before['snapshot_epoch']+.8)+')::text'
+        q.wait_for('destination','analytics',clock,'true',timeout=5)
+        q.check('journal cap stays at eight while engine remains blocked',dst("SELECT count(*) FROM lake_replication.transactions WHERE state<>'published'"),'8')
+        frontier=dst('SELECT staged_lsn FROM lake_replication.checkpoints')
+        q.check('guard never acknowledges the ninth pending transaction',q.wait_for('source','application',"SELECT confirmed_flush_lsn FROM pg_replication_slots WHERE slot_name='receiver_ops_sub'",frontier,timeout=5),frontier)
+        q.compose('exec','-T','destination','sh','-ec','kill -KILL "$1"','guard-receiver',str(before['pid']))
+    finally:
+        for holder in holders:
+            holder.close()
+    q.check('killed journal waiter restarts from durable progress',q.wait_for('destination','receiver_ops',"SELECT count(*)||':'||sum(id) FROM receiver_ops_src",'17:153',timeout=45),'17:153')
+    q.check('bounded retry leaves no unpublished transactions',q.wait_for('destination','receiver_ops',"SELECT count(*) FROM lake_replication.transactions WHERE state<>'published'",'0',timeout=10),'0')

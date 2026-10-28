@@ -2,6 +2,6 @@ FROM rust:1.85-bookworm@sha256:e51d0265072d2d9d5d320f6a44dde6b9ef13653b035098feb
 WORKDIR /src
 COPY Cargo.toml Cargo.lock ./
 COPY worker ./worker
-RUN cargo test --locked --bin lake-replication-receiver \
-    && cargo build --release --locked --bin lake-replication-receiver \
-    && strip target/release/lake-replication-receiver
+RUN cargo test --locked --bin lake-replication-receiver --bin lake-replication-supervisor \
+    && cargo build --release --locked --bin lake-replication-receiver --bin lake-replication-supervisor \
+    && strip target/release/lake-replication-receiver target/release/lake-replication-supervisor

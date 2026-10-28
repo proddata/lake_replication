@@ -82,6 +82,36 @@ impl Progress {
         self.emit("read_timeout", false)
     }
 
+    pub fn wait_for_journal(
+        &mut self,
+        destination: &mut lake_replication_worker::wire::Client,
+        maximum: u64,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let began = Instant::now();
+        loop {
+            // Native source-slot ownership supplies the single producer in
+            // this prototype. This is not an admission API for other writers.
+            let rows = destination.simple_query(&format!(
+                "SELECT count(*)::text FROM lake_replication.transactions WHERE subscription_id={} AND state<>'published'",
+                self.subscription
+            ))?;
+            let count: u64 = rows
+                .first()
+                .and_then(|r| r.first())
+                .and_then(Option::as_deref)
+                .ok_or("journal count missing")?
+                .parse()?;
+            if count < maximum {
+                return Ok(());
+            }
+            self.emit("journal_backpressure", false)?;
+            if began.elapsed() > Duration::from_secs(30) {
+                return Err("diagnostic journal backpressure exceeded 30 seconds".into());
+            }
+            std::thread::sleep(Duration::from_millis(100));
+        }
+    }
+
     pub fn staged(&mut self, lsn: u64) -> io::Result<()> {
         self.durable_lsn = lsn;
         self.emit("durably_staged", false)

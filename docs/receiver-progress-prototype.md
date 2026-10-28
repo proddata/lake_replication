@@ -129,3 +129,9 @@ proven root cause. Extending receiver lifetime without a staged-journal budget
 could trade process overhead for unbounded durable backlog; do not adopt that
 as a shortcut. Production policy and the interrupted-run OOM finding remain
 open.
+
+
+The subsequent [cycle attribution and bounded lifetime experiment](bounded-receiver-cycle-prototype.md)
+measures the repeated-cycle cost and tests a 64-transaction lifetime with an
+eight-unpublished-transaction guard. Its explicit topology control passes, but
+the shared-two-CPU failures and remaining resource-contract work are retained.
