@@ -34,7 +34,7 @@ To qualify an already downloaded native archive, keep its adjacent
 `.sha256` file and select it explicitly:
 
 ```sh
-QUALIFICATION_ARCHIVE=/path/to/lake_replication-0.1.0-beta.3-linux-arm64.tar.gz \
+QUALIFICATION_ARCHIVE=/path/to/lake_replication-0.1.0-beta.4-linux-arm64.tar.gz \
   make qualification-test
 ```
 
@@ -108,6 +108,27 @@ The defaults are commits `8180647d4535fdb1ed223f92f301ba6094a8ec3e` and
 more distinct full commit SHAs via the space-separated
 `COMPATIBILITY_PG_LAKE_REVISIONS` variable. A base image is cached separately
 for each revision; the first run of a new revision is therefore expensive.
+
+## Focused native probe
+
+After the candidate commit's normal CI has passed and produced both native
+archives, run the focused ARM64/AMD64 probe using that CI run ID:
+
+```sh
+gh workflow run lifecycle-qualification.yml --ref main \
+  -f artifact_run_id=CI_RUN_ID -f native_probe=true
+```
+
+This verifies archive provenance, prepares the source-pinned storage fixtures,
+and runs managed admission followed by one unchanged four-copy fairness case.
+It skips fresh lifecycle, receiver regressions, scale and historical upgrade
+builds. Each architecture has a 45-minute job limit and a 35-minute probe step
+limit, including prerequisite image builds. A fresh runner must still compile
+pg_lake, so this is not an estimate of test execution time. Evidence is uploaded
+on failure as well as success. These probes do not qualify a release.
+
+Use either `native_probe` or the older `fairness_diagnostic` mode, not both.
+Leave both false for full qualification.
 
 ## Storage fixture preparation
 

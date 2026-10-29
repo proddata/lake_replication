@@ -1484,7 +1484,8 @@ handle_enable_subscription(const char *subname, int64 subscriptionId)
 {
 	if (SPI_execute(psprintf(
 			"UPDATE lake_replication.worker_launch_config "
-			"SET desired_state = 'running' WHERE subscription_id = %lld",
+			"SET config_generation = config_generation + CASE WHEN desired_state = 'stopped' THEN 1 ELSE 0 END, "
+			"desired_state = 'running' WHERE subscription_id = %lld",
 			(long long) subscriptionId), false, 0) != SPI_OK_UPDATE ||
 		SPI_processed != 1)
 		ereport(ERROR,
@@ -1808,5 +1809,19 @@ lake_replication_admit_stream(PG_FUNCTION_ARGS)
         if (LockAcquire(&tags[i], ExclusiveLock, false, true) != LOCKACQUIRE_NOT_AVAIL)
             PG_RETURN_VOID();
     (void) LockAcquire(&tags[MyProcPid % 4], ExclusiveLock, false, false);
+    PG_RETURN_VOID();
+}
+
+/* Initial-copy append admission: distinct from bulk and streaming engine slots. */
+PG_FUNCTION_INFO_V1(lake_replication_admit_staging);
+
+Datum
+lake_replication_admit_staging(PG_FUNCTION_ARGS)
+{
+    LOCKTAG tag;
+
+    SET_LOCKTAG_ADVISORY(tag, InvalidOid, 0x4c524550U, 71, 1);
+    if (!LockHeldByMe(&tag, ExclusiveLock, false))
+        (void) LockAcquire(&tag, ExclusiveLock, false, false);
     PG_RETURN_VOID();
 }

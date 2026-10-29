@@ -290,39 +290,43 @@ def native():
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--native-bulk',action='store_true',help='Also test native bulk progress, idle connection lifetime, stop/resume and source recovery')
+    parser.add_argument('--archive-only',action='store_true',help='Test exported SQL and native binaries unchanged, without a source overlay')
     parser.add_argument('--current-workers',action='store_true',help='Rebuild Rust workers from the current source into the test image')
     args=parser.parse_args()
+    if args.archive_only and args.current_workers:parser.error('archive-only cannot rebuild workers')
     q.EVIDENCE['native_bulk_diagnostic']=args.native_bulk
     q.EVIDENCE['current_workers']=args.current_workers
+    q.EVIDENCE['archive_only']=args.archive_only
     q.RESULTS=q.RESULTS.with_name(q.RUN+'_empty_filtered')
     q.RESULTS.mkdir(parents=True)
     q.PROJECT += '-empty-filtered'
     q.EVIDENCE['inputs']={str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in [Path(__file__),*(sorted((ROOT/'worker/src').glob('*.rs')) if args.current_workers else []),ROOT/'Cargo.lock',ROOT/'migrations/0022_empty_filtered_transactions.sql',*sorted((ROOT/'extensions/lake_replication').glob('lake_replication--*.sql'))]}
-    q.EVIDENCE['scope']='Current SQL overlay; '+('current Rust workers' if args.current_workers else 'archived native binaries unchanged')+'; not release qualification'
+    q.EVIDENCE['scope']=('Exported archive SQL and native binaries unchanged; no overlay' if args.archive_only else 'Current SQL overlay; '+('current Rust workers' if args.current_workers else 'archived native binaries unchanged')+'; not release qualification')
     try:
         q.verify_archive(q.archive_path())
         with tempfile.TemporaryDirectory(prefix='lake-empty-filtered-') as directory:
             context=Path(directory)
             q.build_images(q.archive_path(),context)
-            for file in (ROOT/'extensions/lake_replication').glob('lake_replication--*.sql'):
-                (context/file.name).write_bytes(file.read_bytes())
-            overlay=f'FROM {q.DESTINATION_IMAGE}\nUSER root\nCOPY lake_replication--*.sql /tmp/sql/\nRUN cp /tmp/sql/*.sql "$(pg_config --sharedir)/extension/"\n'
-            if args.current_workers:
-                builder='lake-replication-worker-test:'+q.RUN
-                q.command(['docker','build','--target','worker-builder','-f',str(ROOT/'deploy/install/Dockerfile'),'-t',builder,str(ROOT)],timeout=900)
-                overlay+='COPY --from='+builder+' /src/target/release/lake-replication-receiver /src/target/release/lake-replication-supervisor /src/target/release/lake-replication-publisher /src/target/release/lake-replication-initial-sync /usr/local/bin/\n'
-            (context/'Dockerfile.overlay').write_text(overlay)
-            image='lake-replication-empty-filtered:'+q.RUN
-            q.command(['docker','build','-f',str(context/'Dockerfile.overlay'),'-t',image,str(context)])
-            q.EVIDENCE['image']=q.command(['docker','image','inspect','--format','{{.Id}}',image]).stdout.strip()
-            q.ENV['QUALIFICATION_DESTINATION_IMAGE']=image
+            if not args.archive_only:
+                for file in (ROOT/'extensions/lake_replication').glob('lake_replication--*.sql'):
+                    (context/file.name).write_bytes(file.read_bytes())
+                overlay=f'FROM {q.DESTINATION_IMAGE}\nUSER root\nCOPY lake_replication--*.sql /tmp/sql/\nRUN cp /tmp/sql/*.sql "$(pg_config --sharedir)/extension/"\n'
+                if args.current_workers:
+                    builder='lake-replication-worker-test:'+q.RUN
+                    q.command(['docker','build','--target','worker-builder','-f',str(ROOT/'deploy/install/Dockerfile'),'-t',builder,str(ROOT)],timeout=900)
+                    overlay+='COPY --from='+builder+' /src/target/release/lake-replication-receiver /src/target/release/lake-replication-supervisor /src/target/release/lake-replication-publisher /src/target/release/lake-replication-initial-sync /usr/local/bin/\n'
+                (context/'Dockerfile.overlay').write_text(overlay)
+                image='lake-replication-empty-filtered:'+q.RUN
+                q.command(['docker','build','-f',str(context/'Dockerfile.overlay'),'-t',image,str(context)])
+                q.EVIDENCE['image']=q.command(['docker','image','inspect','--format','{{.Id}}',image]).stdout.strip()
+                q.ENV['QUALIFICATION_DESTINATION_IMAGE']=image
             compose=q.COMPOSE_FILE.read_text().replace('      - wal_level=logical','      - logical_decoding_work_mem=64kB\n      - -c\n      - wal_level=logical')
             q.COMPOSE_FILE=q.RESULTS/'compose.yml'
             q.COMPOSE_FILE.write_text(compose)
             q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
             contract('analytics')
             sql('CREATE DATABASE upgraded')
-            sql("CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION lake_replication VERSION '0.1.0' CASCADE; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'",'upgraded')
+            sql("CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION lake_replication VERSION '0.1.0' CASCADE; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4'",'upgraded')
             contract('upgraded')
             wire()
             if args.native_bulk:

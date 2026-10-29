@@ -62,7 +62,7 @@ with:
 BEGIN;
 -- For beta.1/baseline bindings, only after verifying the original destination:
 SET LOCAL lake_replication.allow_legacy_binding_upgrade = on;
-ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3';
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4';
 COMMIT;
 ```
 
@@ -71,7 +71,10 @@ setting. The beta.3 migration adds one bulk permit and four streaming slots whil
 preserving checkpoints and completed copies. Keep all installed databases drained
 until their SQL upgrades finish; enabled subscriptions are rejected by the
 admission migration. Inspect `lake_replication.bulk_admission` and
-`lake_replication.stream_admission` for holders and waiters.
+`lake_replication.stream_admission` for holders and waiters. Beta.4 adds a separate
+initial-copy staging permit, managed worker fencing, and default journal budgets
+of eight committed unpublished transactions and 64 MiB of normalized payload
+per subscription. See the bundled operations guide for scope and tuning.
 
 ## Removal
 
@@ -105,7 +108,7 @@ dirty source tree so its recorded revision is unambiguous. For a local test of
 uncommitted packaging changes, opt in explicitly with
 `ALLOW_DIRTY=1 make install-bundles`.
 
-Pushing a version tag such as `v0.1.0-beta.3` runs the release workflow. The tag must
+Pushing a version tag such as `v0.1.0-beta.4` runs the release workflow. The tag must
 match the worker and SQL-extension versions. The workflow builds both bundles,
 generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
 keylessly signs every archive, SBOM, and checksum manifest with Sigstore

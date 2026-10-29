@@ -1,5 +1,6 @@
 use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::logging::event as log_event;
+use lake_replication_worker::managed::ManagedClient;
 use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -21,13 +22,14 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut sync_guard = Client::connect_secure(
+    let mut sync_guard = ManagedClient::connect(
         config.destination_address.as_str(),
         &config.destination_user,
         &config.destination_database,
-        false,
         config.destination_password.as_deref(),
         config.destination_tls.as_ref(),
+        config.subscription_id,
+        config.config_generation,
     )?;
     let lock_rows = sync_guard.simple_query(&format!(
         "SELECT pg_try_advisory_lock(hashtextextended({}, 0))::text",
@@ -60,13 +62,14 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             &[("subscription_id", config.subscription_id.to_string())],
         );
     }
-    let mut destination = Client::connect_secure(
+    let mut destination = ManagedClient::connect(
         config.destination_address.as_str(),
         &config.destination_user,
         &config.destination_database,
-        false,
         config.destination_password.as_deref(),
         config.destination_tls.as_ref(),
+        config.subscription_id,
+        config.config_generation,
     )?;
 
     let mut source = Client::connect_secure(
@@ -259,8 +262,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn copy_table_with_retry(
-    sync_guard: &mut Client,
-    destination: &mut Client,
+    sync_guard: &mut ManagedClient,
+    destination: &mut ManagedClient,
     config: &Config,
     plan: &TablePlan,
     snapshot_name: &str,
@@ -309,13 +312,14 @@ fn copy_table_with_retry(
                 // A COPY failure can leave either wire connection unusable.
                 // The snapshot owner is independent and stays open, so both
                 // sessions can be replaced without changing the copy point.
-                *destination = Client::connect_secure(
+                *destination = ManagedClient::connect(
                     config.destination_address.as_str(),
                     &config.destination_user,
                     &config.destination_database,
-                    false,
                     config.destination_password.as_deref(),
                     config.destination_tls.as_ref(),
+                    config.subscription_id,
+                    config.config_generation,
                 )?;
                 destination.simple_query(&format!(
                     "SELECT lake_replication.reset_initial_copy({}, {}, {})",
@@ -390,7 +394,7 @@ fn parse_slot_lsn(value: &str) -> Result<u64, Box<dyn std::error::Error>> {
 
 fn copy_table(
     source: &mut Client,
-    destination: &mut Client,
+    destination: &mut ManagedClient,
     config: &Config,
     plan: &TablePlan,
 ) -> Result<u64, WireError> {
@@ -599,7 +603,7 @@ struct TablePlan {
 }
 
 fn stage_rows(
-    destination: &mut Client,
+    destination: &mut ManagedClient,
     config: &Config,
     relation_id: u32,
     schema_version: i64,
@@ -608,7 +612,7 @@ fn stage_rows(
     pending_bytes: &mut usize,
 ) -> Result<(), WireError> {
     let json_rows = json_array(rows);
-    destination.simple_query(&format!(
+    destination.staging_query(&format!(
         "SELECT lake_replication.append_initial_copy_rows({}, {}, {}, {}, {}::jsonb)::text",
         config.subscription_id,
         relation_id,
@@ -650,7 +654,7 @@ fn stage_rows(
 }
 
 fn mark_copy_failed(
-    destination: &mut Client,
+    destination: &mut ManagedClient,
     config: &Config,
     relation_id: u32,
     schema_version: i64,
@@ -680,6 +684,7 @@ struct Config {
     slot: String,
     publication: String,
     subscription_id: i64,
+    config_generation: i64,
     source_table: Option<String>,
     destination_table: Option<String>,
     destination_schema: Option<String>,
@@ -733,6 +738,7 @@ impl Config {
             slot: required("LAKE_SLOT")?,
             publication: required("LAKE_PUBLICATION")?,
             subscription_id,
+            config_generation: value("LAKE_CONFIG_GENERATION", "0").parse()?,
             source_table: env::var("LAKE_SOURCE_TABLE").ok(),
             destination_table: env::var("LAKE_DESTINATION_TABLE").ok(),
             destination_schema: env::var("LAKE_DESTINATION_SCHEMA").ok(),

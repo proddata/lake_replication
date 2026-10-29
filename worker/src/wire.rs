@@ -5,7 +5,7 @@ use rustls::pki_types::ServerName;
 use rustls::{ClientConfig, ClientConnection, RootCertStore, StreamOwned};
 use std::fs::File;
 use std::io::{self, Read, Write};
-use std::net::{IpAddr, TcpStream, ToSocketAddrs};
+use std::net::{IpAddr, Shutdown, TcpStream, ToSocketAddrs};
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -317,6 +317,14 @@ impl Client {
             Transport::Tls(stream) => stream.sock.set_read_timeout(timeout)?,
         }
         Ok(())
+    }
+
+    /// Close a connection whose protocol state/outcome can no longer be trusted.
+    pub fn abort(&mut self) {
+        let _ = match &mut self.stream {
+            Transport::Plain(stream) => stream.shutdown(Shutdown::Both),
+            Transport::Tls(stream) => stream.sock.shutdown(Shutdown::Both),
+        };
     }
 
     pub fn simple_query(&mut self, sql: &str) -> Result<Vec<Vec<Option<String>>>, Error> {

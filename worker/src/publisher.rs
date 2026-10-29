@@ -1,6 +1,7 @@
 use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::logging::event as log_event;
-use lake_replication_worker::wire::{Client, TlsConfig, address_is_loopback};
+use lake_replication_worker::managed::ManagedClient;
+use lake_replication_worker::wire::{TlsConfig, address_is_loopback};
 use std::env;
 
 fn main() {
@@ -18,13 +19,14 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut destination = Client::connect_secure(
+    let mut destination = ManagedClient::connect(
         config.destination_address.as_str(),
         &config.destination_user,
         &config.destination_database,
-        false,
         config.destination_password.as_deref(),
         config.destination_tls.as_ref(),
+        config.subscription_id,
+        config.config_generation,
     )?;
     if let Some(crash_point) = &config.lab_crash_point {
         destination.simple_query(&format!(
@@ -102,6 +104,7 @@ struct Config {
     destination_tls: Option<TlsConfig>,
     destination_database: String,
     subscription_id: i64,
+    config_generation: i64,
     max_transactions: i64,
     max_rows: i64,
     max_bytes: i64,
@@ -120,6 +123,7 @@ impl Config {
                 .value("LAKE_DESTINATION_USER", &value("LAKE_USER", "postgres")),
             destination_password: settings.optional("LAKE_DESTINATION_PASSWORD"),
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
+            config_generation: value("LAKE_CONFIG_GENERATION", "0").parse()?,
             subscription_id: required("LAKE_SUBSCRIPTION_ID")?.parse()?,
             max_transactions: value("LAKE_BATCH_MAX_TRANSACTIONS", "1000").parse()?,
             max_rows: value("LAKE_BATCH_MAX_ROWS", "100000").parse()?,

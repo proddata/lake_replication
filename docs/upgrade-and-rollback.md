@@ -1,6 +1,6 @@
 # Upgrade, backup, and rollback
 
-This procedure applies to the `v0.1.0-beta.3` candidate on PostgreSQL 18 with a
+This procedure applies to the `v0.1.0-beta.4` candidate on PostgreSQL 18 with a
 supported pg_lake installation. Rehearse it on a restored copy before changing
 a production-like destination.
 
@@ -49,7 +49,7 @@ those defaults from colliding with the retained policy and status rows in the
 archive. Validate the result against the matching object-store snapshot before
 use.
 
-## Upgrade to beta.3
+## Upgrade to beta.4
 
 1. Verify the new archive checksum and unpack it.
 2. Stop PostgreSQL. Run the new bundle's `install.sh` as root; it replaces the
@@ -76,7 +76,7 @@ separately:
 ```sql
 BEGIN;
 SET LOCAL lake_replication.allow_legacy_binding_upgrade = on;
-ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3';
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4';
 COMMIT;
 ```
 
@@ -92,7 +92,9 @@ new beta.2-to-beta.3 migration, which adds one bulk permit and four streaming
 transaction slots. Inspect `lake_replication.bulk_admission` and
 `lake_replication.stream_admission` for current holders and waiters. Keep every
 installed database drained until all SQL upgrades finish. The admission migration
-rejects enabled subscriptions. An empty installation does not need the
+rejects enabled subscriptions. The beta.3-to-beta.4 step adds a separate staging
+permit, managed generation fencing, and journal count/byte policies while
+preserving the existing checkpoint and data. An empty installation does not need the
 adoption setting. SQL upgrade fails if subscriptions are enabled or old launcher/
 wrapper processes are present. Do not replace loaded libraries or workers online.
 
@@ -139,6 +141,7 @@ checkpoint forward.
 The packaged lifecycle lanes exercise fresh install, baseline upgrade, a stopped-
 server beta.1-to-beta.2 handoff with retained data/slot/checkpoint, rolled-back
 upgrade, explicit origin adoption, and resumed replication. See the migration
-qualification report for the exact archive and platform results. A full physical
+qualification report for the exact archive and platform results. The beta.3-to-
+beta.4 stopped-server handoff is covered in the [current migration evidence](staging-journal-migration-results.md). A full physical
 backup/object-store restore drill, SQL downgrade, online handoff, distributed
 fencing and automatic physical takeover are not covered by those lanes.

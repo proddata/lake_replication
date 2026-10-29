@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Qualify exported production bulk-admission packages; no SQL or binary overlay."""
+"""Qualify exported production admission packages; no SQL or binary overlay."""
 import argparse
 import hashlib
 import importlib.util
@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import shutil
 import tempfile
+import tarfile
 from urllib.parse import quote
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -19,7 +20,7 @@ VIEW=o.p.VIEW
 
 
 def contract():
-    q.check('candidate SQL version',o.sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),'0.1.0-beta.3')
+    q.check('candidate SQL version',o.sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),'0.1.0-beta.4')
     q.check('exactly five bulk entry points',o.sql("SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='lake_replication' AND p.prosrc LIKE '%PERFORM lake_replication.admit_bulk();%'"),'5')
     q.check('streaming entry points do not acquire bulk admission',o.sql("SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='lake_replication' AND p.proname IN ('publish_insert_batch','apply_change_run') AND p.prosrc LIKE '%admit_bulk%'"),'0')
     q.check('both streaming entry points acquire stream admission',o.sql("SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='lake_replication' AND p.proname IN ('publish_insert_batch','apply_change_run') AND p.prosrc LIKE '%PERFORM lake_replication.admit_stream();%'"),'2')
@@ -63,26 +64,33 @@ def locks(result):
 
 def upgrade(result,new_image,old_archive):
     q.verify_archive(old_archive)
+    with tarfile.open(old_archive) as bundle:
+        version_file=next(member for member in bundle.getmembers() if member.name.endswith('/VERSION'))
+        old_version=bundle.extractfile(version_file).read().decode().strip()
+    if old_version not in ['0.1.0-beta.2','0.1.0-beta.3']:raise RuntimeError('unsupported admission upgrade fixture')
+    result['old_version']=old_version
     result['old_archive']={k:q.EVIDENCE[k] for k in ['archive','archive_sha256','architecture','source_revision']}
     with tempfile.TemporaryDirectory(prefix='lake-bulk-old-') as temp:q.build_images(old_archive,Path(temp))
     q.ENV['QUALIFICATION_DESTINATION_IMAGE']=q.DESTINATION_IMAGE
     q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
-    q.check('starts unchanged beta.2 SQL',o.sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),'0.1.0-beta.2')
+    q.check('starts unchanged previous SQL',o.sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),old_version)
     q.sql('source','application',"CREATE TABLE admission_upgrade(id bigint PRIMARY KEY); INSERT INTO admission_upgrade VALUES(1); CREATE PUBLICATION admission_upgrade_pub FOR TABLE admission_upgrade; GRANT SELECT ON admission_upgrade TO lake_source")
     connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
     o.sql(f"CREATE SUBSCRIPTION admission_upgrade_sub CONNECTION '{connection}' PUBLICATION admission_upgrade_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
-    q.check('beta.2 native copy completes',q.wait_for('destination','analytics',"SELECT state FROM lake_replication.subscriptions WHERE subscription_name='admission_upgrade_sub'",'streaming'),'streaming')
+    q.check('previous native copy completes',q.wait_for('destination','analytics',"SELECT state FROM lake_replication.subscriptions WHERE subscription_name='admission_upgrade_sub'",'streaming'),'streaming')
     o.sql('ALTER SUBSCRIPTION admission_upgrade_sub DISABLE')
-    q.check('beta.2 wrapper drains before replacement',q.wait_for('destination','analytics',s.WRAPPERS,'0'),'0')
+    q.check('previous wrapper drains before replacement',q.wait_for('destination','analytics',s.WRAPPERS,'0'),'0')
     checkpoint=o.sql('SELECT published_lsn FROM lake_replication.checkpoints')
     q.compose('stop','destination','pgduck',timeout=120)
     q.ENV['QUALIFICATION_DESTINATION_IMAGE']=new_image
     q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
-    rejected=q.sql_result('destination','analytics',"BEGIN; UPDATE lake_replication.worker_launch_config SET desired_state='running'; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'",check_result=False)
-    q.check('admission upgrade rejects an enabled subscription',rejected.returncode!=0 and 'stop subscriptions before the engine admission upgrade' in rejected.stderr,True)
-    o.sql("BEGIN; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'; ROLLBACK")
-    q.check('upgrade rollback preserves beta.2 version and no helper',o.sql("SELECT extversion||':'||(to_regprocedure('lake_replication.admit_bulk()') IS NULL AND to_regprocedure('lake_replication.admit_stream()') IS NULL AND to_regclass('lake_replication.stream_admission') IS NULL)::text FROM pg_extension WHERE extname='lake_replication'"),'0.1.0-beta.2:true')
-    o.sql("ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.3'")
+    rejected=q.sql_result('destination','analytics',"BEGIN; UPDATE lake_replication.worker_launch_config SET desired_state='running'; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4'",check_result=False)
+    q.check('admission upgrade rejects an enabled subscription',rejected.returncode!=0 and 'stop subscriptions' in rejected.stderr and 'upgrade' in rejected.stderr,True)
+    o.sql("BEGIN; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4'; ROLLBACK")
+    q.check('upgrade rollback preserves previous SQL and no staging helper',o.sql("SELECT extversion||':'||(to_regprocedure('lake_replication.admit_staging()') IS NULL)::text FROM pg_extension WHERE extname='lake_replication'"),old_version+':true')
+    expected_helpers='false' if old_version=='0.1.0-beta.2' else 'true'
+    q.check('rollback restores the previous engine admission helpers',o.sql("SELECT (to_regprocedure('lake_replication.admit_bulk()') IS NOT NULL)::text || ':' || (to_regprocedure('lake_replication.admit_stream()') IS NOT NULL)::text || ':' || (to_regclass('lake_replication.stream_admission') IS NOT NULL)::text"),':'.join([expected_helpers]*3))
+    o.sql("ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4'")
     contract()
     q.check('upgrade preserves published checkpoint',o.sql('SELECT published_lsn FROM lake_replication.checkpoints'),checkpoint)
     q.check('upgrade preserves original Iceberg data',o.sql('SELECT count(*)||\':\'||min(id) FROM admission_upgrade'),'1:1')
@@ -96,7 +104,7 @@ def upgrade(result,new_image,old_archive):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--cases',nargs='+',choices=['locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'],default=['locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'])
+    parser.add_argument('--cases',nargs='+',choices=['managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'],default=['managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'])
     parser.add_argument('--old-archive',type=Path,default=ROOT/f'dist/release/lake_replication-0.1.0-beta.2-linux-{q.native_architecture()}.tar.gz')
     parser.add_argument('--fairness-copies',type=int,choices=[0,1,4],default=4,help='Zero/one-copy diagnostic control or the unchanged four-copy release case')
     args=parser.parse_args()
@@ -104,7 +112,7 @@ def main():
     q.PROJECT+='-production-admission';q.SOURCE_IMAGE+='-production-admission';q.DESTINATION_IMAGE+='-production-admission'
     q.ENV.update(QUALIFICATION_SOURCE_IMAGE=q.SOURCE_IMAGE,QUALIFICATION_DESTINATION_IMAGE=q.DESTINATION_IMAGE)
     result=dict(status='running',scope=__doc__,cases=[],parameters={**vars(args),'old_archive':str(args.old_archive)})
-    paths=[Path(__file__),Path(__file__).with_name('pool_cases.py'),ROOT/'experiments/admission/operational_probe.py',ROOT/'experiments/admission/reserved_probe.py',ROOT/'experiments/admission/admission_measure.py',ROOT/'experiments/admission/compare.py',ROOT/'experiments/admission/sample.py',ROOT/'experiments/admission/scale.py',ROOT/'tests/qualification/probe.py',ROOT/'Cargo.lock',ROOT/'worker/Cargo.toml',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),*[ROOT/'extensions/lake_replication'/name for name in ['lake_replication.c','lake_replication.control','Makefile','build-extension-sql.sh']]]
+    paths=[Path(__file__),Path(__file__).with_name('managed_cases.py'),Path(__file__).with_name('pool_cases.py'),ROOT/'experiments/admission/operational_probe.py',ROOT/'experiments/admission/reserved_probe.py',ROOT/'experiments/admission/admission_measure.py',ROOT/'experiments/admission/compare.py',ROOT/'experiments/admission/sample.py',ROOT/'experiments/admission/scale.py',ROOT/'tests/qualification/probe.py',ROOT/'Cargo.lock',ROOT/'worker/Cargo.toml',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),*[ROOT/'extensions/lake_replication'/name for name in ['lake_replication.c','lake_replication.control','Makefile','build-extension-sql.sh']]]
     paths.extend(getattr(m, 'diagnostic_sources', []))
     result['inputs']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     for path in paths:
@@ -135,7 +143,11 @@ def main():
                     if case=='upgrade':upgrade(observed,image,args.old_archive)
                     else:
                         q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
-                        if case=='locks':locks(observed)
+                        if case=='managed':
+                            spec=importlib.util.spec_from_file_location('managed_cases',Path(__file__).with_name('managed_cases.py'))
+                            managed=importlib.util.module_from_spec(spec);spec.loader.exec_module(managed)
+                            managed.run(q,c)
+                        elif case=='locks':locks(observed)
                         elif case=='pool':stream_pool(observed)
                         elif case=='schema':o.schema_case(observed)
                         elif case=='rebuild':o.rebuild_case(observed)

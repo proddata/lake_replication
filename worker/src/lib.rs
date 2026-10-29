@@ -5,5 +5,6 @@
 pub mod credentials;
 pub mod journal;
 pub mod logging;
+pub mod managed;
 pub mod pgoutput;
 pub mod wire;

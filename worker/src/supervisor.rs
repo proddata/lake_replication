@@ -767,12 +767,15 @@ fn run_cycle(
             config.receiver_idle_timeout.as_millis().to_string(),
         )
         .env("LAKE_RECEIVER_PERSISTENT", "1")
-        .env("LAKE_MAX_TRANSACTIONS", "1");
+        .env("LAKE_MAX_TRANSACTIONS", "64");
     let mut child = MonitoredChild(
         command
             .spawn()
             .map_err(|error| CycleError::Retry(format!("could not start receiver: {error}")))?,
     );
+    // Long-lived receivers must expose activity before the process exits.
+    report_cycle(destination, config, "running", 1, 0)
+        .map_err(|error| CycleError::Retry(error.to_string()))?;
     let mut published = 0;
     let mut heartbeat = Instant::now();
     loop {
@@ -828,11 +831,12 @@ fn run_cycle(
             published += 1;
         }
         if status.is_some() {
-            return Ok((1, published));
+            return Ok((0, published));
         }
         if heartbeat.elapsed() >= Duration::from_secs(1) {
-            report_cycle(destination, config, "running", 0, 0)
+            report_cycle(destination, config, "running", 0, published)
                 .map_err(|error| CycleError::Retry(error.to_string()))?;
+            published = 0;
             *consecutive_failures = 0;
             heartbeat = Instant::now();
         }

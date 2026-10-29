@@ -14,6 +14,12 @@ on:
         default: false
         type: boolean
 
+      native_probe:
+        description: Run managed admission and one four-copy probe only (not release qualification)
+        required: false
+        default: false
+        type: boolean
+
 permissions:
   contents: read
   actions: read
@@ -30,12 +36,21 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 180
+    timeout-minutes: ${{ inputs.native_probe && 45 || 180 }}
     env:
       GH_TOKEN: ${{ github.token }}
       ARTIFACT_RUN_ID: ${{ inputs.artifact_run_id }}
-      QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.3-linux-${{ matrix.arch }}.tar.gz
+      QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.4-linux-${{ matrix.arch }}.tar.gz
     steps:
+      - name: Validate probe selection
+        env:
+          NATIVE_PROBE: ${{ inputs.native_probe }}
+          FAIRNESS_DIAGNOSTIC: ${{ inputs.fairness_diagnostic }}
+        run: |
+          if [[ "$NATIVE_PROBE" == true && "$FAIRNESS_DIAGNOSTIC" == true ]]; then
+            echo 'Select native_probe or fairness_diagnostic, not both.' >&2
+            exit 1
+          fi
       - name: Resolve the successful candidate CI revision
         id: candidate
         env:
@@ -112,23 +127,27 @@ jobs:
             python3 tests/admission/probe.py --cases fairness --fairness-copies "$copies" || status=1
           done
           exit "$status"
+      - name: Focused native admission and four-copy probe
+        if: ${{ inputs.native_probe }}
+        timeout-minutes: 35
+        run: python3 tests/admission/probe.py --cases managed fairness
       - name: Fresh packaged lifecycle
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: make lifecycle-test
       - name: Forced Rust child crashes
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: make lifecycle-fault-test
-      - name: Receiver regressions with archived binaries and current SQL overlay
-        if: ${{ !inputs.fairness_diagnostic }}
-        run: python3 tests/streaming/empty_filtered.py --native-bulk
+      - name: Receiver regressions with unchanged archived SQL and binaries
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
+        run: python3 tests/streaming/empty_filtered.py --archive-only --native-bulk
       - name: Check out the preserved beta.2 source
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: 9cfee8fb7d1ca581b089ac649852152f508c0ae9
           path: .qualification/beta2-source
       - name: Reclaim prerequisite build cache before beta.2 build
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: |
           df -h > .qualification/disk/before-beta2-cache-cleanup.txt
           docker system df >> .qualification/disk/before-beta2-cache-cleanup.txt
@@ -136,37 +155,37 @@ jobs:
           docker builder prune --all --force
           df -h > .qualification/disk/after-beta2-cache-cleanup.txt
       - name: Build the beta.2 package for admission upgrade qualification
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         working-directory: .qualification/beta2-source
         env:
           ARCHES: ${{ matrix.arch }}
         run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/beta2-artifacts"
-      - name: Production bulk admission and beta.2 upgrade
-        if: ${{ !inputs.fairness_diagnostic }}
+      - name: Production admission and beta.2 upgrade
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         env:
           OLD_ARCHIVE: ${{ github.workspace }}/.qualification/beta2-artifacts/lake_replication-0.1.0-beta.2-linux-${{ matrix.arch }}.tar.gz
         run: python3 tests/admission/probe.py --old-archive "$OLD_ARCHIVE"
       - name: Check out the preserved beta.1 source
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: 85a32b4bf8092b9b2dd8e4ae4dc615084c7eb9b9
           path: .qualification/legacy-source
       - name: Reclaim build cache before beta.1 build
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: |
           df -h > .qualification/disk/before-beta1-cache-cleanup.txt
           docker system df >> .qualification/disk/before-beta1-cache-cleanup.txt
           docker builder prune --all --force
           df -h > .qualification/disk/after-beta1-cache-cleanup.txt
       - name: Build the real beta.1 package for this architecture
-        if: ${{ !inputs.fairness_diagnostic }}
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         working-directory: .qualification/legacy-source
         env:
           ARCHES: ${{ matrix.arch }}
         run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/legacy-artifacts"
-      - name: Packaged beta.1 to beta.3 handoff
-        if: ${{ !inputs.fairness_diagnostic }}
+      - name: Packaged beta.1 to beta.4 handoff
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         env:
           OLD_ARCHIVE: ${{ github.workspace }}/.qualification/legacy-artifacts/lake_replication-0.1.0-beta.1-linux-${{ matrix.arch }}.tar.gz
         run: python3 tests/lifecycle/probe.py --upgrade --old-archive "$OLD_ARCHIVE"

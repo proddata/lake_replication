@@ -105,7 +105,7 @@ Beta.3 serializes managed bulk engine transactions across destination databases.
 Destination creation, additive schema changes, initial-copy publication and
 rebuild promotion share one permit held through commit. Streaming publication
 does not request the bulk permit; it has four independent transaction slots.
-PostgreSQL staging requests neither.
+Initial-copy PostgreSQL staging uses a separate permit.
 
 As `lake_replication_admin` or an authorized database operator, inspect holders
 and waiters with:
@@ -143,6 +143,42 @@ These limits do not bound staging memory, connections, retained source WAL or
 application SQL sent directly to the engine. Continue monitoring source WAL and
 journal backlog while copies wait.
 
+## Staging and journal admission (beta.4)
+
+Initial-copy append transactions share one instance-wide staging permit. Native
+workers acquire it before converting the chunk to JSONB and retain it through
+commit. Inspect `lake_replication.staging_admission` for admitted and waiting
+backends. Destination worker sessions check disconnected clients every 100 ms;
+PostgreSQL cancellation, rollback and backend exit release the permit.
+
+Managed receivers remain connected for up to 64 transactions. Their committed,
+unpublished journal defaults to eight transactions and 64 MiB of normalized JSONB
+payload per subscription. Inspect and adjust the policy as an administrator:
+
+```sql
+SELECT * FROM lake_replication.journal_admission;
+UPDATE lake_replication.journal_limits
+SET max_transactions = 8, max_payload_bytes = 67108864
+WHERE subscription_id = 7;
+```
+
+A full journal makes the receiver wait without holding a destination transaction
+or acknowledging the waiting commit to the source. Publication frees capacity.
+One payload larger than the byte allowance fails explicitly; inspect the error
+and raise that subscription's allowance if appropriate before retrying. Lowering
+a limit below current usage stops new admission until the backlog drains.
+
+These budgets measure committed unpublished logical payload, excluding physical
+storage overhead, decode buffers and incomplete streamed transactions. They are
+not a total memory bound. Keep monitoring source WAL retention during backpressure.
+
+DISABLE cancels only the subscription's named destination worker queries before
+waiting for their transaction fences to drain. It fails after five seconds if
+those fences cannot drain. Re-enabling advances the generation so obsolete
+workers cannot resume mutations. Receiver cycle counters advance when a receiver
+starts; publisher counters report completed invocations on supervisor heartbeats,
+including while a receiver stays connected.
+
 ## Suggested alerts
 
 Tune lag thresholds to the workload and service-level objective. These are
@@ -155,7 +191,7 @@ safe starting points for the beta:
 | Stale heartbeat | `heartbeat_age_seconds > 30` while desired state is `running` | Page |
 | Source lag | `source_lag_bytes > 1 GiB` for 10 minutes | Ticket/page according to WAL budget |
 | Journal backlog | `journal_lag_bytes > 256 MiB` for 10 minutes | Ticket |
-| No receiver progress | receiver cycle counter does not increase for 10 minutes while running | Ticket |
+| No receiver progress | staged checkpoint stays unchanged for 10 minutes while running with growing source lag | Ticket |
 | Source switch | increase in `lake_replication_source_switches_total` | Informational; correlate with HA events |
 
 A direct SQL alert query is useful before a metrics exporter is installed:

@@ -191,7 +191,7 @@ def cancel_case(result, rows):
     sql(f"CREATE SUBSCRIPTION cancel_sub CONNECTION '{connection}' PUBLICATION cancel_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     monitor = client()
     def executing_write():
-        records = json.loads(monitor.query(f"SELECT coalesce(json_agg(t),'[]') FROM (SELECT a.pid,extract(epoch FROM a.query_start) AS began,a.wait_event_type,a.wait_event FROM pg_stat_activity a JOIN {p.VIEW} v USING(pid) WHERE a.query LIKE 'SELECT lake_replication.finish_initial_sync_group(%' AND a.state='active' AND a.wait_event_type='Extension' AND v.admission_state='admitted')t")[0])
+        records = json.loads(monitor.query(f"SELECT coalesce(json_agg(t),'[]') FROM (SELECT a.pid,extract(epoch FROM a.query_start) AS began,a.wait_event_type,a.wait_event FROM pg_stat_activity a JOIN {p.VIEW} v USING(pid) WHERE (a.query LIKE 'SELECT lake_replication.finish_initial_sync_group(%' OR (a.application_name LIKE 'lake_replication_worker/%' AND a.query LIKE 'BEGIN;%SELECT lake_replication.finish_initial_sync_group(%')) AND a.state='active' AND a.wait_event_type='Extension' AND v.admission_state='admitted')t")[0])
         if not records:
             return None
         logs = q.compose('logs','--no-color','--timestamps','pgduck')

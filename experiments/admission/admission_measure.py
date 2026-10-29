@@ -186,7 +186,9 @@ def fairness(args, variant, image, text, directory):
                     observed_epoch=max(x['observed_epoch'] for x in sample['copies']))
                 sample['observer_epoch'] = sample['copy']['observed_epoch']
             if bulk_copies > 1:
-                sample['active_copy_publications'] = int(monitor.query("SELECT count(*) FROM pg_stat_activity WHERE state='active' AND query LIKE 'SELECT lake_replication.finish_initial_sync_group(%'")[0])
+                # Managed workers wrap the publication in a fenced transaction.
+                # Count their queued queries too, without matching the observer.
+                sample['active_copy_publications'] = int(monitor.query("SELECT count(*) FROM pg_stat_activity WHERE state='active' AND (query LIKE 'SELECT lake_replication.finish_initial_sync_group(%' OR (application_name LIKE 'lake_replication_worker/%' AND query LIKE 'BEGIN;%SELECT lake_replication.finish_initial_sync_group(%'))")[0])
             if variant in ('bounded', 'reserved', 'bulk_only'):
                 sample['admission'] = json.loads(monitor.query(f"SELECT coalesce(jsonb_agg(t),'[]'::jsonb) FROM (SELECT * FROM {admission_view})t")[0])
                 held = [row for row in sample['admission'] if row['admission_state'] == 'admitted']
@@ -199,11 +201,11 @@ def fairness(args, variant, image, text, directory):
             if not resource_trace or sample['elapsed_seconds'] - resource_trace[-1]['elapsed_seconds'] >= 10:
                 activity = json.loads(monitor.query("SELECT coalesce(jsonb_agg(t),'[]'::jsonb) FROM ("
                     "SELECT backend_type,wait_event_type,wait_event,CASE "
-                    "WHEN query LIKE 'SELECT lake_replication.append_initial_copy_rows%' THEN 'copy_staging' "
+                    "WHEN query LIKE '%SELECT lake_replication.append_initial_copy_rows%' THEN 'copy_staging' "
                     "WHEN query LIKE '%SELECT staging_gate.admit();%' THEN 'copy_staging_transaction' "
-                    "WHEN query LIKE 'SELECT lake_replication.finish_initial_sync_group%' THEN 'copy_publication' "
-                    "WHEN query LIKE 'SELECT lake_replication.publish_insert_batch%' THEN 'stream_publication' "
-                    "WHEN query LIKE 'SELECT lake_replication.apply_change_run%' THEN 'stream_apply' "
+                    "WHEN query LIKE '%SELECT lake_replication.finish_initial_sync_group%' THEN 'copy_publication' "
+                    "WHEN query LIKE '%SELECT lake_replication.publish_insert_batch%' THEN 'stream_publication' "
+                    "WHEN query LIKE '%SELECT lake_replication.apply_change_run%' THEN 'stream_apply' "
                     "ELSE 'other' END AS phase,count(*) FROM pg_stat_activity "
                     "WHERE state='active' AND pid<>pg_backend_pid() GROUP BY 1,2,3,4)t")[0])
                 resource_trace.append(dict(elapsed_seconds=sample['elapsed_seconds'],activity=activity,

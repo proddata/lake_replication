@@ -26,9 +26,11 @@ The generated SQL files are build output. Version boundaries are explicit:
 - Frozen `0.1.0-beta.1`: migrations 0001–0021 plus config-dump registration.
 - Frozen `0.1.0-beta.2`: migrations 0001–0023 plus config-dump registration.
 - `beta.1` to `beta.2`: 0022 (empty commits) and 0023 (base lifecycle).
-- `0.1.0-beta.3`: migrations 0001–0024 plus config-dump registration.
+- Frozen `0.1.0-beta.3`: migrations 0001–0024 plus config-dump registration.
 - `beta.2` to `beta.3`: 0024 (one bulk transaction and four streaming transactions). Earlier versions
   upgrade through the preserved beta.2 paths.
+- `0.1.0-beta.4`: migrations 0001–0025 plus config-dump registration.
+- `beta.3` to `beta.4`: 0025 (staging admission, journal budgets and managed worker fencing).
 
 Both development-baseline upgrade paths are shipped. The beta.1 scripts match
 the previously qualified archive; an already-fixed beta.1 installation can also
@@ -44,9 +46,11 @@ boundaries must not be edited in place.
 
 Bulk destination creation, schema changes, initial-copy publication and rebuild
 promotion share one instance-wide transaction permit. Streaming publication has
-a separate pool of four transaction slots. PostgreSQL staging requests neither. Permits last through commit and use native
+a separate pool of four transaction slots. Initial-copy PostgreSQL staging has a separate instance-wide permit acquired before JSONB conversion. Permits last through commit and use native
 PostgreSQL cancellation/rollback cleanup. Administrators can inspect
 `lake_replication.bulk_admission` and `lake_replication.stream_admission` for
-holders and waiters. Streaming slots use separate native queues rather than one
+holders and waiters. `lake_replication.staging_admission` exposes the staging permit,
+and `lake_replication.journal_admission` exposes per-subscription journal budgets.
+Streaming slots use separate native queues rather than one
 global FIFO. This policy does not
 bound total memory or arbitrary application engine queries.

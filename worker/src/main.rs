@@ -1,6 +1,7 @@
 use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::journal::{Operation, StagedTransaction, TransactionAssembler};
 use lake_replication_worker::logging::event as log_event;
+use lake_replication_worker::managed::ManagedClient;
 use lake_replication_worker::pgoutput::{
     self, Cell, IdentityKind, IdentityTuple, Message, Relation, TupleFormat,
 };
@@ -8,6 +9,7 @@ use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, addre
 use std::collections::HashMap;
 use std::env;
 use std::io::ErrorKind;
+use std::thread;
 use std::time::Duration;
 
 const WAL_HEADER_LENGTH: usize = 25;
@@ -28,13 +30,14 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
-    let mut destination = Client::connect_secure(
+    let mut destination = ManagedClient::connect(
         config.destination_address.as_str(),
         &config.destination_user,
         &config.destination_database,
-        false,
         config.destination_password.as_deref(),
         config.destination_tls.as_ref(),
+        config.subscription_id,
+        config.config_generation,
     )?;
     let start_lsn = checkpoint(&mut destination, config.subscription_id)?;
     let schema_contracts = schema_contracts_enabled(&mut destination, config.subscription_id)?;
@@ -260,8 +263,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                             .remove(&stream_commit.xid)
                             .ok_or("commit for unknown streamed transaction")?;
                         let transaction = stream_assembler.commit(stream_commit.commit)?;
-                        let change_count =
-                            commit_stream(&mut destination, config.subscription_id, &transaction)?;
+                        let change_count = commit_stream(
+                            &mut destination,
+                            &mut source,
+                            feedback_lsn,
+                            config.subscription_id,
+                            &transaction,
+                        )?;
                         source.standby_status(transaction.end_lsn)?;
                         feedback_lsn = transaction.end_lsn;
                         mark_acknowledged(
@@ -296,6 +304,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                         let transaction = assembler.commit(commit)?;
                         stage_transaction(
                             &mut destination,
+                            &mut source,
+                            feedback_lsn,
                             config.subscription_id,
                             &transaction,
                             &schema_versions,
@@ -358,6 +368,7 @@ struct Config {
     slot: String,
     publication: String,
     subscription_id: i64,
+    config_generation: i64,
     max_transactions: u64,
     debug_streaming_immediate: bool,
     type_mapping_version: i32,
@@ -398,6 +409,7 @@ impl Config {
             slot: required("LAKE_SLOT")?,
             publication: required("LAKE_PUBLICATION")?,
             subscription_id,
+            config_generation: value("LAKE_CONFIG_GENERATION", "0").parse()?,
             max_transactions: value("LAKE_MAX_TRANSACTIONS", "1").parse()?,
             debug_streaming_immediate: value("LAKE_DEBUG_STREAMING_IMMEDIATE", "0") == "1",
             type_mapping_version: value("LAKE_TYPE_MAPPING_VERSION", "1").parse()?,
@@ -442,7 +454,7 @@ fn value(name: &str, default: &str) -> String {
 }
 
 fn checkpoint(
-    client: &mut Client,
+    client: &mut ManagedClient,
     subscription_id: i64,
 ) -> Result<u64, Box<dyn std::error::Error>> {
     let rows = client.simple_query(&format!(
@@ -457,7 +469,7 @@ fn checkpoint(
 }
 
 fn register_relation(
-    client: &mut Client,
+    client: &mut ManagedClient,
     subscription_id: i64,
     relation: &Relation,
 ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -474,7 +486,7 @@ fn register_relation(
 }
 
 fn schema_contracts_enabled(
-    client: &mut Client,
+    client: &mut ManagedClient,
     subscription_id: i64,
 ) -> Result<bool, Box<dyn std::error::Error>> {
     let rows = client.simple_query(&format!(
@@ -484,7 +496,7 @@ fn schema_contracts_enabled(
 }
 
 fn register_and_reconcile_relation(
-    destination: &mut Client,
+    destination: &mut ManagedClient,
     metadata_source: Option<&mut Client>,
     subscription_id: i64,
     mapping_version: i32,
@@ -545,7 +557,7 @@ fn source_type_contract(
 }
 
 fn record_schema_error(
-    destination: &mut Client,
+    destination: &mut ManagedClient,
     subscription_id: i64,
     relation_id: u32,
     version: i64,
@@ -559,26 +571,35 @@ fn record_schema_error(
 }
 
 fn stage_transaction(
-    client: &mut Client,
+    client: &mut ManagedClient,
+    source: &mut Client,
+    feedback_lsn: u64,
     subscription_id: i64,
     transaction: &StagedTransaction,
     schema_versions: &HashMap<u32, i64>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let changes = changes_json(transaction, schema_versions)?;
-    client.simple_query(&format!(
-        "SELECT lake_replication.stage_transaction({subscription_id}, {}, {}::pg_lsn, {}::pg_lsn, {}::pg_lsn, TIMESTAMPTZ '2000-01-01 00:00:00+00' + {} * INTERVAL '1 microsecond', {}::jsonb)",
+    let sql = format!(
+        "SELECT lake_replication.try_stage_transaction({subscription_id}, {}, {}::pg_lsn, {}::pg_lsn, {}::pg_lsn, TIMESTAMPTZ '2000-01-01 00:00:00+00' + {} * INTERVAL '1 microsecond', {}::jsonb)::text",
         transaction.xid,
         sql_literal(&format_lsn(transaction.begin_lsn)),
         sql_literal(&format_lsn(transaction.commit_lsn)),
         sql_literal(&format_lsn(transaction.end_lsn)),
         transaction.commit_time_micros,
         sql_literal(&changes),
-    ))?;
-    Ok(())
+    );
+    loop {
+        let rows = client.simple_query(&sql)?;
+        match single_value(&rows, "journal admission")? {
+            "true" => return Ok(()),
+            "false" => wait_for_journal(source, feedback_lsn)?,
+            _ => return Err("invalid journal admission response".into()),
+        }
+    }
 }
 
 fn begin_stream(
-    client: &mut Client,
+    client: &mut ManagedClient,
     subscription_id: i64,
     xid: u32,
     begin_lsn: u64,
@@ -591,7 +612,7 @@ fn begin_stream(
 }
 
 fn append_stream_segment(
-    client: &mut Client,
+    client: &mut ManagedClient,
     subscription_id: i64,
     xid: u32,
     changes: &str,
@@ -604,7 +625,7 @@ fn append_stream_segment(
 }
 
 fn abort_stream(
-    client: &mut Client,
+    client: &mut ManagedClient,
     subscription_id: i64,
     xid: u32,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -615,22 +636,41 @@ fn abort_stream(
 }
 
 fn commit_stream(
-    client: &mut Client,
+    client: &mut ManagedClient,
+    source: &mut Client,
+    feedback_lsn: u64,
     subscription_id: i64,
     transaction: &StagedTransaction,
 ) -> Result<u64, Box<dyn std::error::Error>> {
-    let rows = client.simple_query(&format!(
-        "SELECT lake_replication.commit_stream({subscription_id}, {}, {}::pg_lsn, {}::pg_lsn, TIMESTAMPTZ '2000-01-01 00:00:00+00' + {} * INTERVAL '1 microsecond')::text",
+    let sql = format!(
+        "SELECT lake_replication.try_commit_stream({subscription_id}, {}, {}::pg_lsn, {}::pg_lsn, TIMESTAMPTZ '2000-01-01 00:00:00+00' + {} * INTERVAL '1 microsecond')::text",
         transaction.xid,
         sql_literal(&format_lsn(transaction.commit_lsn)),
         sql_literal(&format_lsn(transaction.end_lsn)),
         transaction.commit_time_micros,
-    ))?;
-    Ok(single_value(&rows, "commit_stream")?.parse()?)
+    );
+    loop {
+        let rows = client.simple_query(&sql)?;
+        if let Some(value) = rows
+            .first()
+            .and_then(|r| r.first())
+            .and_then(Option::as_ref)
+        {
+            return Ok(value.parse()?);
+        }
+        wait_for_journal(source, feedback_lsn)?;
+    }
+}
+
+fn wait_for_journal(source: &mut Client, feedback_lsn: u64) -> Result<(), WireError> {
+    // Keep the sender alive without acknowledging the unadmitted commit.
+    source.standby_status(feedback_lsn)?;
+    thread::sleep(Duration::from_millis(100));
+    Ok(())
 }
 
 fn mark_acknowledged(
-    client: &mut Client,
+    client: &mut ManagedClient,
     subscription_id: i64,
     lsn: u64,
 ) -> Result<(), Box<dyn std::error::Error>> {
