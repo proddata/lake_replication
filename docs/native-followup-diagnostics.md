@@ -60,3 +60,59 @@ Its cold native build duration remains unverified.
 retains native findings, local timestamp measurements, input hashes and the
 shared-library relink check. No additional runtime policy or latency threshold
 is changed by this diagnostic work.
+
+## Targeted timing result and checkpoint coupling
+
+[ARM64 diagnostic 40951067352](https://github.com/proddata/lake_replication/actions/runs/40951067352)
+at `9e21a4a` restores the cached prerequisite and completes the probe. Managed
+checks and exact data pass, copies finish in 158.18 seconds with four-way
+publication overlap, and neither engine OOM nor a PostgreSQL crash occurs.
+Streaming p95 is still 2.579–2.945 seconds; the release gate remains failed.
+
+| Stream | End-to-end p95 | Source → insertion p95 | Insertion → batch p95 | Batch → commit p95 |
+|---|---:|---:|---:|---:|
+| analytics | 2579 ms | 1585 ms | 484 ms | 845 ms |
+| fair_stream_1 | 2945 ms | 1722 ms | 856 ms | 876 ms |
+| fair_stream_2 | 2772 ms | 1696 ms | 834 ms | 954 ms |
+
+These column percentiles are independent and must not be summed. The
+pre-insertion interval includes source delivery/decoding, staging SQL and
+backlog caused by acknowledgement of earlier transactions. Destination CPU
+pressure remains high, and sampled transaction-ID waits are present, but the
+existing samples do not identify blocking PIDs or queries.
+
+Source inspection identifies a concrete coupling: `prepare_batch` locks the
+subscription's `checkpoints` row before engine publication and retains it
+until commit. `stage_transaction`, journal admission and `mark_acknowledged`
+also lock that row. The receiver waits synchronously for acknowledgement
+recording before consuming its next source message. Publication can therefore
+stall ingestion even when journal capacity is available.
+
+The artifact-only local diagnostic reproduces this without relying on machine
+speed or an engine slowdown:
+
+```sh
+QUALIFICATION_ARCHIVE=/path/to/beta.4-arm64.tar.gz \
+  python3 tests/admission/probe.py --cases checkpoint
+```
+
+It prepares a real batch in an open transaction, verifies spare journal
+capacity, observes staging and acknowledgement lock timeouts, rolls back the
+publication transaction, and verifies both operations resume with the original
+staged transaction preserved. All seven diagnostic checks pass. This proves
+the lock dependency, not its exact share of native latency. The diagnostic is
+opt-in and is excluded from default release qualification.
+
+Next: locally prototype separate ingress/acknowledgement and publication
+checkpoint writes. Preserve atomic publication plus its progress marker,
+durable staging before source feedback, monotonic frontiers, serialized
+publisher/replay behavior, journal bounds and generation fencing. First prove
+staging can progress while publication is held open below capacity, and blocks
+or retries safely at capacity. Then compare the unchanged two-CPU workload
+with the baseline. Do not move the publication marker into a separate commit
+or loosen the latency gate to hide this coupling.
+
+[Checkpoint evidence](evidence/2026-10-29-checkpoint-coupling.json) retains the
+native phase summaries and local archive/input hashes and assertions. The
+local prerequisite image was reused; the pending Dockerfile optimization was
+not rebuilt or qualified by this diagnostic.

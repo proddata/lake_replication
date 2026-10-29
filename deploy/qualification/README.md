@@ -139,6 +139,12 @@ post-workload phase timings; see [timing semantics and current findings](../../d
 Use either `native_probe` or the older `fairness_diagnostic` mode, not both.
 Leave both false for full qualification.
 
+An opt-in local checkpoint coupling diagnostic is available with
+`python3 tests/admission/probe.py --cases checkpoint` and `QUALIFICATION_ARCHIVE`
+set to the candidate archive. A pass reproduces publication blocking staging
+and acknowledgement below journal capacity; it is not a release gate. See
+[the timing result and reproduction](../../docs/native-followup-diagnostics.md#targeted-timing-result-and-checkpoint-coupling).
+
 ## Storage fixture preparation
 
 Qualification builds MinIO server/client fixtures from the pinned upstream source
