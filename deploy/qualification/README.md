@@ -131,6 +131,11 @@ first-time preparation and cache export. Cold prerequisite preparation previousl
 took roughly 45–50 minutes; caching avoids repeating that work. Evidence is uploaded
 on failure as well as success. These probes do not qualify a release.
 
+Add `-f probe_arch=arm64` or `-f probe_arch=amd64` to isolate a focused
+probe; the default is both. Architecture selection requires `native_probe=true`.
+Full qualification always runs both architectures. The fairness report includes
+post-workload phase timings; see [timing semantics and current findings](../../docs/native-followup-diagnostics.md).
+
 Use either `native_probe` or the older `fairness_diagnostic` mode, not both.
 Leave both false for full qualification.
 

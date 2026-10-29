@@ -19,7 +19,7 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 40839966901](https://github.com/proddata/lake_replication/actions/runs/40839966901) passes checks and both native beta.4 bundles at `a2282cd`. [Native probe 40840260661](docs/native-beta4-probe-findings.md) fails ARM64 latency and AMD64 cache export disk space. The heartbeat/fence conflict and cache workflow are corrected locally; native revalidation remains pending. Historical findings remain in [native findings](docs/native-qualification-failures.md). |
+| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 40932433981](https://github.com/proddata/lake_replication/actions/runs/40932433981) passes checks and both native beta.4 bundles at `a817ce9`. [Native probe 40932877134](docs/native-followup-diagnostics.md) passes 68 ARM64 managed checks with no heartbeat lock errors, but streaming p95 remains 2.161–2.718 seconds. AMD64 disk preparation succeeds; its cold prerequisite build times out before replication. Targeted latency diagnostics and a separate build optimization are prepared; native qualification remains open. |
 | G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Local beta.4 arm64 archives pass fresh lifecycle, receiver, worker crash, admission and upgrade checks. Measured and final documented archives have identical production payloads; see [current qualification](docs/staging-journal-migration-results.md). Native amd64 and clean final-commit packages remain pending. |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The local beta.4 arm64 candidate passes 119 fresh lifecycle checks on private clean volumes with no SQL/binary overlay, including restore, management and uninstall. See [current production qualification](docs/staging-journal-migration-results.md). Native amd64 and final-commit packages remain G1 requirements. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Bulk-only admission reproduced a fatal sixteen-stream OOM at 2 GB. The adopted four-slot streaming pool passes 457 final packaged arm64 checks, including that live/restart workload and four-copy coexistence. [Performance evidence](docs/stream-pool-performance-results.md) retains the first inconclusive copy cohort and fixed ten-pair extension. Native ARM64 subsequently failed the four-copy latency limits at `8bcd5b2`; exact data and the sixteen-stream OOM regression passed. See [native findings](docs/native-qualification-failures.md). Both native architectures, final-commit qualification and the packaged RC soak remain required. See [production migration](docs/stream-pool-migration-results.md). |
@@ -32,13 +32,15 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 ## Release decision
 
-The [latest native beta.4 probe](docs/native-beta4-probe-findings.md) fails:
-ARM64 passes managed recovery and exact data but misses streaming p95 targets;
-AMD64 exhausts disk exporting the prerequisite cache before replication tests.
-A heartbeat/fence lock conflict is reproduced and corrected locally, with 68
-managed checks and a passing two-CPU contention repeat. Cache export is made
-optional and disk preparation improved. Corrected native qualification remains
-pending; no local pass promotes the failed native gate.
+The [latest native beta.4 probe](docs/native-followup-diagnostics.md) fails:
+ARM64 passes 68 managed checks and exact data, with zero heartbeat lock errors,
+but streaming p95 remains 2.161–2.718 seconds against the two-second limit.
+AMD64 has adequate disk after cleanup, but its cold prerequisite build reaches
+the 60-minute timeout before replication starts. The heartbeat correction is
+validated; native performance remains unresolved. Post-workload timestamp
+diagnostics are locally checked and ready for a targeted ARM64 probe. The
+separately prepared shared-library build optimization still needs cold native
+validation. No local pass promotes the failed native gate.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)

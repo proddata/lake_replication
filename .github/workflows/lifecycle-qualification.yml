@@ -20,6 +20,16 @@ on:
         default: false
         type: boolean
 
+      probe_arch:
+        description: Architecture for a focused native probe (full qualification always uses both)
+        required: false
+        default: both
+        type: choice
+        options:
+          - both
+          - arm64
+          - amd64
+
 permissions:
   contents: read
   actions: read
@@ -30,11 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - arch: amd64
-            runner: ubuntu-latest
-          - arch: arm64
-            runner: ubuntu-24.04-arm
+        include: ${{ fromJSON(inputs.native_probe && inputs.probe_arch == 'arm64' && '[{"arch":"arm64","runner":"ubuntu-24.04-arm"}]' || inputs.native_probe && inputs.probe_arch == 'amd64' && '[{"arch":"amd64","runner":"ubuntu-latest"}]' || '[{"arch":"amd64","runner":"ubuntu-latest"},{"arch":"arm64","runner":"ubuntu-24.04-arm"}]') }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: ${{ inputs.native_probe && 90 || 180 }}
     env:
@@ -46,9 +52,15 @@ jobs:
         env:
           NATIVE_PROBE: ${{ inputs.native_probe }}
           FAIRNESS_DIAGNOSTIC: ${{ inputs.fairness_diagnostic }}
+          PROBE_ARCH: ${{ inputs.probe_arch }}
         run: |
           if [[ "$NATIVE_PROBE" == true && "$FAIRNESS_DIAGNOSTIC" == true ]]; then
             echo 'Select native_probe or fairness_diagnostic, not both.' >&2
+            exit 1
+          fi
+          case "$PROBE_ARCH" in both|arm64|amd64) ;; *) exit 1 ;; esac
+          if [[ "$NATIVE_PROBE" != true && "$PROBE_ARCH" != both ]]; then
+            echo 'Architecture selection requires native_probe=true.' >&2
             exit 1
           fi
       - name: Resolve the successful candidate CI revision

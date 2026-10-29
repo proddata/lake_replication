@@ -43,6 +43,23 @@ def observer_epoch(sample):
     return sample['observer_epoch'] if 'observer_epoch' in sample else sample['copy']['observed_epoch']
 
 
+def publication_phases(transaction,journal_insert,batch_created,published):
+    """Split lag using existing row timestamps collected after measurement.
+
+    staged_at marks insertion, not the staging transaction's durable commit.
+    The middle interval therefore includes staging commit as well as planning.
+    """
+    epochs=[transaction['commit_epoch'],journal_insert,batch_created,published]
+    if any(right<left for left,right in zip(epochs,epochs[1:])):
+        raise AssertionError('publication phase timestamps are out of order')
+    return dict(**transaction,journal_insert_epoch=journal_insert,
+        batch_created_epoch=batch_created,publication_commit_epoch=published,
+        source_to_journal_insert_ms=1000*(journal_insert-epochs[0]),
+        journal_insert_to_batch_ms=1000*(batch_created-journal_insert),
+        batch_to_publication_commit_ms=1000*(published-batch_created),
+        lag_ms=1000*(published-epochs[0]))
+
+
 def fairness_timing_validation(case, tolerance_seconds=1.0):
     trace=case['trace']
     if not trace:
@@ -234,11 +251,11 @@ def fairness(args, variant, image, text, directory):
             result.update(copy_start_epoch=copy_start, copy_commit_epoch=copy_end,
                 copy_elapsed_seconds=copy_end-copy_start, streams=[], source_transactions=commits)
         for i, dest in enumerate(destinations):
-            published = dest.query("SELECT xid::text,extract(epoch FROM pg_xact_commit_timestamp(xmin)) FROM lake_replication.transactions WHERE state='published' ORDER BY xid")
-            mapping = {int(row.split('|')[0]): float(row.split('|')[1]) for row in published}
+            published = dest.query("SELECT t.xid::text,extract(epoch FROM t.staged_at),extract(epoch FROM b.created_at),extract(epoch FROM pg_xact_commit_timestamp(t.xmin)) FROM lake_replication.transactions t JOIN lake_replication.batches b USING(batch_id) WHERE t.state='published' ORDER BY t.xid")
+            mapping = {int(row.split('|')[0]): [float(value) for value in row.split('|')[1:]] for row in published}
             if len(mapping) != args.stream_transactions or len(commits[i]) != args.stream_transactions:
                 raise AssertionError('missing/duplicate measured streaming transactions')
-            points = [dict(**tx, publication_commit_epoch=mapping[tx['xid']], lag_ms=1000*(mapping[tx['xid']]-tx['commit_epoch'])) for tx in commits[i]]
+            points = [publication_phases(tx,*mapping[tx['xid']]) for tx in commits[i]]
             if any(tx['lag_ms'] < 0 for tx in points):
                 raise AssertionError('negative commit lag')
             during = [tx for tx in points if copy_start <= tx['publication_commit_epoch'] <= copy_end] if bulk_copies else None
@@ -254,6 +271,8 @@ def fairness(args, variant, image, text, directory):
                 p95_publication_ms=p95, max_publication_gap_seconds=max(gaps),
                 commits_during_copy=len(during) if during is not None else None, catchup_seconds=catchup,
                 source_max_schedule_lateness_seconds=lateness)
+            summary['latency_phases_p95_ms']={name:c.percentile([tx[name] for tx in points],.95)
+                for name in ['source_to_journal_insert_ms','journal_insert_to_batch_ms','batch_to_publication_commit_ms']}
             summary['checks'] = dict(p95_below_two_seconds=p95<2000,
                 max_gap_within_five_seconds=max(gaps)<=5,
                 at_least_five_commits_during_copy=len(during)>=5 if during is not None else None,
