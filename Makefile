@@ -186,7 +186,7 @@ check:
 	python3 -m py_compile tests/postgres_integration/probe.py
 	python3 -m py_compile tests/extension/probe.py
 	python3 -m py_compile tests/install/probe.py
-	python3 -m py_compile tests/qualification/probe.py tests/qualification/storage.py tests/qualification/storage_preflight.py
+	python3 -m py_compile tests/qualification/probe.py tests/qualification/storage.py tests/qualification/storage_preflight.py tests/qualification/prerequisite.py
 	python3 -m unittest discover -s tests/qualification -p 'test_*.py'
 	python3 -m py_compile tests/qualification/compatibility.py
 	$(MAKE) -C extensions/lake_replication generate

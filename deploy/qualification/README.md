@@ -122,9 +122,13 @@ gh workflow run lifecycle-qualification.yml --ref main \
 This verifies archive provenance, prepares the source-pinned storage fixtures,
 and runs managed admission followed by one unchanged four-copy fairness case.
 It skips fresh lifecycle, receiver regressions, scale and historical upgrade
-builds. Each architecture has a 45-minute job limit and a 35-minute probe step
-limit, including prerequisite image builds. A fresh runner must still compile
-pg_lake, so this is not an estimate of test execution time. Evidence is uploaded
+builds. The upstream-only pg_lake image is prepared separately and cached by source
+revision, architecture and build/loader inputs. Cache restoration verifies its
+archive checksum, image ID and source labels before testing. A cache miss has a
+60-minute preparation limit; a hit loads the existing image. The actual probe
+step has a 15-minute limit and the overall job has a 90-minute ceiling, including
+first-time preparation and cache export. Cold prerequisite preparation previously
+took roughly 45–50 minutes; caching avoids repeating that work. Evidence is uploaded
 on failure as well as success. These probes do not qualify a release.
 
 Use either `native_probe` or the older `fairness_diagnostic` mode, not both.

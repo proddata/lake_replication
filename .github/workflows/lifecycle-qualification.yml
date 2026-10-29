@@ -36,7 +36,7 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: ${{ inputs.native_probe && 45 || 180 }}
+    timeout-minutes: ${{ inputs.native_probe && 90 || 180 }}
     env:
       GH_TOKEN: ${{ github.token }}
       ARTIFACT_RUN_ID: ${{ inputs.artifact_run_id }}
@@ -117,6 +117,41 @@ jobs:
           docker system df >> .qualification/disk/before-storage-cache-cleanup.txt
           docker builder prune --all --force
           df -h > .qualification/disk/after-storage-cache-cleanup.txt
+      - name: Resolve source-keyed prerequisite cache
+        if: ${{ inputs.native_probe }}
+        id: prerequisite_key
+        run: echo "key=$(python3 tests/qualification/prerequisite.py key)" >> "$GITHUB_OUTPUT"
+      - name: Restore prerequisite image archive
+        if: ${{ inputs.native_probe }}
+        id: prerequisite_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: ${{ runner.temp }}/lake-prerequisite-cache
+          key: ${{ steps.prerequisite_key.outputs.key }}
+      - name: Verify and load cached prerequisite image
+        if: ${{ inputs.native_probe && steps.prerequisite_cache.outputs.cache-hit == 'true' }}
+        run: python3 tests/qualification/prerequisite.py load "$RUNNER_TEMP/lake-prerequisite-cache"
+      - name: Prepare upstream-only prerequisite image
+        if: ${{ inputs.native_probe }}
+        timeout-minutes: 60
+        run: |
+          set -o pipefail
+          python3 tests/qualification/prerequisite.py build 2>&1 | tee .qualification/prerequisite-build.log
+      - name: Export prerequisite image without an uncompressed copy
+        if: ${{ inputs.native_probe && steps.prerequisite_cache.outputs.cache-hit != 'true' }}
+        timeout-minutes: 10
+        run: python3 tests/qualification/prerequisite.py save "$RUNNER_TEMP/lake-prerequisite-cache"
+      - name: Save verified prerequisite cache
+        if: ${{ inputs.native_probe && steps.prerequisite_cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: ${{ runner.temp }}/lake-prerequisite-cache
+          key: ${{ steps.prerequisite_key.outputs.key }}
+      - name: Free the local cache archive before replication
+        if: ${{ inputs.native_probe }}
+        run: |
+          rm -f "$RUNNER_TEMP/lake-prerequisite-cache/pg-lake-base.tar.gz" \
+                "$RUNNER_TEMP/lake-prerequisite-cache/manifest.json"
       - name: Controlled copy-contention diagnostic
         if: ${{ inputs.fairness_diagnostic }}
         run: |
@@ -129,7 +164,7 @@ jobs:
           exit "$status"
       - name: Focused native admission and four-copy probe
         if: ${{ inputs.native_probe }}
-        timeout-minutes: 35
+        timeout-minutes: 15
         run: python3 tests/admission/probe.py --cases managed fairness
       - name: Fresh packaged lifecycle
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}

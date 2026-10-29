@@ -59,18 +59,19 @@ EVIDENCE = {
 }
 
 
-def command(args, *, check_result=True, timeout=1200, cwd=ROOT, **kwargs):
+def command(args, *, check_result=True, timeout=1200, cwd=ROOT, capture_output=True, **kwargs):
     result = subprocess.run(
         args,
         cwd=cwd,
         env=ENV,
         text=True,
-        capture_output=True,
+        capture_output=capture_output,
         timeout=timeout,
         **kwargs,
     )
     if check_result and result.returncode:
-        raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+        raise RuntimeError((result.stderr or "").strip() or (result.stdout or "").strip()
+                           or f"{args[0]} exited with status {result.returncode}")
     return result
 
 
@@ -206,27 +207,12 @@ def build_images(archive, context):
     # Fail before the expensive prerequisite compilation if S3 fixtures cannot
     # be prepared. Reuse only locally verified source/recipe/architecture IDs.
     build_storage_images()
-    base_exists = command(
-        ["docker", "image", "inspect", BASE_IMAGE], check_result=False
-    ).returncode == 0
-    if not base_exists or os.environ.get("QUALIFICATION_REBUILD_BASE") == "1":
-        command([sys.executable, str(ROOT / "deploy/prepare-upstream.py"), PG_LAKE_REVISION])
-        command(
-            [
-                "docker",
-                "build",
-                "--target",
-                "pg-lake-base",
-                "--build-arg",
-                f"PG_LAKE_REV={PG_LAKE_REVISION}",
-                "--tag",
-                BASE_IMAGE,
-                "--file",
-                str(ROOT / "deploy/poc/Dockerfile"),
-                str(ROOT),
-            ],
-            timeout=7200,
-        )
+    spec=importlib.util.spec_from_file_location('qualification_prerequisite',ROOT/'tests/qualification/prerequisite.py')
+    prerequisite=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(prerequisite)
+    prerequisite.ensure(command,ROOT,PG_LAKE_REVISION,BASE_IMAGE)
+    expected=prerequisite.identity(ROOT,PG_LAKE_REVISION,native_architecture())
+    EVIDENCE['prerequisite']={'identity':expected,'image_id':prerequisite.image(command,BASE_IMAGE,expected)}
     for name in (
         "Dockerfile.destination",
         "Dockerfile.source",

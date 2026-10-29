@@ -1,0 +1,382 @@
+{
+  "archives": {
+    "amd64": {
+      "changed_from_local_arm64": [
+        "bin/lake-replication-initial-sync",
+        "bin/lake-replication-publisher",
+        "bin/lake-replication-receiver",
+        "bin/lake-replication-supervisor",
+        "lib/lake_replication.so"
+      ],
+      "metadata": {
+        "SOURCE_REVISION": "77857809f37349951e7acc4e98c5a8a3aa519859",
+        "TARGETARCH": "amd64",
+        "VERSION": "0.1.0-beta.4"
+      },
+      "payload_sha256": {
+        "bin/lake-replication-initial-sync": "4a0207e3c5bde9f90b5dc8e409ed6dce9abb75eaf9b39173a3e55b58b64a8c84",
+        "bin/lake-replication-publisher": "031a90f3f20a63c0fc9ee215c6ffef43110545cd3a3b99e2dacb808f7c76a1c9",
+        "bin/lake-replication-receiver": "6344da0b7969390f420bef1a5f76b357de391b5420c321d17ce3b361beb3ed0e",
+        "bin/lake-replication-supervisor": "cff51306c5b2b8df69a84ad78f3fc30b2d7f56d6c7b1082044fa2474957965e5",
+        "extension/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+        "extension/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+        "extension/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+        "extension/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+        "extension/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "9ab9461483a11815411da68b64618f3ee2665d3ba75ce2aab77fe2cfea508177",
+        "extension/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+        "extension/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql": "93603142a448e24e138484fed63f41bbff0f93cdf6744d5dcb27932fc8faca2c",
+        "extension/lake_replication--0.1.0-beta.3.sql": "fe02eb376e8467e3c69c51ce1e9c4f415810a5a54dcf2a402ec77742bdf3d35d",
+        "extension/lake_replication--0.1.0-beta.4.sql": "6545e3c2a88b13c4a6c1579d24298e68b4f63cd719fb855dfa063bbca50306f0",
+        "extension/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+        "extension/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+        "lib/lake_replication.so": "15bf1a6d1284244dcfc5b3ddd9459a68732d0f65da4c3660ad92ac2b70534cae"
+      },
+      "sha256": "4df8feb0b2d83108accb9cec953a175e5d10d614143752d650da392fb500e592",
+      "sql_matches_checkout": true
+    },
+    "arm64": {
+      "changed_from_local_arm64": [],
+      "metadata": {
+        "SOURCE_REVISION": "77857809f37349951e7acc4e98c5a8a3aa519859",
+        "TARGETARCH": "arm64",
+        "VERSION": "0.1.0-beta.4"
+      },
+      "payload_sha256": {
+        "bin/lake-replication-initial-sync": "74ac2186267dc2faa6a6ebc1d5ff23480810a0b294b4bf981f99a97d691a151e",
+        "bin/lake-replication-publisher": "82307e95cc0cc57241e8a7349900c941b338bab7e41e3ea44c69a039fdc57abb",
+        "bin/lake-replication-receiver": "aa2e1c26d761ddee0aabf0ec6b086b8e0f3cec55fe92fbefd2e272bb6c59f165",
+        "bin/lake-replication-supervisor": "da899b3659130a4ad5a7f0450b0fc4354fa051c1ea7843c0705b684cc1f885cc",
+        "extension/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+        "extension/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+        "extension/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+        "extension/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+        "extension/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "9ab9461483a11815411da68b64618f3ee2665d3ba75ce2aab77fe2cfea508177",
+        "extension/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+        "extension/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql": "93603142a448e24e138484fed63f41bbff0f93cdf6744d5dcb27932fc8faca2c",
+        "extension/lake_replication--0.1.0-beta.3.sql": "fe02eb376e8467e3c69c51ce1e9c4f415810a5a54dcf2a402ec77742bdf3d35d",
+        "extension/lake_replication--0.1.0-beta.4.sql": "6545e3c2a88b13c4a6c1579d24298e68b4f63cd719fb855dfa063bbca50306f0",
+        "extension/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+        "extension/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+        "lib/lake_replication.so": "f8d59974522bd1c06fe80589fe37af5f23f17d860096e59d0c2b35afcb3ad7ff"
+      },
+      "sha256": "b61cefd8ea621fcc2e4946f88cb9393909dd2eaaad554558d3eb091d9b9997d9",
+      "sql_matches_checkout": true
+    }
+  },
+  "cache_round_trip": {
+    "archive_bytes": 2061084008,
+    "archive_sha256": "3c4495a9463bf9299336d4415d6823c20285114afa66610141eef7fce2f7dd3d",
+    "clean_restore_log_sha256": "bae5ddc4cf89b3fae573c23b493628c7b7eefa78b279205e853a3a2b97b5b7e5",
+    "identity": {
+      "architecture": "arm64",
+      "format": 1,
+      "inputs": {
+        "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+        "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+        "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+      },
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+    },
+    "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+    "restores_absent_tag": true
+  },
+  "cancelled_probe": {
+    "reason": "35-minute probe step included cold upstream compilation; previous first lifecycle steps took 47-52 minutes.",
+    "run_id": 40836900198,
+    "url": "https://github.com/proddata/lake_replication/actions/runs/40836900198"
+  },
+  "candidate_revision": "77857809f37349951e7acc4e98c5a8a3aa519859",
+  "ci": {
+    "conclusion": "success",
+    "databaseId": 40836527510,
+    "headSha": "77857809f37349951e7acc4e98c5a8a3aa519859",
+    "jobs": [
+      {
+        "completedAt": "2026-10-29T07:38:24Z",
+        "conclusion": "success",
+        "databaseId": 123322487486,
+        "name": "bundle (amd64)",
+        "startedAt": "2026-10-29T07:36:39Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-29T07:36:42Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-29T07:36:40Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:36:44Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-29T07:36:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:36:51Z",
+            "conclusion": "success",
+            "name": "Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 3,
+            "startedAt": "2026-10-29T07:36:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:19Z",
+            "conclusion": "success",
+            "name": "Build amd64 bundle",
+            "number": 4,
+            "startedAt": "2026-10-29T07:36:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:21Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+            "number": 5,
+            "startedAt": "2026-10-29T07:38:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:21Z",
+            "conclusion": "success",
+            "name": "Post Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 9,
+            "startedAt": "2026-10-29T07:38:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:22Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-29T07:38:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:22Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-29T07:38:22Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/40836527510/job/123322487486"
+      },
+      {
+        "completedAt": "2026-10-29T07:38:21Z",
+        "conclusion": "success",
+        "databaseId": 123322487758,
+        "name": "bundle (arm64)",
+        "startedAt": "2026-10-29T07:36:41Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-29T07:36:43Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-29T07:36:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:36:45Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-29T07:36:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:36:54Z",
+            "conclusion": "success",
+            "name": "Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 3,
+            "startedAt": "2026-10-29T07:36:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:17Z",
+            "conclusion": "success",
+            "name": "Build arm64 bundle natively",
+            "number": 4,
+            "startedAt": "2026-10-29T07:36:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:18Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+            "number": 5,
+            "startedAt": "2026-10-29T07:38:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:19Z",
+            "conclusion": "success",
+            "name": "Post Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 9,
+            "startedAt": "2026-10-29T07:38:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:19Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-29T07:38:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:38:19Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-29T07:38:19Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/40836527510/job/123322487758"
+      },
+      {
+        "completedAt": "2026-10-29T07:37:09Z",
+        "conclusion": "success",
+        "databaseId": 123322488391,
+        "name": "check",
+        "startedAt": "2026-10-29T07:36:39Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-29T07:36:41Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-29T07:36:40Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:36:42Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-29T07:36:41Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:36:49Z",
+            "conclusion": "success",
+            "name": "Select Rust 1.85",
+            "number": 3,
+            "startedAt": "2026-10-29T07:36:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:37:08Z",
+            "conclusion": "success",
+            "name": "Check",
+            "number": 4,
+            "startedAt": "2026-10-29T07:36:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:37:08Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 8,
+            "startedAt": "2026-10-29T07:37:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-29T07:37:08Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 9,
+            "startedAt": "2026-10-29T07:37:08Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/40836527510/job/123322488391"
+      },
+      {
+        "completedAt": "2026-10-29T07:38:24Z",
+        "conclusion": "skipped",
+        "databaseId": 123323116488,
+        "name": "qualify-amd64",
+        "startedAt": "2026-10-29T07:38:25Z",
+        "status": "completed",
+        "steps": [],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/40836527510/job/123323116488"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/proddata/lake_replication/actions/runs/40836527510"
+  },
+  "local_managed": {
+    "checks": 65,
+    "inputs": {
+      "Cargo.lock": "9b41b01aa6d7749ea85b205c592b6a9781833fbe65765169a06e20e07a325ffa",
+      "experiments/admission/admission_measure.py": "4f91178643292bce24feda6d9f52c6a7836862e0662d3c66ae6bcfe82ecf2f48",
+      "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+      "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+      "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+      "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+      "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+      "extensions/lake_replication/Makefile": "ea9b145b1689133f62b9947e1ae219190588fce78d0b35b82923fc560aae8316",
+      "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+      "extensions/lake_replication/lake_replication.c": "453b0e4de938675413a56df77bdff8d748407066060cc81cf8b3b5a773d97316",
+      "extensions/lake_replication/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+      "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+      "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+      "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+      "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+      "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+      "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+      "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+      "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+      "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+      "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+      "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+      "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+      "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+      "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+      "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+      "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+      "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+      "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+      "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+      "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+      "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+      "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+      "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+      "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+      "migrations/0025_staging_and_journal_admission.sql": "62b243f5a697567d148089eea4886c22b8276e46f8394faff60d863c8cb4a035",
+      "tests/admission/managed_cases.py": "b073ed67857bfc9c0115841dd9bc8a5452e3995f460d5472537d2727e4563dd5",
+      "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+      "tests/admission/probe.py": "6697132235337fc8db850ea2ef005d6c28fc6cc3aea4a5725e7cda1ccc9002e3",
+      "tests/qualification/probe.py": "f748c14719ea9877818e816b052890e51fced24c84e72bec8e6a89b19436a4cb",
+      "worker/Cargo.toml": "8da2a60721a6ebde95857712570e1cd1e3482cd84d83dcafc7dd0c92c6c693b9",
+      "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+      "worker/src/initial_sync.rs": "68d53a3550ef7df1b35c4fb0368293df29d626adc0640346c79fa7631af9abc5",
+      "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+      "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+      "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+      "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+      "worker/src/managed.rs": "8a01d95edbe918179e320c682ec5a5154d59ac7e1e3e338659490ef7909caed7",
+      "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+      "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+      "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+      "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+    },
+    "results": ".qualification/qualification_20261029_080115_production_admission/results.json",
+    "status": "passed"
+  },
+  "scope": "Native candidate provenance and prerequisite-cache preparation; native replication results remain pending.",
+  "validation": {
+    "local_managed_checks": 65,
+    "qualification_unit_tests": 9,
+    "workflow_actionlint": "passed"
+  }
+}
