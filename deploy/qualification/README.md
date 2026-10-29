@@ -145,6 +145,21 @@ set to the candidate archive. A pass reproduces publication blocking staging
 and acknowledgement below journal capacity; it is not a release gate. See
 [the timing result and reproduction](../../docs/native-followup-diagnostics.md#targeted-timing-result-and-checkpoint-coupling).
 
+The [checkpoint partition prototype](../../docs/checkpoint-split-prototype.md)
+has a separate opt-in native diagnostic after its local safety checks:
+
+```sh
+gh workflow run lifecycle-qualification.yml --ref main \
+  -f artifact_run_id=CI_RUN_ID -f native_probe=true -f probe_arch=arm64 \
+  -f checkpoint_split_diagnostic=true
+```
+
+This installs a disposable SQL overlay after archive provenance verification.
+The evidence declares the overlay and retains its sources. A passing diagnostic
+does not qualify the unmodified release archive or supply a production upgrade.
+The option is rejected outside an ARM64 focused native probe; leave it false for
+all normal archive qualification.
+
 ## Storage fixture preparation
 
 Qualification builds MinIO server/client fixtures from the pinned upstream source

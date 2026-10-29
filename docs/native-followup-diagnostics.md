@@ -116,3 +116,9 @@ or loosen the latency gate to hide this coupling.
 native phase summaries and local archive/input hashes and assertions. The
 local prerequisite image was reused; the pending Dockerfile optimization was
 not rebuilt or qualified by this diagnostic.
+
+The [local split-checkpoint prototype](checkpoint-split-prototype.md) now
+removes this lock dependency in deterministic checks and passes managed and
+one-/two-CPU workload checks. It sharply reduces pre-insertion delay locally,
+but some waiting shifts into the journal, so end-to-end gains are modest.
+The next test is the opt-in native overlay diagnostic, not a production migration.

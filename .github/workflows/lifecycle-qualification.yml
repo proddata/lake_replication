@@ -30,6 +30,12 @@ on:
           - arm64
           - amd64
 
+      checkpoint_split_diagnostic:
+        description: Test the disposable checkpoint SQL overlay (ARM64 native probe only; not release qualification)
+        required: false
+        default: false
+        type: boolean
+
 permissions:
   contents: read
   actions: read
@@ -53,6 +59,7 @@ jobs:
           NATIVE_PROBE: ${{ inputs.native_probe }}
           FAIRNESS_DIAGNOSTIC: ${{ inputs.fairness_diagnostic }}
           PROBE_ARCH: ${{ inputs.probe_arch }}
+          CHECKPOINT_SPLIT: ${{ inputs.checkpoint_split_diagnostic }}
         run: |
           if [[ "$NATIVE_PROBE" == true && "$FAIRNESS_DIAGNOSTIC" == true ]]; then
             echo 'Select native_probe or fairness_diagnostic, not both.' >&2
@@ -61,6 +68,10 @@ jobs:
           case "$PROBE_ARCH" in both|arm64|amd64) ;; *) exit 1 ;; esac
           if [[ "$NATIVE_PROBE" != true && "$PROBE_ARCH" != both ]]; then
             echo 'Architecture selection requires native_probe=true.' >&2
+            exit 1
+          fi
+          if [[ "$CHECKPOINT_SPLIT" == true && ( "$NATIVE_PROBE" != true || "$PROBE_ARCH" != arm64 ) ]]; then
+            echo 'Checkpoint overlay diagnostics require native_probe=true and probe_arch=arm64.' >&2
             exit 1
           fi
       - name: Resolve the successful candidate CI revision
@@ -195,9 +206,13 @@ jobs:
           done
           exit "$status"
       - name: Focused native admission and four-copy probe
-        if: ${{ inputs.native_probe }}
+        if: ${{ inputs.native_probe && !inputs.checkpoint_split_diagnostic }}
         timeout-minutes: 15
         run: python3 tests/admission/probe.py --cases managed fairness
+      - name: Checkpoint partition prototype diagnostic (SQL overlay)
+        if: ${{ inputs.native_probe && inputs.checkpoint_split_diagnostic }}
+        timeout-minutes: 15
+        run: python3 tests/admission/checkpoint_split_probe.py --cases managed fairness --cpuset 0-1
       - name: Fresh packaged lifecycle
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: make lifecycle-test

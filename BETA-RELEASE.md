@@ -37,10 +37,15 @@ completes with managed/exact-data checks passing, but publication p95 remains
 2.579–2.945 seconds against the two-second limit. Source-to-journal insertion
 accounts for substantial delay. A local artifact-only diagnostic proves that
 publication checkpoint row locks block staging and acknowledgement despite
-free journal capacity. Its contribution to native latency still needs an
-isolated local comparison. AMD64's prerequisite build timeout and the separate
-build optimization also remain unqualified. No local pass promotes the failed
-native gate.
+free journal capacity. Its contribution to native latency still needs a
+targeted native comparison. AMD64's prerequisite build timeout and the separate
+build optimization also remain unqualified. The
+[split-checkpoint overlay](docs/checkpoint-split-prototype.md) passes local
+managed checks, deterministic isolation/bounds checks and original/overlay
+one- and two-CPU comparisons. It removes the observed staging dependency but
+has only modest local end-to-end gains. A targeted native overlay diagnostic
+is next; the production migration is not implemented. No local pass promotes
+the failed native gate.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)
