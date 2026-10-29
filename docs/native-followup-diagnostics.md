@@ -121,4 +121,4 @@ The [local split-checkpoint prototype](checkpoint-split-prototype.md) now
 removes this lock dependency in deterministic checks and passes managed and
 one-/two-CPU workload checks. It sharply reduces pre-insertion delay locally,
 but some waiting shifts into the journal, so end-to-end gains are modest.
-The next test is the opt-in native overlay diagnostic, not a production migration.
+The native overlay diagnostic subsequently passes stream latency but fails copy/source-scheduling gates; see the [retained native result](checkpoint-split-prototype.md#native-result-latency-improves-qualification-still-fails). Production migration remains deferred pending a matched runner comparison.

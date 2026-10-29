@@ -19,7 +19,7 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 40950730646](https://github.com/proddata/lake_replication/actions/runs/40950730646) passes checks and both bundles at `9e21a4a`. [ARM64 timing diagnostic 40951067352](docs/native-followup-diagnostics.md#targeted-timing-result-and-checkpoint-coupling) passes managed/exact-data checks but fails p95 at 2.579–2.945 seconds. A local diagnostic proves publication checkpoint locks block staging and acknowledgement below journal capacity; an isolated fix remains pending. AMD64 prerequisite cold-build timeout also remains open. |
+| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 40956746888](https://github.com/proddata/lake_replication/actions/runs/40956746888) passes checks and both bundles at `99f9177`. The unmodified archive still fails native latency. The [split-checkpoint native overlay](docs/checkpoint-split-prototype.md#native-result-latency-improves-qualification-still-fails) reaches 1.717–1.883-second p95, but fails the 180-second copy limit and two source-scheduling gates. A matched same-runner comparison remains required before migration. AMD64 cold-build timeout remains open. |
 | G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Local beta.4 arm64 archives pass fresh lifecycle, receiver, worker crash, admission and upgrade checks. Measured and final documented archives have identical production payloads; see [current qualification](docs/staging-journal-migration-results.md). Native amd64 and clean final-commit packages remain pending. |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The local beta.4 arm64 candidate passes 119 fresh lifecycle checks on private clean volumes with no SQL/binary overlay, including restore, management and uninstall. See [current production qualification](docs/staging-journal-migration-results.md). Native amd64 and final-commit packages remain G1 requirements. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Bulk-only admission reproduced a fatal sixteen-stream OOM at 2 GB. The adopted four-slot streaming pool passes 457 final packaged arm64 checks, including that live/restart workload and four-copy coexistence. [Performance evidence](docs/stream-pool-performance-results.md) retains the first inconclusive copy cohort and fixed ten-pair extension. Native ARM64 subsequently failed the four-copy latency limits at `8bcd5b2`; exact data and the sixteen-stream OOM regression passed. See [native findings](docs/native-qualification-failures.md). Both native architectures, final-commit qualification and the packaged RC soak remain required. See [production migration](docs/stream-pool-migration-results.md). |
@@ -43,9 +43,11 @@ build optimization also remain unqualified. The
 [split-checkpoint overlay](docs/checkpoint-split-prototype.md) passes local
 managed checks, deterministic isolation/bounds checks and original/overlay
 one- and two-CPU comparisons. It removes the observed staging dependency but
-has only modest local end-to-end gains. A targeted native overlay diagnostic
-is next; the production migration is not implemented. No local pass promotes
-the failed native gate.
+has only modest local end-to-end gains. Its [native diagnostic](docs/checkpoint-split-prototype.md#native-result-latency-improves-qualification-still-fails)
+puts stream p95 below two seconds but fails the copy limit (182.86 seconds)
+and two source-scheduling checks. A matched same-runner comparison is required
+before attributing the slowdown or promoting a production migration. No
+prototype or local pass promotes the failed native gate.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)

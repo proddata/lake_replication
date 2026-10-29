@@ -108,3 +108,69 @@ checks. Evidence marks the overlay and preserves its source hashes. The
 standard archive-only probe and full release qualification are unchanged.
 This diagnostic uses the existing prerequisite recipe and cache; a local
 Dockerfile optimization is intentionally excluded from its commit.
+
+## Production migration requirements
+
+If the native diagnostic supports this direction, implement an explicit,
+stopped-worker upgrade with two authoritative tables and a stable combined
+read interface. Remove the prototype's unused legacy publication column and
+register both data tables for extension dump/restore. Preserve the frozen
+prior-release SQL and qualify both clean installation and real upgrades.
+
+The candidate constraint strategy is to enforce monotonic frontiers at all
+supported write boundaries, keep `received >= staged >= acknowledged` as local
+ingress constraints, and validate publication against committed staging. With
+staging unable to regress, publication can validate its upper bound without
+locking ingress throughout engine work. This needs adversarial concurrent
+write tests and an explicit direct-DML permissions decision; merely relying on
+current worker behavior is insufficient. Publication lookup must also fail
+explicitly if its physical row is missing, rather than silently skipping a
+progress update. Deletion/identity rules must preserve paired checkpoint rows.
+
+Qualify initial-copy promotion/recovery, rebuild promotion, journal maintenance,
+status views, stop/generation fencing, crash/replay behavior, logical restore,
+upgrade rollback and uninstall against the final schema. These are promotion
+requirements, not outcomes established by the performance overlay.
+
+## Native result: latency improves, qualification still fails
+
+[ARM64 overlay diagnostic 40957099106](https://github.com/proddata/lake_replication/actions/runs/40957099106)
+at `99f9177` verifies and loads the existing prerequisite cache. Managed checks,
+all focused checkpoint assertions, exact data, four-way publication overlap,
+clock validity and crash/OOM checks pass. It completes with workload findings:
+
+| Stream | Publication p95 | Source → insertion p95 | Source scheduling lateness |
+|---|---:|---:|---:|
+| analytics | 1883 ms | 291 ms | 385 ms |
+| fair_stream_1 | 1717 ms | 39 ms | 523 ms |
+| fair_stream_2 | 1757 ms | 46 ms | 677 ms |
+
+All streaming p95s are below two seconds. However, the latter two source
+schedule observations exceed the unchanged 500 ms limit, and copies take
+182.86 seconds against the 180-second limit. This is not a passing workload or
+release qualification; source scheduling failure limits the latency conclusion.
+No timing threshold is relaxed.
+
+The original native run had 2.579–2.945-second streaming p95 and 158.18-second
+copies. Those observations come from different runner instances. Copy staging
+is also slower after measured streaming has ended: samples nearest 80–120
+seconds show about 66.5k rows/s in the overlay run versus 78.2k in the original.
+That period contains essentially no streaming engine CPU work. This does not
+establish whether the copy difference comes from host/storage variation,
+fixture/setup effects or a persistent cost of the prototype. Publication counts
+are similar (271 original, 275 split across the measured streams), so there is
+no evidence of a large increase in engine publication count.
+
+**Decision:** retain the prototype; do not migrate production yet. The next
+performance experiment should compare original/split/original sequentially on
+one ARM64 runner, reusing the same verified prerequisite image. Keep all source,
+copy, latency and overlap gates, retain every result, and omit extra focused
+setup work from the timed performance-only fixtures. This separates runner
+variation from the schema change before selecting a copy/resource fix. Do not
+repeat an unchanged full qualification or presume that the three-second copy
+miss is harmless noise.
+
+[Native evidence](evidence/2026-10-29-checkpoint-split-native.json) retains the
+archive/overlay hashes, timing summaries, exact source misses and the failed
+gates. The unmodified production archive remains blocked on native latency;
+this overlay is still an experiment.
