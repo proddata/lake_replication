@@ -160,6 +160,36 @@ does not qualify the unmodified release archive or supply a production upgrade.
 The option is rejected outside an ARM64 focused native probe; leave it false for
 all normal archive qualification.
 
+To bracket runner variation, use the fixed performance-only comparison after
+the separate managed/overlay safety checks have passed:
+
+```sh
+gh workflow run lifecycle-qualification.yml --ref main \
+  -f artifact_run_id=CI_RUN_ID -f native_probe=true -f probe_arch=arm64 \
+  -f checkpoint_split_comparison=true
+```
+
+It runs original/split/original sequentially on one runner, with the same archive,
+destination image, harness and shared CPU affinity. Each fixture starts with
+fresh volumes. Focused safety-test setup is excluded from all three performance
+fixtures. The comparison step has a 20-minute ceiling for three workloads; each
+workload retains the original source, copy, overlap and latency gates. It cannot
+combine with `checkpoint_split_diagnostic` or full qualification.
+
+Results retain every observation and gate. `measurement_valid` is separate from
+`candidate_workload_passed`; source scheduling or clock failure prevents a valid
+comparison. A slow original is retained and the sequence continues, while a
+fixture/provenance error stops it. The command exits nonzero if any workload
+fails, including an expected original latency failure. Inspect the comparison
+`results.json` as well as the child results; a red diagnostic does not by itself
+identify a new implementation error. This is not release qualification.
+
+The same comparison runs locally with `QUALIFICATION_ARCHIVE` set:
+
+```sh
+python3 tests/admission/checkpoint_compare.py --cpuset 0-1
+```
+
 ## Storage fixture preparation
 
 Qualification builds MinIO server/client fixtures from the pinned upstream source

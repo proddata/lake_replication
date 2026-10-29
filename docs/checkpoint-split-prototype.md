@@ -174,3 +174,69 @@ miss is harmless noise.
 archive/overlay hashes, timing summaries, exact source misses and the failed
 gates. The unmodified production archive remains blocked on native latency;
 this overlay is still an experiment.
+
+## Controlled comparison harness and local check
+
+`tests/admission/checkpoint_compare.py` runs a fixed original/split/original
+sequence on one host, using the same archive, destination image, harness inputs
+and CPU affinity. Child fixtures have fresh volumes, and extra focused safety
+operations are omitted from every performance fixture. Findings are retained
+without retrying or selecting a best result; fixture/provenance errors stop
+the sequence. Input and image identity must match all three observations.
+The same driver supports original and split layouts, eliminating differences
+between separate diagnostic drivers.
+
+The first local startup caught an evidence-directory collision before fixture
+startup. After correction the complete two-CPU sequence passes every gate:
+
+| Observation | Copy duration | Stream p95s |
+|---|---:|---|
+| Original before | 72.23 s | 462 / 462 / 439 ms |
+| Split | 78.47 s | 501 / 495 / 492 ms |
+| Original after | 74.14 s | 457 / 482 / 451 ms |
+
+Control copy drift is 2.64%; the split copy is 7.22% slower than the mean of
+the controls. This is a cost signal, not statistical proof of a regression.
+All clocks, source schedules, exact-data and overlap checks are valid. The
+final classifier reproduces these retained observations, with 29 admission
+unit tests and workflow lint passing.
+
+A separate local pair enables `pg_stat_statements` with planning/I/O timing in
+both layouts and captures normalized statements after measurement. These are
+instrumented observations, not comparable to unprofiled qualification times.
+Copies take 76.34 s original and 78.76 s split. The pending-work query's total
+planning plus execution changes from 89 ms to 135 ms over 1,990 calls, too
+small to explain the wall-clock difference by itself. Staging append execution
+is slightly lower in the split run (48.45 vs 47.70 seconds total). Bulk
+publication admission wait totals differ substantially (14.98 vs 26.54 seconds),
+while nested timings overlap and must not be added. This does not identify a
+specific planning fix; the controlled native comparison remains necessary.
+Raw profiles and source hashes are retained separately.
+
+Run the comparison locally with `QUALIFICATION_ARCHIVE` set:
+
+```sh
+python3 tests/admission/checkpoint_compare.py --cpuset 0-1
+```
+
+The workflow's `checkpoint_split_comparison=true` option requires a focused
+ARM64 native probe and cannot combine with the overlay safety diagnostic.
+It allows 20 minutes for the three workloads, each retaining all original
+performance gates. Every workload finding, including an original latency miss,
+causes a nonzero exit; inspect the comparison summary's `measurement_valid`
+and `candidate_workload_passed` separately. Source/clock failures invalidate a
+comparison even when latency is low. A comparison does not qualify a release.
+
+The optional local profiling command is:
+
+```sh
+python3 tests/admission/checkpoint_split_probe.py --cases fairness \
+  --skip-operations --variant original --profile-sql
+# Repeat with --variant split, retaining both instrumented observations.
+```
+
+Profiling is disabled in the native comparison. No production SQL or binary,
+prerequisite recipe or timing threshold changes in this diagnostic work.
+[Local comparison and profile evidence](evidence/2026-10-29-checkpoint-comparison-local.json)
+retains the full cohort, initial setup error, hashes and selected inclusive
+statement totals.

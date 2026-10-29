@@ -36,6 +36,12 @@ on:
         default: false
         type: boolean
 
+      checkpoint_split_comparison:
+        description: Original/split/original on one ARM64 runner (performance diagnostic only)
+        required: false
+        default: false
+        type: boolean
+
 permissions:
   contents: read
   actions: read
@@ -60,6 +66,7 @@ jobs:
           FAIRNESS_DIAGNOSTIC: ${{ inputs.fairness_diagnostic }}
           PROBE_ARCH: ${{ inputs.probe_arch }}
           CHECKPOINT_SPLIT: ${{ inputs.checkpoint_split_diagnostic }}
+          CHECKPOINT_COMPARE: ${{ inputs.checkpoint_split_comparison }}
         run: |
           if [[ "$NATIVE_PROBE" == true && "$FAIRNESS_DIAGNOSTIC" == true ]]; then
             echo 'Select native_probe or fairness_diagnostic, not both.' >&2
@@ -72,6 +79,10 @@ jobs:
           fi
           if [[ "$CHECKPOINT_SPLIT" == true && ( "$NATIVE_PROBE" != true || "$PROBE_ARCH" != arm64 ) ]]; then
             echo 'Checkpoint overlay diagnostics require native_probe=true and probe_arch=arm64.' >&2
+            exit 1
+          fi
+          if [[ "$CHECKPOINT_COMPARE" == true && ( "$NATIVE_PROBE" != true || "$PROBE_ARCH" != arm64 || "$CHECKPOINT_SPLIT" == true ) ]]; then
+            echo 'Checkpoint comparison requires an ARM64 native probe and cannot combine with the overlay safety diagnostic.' >&2
             exit 1
           fi
       - name: Resolve the successful candidate CI revision
@@ -206,13 +217,18 @@ jobs:
           done
           exit "$status"
       - name: Focused native admission and four-copy probe
-        if: ${{ inputs.native_probe && !inputs.checkpoint_split_diagnostic }}
+        if: ${{ inputs.native_probe && !inputs.checkpoint_split_diagnostic && !inputs.checkpoint_split_comparison }}
         timeout-minutes: 15
         run: python3 tests/admission/probe.py --cases managed fairness
       - name: Checkpoint partition prototype diagnostic (SQL overlay)
         if: ${{ inputs.native_probe && inputs.checkpoint_split_diagnostic }}
         timeout-minutes: 15
         run: python3 tests/admission/checkpoint_split_probe.py --cases managed fairness --cpuset 0-1
+      - name: Checkpoint original-split-original comparison (performance diagnostic)
+        if: ${{ inputs.native_probe && inputs.checkpoint_split_comparison }}
+        # Three fixed workloads, each retaining its own unchanged timing gates.
+        timeout-minutes: 20
+        run: python3 tests/admission/checkpoint_compare.py --cpuset 0-1
       - name: Fresh packaged lifecycle
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: make lifecycle-test

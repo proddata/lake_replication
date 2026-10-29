@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local checkpoint partition prototype; SQL overlay, never release qualification."""
+"""Checkpoint partition diagnostic: original control or SQL overlay, never release qualification."""
 import argparse
 import hashlib
 import importlib.util
@@ -13,9 +13,18 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cases',nargs='+',choices=['managed','fairness'],default=['managed','fairness'])
     parser.add_argument('--cpuset',default='0-1')
+    parser.add_argument('--variant',choices=['original','split'],default='split')
+    parser.add_argument('--skip-operations',action='store_true',help='Performance-only fixture; focused safety checks were qualified separately')
+    parser.add_argument('--profile-sql',action='store_true',help='Local pg_stat_statements instrumentation; not comparable to unprofiled timings')
     args=parser.parse_args()
     if not re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*',args.cpuset):
         parser.error('invalid CPU affinity')
+    if args.skip_operations and args.cases!=['fairness']:
+        parser.error('skip-operations requires the fairness-only case')
+    if args.variant=='original' and not args.skip_operations:
+        parser.error('the original control requires skip-operations and fairness only')
+    if args.profile_sql and (not args.skip_operations or args.cases!=['fairness']):
+        parser.error('SQL profiling requires a performance-only fixture')
     spec=importlib.util.spec_from_file_location('production_probe',Path(__file__).with_name('probe.py'))
     p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
     original_sql=p.q.sql;original_compose=p.q.compose;original_text=p.m.compose_text
@@ -23,11 +32,20 @@ def main():
     overlay=Path(__file__).with_name('checkpoint_split.sql').read_text()
     spec=importlib.util.spec_from_file_location('split_operations',Path(__file__).with_name('checkpoint_split_operations.py'))
     operations=importlib.util.module_from_spec(spec);spec.loader.exec_module(operations)
+    profile=None
+    if args.profile_sql:
+        spec=importlib.util.spec_from_file_location('checkpoint_sql_profile',Path(__file__).with_name('checkpoint_sql_profile.py'))
+        profiler=importlib.util.module_from_spec(spec);spec.loader.exec_module(profiler)
+        profile=profiler.Profile(p.q,original_sql)
 
     def install(database):
         if database not in installed:
-            original_sql('destination',database,overlay)
-            installed.add(database);installs.append(database)
+            if args.variant=='split':
+                original_sql('destination',database,overlay)
+                installs.append(database)
+            if profile:profile.install(database)
+            installed.add(database)
+            metadata_path.write_text(json.dumps(metadata,indent=2)+'\n')
 
     def sql(service,database,statement,**kwargs):
         result=original_sql(service,database,statement,**kwargs)
@@ -36,34 +54,44 @@ def main():
         return result
 
     def compose(*values,**kwargs):
+        if values and values[0]=='logs' and profile and 'analytics' in installed:
+            profile.capture()
         result=original_compose(*values,**kwargs)
         if values and values[0]=='down':installed.clear()
         if values and values[0]=='up' and 'analytics' not in installed:
             install('analytics')
-            operations.run(p.q,p.c)
+            if not args.skip_operations:operations.run(p.q,p.c)
         return result
 
     def compose_text():
         text=original_text()
         for service in ('source','destination','pgduck','storage'):
             text=re.sub(rf'^  {service}:$',f'  {service}:\n    cpuset: "{args.cpuset}"',text,flags=re.MULTILINE)
-        return text
+        return profile.compose_text(text) if profile else text
 
     paths=[Path(__file__),Path(__file__).with_name('checkpoint_split.sql'),Path(__file__).with_name('checkpoint_split_operations.py')]
+    if profile:paths.append(Path(__file__).with_name('checkpoint_sql_profile.py'))
     inputs={str(path.relative_to(p.ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
     p.m.diagnostic_sources=paths
     p.q.sql=sql;p.q.compose=compose;p.m.compose_text=compose_text
+    scope=f'{__doc__} Variant={args.variant}; SQL overlay={args.variant=="split"}; SQL profiling={args.profile_sql}.'
+    p.__doc__=scope
+    metadata=dict(scope=scope,variant=args.variant,sql_overlay=args.variant=='split',
+        focused_operations=not args.skip_operations,production_migrations_changed=False,
+        sql_profiling=args.profile_sql,
+        service_cpu_affinity=args.cpuset,installations=installs,inputs=inputs)
+    directory=p.ROOT/'.qualification'/(p.q.RUN+'_production_admission')
+    metadata_path=directory/'checkpoint-split-prototype.json'
     sys.argv=[sys.argv[0],'--cases',*args.cases]
     code=p.main()
-    metadata=dict(scope=__doc__,sql_overlay=True,production_migrations_changed=False,
-        service_cpu_affinity=args.cpuset,installations=installs,
-        inputs=inputs)
-    (p.q.RESULTS/'checkpoint-split-prototype.json').write_text(json.dumps(metadata,indent=2)+'\n')
+    metadata_path.write_text(json.dumps(metadata,indent=2)+'\n')
     result_path=p.q.RESULTS/'results.json'
     result=json.loads(result_path.read_text())
-    result['scope']=__doc__;result['prototype']=metadata
+    result['scope']=scope;result['prototype']=metadata
+    if profile and (profile.error or not profile.captured):
+        result.update(status='error',error=profile.error or 'SQL profile was not captured');code=1
     for case in result['cases']:
-        case['sql_overlay']=True
+        case['sql_overlay']=metadata['sql_overlay']
         case_path=p.q.RESULTS/case['case']/'results.json'
         case_path.write_text(json.dumps(case,indent=2)+'\n')
     result_path.write_text(json.dumps(result,indent=2)+'\n')
