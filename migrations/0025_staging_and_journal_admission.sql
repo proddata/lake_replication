@@ -44,7 +44,9 @@ RETURNS void LANGUAGE plpgsql VOLATILE SECURITY DEFINER SET search_path=pg_catal
 DECLARE desired text; generation bigint; launch_desired text;
 BEGIN
  IF p_generation<=0 THEN RAISE EXCEPTION 'managed worker generation is required' USING ERRCODE='55000'; END IF;
- SELECT desired_state INTO desired FROM service_status WHERE subscription_id=p_subscription_id FOR SHARE NOWAIT;
+ -- Heartbeats take NO KEY UPDATE on this row. Allow them while retaining
+ -- conflict with stop's explicit FOR UPDATE and with deletion of the service.
+ SELECT desired_state INTO desired FROM service_status WHERE subscription_id=p_subscription_id FOR KEY SHARE NOWAIT;
  IF NOT FOUND OR desired<>'running' THEN
   RAISE EXCEPTION 'managed worker is stopped or obsolete' USING ERRCODE='55000';
  END IF;

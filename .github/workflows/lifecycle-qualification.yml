@@ -108,6 +108,14 @@ jobs:
               'receiver_sql_overlay_identical_to_archive': True,
           }, indent=2) + '\n')
           PY
+      - name: Reclaim unused SDK space on the AMD64 probe runner
+        if: ${{ inputs.native_probe && matrix.arch == 'amd64' }}
+        run: |
+          mkdir -p .qualification/disk
+          df -h > .qualification/disk/before-sdk-cleanup.txt
+          # Ephemeral hosted runner: these SDKs are unused by the Docker-based build.
+          sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet
+          df -h > .qualification/disk/after-sdk-cleanup.txt
       - name: Build and verify source-pinned storage fixtures
         run: python3 tests/qualification/storage_preflight.py
       - name: Reclaim storage fixture build cache
@@ -137,12 +145,23 @@ jobs:
         run: |
           set -o pipefail
           python3 tests/qualification/prerequisite.py build 2>&1 | tee .qualification/prerequisite-build.log
-      - name: Export prerequisite image without an uncompressed copy
+      - name: Reclaim prerequisite build cache before export
         if: ${{ inputs.native_probe && steps.prerequisite_cache.outputs.cache-hit != 'true' }}
+        run: |
+          df -h > .qualification/disk/before-prerequisite-cache-cleanup.txt
+          docker system df >> .qualification/disk/before-prerequisite-cache-cleanup.txt
+          docker builder prune --all --force
+          df -h > .qualification/disk/after-prerequisite-cache-cleanup.txt
+          docker system df >> .qualification/disk/after-prerequisite-cache-cleanup.txt
+      - name: Export optional prerequisite cache
+        if: ${{ inputs.native_probe && steps.prerequisite_cache.outputs.cache-hit != 'true' }}
+        id: prerequisite_export
+        continue-on-error: true
         timeout-minutes: 10
         run: python3 tests/qualification/prerequisite.py save "$RUNNER_TEMP/lake-prerequisite-cache"
       - name: Save verified prerequisite cache
-        if: ${{ inputs.native_probe && steps.prerequisite_cache.outputs.cache-hit != 'true' }}
+        if: ${{ inputs.native_probe && steps.prerequisite_export.outcome == 'success' }}
+        continue-on-error: true
         uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ${{ runner.temp }}/lake-prerequisite-cache
@@ -152,6 +171,7 @@ jobs:
         run: |
           rm -f "$RUNNER_TEMP/lake-prerequisite-cache/pg-lake-base.tar.gz" \
                 "$RUNNER_TEMP/lake-prerequisite-cache/manifest.json"
+          df -h > .qualification/disk/before-native-probe.txt
       - name: Controlled copy-contention diagnostic
         if: ${{ inputs.fairness_diagnostic }}
         run: |

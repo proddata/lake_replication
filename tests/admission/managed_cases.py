@@ -77,6 +77,19 @@ def native(q,c,connection):
     q.wait_for('destination','managed_native',"SELECT state FROM lake_replication.subscriptions",'streaming')
     sid=int(sql('SELECT subscription_id FROM lake_replication.subscriptions'))
     generation=int(sql('SELECT config_generation FROM lake_replication.worker_launch_config'))
+    control=c.Psql('destination','managed_native')
+    try:
+        control.query('BEGIN; UPDATE lake_replication.service_status SET heartbeat_at=clock_timestamp()')
+        admitted=q.sql_result('destination','managed_native',f'SELECT lake_replication.assert_worker({sid},{generation})',check_result=False)
+        q.check('worker fence coexists with an uncommitted heartbeat',admitted.returncode,0)
+        control.query('ROLLBACK; BEGIN; SELECT 1 FROM lake_replication.service_status FOR UPDATE')
+        rejected=q.sql_result('destination','managed_native',f'SELECT lake_replication.assert_worker({sid},{generation})',check_result=False)
+        q.check('stop control lock refuses new worker admission',rejected.returncode!=0 and 'could not obtain lock' in rejected.stderr,True)
+        control.query('ROLLBACK; BEGIN; UPDATE lake_replication.worker_launch_config SET config_generation=config_generation+1')
+        rejected=q.sql_result('destination','managed_native',f'SELECT lake_replication.assert_worker({sid},{generation})',check_result=False)
+        q.check('reconfiguration lock refuses new worker admission',rejected.returncode!=0 and 'could not obtain lock' in rejected.stderr,True)
+        control.query('ROLLBACK')
+    finally:control.close()
     holders=[]
     try:
         for _ in range(4):
