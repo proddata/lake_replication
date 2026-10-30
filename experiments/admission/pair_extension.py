@@ -60,7 +60,7 @@ def analyze(roots):
     if a['archive_provenance']['archive_sha256']!=b['archive_provenance']['archive_sha256']:raise ValueError('cohorts use different archives')
     if {k:v for k,v in a['protocol'].items() if k!='order'}!={k:v for k,v in b['protocol'].items() if k!='order'}:raise ValueError('protocol drift')
     if [a['protocol']['order'],b['protocol']['order']]!=['alternating AB/BA by repetition','alternating BA/AB by repetition']:raise ValueError('ten pairs must balance starting order')
-    fixed=['admission_measure.py','compare.py','sample.py','analyze.py','stream_pool.c.inc','stream_pool.sql','Dockerfile.stream-pool']
+    fixed=['admission_measure.py','source_workload.py','compare.py','sample.py','analyze.py','stream_pool.c.inc','stream_pool.sql','Dockerfile.stream-pool']
     keys=['experiments/admission/'+name for name in fixed]+['extensions/lake_replication/lake_replication.c','tests/qualification/probe.py','worker/Cargo.toml','Cargo.lock']
     keys+=sorted(k for k in a['inputs'] if k.startswith('migrations/'))
     if any(a['inputs'].get(k)!=b['inputs'].get(k) for k in keys):raise ValueError('measurement or runtime input drift')

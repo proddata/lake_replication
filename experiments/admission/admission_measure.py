@@ -16,6 +16,9 @@ c, q = s.c, s.q
 spec = importlib.util.spec_from_file_location('analysis', Path(__file__).with_name('analyze.py'))
 a = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(a)
+spec = importlib.util.spec_from_file_location('source_workload', Path(__file__).with_name('source_workload.py'))
+source_workload = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(source_workload)
 
 
 def timing_validation(work, tolerance_seconds=1.0):
@@ -100,6 +103,7 @@ def fairness(args, variant, image, text, directory):
     result = dict(streams=[], variant=variant, image=image, copy_rows=args.copy_rows, bulk_copies=bulk_copies,
         stream_transactions=args.stream_transactions, stream_rows_per_transaction=20,
         offered_interval_ms=500, observer_interval_ms=500,
+        source_producer='independent_sessions',
         limits=dict(p95_publication_ms=2000, max_publication_gap_seconds=5,
                     min_commits_during_copy=5, catchup_seconds=5, copy_timeout_seconds=180))
     if not bulk_copies:
@@ -107,7 +111,7 @@ def fairness(args, variant, image, text, directory):
         for key in ('min_commits_during_copy', 'copy_timeout_seconds'):
             del result['limits'][key]
     clients = []
-    producer = None
+    producers = []
     stop = threading.Event()
     commits = [[], [], []]
     errors = []
@@ -143,25 +147,14 @@ def fairness(args, variant, image, text, directory):
         monitor = c.Psql('destination', 'analytics')
         clients.extend(destinations + copies + [monitor])
         result['before'] = s.inventory()
+        producer_connections=[]
+        for _ in names:
+            connection_client=c.Psql('source','application')
+            producer_connections.append(connection_client);clients.append(connection_client)
         started = time.monotonic()
-        def produce():
-            try:
-                for tx in range(1, args.stream_transactions + 1):
-                    delay = started + (tx - 1) * .5 - time.monotonic()
-                    if delay > 0 and stop.wait(delay):
-                        return
-                    if stop.is_set():
-                        return
-                    for i in range(3):
-                        began = time.monotonic() - started
-                        source.query(f"INSERT INTO fair_items_{i} SELECT {tx}::bigint*20+n,{tx},repeat('x',128) FROM generate_series(1,20) n")
-                        xid, epoch = source.query(f'SELECT xmin::text,extract(epoch FROM pg_xact_commit_timestamp(xmin)) FROM fair_items_{i} WHERE tx={tx} LIMIT 1')[0].split('|')
-                        commits[i].append(dict(transaction=tx, xid=int(xid), commit_epoch=float(epoch), insert_started_seconds=began))
-            except Exception as error:
-                errors.append(str(error))
-        producer = threading.Thread(target=produce)
-        producer.start()
+        producers=source_workload.start(producer_connections,args.stream_transactions,started,stop,commits,errors)
         stop.wait(5)
+        if errors:raise RuntimeError(errors[0])
         for i, database in enumerate(copy_names):
             sub = 'fair_copy_sub' if i == 0 else f'fair_copy_sub_{i}'
             q.sql('destination', database, f"CREATE SUBSCRIPTION {sub} CONNECTION '{connection}' PUBLICATION fair_copy_pub WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
@@ -236,12 +229,12 @@ def fairness(args, variant, image, text, directory):
                 origin=observer_epoch(trace[0])-trace[0]['elapsed_seconds']
                 if abs(observer_epoch(sample)-sample['elapsed_seconds']-origin)>1:
                     raise RuntimeError('clock discontinuity invalidates this local measurement')
-            if not producer.is_alive() and all(row['published_transactions'] == args.stream_transactions for row in sample['streams']) and (not bulk_copies or sample['copy']['state'] == 'streaming'):
+            if not any(producer.is_alive() for producer in producers) and all(row['published_transactions'] == args.stream_transactions for row in sample['streams']) and (not bulk_copies or sample['copy']['state'] == 'streaming'):
                 break
             stop.wait(.5)
         else:
             raise TimeoutError('copy/streaming did not finish within the bounded observation window')
-        producer.join(timeout=10)
+        source_workload.join(producers,10)
         copy_start = copy_end = None
         if bulk_copies:
             copy_start = trace[-1]['copy']['started_epoch']
@@ -305,8 +298,10 @@ def fairness(args, variant, image, text, directory):
         print('FAIRNESS ERROR: ' + str(error), flush=True)
     finally:
         stop.set()
-        if producer:
-            producer.join(timeout=125)
+        try:
+            source_workload.join(producers,125)
+        except TimeoutError as error:
+            result.update(status='error',error=str(error))
         result['trace'] = trace
         result['resource_trace'] = resource_trace
         result['source_transactions'] = commits

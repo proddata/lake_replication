@@ -39,6 +39,7 @@ def summarize(result):
         and not case['unexpected_pg_crash'] and case['checks']['publication_overlap_observed']
         and all(s['checks']['source_schedule_within_one_interval'] for s in case['streams']))
     return dict(status=result['status'],measurement_valid=valid,
+        source_producer=case.get('source_producer','legacy_serial_session'),
         workload_passed=result['status']=='passed' and case['status']=='passed' and not failures and valid,
         failed_gates=failures,copy_elapsed_seconds=case['copy_elapsed_seconds'],
         timing_validation=case['timing_validation'],engine_oom=case['engine_oom'],
@@ -50,8 +51,11 @@ def summarize(result):
 def compare(runs):
     if len(runs)!=3 or tuple(r['variant'] for r in runs)!=SEQUENCE:
         raise ValueError('expected fixed original/split/original order')
+    regimes={r.get('source_producer','legacy_serial_session') for r in runs}
+    if len(regimes)!=1:raise ValueError('source producer regime changed within comparison')
     before,split,after=runs
     return dict(measurement_valid=all(r['measurement_valid'] for r in runs),
+        source_producer=next(iter(regimes)),
         candidate_workload_passed=split['workload_passed'],
         all_workloads_passed=all(r['workload_passed'] for r in runs),
         original_copy_drift_ratio=after['copy_elapsed_seconds']/before['copy_elapsed_seconds'],

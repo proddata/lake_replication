@@ -49,6 +49,7 @@ def main():
     q.ENV.update(QUALIFICATION_SOURCE_IMAGE=q.SOURCE_IMAGE,QUALIFICATION_DESTINATION_IMAGE=q.DESTINATION_IMAGE)
     result=dict(status='running',scope=__doc__,cases=[],parameters=vars(args),production_changed=False)
     paths=[Path(__file__),Path(__file__).with_name('stream_pool.c.inc'),Path(__file__).with_name('stream_pool.sql'),Path(__file__).with_name('Dockerfile.stream-pool'),ROOT/'experiments/admission/scale.py',ROOT/'experiments/admission/admission_measure.py',ROOT/'experiments/admission/compare.py',ROOT/'tests/admission/probe.py']
+    paths.append(ROOT/'experiments/admission/source_workload.py')
     result['inputs']={str(x.relative_to(ROOT)):hashlib.sha256(x.read_bytes()).hexdigest() for x in paths}
     for x in paths:
         target=root/'sources'/x.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(x,target)

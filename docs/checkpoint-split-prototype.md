@@ -240,3 +240,73 @@ prerequisite recipe or timing threshold changes in this diagnostic work.
 [Local comparison and profile evidence](evidence/2026-10-29-checkpoint-comparison-local.json)
 retains the full cohort, initial setup error, hashes and selected inclusive
 statement totals.
+
+## Same-runner native result and source workload correction
+
+[Native comparison 40962971005](https://github.com/proddata/lake_replication/actions/runs/40962971005)
+completes all three observations at `e3e6958` with matching archive, image and
+harness identities. No fixture or exact-data error aborts the sequence.
+
+| Serial-source observation | Copy duration | Stream p95 range | Maximum source lateness |
+|---|---:|---:|---:|
+| Original before | 190.35 s | 4.04–5.13 s | 2.315 s |
+| Split | 176.73 s | 1.72–1.91 s | 0.653 s |
+| Original after | 179.28 s | 2.29–2.74 s | 0.745 s |
+
+The split passes copy and streaming latency gates in this cohort; its only
+failed gate is source scheduling in the third stream. All three observations
+miss at least one source schedule check, so the comparison is invalid for
+qualification. The apparent 4.38% lower split copy time relative to the controls'
+mean does not establish a speedup. These matched observations also do not
+reproduce the earlier separate-run copy slowdown consistently. No gate is
+relaxed and production migration remains deferred.
+
+The harness uses one source session and one producer loop for all three
+streams. In split transaction 12 the first stream starts on time, the second
+83 ms late, and the third 653 ms late. In the following round the first stream
+inherits 213 ms of lateness. This proves cross-stream scheduling coupling;
+CPU/I/O stalls may contribute too. The old cohort remains retained as a failed
+serial-source observation, not reclassified as a passing workload.
+
+The source producer now uses one durable session/thread per stream,
+with a common start and the same 500 ms schedule, 120 transactions per stream,
+20 rows per transaction and all existing gates. Each stream records its own
+actual commit timestamp and insertion start. One blocked source no longer
+postpones other streams. Source errors signal shared cancellation, and shutdown
+joins producers against one deadline. Source fsync/durability, source/destination
+CPU affinity and production binaries are unchanged.
+
+This changes the offered workload's concurrency/burst shape, so it requires a
+new original/split/original cohort. New results explicitly record
+`source_producer=independent_sessions`; comparison rejects mixed source regimes.
+The helper is included in source snapshots and input identity checks. Historical
+serial-source performance observations cannot qualify the revised workload.
+
+[Retained native comparison](evidence/2026-10-30-checkpoint-native-comparison.json)
+includes every gate, identity and the source scheduling examples.
+
+The revised source producer passes a local two-CPU rebaseline:
+
+| Independent-source observation | Copy duration | Stream p95s | Maximum source lateness |
+|---|---:|---|---:|
+| Original before | 71.58 s | 478 / 484 / 459 ms | 5.42 ms |
+| Split | 73.36 s | 472 / 488 / 476 ms | 5.18 ms |
+| Original after | 73.69 s | 460 / 414 / 428 ms | 10.18 ms |
+
+All three observations pass every unchanged gate, with matching archive/image
+and harness identities. The 1% split-to-control-mean copy difference is a single
+local observation, not statistical proof. It cannot be combined with the older
+serial-source cohorts. Thirty-three admission unit tests, twenty-two analysis
+tests, workflow lint and the full `make check` pass. New tests cover blocked
+stream isolation, shared cancellation, bounded join and mixed-regime rejection.
+
+The final producer additionally records monotonic insert completion and commit
+observation completion, so future source delays can be split into durable INSERT
+and timestamp-observation round trips. These non-gating markers were added after
+the measured local cohort and pass ordering tests/full checks. They do not change
+source SQL, cadence or acceptance limits. The next qualification is one prospective
+native cohort, not an unchanged retry of the invalid serial-source workload.
+
+[Independent-source local evidence](evidence/2026-10-30-independent-source-local.json)
+retains the full three-run cohort and its hashes. Production migration remains
+unimplemented pending valid native evidence.

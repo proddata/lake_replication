@@ -63,5 +63,11 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(result['split_copy_ratio_to_original_mean'],1)
         with self.assertRaises(ValueError):m.compare(runs[::-1][:2])
 
+    def test_comparison_rejects_mixed_source_schedulers(self):
+        runs=[dict(variant=v,copy_elapsed_seconds=100,measurement_valid=True,
+            workload_passed=True,source_producer='independent_sessions') for v in m.SEQUENCE]
+        runs[0]['source_producer']='legacy_serial_session'
+        with self.assertRaises(ValueError):m.compare(runs)
+
 
 if __name__=='__main__':unittest.main()

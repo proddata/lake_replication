@@ -176,6 +176,12 @@ fixtures. The comparison step has a 20-minute ceiling for three workloads; each
 workload retains the original source, copy, overlap and latency gates. It cannot
 combine with `checkpoint_split_diagnostic` or full qualification.
 
+Fairness source streams use separate durable sessions/producer threads with a
+common start and unchanged 500 ms per-stream cadence. Results identify this as
+`source_producer=independent_sessions`. The previous serial producer could delay
+later streams behind an earlier source round trip. The revised concurrency shape
+requires rebaselining both layouts; comparisons reject mixed source regimes.
+
 Results retain every observation and gate. `measurement_valid` is separate from
 `candidate_workload_passed`; source scheduling or clock failure prevents a valid
 comparison. A slow original is retained and the sequence continues, while a
