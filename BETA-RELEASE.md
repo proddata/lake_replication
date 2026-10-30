@@ -19,7 +19,7 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 41017420553](https://github.com/proddata/lake_replication/actions/runs/41017420553) passes checks and both bundles at `7ad6044`. The [valid native 1,000/4,000/1,000 comparison](docs/bulk-copy-chunk-prototype.md#prospective-native-result) copies in 142.60/133.04/141.78 seconds, but the candidate fails all three two-second streaming p95 gates; the final control fails one. Source/clock/overlap and correctness checks pass. Keep the 1,000-row default and investigate publication latency locally before promotion. Complete native qualification and the AMD64 cold-build timeout remain open. |
+| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 41022649732](https://github.com/proddata/lake_replication/actions/runs/41022649732) passes checks and both bundles at `6f76a31`. The [valid native chunk-store comparison](docs/staging-chunk-prototype.md#prospective-native-result) copies in 137.28/87.09/141.13 seconds. Both per-row controls pass; chunks fail all three two-second streaming p95 gates at 2.62–3.03 seconds. Source/clock/overlap and correctness pass. Retain the prototype and test whole-bulk-pipeline pacing locally before another native run. Full native qualification and AMD64 cold-build validation remain open. |
 | G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Local beta.4 arm64 archives pass fresh lifecycle, receiver, worker crash, admission and upgrade checks. Measured and final documented archives have identical production payloads; see [current qualification](docs/staging-journal-migration-results.md). Native amd64 and clean final-commit packages remain pending. |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The local beta.4 arm64 candidate passes 119 fresh lifecycle checks on private clean volumes with no SQL/binary overlay, including restore, management and uninstall. See [current production qualification](docs/staging-journal-migration-results.md). Native amd64 and final-commit packages remain G1 requirements. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Bulk-only admission reproduced a fatal sixteen-stream OOM at 2 GB. The adopted four-slot streaming pool passes 457 final packaged arm64 checks, including that live/restart workload and four-copy coexistence. [Performance evidence](docs/stream-pool-performance-results.md) retains the first inconclusive copy cohort and fixed ten-pair extension. Native ARM64 subsequently failed the four-copy latency limits at `8bcd5b2`; exact data and the sixteen-stream OOM regression passed. See [native findings](docs/native-qualification-failures.md). Both native architectures, final-commit qualification and the packaged RC soak remain required. See [production migration](docs/stream-pool-migration-results.md). |
@@ -32,29 +32,30 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 ## Release decision
 
-The [prospective independent-source native comparison](docs/checkpoint-split-prototype.md#prospective-independent-source-native-result)
-validates source cadence in all observations. Its split-checkpoint candidate
-passes streaming p95 at 1.71–1.74 seconds, exact data, overlap and safety checks,
-but misses the copy limit at 182.15 seconds versus 180. The valid original
-control also misses copy completion and latency. The final control fails its
-observer clock audit, so the full bracketed comparison is invalid. Independent
-checkpoints remain the latency direction, while bulk-copy headroom is the next
-local runtime blocker. The production schema migration remains unimplemented;
-no experiment result promotes the failed native release gate. The AMD64 cold
-prerequisite build and separate recipe optimization remain unqualified. The
-[bounded copy transaction prototype](docs/bulk-copy-chunk-prototype.md) passes
-local safety, controlled confirmation and one-CPU checks while retaining the
-original byte target and archived binary. Its [valid native comparison](docs/bulk-copy-chunk-prototype.md#prospective-native-result)
-copies in 133.04 seconds but fails all three streaming p95 gates at 2.02–2.06
-seconds. The 1,000-row controls copy in 141.78–142.60 seconds, with one control
-also missing one latency gate. Do not promote the larger row cap. Diagnose the
-publication path locally; no production default or schema change is integrated. The
-[subsequent chunk-storage prototype](docs/staging-chunk-prototype.md) identifies
-per-row foreign-key checks as a major isolated staging cost. At the unchanged
-1,000-row cap it passes 131 frozen safety assertions and a valid local
-73.11/40.58/72.08-second per-row/chunk/per-row comparison, plus a one-CPU
-sensitivity at 79.01 seconds and 1.526–1.535-second streaming p95. Native confirmation
-and a hardened migration remain required.
+The latest [valid native chunk-storage comparison](docs/staging-chunk-prototype.md#prospective-native-result)
+passes source cadence, observer clock, four-way overlap and exact-data checks,
+with no OOM or PostgreSQL crash. Copies take 137.28/87.09/141.13 seconds for
+per-row/chunk/per-row storage. Both controls pass, but the chunk candidate fails
+all three two-second streaming p95 gates at 2.62–3.03 seconds. The remaining
+runtime blocker is bulk/stream fairness under the shared CPU budget. Retain the
+throughput prototype; do not promote unpaced chunks or retry it unchanged.
+
+The chunk prototype preserves the native 1,000-row cap, 8 MiB row-text target
+and archived executable. Local validation passes 131 frozen safety assertions,
+a 73.11/40.58/72.08-second controlled cohort and one-CPU sensitivity at 79.01
+seconds with 1.526–1.535-second streaming p95. Native traces show the latency
+regression before observed bulk publication and increased source CPU pressure.
+Test post-commit whole-bulk-pipeline pacing locally before another native run.
+The [staging investigation](docs/staging-chunk-prototype.md) records all findings
+and the limits of this interpretation. Production storage and defaults remain
+unchanged, and the hardened checkpoint migration remains deferred.
+
+Earlier findings remain retained: the [independent-source checkpoint trial](docs/checkpoint-split-prototype.md#prospective-independent-source-native-result)
+misses copy completion at 182.15 seconds and has an invalid final control;
+the [larger row-cap trial](docs/bulk-copy-chunk-prototype.md#prospective-native-result)
+copies in 133.04 seconds but fails all three streaming latency gates. No
+prototype result qualifies the unmodified production archive. AMD64 cold-build
+validation and the separate prerequisite recipe optimization remain open.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)

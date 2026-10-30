@@ -119,7 +119,80 @@ PostgreSQL crash. This is not a matched one-CPU speedup comparison. Recorded
 inputs for the frozen safety run, full local cohort and sensitivity run match
 the final harness sources byte for byte.
 
-The next step is one prospective native per-row/chunk/per-row comparison using
-a clean CI archive of this harness. Keep all observations and thresholds. No
-production migration or default change follows automatically from a passing
-prototype result.
+## Prospective native result
+
+[ARM64 comparison 41022841650](https://github.com/proddata/lake_replication/actions/runs/41022841650)
+uses the clean archive from successful CI 41022649732 at `6f76a31`. The entire
+fixed sequence has valid independent source schedules, query-return clock audits
+and four-way publication overlap. Archive/exact-data assertions pass, with no
+engine OOM or PostgreSQL crash.
+
+| Storage | Copy seconds | Stream p95 milliseconds | Outcome |
+|---|---:|---|---|
+| Per-row before | 137.28 | 1,889 / 1,818 / 1,863 | PASS |
+| Chunk candidate | 87.09 | 3,031 / 2,615 / 2,635 | FAIL: all three latency gates |
+| Per-row after | 141.13 | 1,975 / 1,768 / 1,781 | PASS |
+
+The candidate is 37.44% below the controls' mean copy duration, with 2.80%
+control copy drift, but its streaming p95 is worse while both controls pass.
+This is a valid workload finding, not a source-scheduling or measurement error.
+The workflow is correctly red. Do not promote the unpaced chunk store or
+re-run the unchanged treatment hoping for a passing observation.
+
+In the candidate, all stream transactions finish publication by 61.56 seconds
+from the first source commit. Bulk publication admission is first observed at
+76.82 seconds. Slow stream transactions therefore precede observed bulk engine
+publication. Their journal-to-batch p95 rises to 1.12–1.33 seconds and
+batch-to-publication p95 to 1.44–1.73 seconds. Separate phase percentiles must
+not be added. There are 84 transactions above two seconds across the three
+streams, versus 7 and 13 in controls.
+
+The first approximately 6–56 seconds of periodic cgroup samples show:
+
+| Service | Per-row before: mean CPU cores | Chunks | Per-row after |
+|---|---:|---:|---:|
+| Destination PostgreSQL | 1.04 | 0.97 | 1.05 |
+| Destination engine | 0.57 | 0.42 | 0.58 |
+| Source PostgreSQL | 0.26 | 0.57 | 0.24 |
+| Object store | 0.04 | 0.03 | 0.04 |
+
+All four services share two CPUs. Source CPU usage approximately doubles while
+the destination engine gets less CPU. Source sampled `cpu.pressure` some/avg10
+reaches 86.06%, versus 30.62% and 14.68% in controls; engine pressure reaches
+43.25%, versus 35.93% and 31.32%. No destination/engine cgroup quota throttling
+is observed. This is consistent with a faster bulk pipeline consuming shared CPU
+headroom, not proof of one particular scheduler or SQL cause. Source/object-store
+CPU estimates use observer intervals because their raw dumps lack individual
+return timestamps. Periodic samples cannot rule out storage or shorter bursts.
+
+Destination memory.current samples, including cache, reach about 987 MiB for
+the candidate versus 3,796–3,863 MiB in controls; this does not qualify exact
+memory peaks. The workload uses repeated compressible payloads. Fewer parent
+checks, fewer index entries and chunk TOAST compression can all contribute;
+the copy improvement is not a guarantee for arbitrary data distributions.
+
+[Native evidence](evidence/2026-10-30-staging-chunk-native.json) retains every
+observation and failed gate, archive/input/runtime hashes, resource counters and
+the stream/publication timeline. Historical row-cap and checkpoint findings are
+unchanged.
+
+## Decision and next bounded experiment
+
+Retain chunk storage as a throughput prototype; keep production storage and
+defaults unchanged. The remaining blocker is bulk/stream fairness on the shared
+CPU budget. The next local experiment should pace the whole bulk pipeline via
+the archived worker's existing post-commit `LAKE_INITIAL_COPY_CHUNK_PAUSE_MS`,
+without holding the staging permit or generation fence while sleeping. The
+source COPY callback consumes data synchronously, so this also tests source-side
+backpressure rather than only limiting the engine publisher.
+
+Prespecify a 40 ms pause per unchanged 1,000-row transaction, retain the 8 MiB
+row-text target, and compare unpaced/paced/unpaced chunks with fresh volumes and
+identical source/resource settings. This pause is a diagnostic candidate, not a
+production default or validated fix. At 2,000 chunks per copy it adds at most
+80 seconds of explicit sleep per copy; admission waits can overlap it. Actual
+completion must still pass 180 seconds with headroom and every streaming gate.
+Re-run cancellation/bounds safety and one-CPU sensitivity before another native
+comparison. Do not add CPUs, change input cadence or loosen thresholds. A valid
+local pacing result is necessary before testing the combined candidate natively;
+a hardened production migration remains deferred.
