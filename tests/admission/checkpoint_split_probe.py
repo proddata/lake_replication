@@ -16,6 +16,7 @@ def main():
     parser.add_argument('--variant',choices=['original','split'],default='split')
     parser.add_argument('--skip-operations',action='store_true',help='Performance-only fixture; focused safety checks were qualified separately')
     parser.add_argument('--profile-sql',action='store_true',help='Local pg_stat_statements instrumentation; not comparable to unprofiled timings')
+    parser.add_argument('--copy-chunk-rows',type=int,choices=[1000,2000,4000],help='Archived initial-sync configuration overlay; byte budget stays 8 MiB')
     args=parser.parse_args()
     if not re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*',args.cpuset):
         parser.error('invalid CPU affinity')
@@ -37,6 +38,16 @@ def main():
         spec=importlib.util.spec_from_file_location('checkpoint_sql_profile',Path(__file__).with_name('checkpoint_sql_profile.py'))
         profiler=importlib.util.module_from_spec(spec);spec.loader.exec_module(profiler)
         profile=profiler.Profile(p.q,original_sql)
+    chunk=None
+    if args.copy_chunk_rows:
+        spec=importlib.util.spec_from_file_location('copy_chunk',Path(__file__).with_name('copy_chunk.py'))
+        chunk_module=importlib.util.module_from_spec(spec);spec.loader.exec_module(chunk_module)
+        chunk=chunk_module.Overlay(p.q,args.copy_chunk_rows)
+        original_build=p.q.build_images
+        def build_images(archive,context):
+            original_build(archive,context)
+            chunk.build(context)
+        p.q.build_images=build_images
 
     def install(database):
         if database not in installed:
@@ -61,6 +72,10 @@ def main():
         if values and values[0]=='up' and 'analytics' not in installed:
             install('analytics')
             if not args.skip_operations:operations.run(p.q,p.c)
+            if chunk and not args.skip_operations:
+                spec=importlib.util.spec_from_file_location('copy_chunk_bounds',Path(__file__).with_name('copy_chunk_bounds.py'))
+                bounds=importlib.util.module_from_spec(spec);spec.loader.exec_module(bounds)
+                bounds.run(p.q,p.c,chunk.rows)
         return result
 
     def compose_text():
@@ -71,14 +86,16 @@ def main():
 
     paths=[Path(__file__),Path(__file__).with_name('checkpoint_split.sql'),Path(__file__).with_name('checkpoint_split_operations.py')]
     if profile:paths.append(Path(__file__).with_name('checkpoint_sql_profile.py'))
+    if chunk:paths.extend(Path(__file__).with_name(name) for name in ['copy_chunk.py','copy_chunk_bounds.py'])
     inputs={str(path.relative_to(p.ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
     p.m.diagnostic_sources=paths
     p.q.sql=sql;p.q.compose=compose;p.m.compose_text=compose_text
-    scope=f'{__doc__} Variant={args.variant}; SQL overlay={args.variant=="split"}; SQL profiling={args.profile_sql}.'
+    scope=f'{__doc__} Variant={args.variant}; SQL overlay={args.variant=="split"}; SQL profiling={args.profile_sql}; copy chunk rows={args.copy_chunk_rows}.'
     p.__doc__=scope
     metadata=dict(scope=scope,variant=args.variant,sql_overlay=args.variant=='split',
         focused_operations=not args.skip_operations,production_migrations_changed=False,
         sql_profiling=args.profile_sql,
+        initial_copy_override=chunk.metadata if chunk else None,
         service_cpu_affinity=args.cpuset,installations=installs,inputs=inputs)
     directory=p.ROOT/'.qualification'/(p.q.RUN+'_production_admission')
     metadata_path=directory/'checkpoint-split-prototype.json'
@@ -92,6 +109,7 @@ def main():
         result.update(status='error',error=profile.error or 'SQL profile was not captured');code=1
     for case in result['cases']:
         case['sql_overlay']=metadata['sql_overlay']
+        case['initial_copy_override']=metadata['initial_copy_override']
         case_path=p.q.RESULTS/case['case']/'results.json'
         case_path.write_text(json.dumps(case,indent=2)+'\n')
     result_path.write_text(json.dumps(result,indent=2)+'\n')

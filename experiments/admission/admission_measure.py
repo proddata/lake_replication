@@ -46,6 +46,11 @@ def observer_epoch(sample):
     return sample['observer_epoch'] if 'observer_epoch' in sample else sample['copy']['observed_epoch']
 
 
+def observer_elapsed(sample):
+    value=sample.get('observer_read_finished_seconds')
+    return sample['elapsed_seconds'] if value is None else value
+
+
 def publication_phases(transaction,journal_insert,batch_created,published):
     """Split lag using existing row timestamps collected after measurement.
 
@@ -67,14 +72,19 @@ def fairness_timing_validation(case, tolerance_seconds=1.0):
     trace=case['trace']
     if not trace:
         return dict(valid=False,errors=['no timing trace'])
-    origin=observer_epoch(trace[0])-trace[0]['elapsed_seconds']
+    origin=observer_epoch(trace[0])-observer_elapsed(trace[0])
     errors=[]
+    modern=any('observer_read_finished_seconds' in sample or 'observer_read_started_seconds' in sample for sample in trace)
     for sample in trace:
-        if abs(observer_epoch(sample)-origin-sample['elapsed_seconds'])>tolerance_seconds:
+        if modern and (sample.get('observer_read_started_seconds') is None
+            or sample.get('observer_read_finished_seconds') is None
+            or not sample['elapsed_seconds']<=sample['observer_read_started_seconds']<=sample['observer_read_finished_seconds']):
+            errors.append('invalid observer query timing bounds')
+        if abs(observer_epoch(sample)-origin-observer_elapsed(sample))>tolerance_seconds:
             errors.append('observer wall clock differs from monotonic trace')
     for stream in case['source_transactions']:
         for index,row in enumerate(stream):
-            end=stream[index+1]['insert_started_seconds'] if index+1<len(stream) else trace[-1]['elapsed_seconds']
+            end=row.get('insert_completed_seconds',stream[index+1]['insert_started_seconds'] if index+1<len(stream) else observer_elapsed(trace[-1]))
             elapsed=row['commit_epoch']-origin
             if not row['insert_started_seconds']-tolerance_seconds <= elapsed <= end+tolerance_seconds:
                 errors.append('stream source clock differs from monotonic insertion window')
@@ -104,6 +114,7 @@ def fairness(args, variant, image, text, directory):
         stream_transactions=args.stream_transactions, stream_rows_per_transaction=20,
         offered_interval_ms=500, observer_interval_ms=500,
         source_producer='independent_sessions',
+        observer_clock_sampling='query_return_monotonic',
         limits=dict(p95_publication_ms=2000, max_publication_gap_seconds=5,
                     min_commits_during_copy=5, catchup_seconds=5, copy_timeout_seconds=180))
     if not bulk_copies:
@@ -165,6 +176,7 @@ def fairness(args, variant, image, text, directory):
             sample = dict(elapsed_seconds=time.monotonic() - started, streams=[])
             for stream_index, dest in enumerate(destinations):
                 pressure = getattr(args, 'pressure_observer', None)
+                read_started=time.monotonic()-started
                 if pressure:
                     known_commits = list(commits[stream_index])
                     values = dest.query(pressure.SQL)[0].split('|')
@@ -172,6 +184,7 @@ def fairness(args, variant, image, text, directory):
                 else:
                     values = dest.query("SELECT count(*),extract(epoch FROM clock_timestamp()) FROM lake_replication.transactions WHERE state='published'")[0].split('|')
                     sample['streams'].append(dict(published_transactions=int(values[0]), observed_epoch=float(values[1])))
+                sample['streams'][-1].update(read_started_seconds=read_started,read_finished_seconds=time.monotonic()-started)
                 diagnostic=dest.query("SELECT coalesce(last_error,'') FROM lake_replication.service_status")
                 if diagnostic and 'has no changes' in diagnostic[0] and 'streamed transaction' in diagnostic[0]:
                     result['receiver_error']=diagnostic[0]
@@ -184,8 +197,9 @@ def fairness(args, variant, image, text, directory):
                     "SELECT coalesce(jsonb_agg(s),'[]'::jsonb) FROM staging_gate.activity s")[0])
             sample['copies'] = []
             for copy in copies:
+                read_started=time.monotonic()-started
                 values = copy.query("SELECT coalesce((SELECT state FROM lake_replication.subscriptions WHERE subscription_name LIKE 'fair_copy_sub%'),'absent'),coalesce(max(rows_copied),0),coalesce(min(extract(epoch FROM started_at)),0),coalesce(max(extract(epoch FROM pg_xact_commit_timestamp(xmin))),0),extract(epoch FROM clock_timestamp()) FROM lake_replication.initial_copies")[0].split('|')
-                sample['copies'].append(dict(state=values[0], rows_copied=int(values[1]), started_epoch=float(values[2]), last_row_commit_epoch=float(values[3]), observed_epoch=float(values[4])))
+                sample['copies'].append(dict(state=values[0], rows_copied=int(values[1]), started_epoch=float(values[2]), last_row_commit_epoch=float(values[3]), observed_epoch=float(values[4]),read_started_seconds=read_started,read_finished_seconds=time.monotonic()-started))
             sample['observer_epoch'] = max(x['observed_epoch'] for x in sample['streams'])
             sample['copy'] = None
             if bulk_copies:
@@ -195,6 +209,9 @@ def fairness(args, variant, image, text, directory):
                     last_row_commit_epoch=max(x['last_row_commit_epoch'] for x in sample['copies']),
                     observed_epoch=max(x['observed_epoch'] for x in sample['copies']))
                 sample['observer_epoch'] = sample['copy']['observed_epoch']
+            clock_sample=max(sample['copies'] if bulk_copies else sample['streams'],key=lambda x:x['observed_epoch'])
+            sample['observer_read_started_seconds']=clock_sample['read_started_seconds']
+            sample['observer_read_finished_seconds']=clock_sample['read_finished_seconds']
             if bulk_copies > 1:
                 # Managed workers wrap the publication in a fenced transaction.
                 # Count their queued queries too, without matching the observer.
@@ -226,8 +243,8 @@ def fairness(args, variant, image, text, directory):
                         for service in ('source','storage')}))
             trace.append(sample)
             if getattr(args, 'abort_on_clock_step', False) and len(trace)>1:
-                origin=observer_epoch(trace[0])-trace[0]['elapsed_seconds']
-                if abs(observer_epoch(sample)-sample['elapsed_seconds']-origin)>1:
+                origin=observer_epoch(trace[0])-observer_elapsed(trace[0])
+                if abs(observer_epoch(sample)-observer_elapsed(sample)-origin)>1:
                     raise RuntimeError('clock discontinuity invalidates this local measurement')
             if not any(producer.is_alive() for producer in producers) and all(row['published_transactions'] == args.stream_transactions for row in sample['streams']) and (not bulk_copies or sample['copy']['state'] == 'streaming'):
                 break

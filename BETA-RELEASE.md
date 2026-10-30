@@ -41,7 +41,11 @@ observer clock audit, so the full bracketed comparison is invalid. Independent
 checkpoints remain the latency direction, while bulk-copy headroom is the next
 local runtime blocker. The production schema migration remains unimplemented;
 no experiment result promotes the failed native release gate. The AMD64 cold
-prerequisite build and separate recipe optimization remain unqualified.
+prerequisite build and separate recipe optimization remain unqualified. The
+[bounded copy transaction prototype](docs/bulk-copy-chunk-prototype.md) passes
+local safety, controlled confirmation and one-CPU checks while retaining the
+original byte target and archived binary. Its 4,000-row configuration still needs
+native confirmation; no production default or schema change is integrated.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)

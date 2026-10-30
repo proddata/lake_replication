@@ -196,6 +196,28 @@ The same comparison runs locally with `QUALIFICATION_ARCHIVE` set:
 python3 tests/admission/checkpoint_compare.py --cpuset 0-1
 ```
 
+For the [bounded bulk-copy row-cap experiment](../../docs/bulk-copy-chunk-prototype.md),
+run a separate ARM64 comparison after its local byte/lifecycle checks:
+
+```sh
+gh workflow run lifecycle-qualification.yml --ref main \
+  -f artifact_run_id=CI_RUN_ID -f native_probe=true -f probe_arch=arm64 \
+  -f copy_chunk_comparison=4000
+```
+
+This holds split checkpoints constant and measures 1,000/4,000/1,000 rows per
+copy transaction. The archived binary checksum and 8 MiB row-text budget stay
+fixed; only the declared configuration wrapper varies. Fresh fixtures, source
+cadence, copy/latency/overlap limits and the 20-minute three-case ceiling are
+unchanged. It cannot combine with the other prototype modes. `2000` is also an
+explicit diagnostic choice; neither setting changes production defaults.
+
+New fairness traces record monotonic return time for the exact SQL timestamp
+query, rather than pairing it with the start of a multi-query observer batch.
+The one-second clock tolerance is unchanged. Historical traces use their legacy
+audit, and comparisons reject mixed sampling methods. These changes do not
+requalify the earlier invalid native control.
+
 ## Storage fixture preparation
 
 Qualification builds MinIO server/client fixtures from the pinned upstream source

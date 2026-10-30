@@ -58,3 +58,25 @@ class AdmissionClockTests(unittest.TestCase):
         self.assertTrue(measure.fairness_timing_validation(case)['valid'])
         case['trace'][1]['observer_epoch']+=570
         self.assertFalse(measure.fairness_timing_validation(case)['valid'])
+
+    def test_query_return_time_does_not_confuse_prior_sql_delay_with_clock_step(self):
+        case=dict(trace=[dict(elapsed_seconds=5,observer_epoch=1005.01,
+            observer_read_started_seconds=5,observer_read_finished_seconds=5.02),
+            dict(elapsed_seconds=6,observer_epoch=1009.01,
+            observer_read_started_seconds=9,observer_read_finished_seconds=9.02)],
+            source_transactions=[[dict(insert_started_seconds=0,insert_completed_seconds=.04,commit_epoch=1000.02)]])
+        self.assertTrue(measure.fairness_timing_validation(case)['valid'])
+        legacy=copy.deepcopy(case)
+        for sample in legacy['trace']:
+            del sample['observer_read_started_seconds'];del sample['observer_read_finished_seconds']
+        self.assertFalse(measure.fairness_timing_validation(legacy)['valid'])
+        for step in [1.1,-1.1,570]:
+            stepped=copy.deepcopy(case);stepped['trace'][1]['observer_epoch']+=step
+            self.assertFalse(measure.fairness_timing_validation(stepped)['valid'])
+
+    def test_query_clock_audit_rejects_missing_or_reversed_bounds(self):
+        for bounds in [dict(observer_read_finished_seconds=6),
+                       dict(observer_read_finished_seconds=None),
+                       dict(observer_read_started_seconds=7,observer_read_finished_seconds=6)]:
+            case=dict(trace=[dict(elapsed_seconds=5,observer_epoch=1006,**bounds)],source_transactions=[])
+            self.assertFalse(measure.fairness_timing_validation(case)['valid'])

@@ -71,5 +71,39 @@ class ComparisonTests(unittest.TestCase):
         runs[0]['source_producer']='legacy_serial_session'
         with self.assertRaises(ValueError):m.compare(runs)
 
+    def test_copy_comparison_allows_only_declared_configuration_change(self):
+        def run(rows):
+            return dict(archive='same archive',image_id=f'wrapped-{rows}',inputs='same sources',
+                prototype=dict(variant='split',sql_overlay=True,focused_operations=False,
+                    sql_profiling=False,service_cpu_affinity='0-1',initial_copy_override=dict(
+                    chunk_rows=rows,chunk_row_text_bytes=8388608,base_destination_image_id='base',worker_sha256='worker')))
+        baseline=run(1000);candidate=run(2000)
+        self.assertEqual(m.runtime_identity(baseline,'split','0-1',1000),
+                         m.runtime_identity(candidate,'split','0-1',2000))
+        candidate['prototype']['initial_copy_override']['worker_sha256']='different worker'
+        self.assertNotEqual(m.runtime_identity(baseline,'split','0-1',1000),
+                            m.runtime_identity(candidate,'split','0-1',2000))
+
+    def test_copy_comparison_rejects_widened_byte_budget(self):
+        observed=dict(archive='archive',image_id='image',inputs='sources',prototype=dict(
+            variant='split',sql_overlay=True,focused_operations=False,sql_profiling=False,
+            service_cpu_affinity='0-1',initial_copy_override=dict(chunk_rows=2000,
+            chunk_row_text_bytes=16777216,base_destination_image_id='base',worker_sha256='worker')))
+        with self.assertRaises(ValueError):m.runtime_identity(observed,'split','0-1',2000)
+        with self.assertRaises(ValueError):m.runtime_identity(observed,'split','0-1')
+
+    def test_chunk_control_treatment_control_order_and_ratio(self):
+        sequence=('rows_1000','rows_2000','rows_1000')
+        runs=[dict(variant=v,copy_elapsed_seconds=t,measurement_valid=True,workload_passed=True)
+            for v,t in zip(sequence,[100,80,100])]
+        self.assertEqual(m.compare(runs,sequence)['candidate_copy_ratio_to_control_mean'],.8)
+        with self.assertRaises(ValueError):m.compare(runs)
+
+    def test_comparison_rejects_mixed_clock_sampling_methods(self):
+        runs=[dict(variant=v,copy_elapsed_seconds=100,measurement_valid=True,
+            workload_passed=True,observer_clock_sampling='query_return_monotonic') for v in m.SEQUENCE]
+        runs[0]['observer_clock_sampling']='legacy_batch_start'
+        with self.assertRaises(ValueError):m.compare(runs)
+
 
 if __name__=='__main__':unittest.main()

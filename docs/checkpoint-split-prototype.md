@@ -358,3 +358,11 @@ copy improvement; then implement the hardened production schema/upgrade.
 retains the valid pair, invalid final control, source round trips and all failed
 gates. This remains an experiment; the production archive still uses the shared
 checkpoint row.
+
+The subsequent [bounded copy transaction prototype](bulk-copy-chunk-prototype.md)
+retains the 8 MiB row-text target and original worker binary while testing
+larger row caps. Its safety checks, local controlled cohorts and one-CPU
+sensitivity pass. It also corrects the observer's timestamp pairing with the
+same clock tolerance, leaving this historical invalid control unchanged.
+A prospective native configuration trial is next; no production migration has
+been performed.
