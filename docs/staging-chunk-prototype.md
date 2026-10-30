@@ -201,3 +201,9 @@ The [subsequent pacing diagnostic](staging-pacing-prototype.md) executes this
 40 ms candidate. Its two paced observations, one-CPU sensitivity and safety
 checks pass. Both local bracketed comparisons retain unpaced overlap misses
 and remain inconclusive; a prospective native comparison is required.
+
+The [prospective paced native observation](staging-pacing-prototype.md#prospective-native-result)
+subsequently passes all absolute workload and validity gates at 123.49 seconds
+with 1.610–1.661-second streaming p95. An invalid unpaced control still invalidates
+the full comparison. This supports production hardening of the combination,
+without promoting a migration or default change here.

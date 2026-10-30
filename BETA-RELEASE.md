@@ -19,7 +19,7 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 41022649732](https://github.com/proddata/lake_replication/actions/runs/41022649732) passes checks and both bundles at `6f76a31`. The [valid native chunk-store comparison](docs/staging-chunk-prototype.md#prospective-native-result) copies in 137.28/87.09/141.13 seconds. Both per-row controls pass; chunks fail all three two-second streaming p95 gates at 2.62–3.03 seconds. Source/clock/overlap and correctness pass. Retain the prototype and test whole-bulk-pipeline pacing locally before another native run. Full native qualification and AMD64 cold-build validation remain open. |
+| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 41084483405](https://github.com/proddata/lake_replication/actions/runs/41084483405) passes checks and both bundles at `2244f6f`. The [native 40 ms paced chunk candidate](docs/staging-pacing-prototype.md#prospective-native-result) independently passes every gate at 123.49-second copy duration and 1.610–1.661-second streaming p95. The first unpaced control misses overlap, invalidating full ABA; both controls retain latency failures, so the diagnostic workflow is red. Advance the working configuration to migration/concurrency-contract hardening, not release promotion. Full native package qualification and AMD64 cold-build validation remain open. |
 | G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Local beta.4 arm64 archives pass fresh lifecycle, receiver, worker crash, admission and upgrade checks. Measured and final documented archives have identical production payloads; see [current qualification](docs/staging-journal-migration-results.md). Native amd64 and clean final-commit packages remain pending. |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The local beta.4 arm64 candidate passes 119 fresh lifecycle checks on private clean volumes with no SQL/binary overlay, including restore, management and uninstall. See [current production qualification](docs/staging-journal-migration-results.md). Native amd64 and final-commit packages remain G1 requirements. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Bulk-only admission reproduced a fatal sixteen-stream OOM at 2 GB. The adopted four-slot streaming pool passes 457 final packaged arm64 checks, including that live/restart workload and four-copy coexistence. [Performance evidence](docs/stream-pool-performance-results.md) retains the first inconclusive copy cohort and fixed ten-pair extension. Native ARM64 subsequently failed the four-copy latency limits at `8bcd5b2`; exact data and the sixteen-stream OOM regression passed. See [native findings](docs/native-qualification-failures.md). Both native architectures, final-commit qualification and the packaged RC soak remain required. See [production migration](docs/stream-pool-migration-results.md). |
@@ -32,35 +32,35 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 ## Release decision
 
-The latest [valid native chunk-storage comparison](docs/staging-chunk-prototype.md#prospective-native-result)
-passes source cadence, observer clock, four-way overlap and exact-data checks,
-with no OOM or PostgreSQL crash. Copies take 137.28/87.09/141.13 seconds for
-per-row/chunk/per-row storage. Both controls pass, but the chunk candidate fails
-all three two-second streaming p95 gates at 2.62–3.03 seconds. The remaining
-runtime blocker is bulk/stream fairness under the shared CPU budget. Retain the
-throughput prototype; do not promote unpaced chunks or retry it unchanged.
+The [prospective native 40 ms pacing trial](docs/staging-pacing-prototype.md#prospective-native-result)
+provides one valid working point for split checkpoints and chunk-backed staging:
+123.49-second copy completion and 1.610–1.661-second streaming p95, passing every
+source, clock, overlap, exact-data, catch-up and safety gate with no OOM or
+PostgreSQL crash. The full bracketed comparison remains invalid because the
+first unpaced control misses overlap; both controls retain latency failures.
+The diagnostic workflow is correctly red. No causal/statistical performance
+claim or requalification of historical controls is made.
 
-The chunk prototype preserves the native 1,000-row cap, 8 MiB row-text target
-and archived executable. Local validation passes 131 frozen safety assertions,
-a 73.11/40.58/72.08-second controlled cohort and one-CPU sensitivity at 79.01
-seconds with 1.526–1.535-second streaming p95. Native traces show the latency
-regression before observed bulk publication and increased source CPU pressure.
-Test post-commit whole-bulk-pipeline pacing locally before another native run.
-The [staging investigation](docs/staging-chunk-prototype.md) records all findings
-and the limits of this interpretation. Production storage and defaults remain
-unchanged, and the hardened checkpoint migration remains deferred. The
-[subsequent 40 ms pacing diagnostic](docs/staging-pacing-prototype.md) passes
-131 safety checks, both paced observations at 103.65–104.50 seconds and one-CPU
-sensitivity at 124.59 seconds. Both full local comparisons remain inconclusive
-because of unpaced publication-overlap misses. A prospective native comparison
-is pending; no gate or historical finding is waived.
+Advance this combination to production hardening. Production schema/defaults
+remain unchanged and the checkpoint/storage migration is still deferred. Resolve
+populated upgrades and rollback, dump/restore, permissions/direct-write APIs,
+the `btree_gist` dependency, configured chunk-size compatibility and an explicit
+pacing/concurrency contract. Four-copy validation of a per-worker 40 ms pause
+does not supply an aggregate rate bound for arbitrary concurrency. Then qualify
+the unmodified migrated archive on both native architectures and complete the
+remaining release gates.
 
-Earlier findings remain retained: the [independent-source checkpoint trial](docs/checkpoint-split-prototype.md#prospective-independent-source-native-result)
-misses copy completion at 182.15 seconds and has an invalid final control;
-the [larger row-cap trial](docs/bulk-copy-chunk-prototype.md#prospective-native-result)
-copies in 133.04 seconds but fails all three streaming latency gates. No
-prototype result qualifies the unmodified production archive. AMD64 cold-build
-validation and the separate prerequisite recipe optimization remain open.
+Local paced validation passes 131 safety assertions, two independent four-copy
+observations at 103.65–104.50 seconds, and one-CPU sensitivity at 124.59 seconds
+with 1.173–1.264-second p95. Both local bracketed comparisons retain unpaced
+overlap misses and remain inconclusive. [Pacing evidence](docs/staging-pacing-prototype.md)
+records those limitations and the native working point. Earlier findings also
+remain retained: the [independent-source checkpoint trial](docs/checkpoint-split-prototype.md#prospective-independent-source-native-result)
+misses copy completion at 182.15 seconds; the [larger row-cap trial](docs/bulk-copy-chunk-prototype.md#prospective-native-result)
+fails streaming p95; and [unpaced chunks](docs/staging-chunk-prototype.md#prospective-native-result)
+copy in 87.09 seconds but fail all three latency gates. No prototype qualifies
+the unmodified production archive. AMD64 cold-build validation and the separate
+prerequisite recipe optimization remain open.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)

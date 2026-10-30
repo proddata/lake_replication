@@ -94,3 +94,66 @@ trial keeps the same fixed unpaced/40 ms/unpaced sequence and all gates. Invalid
 controls would still invalidate its comparison; failed latency controls remain
 findings. No local finding is reclassified or waived to trigger that trial.
 Production storage, defaults and migration status remain unchanged.
+
+## Prospective native result
+
+[ARM64 run 41084821645](https://github.com/proddata/lake_replication/actions/runs/41084821645)
+uses the clean CI 41084483405 archive at `2244f6f`. The archived executable,
+1,000-row cap, 8 MiB row-text target, split checkpoints, chunk store, source
+schedule and shared two-CPU resource settings are identical across observations.
+Only the declared 0/40/0 ms post-commit pause changes.
+
+| Pause | Copy seconds | Stream p95 milliseconds | Observed publications | Outcome |
+|---|---:|---|---:|---|
+| 0 ms before | 82.58 | 2,355 / 2,341 / 1,943 | 3 | Invalid control; two latency failures |
+| 40 ms candidate | 123.49 | 1,661 / 1,610 / 1,631 | 4 | PASS: every validity and workload gate |
+| 0 ms after | 86.41 | 1,857 / 2,088 / 1,867 | 4 | Valid control; one latency failure |
+
+The paced observation is independently valid: source cadence, query-return clock
+audit, four-way publication overlap, exact data, copy completion, streaming p95,
+catch-up and publication-gap checks all pass. No engine OOM or PostgreSQL crash
+is observed. Copy completion has 56.5 seconds of headroom against 180 seconds;
+its worst streaming p95 is about 339 ms below two seconds. Maximum source-start
+lateness is about 1.84 ms.
+
+The full bracketed comparison remains invalid because the first control misses
+publication overlap. Both controls also retain their latency failures. The
+workflow is correctly red (`completed_with_findings`); no control is discarded
+or replaced, and no local/native invalid cohort is requalified. This establishes
+one native working point, not statistical or complete-comparison causal proof.
+Do not retry the unchanged cohort solely to obtain a green workflow.
+
+Periodic samples during approximately the first 6–56 seconds show source CPU
+averaging about 0.35 cores with pacing versus 0.57/0.51 in controls. The engine
+receives about 0.59 cores versus 0.43/0.48. Source sampled CPU-pressure some/avg10
+reaches 39.65% versus 82.73%/81.35%. These observations are consistent with source
+backpressure leaving more CPU for streaming publication; the invalid full
+comparison limits causal inference. Source/object-store CPU uses approximate
+observer intervals, and periodic samples cannot resolve shorter bursts.
+
+Candidate samples reach about 986 MiB destination memory.current (including
+cache), 169 MiB engine memory.current and 6.05 MiB aggregate initial-sync process
+PSS. These are sampled observations, not exact peaks or new memory guarantees.
+The existing encoded-byte target and engine limits remain unchanged.
+
+[Native evidence](evidence/2026-10-30-staging-pacing-native.json) retains the full
+comparison, all failed gates, overlap counts, resource summaries and original
+archive/image/worker/configuration/source hashes. Historical failures remain
+retained separately.
+
+## Engineering decision
+
+Advance split checkpoints, chunk-backed staging and bounded post-commit pacing
+to production hardening. Keep production storage and defaults unchanged until
+that work is implemented and qualified. The native candidate meets the measured
+absolute gates; the full comparison does not establish a causal performance win.
+
+The migration must handle populated upgrades and rollback, dump/restore data,
+permissions and direct-write API compatibility, the `btree_gist` dependency,
+existing configured chunk sizes, and atomic checkpoint/data publication. Define
+the pacing/concurrency contract explicitly: a per-worker 40 ms setting validated
+with four copies is not an aggregate rate guarantee for arbitrary worker counts,
+row widths or host capacities. Preserve cancellation, generation fencing and
+byte/journal bounds. Qualify the resulting unmodified archive with lifecycle,
+recovery, memory/concurrency and native performance checks on both architectures
+before beta release. No production migration or default change is included here.

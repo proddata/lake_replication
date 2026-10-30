@@ -1,0 +1,522 @@
+{
+  "scope": "Prospective native ARM64 unpaced/40ms/unpaced chunk-storage diagnostic at unchanged 1000-row/8MiB limits. Paced candidate independently passes; first control overlap failure invalidates full comparison. Not release qualification.",
+  "workflow_url": "https://github.com/proddata/lake_replication/actions/runs/41084821645",
+  "candidate_revision": "2244f6f5afd52d9c0775f9b33d3705227074c7bb",
+  "artifact_run_id": 41084483405,
+  "raw_comparison_sha256": "dc1a178b156ac23a455fc1732798ca33352cdc79c494f17bedc829ff54f6cd8e",
+  "comparison": {
+    "scope": "Fixed control/treatment/control comparison on one host; not release qualification.\n\nEvery workload gate and failed observation is retained. Findings do not stop the\nsequence; fixture/provenance errors do. No best-of or automatic retries.\n",
+    "status": "completed_with_findings",
+    "sequence": [
+      "chunks_unpaced",
+      "chunks_pause_40ms",
+      "chunks_unpaced"
+    ],
+    "shared_cpu_affinity": "0-1",
+    "experiment": "staging_chunk_pacing",
+    "chunk_storage": [
+      true,
+      true,
+      true
+    ],
+    "pause_after_chunk_ms": [
+      0,
+      40,
+      0
+    ],
+    "copy_chunk_caps": [
+      1000,
+      1000,
+      1000
+    ],
+    "runs": [
+      {
+        "variant": "chunks_unpaced",
+        "checkpoint_variant": "split",
+        "chunk_storage": true,
+        "pause_after_chunk_ms": 0,
+        "initial_copy_override": {
+          "chunk_rows": 1000,
+          "chunk_row_text_bytes": 8388608,
+          "pause_after_chunk_ms": 0,
+          "pause_placement": "after_managed_transaction_commit",
+          "scope": "Disposable archived-worker configuration overlay; no rebuilt worker binary.",
+          "single_oversized_row_behavior": "unchanged",
+          "base_destination_image_id": "sha256:4775080da805cc61a86bd10bdd698bfdbd78e7779a94f75b3315583933943884",
+          "worker_sha256": "74ac2186267dc2faa6a6ebc1d5ff23480810a0b294b4bf981f99a97d691a151e",
+          "wrapper_sha256": "e98a06fb58e47de9e8c41ef694816652ba4397cf6ea30f7958577589951fdf79"
+        },
+        "image_id": "sha256:75a96ecc025421c2bbcb8c34a118bb4808b4493b78f173fadeabb26359183e7e",
+        "evidence": ".qualification/qualification_20261030_155728_production_admission",
+        "results_sha256": "746cb57a5ba08be42b021690cd099c79d0d4375fa3eccd5cac4e8ac88464d2ff",
+        "status": "completed_with_findings",
+        "measurement_valid": false,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": false,
+        "failed_gates": [
+          "all_stream_targets_pass",
+          "publication_overlap_observed",
+          "analytics:p95_below_two_seconds",
+          "fair_stream_1:p95_below_two_seconds"
+        ],
+        "copy_elapsed_seconds": 82.58149313926697,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 2354.7000885009766,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1506.5629482269287,
+              "journal_insert_to_batch_ms": 1041.3639545440674,
+              "source_to_journal_insert_ms": 240.56482315063477
+            },
+            "source_max_schedule_lateness_seconds": 0.4696826739999551,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 2340.5919075012207,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1304.4331073760986,
+              "journal_insert_to_batch_ms": 1139.106035232544,
+              "source_to_journal_insert_ms": 224.45297241210938
+            },
+            "source_max_schedule_lateness_seconds": 0.0014326900000014575,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 1942.673921585083,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1188.1861686706543,
+              "journal_insert_to_batch_ms": 909.3961715698242,
+              "source_to_journal_insert_ms": 189.44907188415527
+            },
+            "source_max_schedule_lateness_seconds": 0.0010921250000137661,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      {
+        "variant": "chunks_pause_40ms",
+        "checkpoint_variant": "split",
+        "chunk_storage": true,
+        "pause_after_chunk_ms": 40,
+        "initial_copy_override": {
+          "chunk_rows": 1000,
+          "chunk_row_text_bytes": 8388608,
+          "pause_after_chunk_ms": 40,
+          "pause_placement": "after_managed_transaction_commit",
+          "scope": "Disposable archived-worker configuration overlay; no rebuilt worker binary.",
+          "single_oversized_row_behavior": "unchanged",
+          "base_destination_image_id": "sha256:4775080da805cc61a86bd10bdd698bfdbd78e7779a94f75b3315583933943884",
+          "worker_sha256": "74ac2186267dc2faa6a6ebc1d5ff23480810a0b294b4bf981f99a97d691a151e",
+          "wrapper_sha256": "f0f5a888930454658e0fbb9781a4a79abcdde54c2477db47abf278dc64487d8d"
+        },
+        "image_id": "sha256:a54241910ac357909d0d7ee458b54c92678983ff1b29aee71ac6838121e63530",
+        "evidence": ".qualification/qualification_20261030_160018_production_admission",
+        "results_sha256": "785836ad34ac9fb2b4c6ec367333b565f8915acd7330693451b8948e5daef3b9",
+        "status": "passed",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": true,
+        "failed_gates": [],
+        "copy_elapsed_seconds": 123.49164581298828,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 1661.2789630889893,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 954.031229019165,
+              "journal_insert_to_batch_ms": 764.3530368804932,
+              "source_to_journal_insert_ms": 64.6219253540039
+            },
+            "source_max_schedule_lateness_seconds": 0.0011482840000098804,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 1610.3150844573975,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 955.0890922546387,
+              "journal_insert_to_batch_ms": 726.8929481506348,
+              "source_to_journal_insert_ms": 47.07908630371094
+            },
+            "source_max_schedule_lateness_seconds": 0.0018413190000501345,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 1631.0880184173584,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 907.9861640930176,
+              "journal_insert_to_batch_ms": 673.8111972808838,
+              "source_to_journal_insert_ms": 179.8989772796631
+            },
+            "source_max_schedule_lateness_seconds": 0.0010428959999444487,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      {
+        "variant": "chunks_unpaced",
+        "checkpoint_variant": "split",
+        "chunk_storage": true,
+        "pause_after_chunk_ms": 0,
+        "initial_copy_override": {
+          "chunk_rows": 1000,
+          "chunk_row_text_bytes": 8388608,
+          "pause_after_chunk_ms": 0,
+          "pause_placement": "after_managed_transaction_commit",
+          "scope": "Disposable archived-worker configuration overlay; no rebuilt worker binary.",
+          "single_oversized_row_behavior": "unchanged",
+          "base_destination_image_id": "sha256:4775080da805cc61a86bd10bdd698bfdbd78e7779a94f75b3315583933943884",
+          "worker_sha256": "74ac2186267dc2faa6a6ebc1d5ff23480810a0b294b4bf981f99a97d691a151e",
+          "wrapper_sha256": "e98a06fb58e47de9e8c41ef694816652ba4397cf6ea30f7958577589951fdf79"
+        },
+        "image_id": "sha256:75a96ecc025421c2bbcb8c34a118bb4808b4493b78f173fadeabb26359183e7e",
+        "evidence": ".qualification/qualification_20261030_160331_production_admission",
+        "results_sha256": "b181ad47978151b936e4e57180386d7c5ede562b9ab56c5f8a777a8e23a82937",
+        "status": "completed_with_findings",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": false,
+        "failed_gates": [
+          "all_stream_targets_pass",
+          "fair_stream_1:p95_below_two_seconds"
+        ],
+        "copy_elapsed_seconds": 86.40808296203613,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 1856.9860458374023,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1069.577932357788,
+              "journal_insert_to_batch_ms": 840.4829502105713,
+              "source_to_journal_insert_ms": 165.65799713134766
+            },
+            "source_max_schedule_lateness_seconds": 0.0003326089999973192,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 2087.6100063323975,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1288.6340618133545,
+              "journal_insert_to_batch_ms": 899.5349407196045,
+              "source_to_journal_insert_ms": 197.48306274414062
+            },
+            "source_max_schedule_lateness_seconds": 0.0003858850000142411,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 1866.853952407837,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1124.7308254241943,
+              "journal_insert_to_batch_ms": 879.9088001251221,
+              "source_to_journal_insert_ms": 139.50014114379883
+            },
+            "source_max_schedule_lateness_seconds": 0.0005554239999128185,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      }
+    ],
+    "runner_source_sha256": "5f67023034ed2df3ac973c271cf16642c5be9ce7c117067e76c994d7617651c0",
+    "common_inputs": {
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.4-linux-arm64.tar.gz",
+        "archive_sha256": "86f8914ba109412a6c1bb6010eafb6f7e44f880952d3118eac3a5500d3300ab9",
+        "source_revision": "2244f6f5afd52d9c0775f9b33d3705227074c7bb"
+      },
+      "inputs": {
+        "Cargo.lock": "9b41b01aa6d7749ea85b205c592b6a9781833fbe65765169a06e20e07a325ffa",
+        "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "ea9b145b1689133f62b9947e1ae219190588fce78d0b35b82923fc560aae8316",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "453b0e4de938675413a56df77bdff8d748407066060cc81cf8b3b5a773d97316",
+        "extensions/lake_replication/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+        "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+        "tests/admission/checkpoint_split_probe.py": "55ca7d82a21de60ed46afc6c9c6046c9af21968ab1f250ed4c2ea88f6e746716",
+        "tests/admission/copy_chunk.py": "e41cac198027f91e83ce78579fd0aedc069be645d2d76f4a8990e9537c136dc2",
+        "tests/admission/copy_chunk_bounds.py": "8efcf43e150a7cd43846d606a84bb4d01fd841b833d28fd8f22a2ee2b220ed55",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "61a7844bc35e350c20db166666a990694be27a2144383283651d1361e1501e4e",
+        "tests/admission/staging_chunk_operations.py": "62fd4f58adf72e09945563230b767332cae2e56d0f53940ece21536b14ccaaf9",
+        "tests/admission/staging_chunks.sql": "9e719e5341dcc44f998533139216ce3d72e9576c7d59e88fb0db93ebc841e70e",
+        "tests/qualification/probe.py": "0bb5ed0b888ad6c030ec46bd95c6fbf6fe355c5c266d5882256f119e18bbd4b7",
+        "worker/Cargo.toml": "8da2a60721a6ebde95857712570e1cd1e3482cd84d83dcafc7dd0c92c6c693b9",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "68d53a3550ef7df1b35c4fb0368293df29d626adc0640346c79fa7631af9abc5",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "8a01d95edbe918179e320c682ec5a5154d59ac7e1e3e338659490ef7909caed7",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "base_destination_image_id": "sha256:4775080da805cc61a86bd10bdd698bfdbd78e7779a94f75b3315583933943884",
+      "archived_worker_sha256": "74ac2186267dc2faa6a6ebc1d5ff23480810a0b294b4bf981f99a97d691a151e"
+    },
+    "comparison": {
+      "measurement_valid": false,
+      "source_producer": "independent_sessions",
+      "observer_clock_sampling": "query_return_monotonic",
+      "candidate_workload_passed": true,
+      "all_workloads_passed": false,
+      "control_copy_drift_ratio": 1.0463371353229947,
+      "candidate_copy_ratio_to_control_mean": 1.461529742390259,
+      "inference_limit": "One sequential comparison; host drift is bracketed, not eliminated. No statistical speedup or release qualification is claimed."
+    }
+  },
+  "observations": [
+    {
+      "evidence": ".qualification/qualification_20261030_155728_production_admission",
+      "raw_fairness_sha256": "ccf6d0ab4b3a111bb8b97addd09e1a1d65759f004a9dadef9eb8fdad41376098",
+      "archive_and_exact_data_assertions_passed": true,
+      "max_active_copy_publications": 3,
+      "checks": {
+        "all_stream_targets_pass": false,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": false,
+        "waiting_observed": true
+      },
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "resources": {
+        "destination": {
+          "mean_cpu_cores_between_samples_while_streaming": 0.9608241628247817,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 75.99,
+          "max_sampled_memory_current_bytes": 1149091840,
+          "cpu_quota_throttled_usec_delta": 0
+        },
+        "pgduck": {
+          "mean_cpu_cores_between_samples_while_streaming": 0.4339030669534031,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 40.47,
+          "max_sampled_memory_current_bytes": 184860672,
+          "cpu_quota_throttled_usec_delta": 0
+        },
+        "source": {
+          "approx_mean_cpu_cores_between_samples_while_streaming": 0.5686705675097682,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 82.73
+        },
+        "storage": {
+          "approx_mean_cpu_cores_between_samples_while_streaming": 0.03023468771152756,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 4.39
+        },
+        "max_sampled_initial_sync_aggregate_pss_bytes": 6876160
+      },
+      "sampling_limits": "Periodic samples are not exact peaks or time-weighted waits. Source/storage CPU uses observer interval approximations because raw dumps lack individual return timestamps. Source/engine CPU differences are descriptive, not proof of a causal comparative effect; full comparison remains invalid."
+    },
+    {
+      "evidence": ".qualification/qualification_20261030_160018_production_admission",
+      "raw_fairness_sha256": "5b20180a1bbbd0d7055502a9e0d56da3588b08548ee2e6c32cf7b9248d6dc6a2",
+      "archive_and_exact_data_assertions_passed": true,
+      "max_active_copy_publications": 4,
+      "checks": {
+        "all_stream_targets_pass": true,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": true,
+        "waiting_observed": true
+      },
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "resources": {
+        "destination": {
+          "mean_cpu_cores_between_samples_while_streaming": 0.9277660836959414,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 66.87,
+          "max_sampled_memory_current_bytes": 1034334208,
+          "cpu_quota_throttled_usec_delta": 0
+        },
+        "pgduck": {
+          "mean_cpu_cores_between_samples_while_streaming": 0.5896103695098714,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 37.19,
+          "max_sampled_memory_current_bytes": 177680384,
+          "cpu_quota_throttled_usec_delta": 0
+        },
+        "source": {
+          "approx_mean_cpu_cores_between_samples_while_streaming": 0.35403879115767556,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 39.65
+        },
+        "storage": {
+          "approx_mean_cpu_cores_between_samples_while_streaming": 0.037070377568646465,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 3.33
+        },
+        "max_sampled_initial_sync_aggregate_pss_bytes": 6340608
+      },
+      "sampling_limits": "Periodic samples are not exact peaks or time-weighted waits. Source/storage CPU uses observer interval approximations because raw dumps lack individual return timestamps. Source/engine CPU differences are descriptive, not proof of a causal comparative effect; full comparison remains invalid."
+    },
+    {
+      "evidence": ".qualification/qualification_20261030_160331_production_admission",
+      "raw_fairness_sha256": "6cf98b0f06d49e53370657d6259d9d0710861190689c22fc72914f35a3c07083",
+      "archive_and_exact_data_assertions_passed": true,
+      "max_active_copy_publications": 4,
+      "checks": {
+        "all_stream_targets_pass": false,
+        "copy_progress_observed": true,
+        "copy_within_three_minutes": true,
+        "publication_overlap_observed": true,
+        "waiting_observed": true
+      },
+      "limits": {
+        "catchup_seconds": 5,
+        "copy_timeout_seconds": 180,
+        "max_publication_gap_seconds": 5,
+        "min_commits_during_copy": 5,
+        "p95_publication_ms": 2000
+      },
+      "resources": {
+        "destination": {
+          "mean_cpu_cores_between_samples_while_streaming": 0.9517221207866026,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 74.82,
+          "max_sampled_memory_current_bytes": 1192669184,
+          "cpu_quota_throttled_usec_delta": 0
+        },
+        "pgduck": {
+          "mean_cpu_cores_between_samples_while_streaming": 0.4769119070620311,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 40.74,
+          "max_sampled_memory_current_bytes": 303345664,
+          "cpu_quota_throttled_usec_delta": 0
+        },
+        "source": {
+          "approx_mean_cpu_cores_between_samples_while_streaming": 0.5146031544036629,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 81.35
+        },
+        "storage": {
+          "approx_mean_cpu_cores_between_samples_while_streaming": 0.033060484983078446,
+          "max_sampled_cpu_pressure_some_avg10_while_streaming": 7.81
+        },
+        "max_sampled_initial_sync_aggregate_pss_bytes": 6860800
+      },
+      "sampling_limits": "Periodic samples are not exact peaks or time-weighted waits. Source/storage CPU uses observer interval approximations because raw dumps lack individual return timestamps. Source/engine CPU differences are descriptive, not proof of a causal comparative effect; full comparison remains invalid."
+    }
+  ],
+  "decision": "A valid native working point supports hardening the combined checkpoint split, chunk staging and post-commit pacing route. Keep production schema/defaults unchanged until migration, API, concurrency and restore contracts are implemented and qualified. Full comparison remains invalid; retain all control findings and do not claim statistical or complete-ABA causal proof. No unchanged native retry is required."
+}
