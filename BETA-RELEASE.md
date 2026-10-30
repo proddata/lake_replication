@@ -19,7 +19,7 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 41007276233](https://github.com/proddata/lake_replication/actions/runs/41007276233) passes checks and both bundles at `7c5d901`. The [independent-source native comparison](docs/checkpoint-split-prototype.md#prospective-independent-source-native-result) meets source cadence in all observations. The valid split reaches 1.71–1.74-second p95 but copies take 182.15 seconds against 180; the final control fails its observer clock audit, invalidating full ABA. Bulk-copy headroom and complete native qualification remain open. AMD64 cold-build timeout remains open. |
+| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 41017420553](https://github.com/proddata/lake_replication/actions/runs/41017420553) passes checks and both bundles at `7ad6044`. The [valid native 1,000/4,000/1,000 comparison](docs/bulk-copy-chunk-prototype.md#prospective-native-result) copies in 142.60/133.04/141.78 seconds, but the candidate fails all three two-second streaming p95 gates; the final control fails one. Source/clock/overlap and correctness checks pass. Keep the 1,000-row default and investigate publication latency locally before promotion. Complete native qualification and the AMD64 cold-build timeout remain open. |
 | G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Local beta.4 arm64 archives pass fresh lifecycle, receiver, worker crash, admission and upgrade checks. Measured and final documented archives have identical production payloads; see [current qualification](docs/staging-journal-migration-results.md). Native amd64 and clean final-commit packages remain pending. |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | The local beta.4 arm64 candidate passes 119 fresh lifecycle checks on private clean volumes with no SQL/binary overlay, including restore, management and uninstall. See [current production qualification](docs/staging-journal-migration-results.md). Native amd64 and final-commit packages remain G1 requirements. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Bulk-only admission reproduced a fatal sixteen-stream OOM at 2 GB. The adopted four-slot streaming pool passes 457 final packaged arm64 checks, including that live/restart workload and four-copy coexistence. [Performance evidence](docs/stream-pool-performance-results.md) retains the first inconclusive copy cohort and fixed ten-pair extension. Native ARM64 subsequently failed the four-copy latency limits at `8bcd5b2`; exact data and the sixteen-stream OOM regression passed. See [native findings](docs/native-qualification-failures.md). Both native architectures, final-commit qualification and the packaged RC soak remain required. See [production migration](docs/stream-pool-migration-results.md). |
@@ -44,8 +44,11 @@ no experiment result promotes the failed native release gate. The AMD64 cold
 prerequisite build and separate recipe optimization remain unqualified. The
 [bounded copy transaction prototype](docs/bulk-copy-chunk-prototype.md) passes
 local safety, controlled confirmation and one-CPU checks while retaining the
-original byte target and archived binary. Its 4,000-row configuration still needs
-native confirmation; no production default or schema change is integrated.
+original byte target and archived binary. Its [valid native comparison](docs/bulk-copy-chunk-prototype.md#prospective-native-result)
+copies in 133.04 seconds but fails all three streaming p95 gates at 2.02–2.06
+seconds. The 1,000-row controls copy in 141.78–142.60 seconds, with one control
+also missing one latency gate. Do not promote the larger row cap. Diagnose the
+publication path locally; no production default or schema change is integrated.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)

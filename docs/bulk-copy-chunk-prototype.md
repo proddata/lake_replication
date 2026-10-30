@@ -126,14 +126,83 @@ valid/valid/invalid classifications. No historical control has been requalified.
 histograms, both row-cap candidates, the inconclusive cohort, confirmation,
 one-CPU run, archived-worker hashes and all failed gates.
 
-The next bounded native experiment is:
+## Prospective native result
 
-```sh
-gh workflow run lifecycle-qualification.yml --ref main \
-  -f artifact_run_id=CI_RUN_ID -f native_probe=true -f probe_arch=arm64 \
-  -f copy_chunk_comparison=4000
-```
+[ARM64 run 41017649640](https://github.com/proddata/lake_replication/actions/runs/41017649640)
+uses the clean CI archive from run 41017420553 at `7ad6044`, with the unchanged
+archived worker and split checkpoints in all three observations. The complete
+fixed sequence has valid source cadence, query-return clock audits and four-way
+publication overlap. Exact-data/archive assertions pass, with no engine OOM or
+PostgreSQL crash.
 
-Keep every observation and all existing gates. Select a production migration
-only after valid native data demonstrates adequate latency and copy headroom.
-Production worker defaults and extension SQL remain unchanged.
+| Configuration | Copy seconds | Stream p95 milliseconds | Outcome |
+|---|---:|---|---|
+| 1,000 before | 142.60 | 1,693 / 1,873 / 1,785 | PASS |
+| 4,000 candidate | 133.04 | 2,062 / 2,022 / 2,054 | FAIL: all three latency gates |
+| 1,000 after | 141.78 | 1,815 / 2,058 / 1,836 | FAIL: second stream latency |
+
+The candidate copy is 6.43% below the controls' mean, with 0.57% control copy
+drift. This one bracketed sequence supports a copy-throughput observation, not
+a statistical speedup claim. The candidate fails the unchanged two-second
+streaming limit; the final control also misses it on one stream. All copies
+finish below 180 seconds on this host, including the unchanged 1,000-row controls.
+The earlier 182.15-second native result remains retained; absolute durations
+across different runner allocations are not matched comparisons.
+
+The candidate's source-to-journal p95 is 91–187 ms, journal-to-batch p95 is
+914–957 ms and batch-to-publication p95 is 1,147–1,180 ms. These separate phase
+percentiles must not be added. Both later phases are higher than the first
+control, but the final control also varies; this does not isolate a causal lock
+or SQL operation. Periodic samples show bulk staging advisory-lock waits in all
+three runs. Destination CPU interval averages are about one core and engine
+averages about 0.27 cores, with no cgroup quota throttling. Such samples cannot
+exclude brief CPU, storage or lock contention. Initial-copy workers reach about
+18.0 MiB aggregate sampled PSS in the candidate versus 6.1–6.6 MiB in controls.
+
+[Native evidence](evidence/2026-10-30-bulk-copy-chunk-native.json) retains the
+complete comparison, every failed gate, archive/harness/worker hashes and sampled
+resource summaries. The workflow is correctly red because workload gates fail;
+this is not a fixture, source scheduling or observer-clock failure.
+
+Do not promote 4,000 rows. Production remains at 1,000 rows and the checkpoint
+split remains a diagnostic overlay.
+
+## Local SQL profile after the native finding
+
+A local sequential 1,000/4,000 pair uses identical `pg_stat_statements` planning
+and execution instrumentation, independent source sessions, split checkpoints,
+two shared CPUs and the same local archive/worker. Both observations pass every
+workload gate, copying in 76.07/71.61 seconds with streaming p95 of 423–467 /
+486–513 ms. These instrumented local timings do not qualify the failed native
+candidate and the unbracketed pair does not establish causality.
+
+| Statement | 1,000 rows: calls / mean execution | 4,000 rows: calls / mean execution |
+|---|---|---|
+| Bulk staging permit | 8,000 / 18.94 ms | 2,000 / 71.85 ms |
+| Append initial-copy rows | 8,000 / 5.87 ms | 2,000 / 24.45 ms |
+| Streaming publication | 360 / 30.69 ms | 360 / 30.99 ms |
+| Streaming engine permit | 720 / 0.003 ms | 720 / 0.003 ms |
+
+Total append execution is 46.94/48.90 seconds, dominated by the nested staging
+row INSERT. Enlarging chunks reduces transaction/round-trip frequency but does
+not reduce the observed aggregate append execution; each admission covers a
+longer append. Permit wait totals overlap between sessions and nested SQL
+execution totals overlap with their callers; do not add them to copy wall time.
+Streaming engine permit execution is negligible in this local pair. Neither
+fact identifies the native bottleneck: aggregate local SQL profiles are not
+native per-transaction traces.
+
+[Profile evidence](evidence/2026-10-30-bulk-copy-chunk-sql-profile.json) records
+all gates, source/archive/worker/profile hashes and per-database statement costs.
+Raw profiles remain at the recorded local evidence paths. Both native and local
+failed/inconclusive observations elsewhere in this document remain retained.
+
+The next bounded investigation is an isolated append profile at the current
+1,000-row cap: inspect INSERT/index/constraint/WAL costs, including foreign-key
+trigger time, before changing the staging representation. Preserve parent/row
+integrity, exact data, cancellation, generation fencing and transaction/byte
+bounds. Separately obtain per-call publication timing if staging changes do
+not improve latency; interval CPU samples and local SQL averages cannot choose
+that fix. Require a concrete locally verified improvement before another native
+comparison. Do not retry the unchanged cohort or relax thresholds. The hardened
+checkpoint production migration remains deferred.

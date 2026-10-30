@@ -364,5 +364,8 @@ retains the 8 MiB row-text target and original worker binary while testing
 larger row caps. Its safety checks, local controlled cohorts and one-CPU
 sensitivity pass. It also corrects the observer's timestamp pairing with the
 same clock tolerance, leaving this historical invalid control unchanged.
-A prospective native configuration trial is next; no production migration has
-been performed.
+The [prospective native configuration trial](bulk-copy-chunk-prototype.md#prospective-native-result)
+passes measurement validity and improves copy duration, but the larger chunks
+fail all three streaming latency gates. The 1,000-row controls also vary. Keep
+the production row cap and investigate staging/publication costs locally; no
+production migration has been performed.
