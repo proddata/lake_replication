@@ -9,7 +9,7 @@ publish = false
 [dependencies]
 libc = "=0.2.189"
 postgres-protocol = "=0.6.12"
-rustls = { version = "=0.23.45", default-features = false, features = ["ring", "std", "tls12"] }
+rustls = { version = "=0.23.46", default-features = false, features = ["ring", "std", "tls12"] }
 rustls-pemfile = "=2.2.0"
 
 [lib]
