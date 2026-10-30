@@ -75,10 +75,11 @@ def compare(runs,sequence=SEQUENCE):
     return result
 
 
-def runtime_identity(observed,variant,cpuset,chunk_rows=None):
+def runtime_identity(observed,variant,cpuset,chunk_rows=None,chunk_storage=False):
     metadata=observed['prototype']
     if (metadata['variant']!=variant or metadata['sql_overlay']!=(variant=='split')
-        or metadata['focused_operations'] or metadata.get('sql_profiling')
+        or metadata['focused_operations'] or metadata.get('sql_profiling') or metadata.get('staging_profiling')
+        or metadata.get('chunk_storage',False)!=chunk_storage
         or metadata['service_cpu_affinity']!=cpuset):
         raise ValueError('child variant/setup declaration does not match')
     identity=dict(archive=observed['archive'],inputs=observed['inputs'])
@@ -98,7 +99,9 @@ def runtime_identity(observed,variant,cpuset,chunk_rows=None):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cpuset',default='0-1')
-    parser.add_argument('--copy-chunk-rows',type=int,choices=[2000,4000],help='Compare 1000/candidate/1000 rows with split checkpoints throughout; byte budget unchanged')
+    modes=parser.add_mutually_exclusive_group()
+    modes.add_argument('--copy-chunk-rows',type=int,choices=[2000,4000],help='Compare 1000/candidate/1000 rows with split checkpoints throughout; byte budget unchanged')
+    modes.add_argument('--chunk-store',action='store_true',help='Per-row/chunk/per-row storage with split checkpoints and unchanged 1000-row/8MiB limits')
     args=parser.parse_args()
     if not re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*',args.cpuset):
         parser.error('invalid CPU affinity')
@@ -106,10 +109,14 @@ def main():
     sequence=tuple(f'rows_{n}' for n in chunk_caps) if args.copy_chunk_rows else SEQUENCE
     variants=('split',)*3 if args.copy_chunk_rows else SEQUENCE
     suffix='copy_chunk_comparison' if args.copy_chunk_rows else 'checkpoint_comparison'
+    stores=(False,True,False) if args.chunk_store else (False,)*3
+    if args.chunk_store:
+        sequence=('per_row','chunks','per_row');variants=('split',)*3;suffix='staging_chunk_comparison'
     directory=ROOT/'.qualification'/(datetime.now(timezone.utc).strftime('qualification_%Y%m%d_%H%M%S_')+suffix)
     directory.mkdir(parents=True)
     result=dict(scope=__doc__,status='running',sequence=list(sequence),shared_cpu_affinity=args.cpuset,
-        experiment='copy_chunk_rows' if args.copy_chunk_rows else 'checkpoint_partition',
+        experiment='staging_chunks' if args.chunk_store else 'copy_chunk_rows' if args.copy_chunk_rows else 'checkpoint_partition',
+        chunk_storage=list(stores),
         copy_chunk_caps=list(chunk_caps),
         runs=[],runner_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     (directory/'checkpoint_compare.py').write_bytes(Path(__file__).read_bytes())
@@ -117,13 +124,14 @@ def main():
     save()
     common=None
     try:
-        for index,(label,variant,chunk_rows) in enumerate(zip(sequence,variants,chunk_caps)):
+        for index,(label,variant,chunk_rows,store) in enumerate(zip(sequence,variants,chunk_caps,stores)):
             print(f'COMPARISON {index+1}/3 {label}',flush=True)
             result['current_stage']=dict(index=index+1,variant=label)
             save()
             command=[sys.executable,str(Path(__file__).with_name('checkpoint_split_probe.py')),
                 '--cases','fairness','--skip-operations','--variant',variant,'--cpuset',args.cpuset]
             if chunk_rows:command.extend(['--copy-chunk-rows',str(chunk_rows)])
+            if store:command.append('--chunk-store')
             log=directory/f'{index+1}-{label}.log'
             with log.open('w') as output:
                 child=subprocess.Popen(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
@@ -136,13 +144,14 @@ def main():
             if not evidence.is_relative_to(ROOT/'.qualification'):raise ValueError('unexpected evidence path')
             path=evidence/'results.json';observed=json.loads(path.read_text())
             metadata=observed['prototype']
-            identity=runtime_identity(observed,variant,args.cpuset,chunk_rows)
+            identity=runtime_identity(observed,variant,args.cpuset,chunk_rows,store)
             if common is None:common=identity;result['common_inputs']=identity
             elif common!=identity:raise ValueError('archive, base runtime or harness changed between observations')
             summary=summarize(observed)
             expected_code=0 if observed['status']=='passed' else 1
             if child.returncode!=expected_code:raise ValueError('child status and process exit disagree')
             result['runs'].append(dict(variant=label,checkpoint_variant=variant,
+                chunk_storage=store,
                 initial_copy_override=metadata.get('initial_copy_override'),image_id=observed['image_id'],
                 evidence=str(evidence.relative_to(ROOT)),
                 results_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),**summary))

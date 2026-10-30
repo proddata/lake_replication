@@ -105,5 +105,26 @@ class ComparisonTests(unittest.TestCase):
         runs[0]['observer_clock_sampling']='legacy_batch_start'
         with self.assertRaises(ValueError):m.compare(runs)
 
+    def test_storage_comparison_requires_declared_overlay_and_unchanged_runtime(self):
+        base=dict(archive='same archive',image_id='same image',inputs='same sources',prototype=dict(
+            variant='split',sql_overlay=True,focused_operations=False,sql_profiling=False,
+            staging_profiling=False,chunk_storage=False,service_cpu_affinity='0-1'))
+        candidate=copy.deepcopy(base);candidate['prototype']['chunk_storage']=True
+        self.assertEqual(m.runtime_identity(base,'split','0-1'),
+                         m.runtime_identity(candidate,'split','0-1',chunk_storage=True))
+        with self.assertRaises(ValueError):m.runtime_identity(candidate,'split','0-1')
+        with self.assertRaises(ValueError):m.runtime_identity(base,'split','0-1',chunk_storage=True)
+        candidate['prototype']['staging_profiling']=True
+        with self.assertRaises(ValueError):m.runtime_identity(candidate,'split','0-1',chunk_storage=True)
+
+    def test_storage_comparison_retains_failed_candidate(self):
+        sequence=('per_row','chunks','per_row')
+        runs=[dict(variant=v,copy_elapsed_seconds=t,measurement_valid=True,workload_passed=i!=1)
+            for i,(v,t) in enumerate(zip(sequence,[100,80,100]))]
+        result=m.compare(runs,sequence)
+        self.assertTrue(result['measurement_valid'])
+        self.assertFalse(result['candidate_workload_passed'])
+        self.assertEqual(result['candidate_copy_ratio_to_control_mean'],.8)
+
 
 if __name__=='__main__':unittest.main()

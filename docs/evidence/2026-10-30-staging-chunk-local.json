@@ -1,0 +1,2980 @@
+{
+  "scope": "Isolated staging-cost investigation and frozen chunk-store safety evidence; no production schema or worker change",
+  "profile": {
+    "evidence": ".qualification/qualification_20261030_073351_production_admission",
+    "results_sha256": "f2f3549597b5788be1be2519fbcea6e8711a1f191a6ee3fa835da2952d12fb28",
+    "status": "passed",
+    "assertions": 97,
+    "checks": [
+      {
+        "actual": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+        "expected": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "split stages first transaction",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split stages during held publication",
+        "passed": true
+      },
+      {
+        "actual": 0,
+        "expected": 0,
+        "name": "split acknowledges during held publication",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "split respects capacity during uncommitted publication",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split serializes competing publishers",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/0:0/1",
+        "expected": "0/2:0/0:0/1",
+        "name": "split hides uncommitted publication frontier",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/0:0/1",
+        "expected": "0/2:0/0:0/1",
+        "name": "split rollback preserves staged and acknowledged progress",
+        "passed": true
+      },
+      {
+        "actual": "2",
+        "expected": "2",
+        "name": "split rollback restores publishing journal state",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "split does not release journal capacity before publication commit",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/0:0/1",
+        "expected": "0/2:0/0:0/1",
+        "name": "split keeps completed batch and frontier invisible before commit",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/1:0/1",
+        "expected": "0/2:0/1:0/1",
+        "name": "split commits publication frontier with journal state",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "split releases capacity after publication commit",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "split replay remains accepted at capacity",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split rejects conflicting replay at capacity",
+        "passed": true
+      },
+      {
+        "actual": "0/3:0/1:0/3",
+        "expected": "0/3:0/1:0/3",
+        "name": "split preserves independent monotonic frontiers",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split rejects publication beyond durable staged frontier",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split rejects acknowledgement beyond durable staging",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "append profile 1 rolls back every row",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "append profile 1 rolls back row progress",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "insert profile 1 rolls back every row",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "insert profile 1 rolls back row progress",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "append profile 2 rolls back every row",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "append profile 2 rolls back row progress",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "insert profile 2 rolls back every row",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "insert profile 2 rolls back row progress",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "append profile 3 rolls back every row",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "append profile 3 rolls back row progress",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "insert profile 3 rolls back every row",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "insert profile 3 rolls back row progress",
+        "passed": true
+      },
+      {
+        "actual": "t",
+        "expected": "t",
+        "name": "admin can admit and inspect staging",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "read-only role cannot acquire staging permit",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed fixture starts streaming",
+        "passed": true
+      },
+      {
+        "actual": "8:67108864",
+        "expected": "8:67108864",
+        "name": "managed defaults install count and byte policy",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "first journal reservation succeeds",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "second journal reservation succeeds",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "full journal returns retry without consuming commit",
+        "passed": true
+      },
+      {
+        "actual": "0/1BCA85A",
+        "expected": "0/1BCA85A",
+        "name": "full journal leaves checkpoint unchanged",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "legacy staging API cannot bypass managed bound",
+        "passed": true
+      },
+      {
+        "actual": "ok",
+        "expected": "ok",
+        "name": "retry releases checkpoint lock before caller sleeps",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "one newly free slot is reserved",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "concurrent producer sees committed capacity",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "full-journal replay remains idempotent",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "conflicting replay remains an error at capacity",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "first two-byte payload fits byte allowance",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "byte bound applies independently from count",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "oversized transaction fails without endless admission retry",
+        "passed": true
+      },
+      {
+        "actual": "1:2",
+        "expected": "1:2",
+        "name": "journal view reports normalized payload bytes",
+        "passed": true
+      },
+      {
+        "actual": "",
+        "expected": "",
+        "name": "streamed commit returns NULL at capacity",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "streamed admission retry preserves durable segments",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "streamed commit succeeds when capacity returns",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "accepted streamed commit clears segment state",
+        "passed": true
+      },
+      {
+        "actual": 0,
+        "expected": 0,
+        "name": "worker fence coexists with an uncommitted heartbeat",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "stop control lock refuses new worker admission",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "reconfiguration lock refuses new worker admission",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "publisher waits behind engine slots with managed identity",
+        "passed": true
+      },
+      {
+        "actual": "8",
+        "expected": "8",
+        "name": "native receiver stops at eight unpublished transactions",
+        "passed": true
+      },
+      {
+        "actual": "0/1BCAEA8",
+        "expected": "0/1BCAEA8",
+        "name": "native admission wait preserves durable source feedback",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "stop cancels publisher before waiting on its fence",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "native supervisor drains with publisher blocked",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "stopped worker cannot mutate copy state",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "enable advances worker generation",
+        "passed": true
+      },
+      {
+        "actual": "12",
+        "expected": "12",
+        "name": "resume publishes retained committed source data",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "old generation remains fenced after re-enable",
+        "passed": true
+      },
+      {
+        "actual": "13:91",
+        "expected": "13:91",
+        "name": "replacement receiver continues exact streaming",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "long-lived receiver reports live cycle counters",
+        "passed": true
+      },
+      {
+        "actual": "t",
+        "expected": "t",
+        "name": "managed byte accounting tracks each payload",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed drop removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_wait reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_wait releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_wait leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_wait resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_wait copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_wait removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_held reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_held releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_held leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_held resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_held copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_held removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_crash_wait reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "managed_copy_crash_wait locates native initial-sync child",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait detects abrupt peer disconnect",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_crash_wait resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_crash_wait copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_crash_held reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "managed_copy_crash_held locates native initial-sync child",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held detects abrupt peer disconnect",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_crash_held resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_crash_held copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held removes source slot",
+        "passed": true
+      }
+    ],
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.4-linux-arm64.tar.gz",
+      "archive_sha256": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+      "source_revision": "a2282cda4d1d563dcf8923b03ea566350d1bb6c9-dirty"
+    },
+    "inputs": {
+      "Cargo.lock": "9b41b01aa6d7749ea85b205c592b6a9781833fbe65765169a06e20e07a325ffa",
+      "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+      "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+      "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+      "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+      "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+      "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+      "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+      "extensions/lake_replication/Makefile": "ea9b145b1689133f62b9947e1ae219190588fce78d0b35b82923fc560aae8316",
+      "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+      "extensions/lake_replication/lake_replication.c": "453b0e4de938675413a56df77bdff8d748407066060cc81cf8b3b5a773d97316",
+      "extensions/lake_replication/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+      "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+      "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+      "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+      "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+      "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+      "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+      "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+      "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+      "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+      "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+      "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+      "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+      "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+      "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+      "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+      "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+      "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+      "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+      "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+      "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+      "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+      "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+      "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+      "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+      "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+      "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+      "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+      "tests/admission/checkpoint_split_probe.py": "bd91acc7d3d0a6fd2dc801e479c02b2363d70e4670994d7a708d61d38d4b89ff",
+      "tests/admission/managed_cases.py": "4290e9d943aba3294e39e06ed49bd311ed8a6738bc00a24e8e399cfe6374f509",
+      "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+      "tests/admission/probe.py": "61a7844bc35e350c20db166666a990694be27a2144383283651d1361e1501e4e",
+      "tests/admission/staging_cost.py": "45cc404d383751e1d7cc6eac7e8e82b0e6ea61e603bac555cebf6a9f8fcd4ff5",
+      "tests/qualification/probe.py": "0bb5ed0b888ad6c030ec46bd95c6fbf6fe355c5c266d5882256f119e18bbd4b7",
+      "worker/Cargo.toml": "8da2a60721a6ebde95857712570e1cd1e3482cd84d83dcafc7dd0c92c6c693b9",
+      "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+      "worker/src/initial_sync.rs": "68d53a3550ef7df1b35c4fb0368293df29d626adc0640346c79fa7631af9abc5",
+      "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+      "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+      "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+      "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+      "worker/src/managed.rs": "8a01d95edbe918179e320c682ec5a5154d59ac7e1e3e338659490ef7909caed7",
+      "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+      "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+      "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+      "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+    },
+    "prototype": {
+      "scope": "Checkpoint partition diagnostic: original control or SQL overlay, never release qualification. Variant=split; SQL overlay=True; SQL profiling=False; copy chunk rows=None.",
+      "variant": "split",
+      "sql_overlay": true,
+      "focused_operations": true,
+      "production_migrations_changed": false,
+      "sql_profiling": false,
+      "staging_profiling": true,
+      "initial_copy_override": null,
+      "service_cpu_affinity": "0-1",
+      "installations": [
+        "analytics",
+        "checkpoint_split_test",
+        "staging_cost",
+        "managed_test",
+        "managed_native",
+        "managed_copy_wait",
+        "managed_copy_held",
+        "managed_copy_crash_wait",
+        "managed_copy_crash_held"
+      ],
+      "inputs": {
+        "tests/admission/checkpoint_split_probe.py": "bd91acc7d3d0a6fd2dc801e479c02b2363d70e4670994d7a708d61d38d4b89ff",
+        "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+        "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+        "tests/admission/staging_cost.py": "45cc404d383751e1d7cc6eac7e8e82b0e6ea61e603bac555cebf6a9f8fcd4ff5"
+      }
+    },
+    "isolated_plans": {
+      "scope": "Isolated 1,000-row append plans; rollback work is diagnostic, not throughput evidence.",
+      "rows_per_chunk": 1000,
+      "repetitions": 3,
+      "observations": [
+        {
+          "repetition": 1,
+          "statement": "append",
+          "sql": "SELECT lake_replication.append_initial_copy_rows(1,42,1,0,(SELECT rows FROM cost_payload))",
+          "explain": {
+            "Plan": {
+              "Node Type": "Result",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 23.6,
+              "Total Cost": 23.86,
+              "Plan Rows": 1,
+              "Plan Width": 8,
+              "Actual Startup Time": 4.331,
+              "Actual Total Time": 4.332,
+              "Actual Rows": 1.0,
+              "Actual Loops": 1,
+              "Disabled": false,
+              "Shared Hit Blocks": 7297,
+              "Shared Read Blocks": 1,
+              "Shared Dirtied Blocks": 39,
+              "Shared Written Blocks": 40,
+              "Local Hit Blocks": 8,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.007,
+              "Shared I/O Write Time": 0.103,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0,
+              "WAL Records": 2009,
+              "WAL FPI": 1,
+              "WAL Bytes": 360075,
+              "WAL Buffers Full": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "InitPlan",
+                  "Subplan Name": "InitPlan 1",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "cost_payload",
+                  "Alias": "cost_payload",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.6,
+                  "Plan Rows": 1360,
+                  "Plan Width": 32,
+                  "Actual Startup Time": 0.002,
+                  "Actual Total Time": 0.002,
+                  "Actual Rows": 1.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 1,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                }
+              ]
+            },
+            "Planning": {
+              "Shared Hit Blocks": 5,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.0,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0
+            },
+            "Planning Time": 0.027,
+            "Triggers": [],
+            "Execution Time": 4.335
+          }
+        },
+        {
+          "repetition": 1,
+          "statement": "insert",
+          "sql": "INSERT INTO lake_replication.initial_copy_rows(subscription_id,remote_relation_id,relation_schema_version,row_ordinal,row_data)\n              SELECT 1,42,1,ordinality-1,row_data FROM jsonb_array_elements((SELECT rows FROM cost_payload)) WITH ORDINALITY source(row_data,ordinality)",
+          "explain": {
+            "Plan": {
+              "Node Type": "ModifyTable",
+              "Operation": "Insert",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "initial_copy_rows",
+              "Alias": "initial_copy_rows",
+              "Startup Cost": 23.6,
+              "Total Cost": 24.85,
+              "Plan Rows": 0,
+              "Plan Width": 0,
+              "Actual Startup Time": 1.476,
+              "Actual Total Time": 1.476,
+              "Actual Rows": 0.0,
+              "Actual Loops": 1,
+              "Disabled": false,
+              "Shared Hit Blocks": 3681,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 29,
+              "Shared Written Blocks": 29,
+              "Local Hit Blocks": 3,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.091,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0,
+              "WAL Records": 2028,
+              "WAL FPI": 0,
+              "WAL Bytes": 350448,
+              "WAL Buffers Full": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "InitPlan",
+                  "Subplan Name": "InitPlan 1",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "cost_payload",
+                  "Alias": "cost_payload",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.6,
+                  "Plan Rows": 1360,
+                  "Plan Width": 32,
+                  "Actual Startup Time": 0.007,
+                  "Actual Total Time": 0.008,
+                  "Actual Rows": 1.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 1,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                },
+                {
+                  "Node Type": "Function Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Function Name": "jsonb_array_elements",
+                  "Alias": "source",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 1.25,
+                  "Plan Rows": 100,
+                  "Plan Width": 60,
+                  "Actual Startup Time": 0.082,
+                  "Actual Total Time": 0.139,
+                  "Actual Rows": 1000.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 3,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                }
+              ]
+            },
+            "Planning": {
+              "Shared Hit Blocks": 0,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.0,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0
+            },
+            "Planning Time": 0.034,
+            "Triggers": [
+              {
+                "Trigger Name": "RI_ConstraintTrigger_c_21451",
+                "Constraint Name": "initial_copy_rows_subscription_id_remote_relation_id_relat_fkey",
+                "Relation": "initial_copy_rows",
+                "Time": 2.162,
+                "Calls": 1000
+              },
+              {
+                "Trigger Name": "managed_worker_fence",
+                "Relation": "initial_copy_rows",
+                "Time": 0.016,
+                "Calls": 1
+              }
+            ],
+            "Execution Time": 3.682
+          }
+        },
+        {
+          "repetition": 2,
+          "statement": "append",
+          "sql": "SELECT lake_replication.append_initial_copy_rows(1,42,1,0,(SELECT rows FROM cost_payload))",
+          "explain": {
+            "Plan": {
+              "Node Type": "Result",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 23.6,
+              "Total Cost": 23.86,
+              "Plan Rows": 1,
+              "Plan Width": 8,
+              "Actual Startup Time": 3.589,
+              "Actual Total Time": 3.589,
+              "Actual Rows": 1.0,
+              "Actual Loops": 1,
+              "Disabled": false,
+              "Shared Hit Blocks": 7676,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 30,
+              "Shared Written Blocks": 30,
+              "Local Hit Blocks": 7,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.089,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0,
+              "WAL Records": 2033,
+              "WAL FPI": 0,
+              "WAL Bytes": 350895,
+              "WAL Buffers Full": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "InitPlan",
+                  "Subplan Name": "InitPlan 1",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "cost_payload",
+                  "Alias": "cost_payload",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.6,
+                  "Plan Rows": 1360,
+                  "Plan Width": 32,
+                  "Actual Startup Time": 0.004,
+                  "Actual Total Time": 0.005,
+                  "Actual Rows": 1.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 1,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                }
+              ]
+            },
+            "Planning": {
+              "Shared Hit Blocks": 0,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.0,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0
+            },
+            "Planning Time": 0.027,
+            "Triggers": [],
+            "Execution Time": 3.593
+          }
+        },
+        {
+          "repetition": 2,
+          "statement": "insert",
+          "sql": "INSERT INTO lake_replication.initial_copy_rows(subscription_id,remote_relation_id,relation_schema_version,row_ordinal,row_data)\n              SELECT 1,42,1,ordinality-1,row_data FROM jsonb_array_elements((SELECT rows FROM cost_payload)) WITH ORDINALITY source(row_data,ordinality)",
+          "explain": {
+            "Plan": {
+              "Node Type": "ModifyTable",
+              "Operation": "Insert",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "initial_copy_rows",
+              "Alias": "initial_copy_rows",
+              "Startup Cost": 23.6,
+              "Total Cost": 24.85,
+              "Plan Rows": 0,
+              "Plan Width": 0,
+              "Actual Startup Time": 1.375,
+              "Actual Total Time": 1.376,
+              "Actual Rows": 0.0,
+              "Actual Loops": 1,
+              "Disabled": false,
+              "Shared Hit Blocks": 3664,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 29,
+              "Shared Written Blocks": 29,
+              "Local Hit Blocks": 3,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.088,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0,
+              "WAL Records": 2028,
+              "WAL FPI": 0,
+              "WAL Bytes": 350488,
+              "WAL Buffers Full": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "InitPlan",
+                  "Subplan Name": "InitPlan 1",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "cost_payload",
+                  "Alias": "cost_payload",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.6,
+                  "Plan Rows": 1360,
+                  "Plan Width": 32,
+                  "Actual Startup Time": 0.006,
+                  "Actual Total Time": 0.006,
+                  "Actual Rows": 1.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 1,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                },
+                {
+                  "Node Type": "Function Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Function Name": "jsonb_array_elements",
+                  "Alias": "source",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 1.25,
+                  "Plan Rows": 100,
+                  "Plan Width": 60,
+                  "Actual Startup Time": 0.059,
+                  "Actual Total Time": 0.111,
+                  "Actual Rows": 1000.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 3,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                }
+              ]
+            },
+            "Planning": {
+              "Shared Hit Blocks": 0,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.0,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0
+            },
+            "Planning Time": 0.045,
+            "Triggers": [
+              {
+                "Trigger Name": "RI_ConstraintTrigger_c_21451",
+                "Constraint Name": "initial_copy_rows_subscription_id_remote_relation_id_relat_fkey",
+                "Relation": "initial_copy_rows",
+                "Time": 2.109,
+                "Calls": 1000
+              },
+              {
+                "Trigger Name": "managed_worker_fence",
+                "Relation": "initial_copy_rows",
+                "Time": 0.018,
+                "Calls": 1
+              }
+            ],
+            "Execution Time": 3.524
+          }
+        },
+        {
+          "repetition": 3,
+          "statement": "append",
+          "sql": "SELECT lake_replication.append_initial_copy_rows(1,42,1,0,(SELECT rows FROM cost_payload))",
+          "explain": {
+            "Plan": {
+              "Node Type": "Result",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 23.6,
+              "Total Cost": 23.86,
+              "Plan Rows": 1,
+              "Plan Width": 8,
+              "Actual Startup Time": 3.724,
+              "Actual Total Time": 3.724,
+              "Actual Rows": 1.0,
+              "Actual Loops": 1,
+              "Disabled": false,
+              "Shared Hit Blocks": 7667,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 30,
+              "Shared Written Blocks": 30,
+              "Local Hit Blocks": 7,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.093,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0,
+              "WAL Records": 2033,
+              "WAL FPI": 0,
+              "WAL Bytes": 350919,
+              "WAL Buffers Full": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "InitPlan",
+                  "Subplan Name": "InitPlan 1",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "cost_payload",
+                  "Alias": "cost_payload",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.6,
+                  "Plan Rows": 1360,
+                  "Plan Width": 32,
+                  "Actual Startup Time": 0.007,
+                  "Actual Total Time": 0.008,
+                  "Actual Rows": 1.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 1,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                }
+              ]
+            },
+            "Planning": {
+              "Shared Hit Blocks": 0,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.0,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0
+            },
+            "Planning Time": 0.023,
+            "Triggers": [],
+            "Execution Time": 3.728
+          }
+        },
+        {
+          "repetition": 3,
+          "statement": "insert",
+          "sql": "INSERT INTO lake_replication.initial_copy_rows(subscription_id,remote_relation_id,relation_schema_version,row_ordinal,row_data)\n              SELECT 1,42,1,ordinality-1,row_data FROM jsonb_array_elements((SELECT rows FROM cost_payload)) WITH ORDINALITY source(row_data,ordinality)",
+          "explain": {
+            "Plan": {
+              "Node Type": "ModifyTable",
+              "Operation": "Insert",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "initial_copy_rows",
+              "Alias": "initial_copy_rows",
+              "Startup Cost": 23.6,
+              "Total Cost": 24.85,
+              "Plan Rows": 0,
+              "Plan Width": 0,
+              "Actual Startup Time": 1.395,
+              "Actual Total Time": 1.396,
+              "Actual Rows": 0.0,
+              "Actual Loops": 1,
+              "Disabled": false,
+              "Shared Hit Blocks": 3682,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 29,
+              "Shared Written Blocks": 29,
+              "Local Hit Blocks": 3,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.104,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0,
+              "WAL Records": 2028,
+              "WAL FPI": 0,
+              "WAL Bytes": 350444,
+              "WAL Buffers Full": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "InitPlan",
+                  "Subplan Name": "InitPlan 1",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "cost_payload",
+                  "Alias": "cost_payload",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.6,
+                  "Plan Rows": 1360,
+                  "Plan Width": 32,
+                  "Actual Startup Time": 0.008,
+                  "Actual Total Time": 0.009,
+                  "Actual Rows": 1.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 1,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                },
+                {
+                  "Node Type": "Function Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Function Name": "jsonb_array_elements",
+                  "Alias": "source",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 1.25,
+                  "Plan Rows": 100,
+                  "Plan Width": 60,
+                  "Actual Startup Time": 0.06,
+                  "Actual Total Time": 0.112,
+                  "Actual Rows": 1000.0,
+                  "Actual Loops": 1,
+                  "Disabled": false,
+                  "Shared Hit Blocks": 0,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 3,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Shared I/O Read Time": 0.0,
+                  "Shared I/O Write Time": 0.0,
+                  "Local I/O Read Time": 0.0,
+                  "Local I/O Write Time": 0.0,
+                  "Temp I/O Read Time": 0.0,
+                  "Temp I/O Write Time": 0.0,
+                  "WAL Records": 0,
+                  "WAL FPI": 0,
+                  "WAL Bytes": 0,
+                  "WAL Buffers Full": 0
+                }
+              ]
+            },
+            "Planning": {
+              "Shared Hit Blocks": 0,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Shared I/O Read Time": 0.0,
+              "Shared I/O Write Time": 0.0,
+              "Local I/O Read Time": 0.0,
+              "Local I/O Write Time": 0.0,
+              "Temp I/O Read Time": 0.0,
+              "Temp I/O Write Time": 0.0
+            },
+            "Planning Time": 0.038,
+            "Triggers": [
+              {
+                "Trigger Name": "RI_ConstraintTrigger_c_21451",
+                "Constraint Name": "initial_copy_rows_subscription_id_remote_relation_id_relat_fkey",
+                "Relation": "initial_copy_rows",
+                "Time": 2.099,
+                "Calls": 1000
+              },
+              {
+                "Trigger Name": "managed_worker_fence",
+                "Relation": "initial_copy_rows",
+                "Time": 0.016,
+                "Calls": 1
+              }
+            ],
+            "Execution Time": 3.53
+          }
+        }
+      ],
+      "limitations": "Isolated warm small-table plans, including rollback WAL; no concurrent workers or engine publication. Trigger and nested execution costs overlap; do not sum them.",
+      "indexes": [
+        {
+          "indexdef": "CREATE UNIQUE INDEX initial_copy_rows_pkey ON lake_replication.initial_copy_rows USING btree (subscription_id, remote_relation_id, relation_schema_version, row_ordinal)",
+          "indexname": "initial_copy_rows_pkey",
+          "tablename": "initial_copy_rows",
+          "schemaname": "lake_replication",
+          "tablespace": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "initial_copy_rows_pkey",
+          "definition": "PRIMARY KEY (subscription_id, remote_relation_id, relation_schema_version, row_ordinal)"
+        },
+        {
+          "name": "initial_copy_rows_relation_schema_version_not_null",
+          "definition": "NOT NULL relation_schema_version"
+        },
+        {
+          "name": "initial_copy_rows_remote_relation_id_not_null",
+          "definition": "NOT NULL remote_relation_id"
+        },
+        {
+          "name": "initial_copy_rows_row_data_check",
+          "definition": "CHECK ((jsonb_typeof(row_data) = 'object'::text))"
+        },
+        {
+          "name": "initial_copy_rows_row_data_not_null",
+          "definition": "NOT NULL row_data"
+        },
+        {
+          "name": "initial_copy_rows_row_ordinal_check",
+          "definition": "CHECK ((row_ordinal >= 0))"
+        },
+        {
+          "name": "initial_copy_rows_row_ordinal_not_null",
+          "definition": "NOT NULL row_ordinal"
+        },
+        {
+          "name": "initial_copy_rows_subscription_id_not_null",
+          "definition": "NOT NULL subscription_id"
+        },
+        {
+          "name": "initial_copy_rows_subscription_id_remote_relation_id_relat_fkey",
+          "definition": "FOREIGN KEY (subscription_id, remote_relation_id, relation_schema_version) REFERENCES lake_replication.initial_copies(subscription_id, remote_relation_id, relation_schema_version) ON DELETE CASCADE"
+        }
+      ],
+      "status": "passed"
+    }
+  },
+  "safety": {
+    "evidence": ".qualification/qualification_20261030_074005_production_admission",
+    "results_sha256": "64d2795f1947ad0794da17f025f0b1ccc4f55602c735b2562651606ec0cb6f7f",
+    "status": "passed",
+    "assertions": 131,
+    "checks": [
+      {
+        "actual": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+        "expected": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+        "name": "release archive checksum",
+        "passed": true
+      },
+      {
+        "actual": "arm64",
+        "expected": "arm64",
+        "name": "archive architecture matches qualification host",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "split stages first transaction",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split stages during held publication",
+        "passed": true
+      },
+      {
+        "actual": 0,
+        "expected": 0,
+        "name": "split acknowledges during held publication",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "split respects capacity during uncommitted publication",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split serializes competing publishers",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/0:0/1",
+        "expected": "0/2:0/0:0/1",
+        "name": "split hides uncommitted publication frontier",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/0:0/1",
+        "expected": "0/2:0/0:0/1",
+        "name": "split rollback preserves staged and acknowledged progress",
+        "passed": true
+      },
+      {
+        "actual": "2",
+        "expected": "2",
+        "name": "split rollback restores publishing journal state",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "split does not release journal capacity before publication commit",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/0:0/1",
+        "expected": "0/2:0/0:0/1",
+        "name": "split keeps completed batch and frontier invisible before commit",
+        "passed": true
+      },
+      {
+        "actual": "0/2:0/1:0/1",
+        "expected": "0/2:0/1:0/1",
+        "name": "split commits publication frontier with journal state",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "split releases capacity after publication commit",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "split replay remains accepted at capacity",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split rejects conflicting replay at capacity",
+        "passed": true
+      },
+      {
+        "actual": "0/3:0/1:0/3",
+        "expected": "0/3:0/1:0/3",
+        "name": "split preserves independent monotonic frontiers",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split rejects publication beyond durable staged frontier",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "split rejects acknowledgement beyond durable staging",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "chunk append accepts empty input without creating storage",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk rejects non-object row",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk rejects negative ordinal",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk FK rejects orphan",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk direct write validates object rows",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk rejects ordinal overflow",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk rejects larger row cap",
+        "passed": true
+      },
+      {
+        "actual": "2",
+        "expected": "2",
+        "name": "chunk accepts adjacent first range",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "chunk accepts adjacent second range",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk rejects identical range replay",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk excludes partial range overlap",
+        "passed": true
+      },
+      {
+        "actual": "[[0, {\"id\": 1}], [1, {\"id\": 2}], [2, {\"id\": 3}]]",
+        "expected": "[[0, {\"id\": 1}], [1, {\"id\": 2}], [2, {\"id\": 3}]]",
+        "name": "failed chunk preserves exact rows",
+        "passed": true
+      },
+      {
+        "actual": "3",
+        "expected": "3",
+        "name": "failed chunk preserves progress",
+        "passed": true
+      },
+      {
+        "actual": "[[0, {\"id\": 1}], [1, {\"id\": 2}], [2, {\"id\": 3}]]",
+        "expected": "[[0, {\"id\": 1}], [1, {\"id\": 2}], [2, {\"id\": 3}]]",
+        "name": "uncommitted chunk and progress remain invisible",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk parent delete waits for committed FK reference",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk competing append serializes at parent",
+        "passed": true
+      },
+      {
+        "actual": "[[0, {\"id\": 1}], [1, {\"id\": 2}], [2, {\"id\": 3}]]",
+        "expected": "[[0, {\"id\": 1}], [1, {\"id\": 2}], [2, {\"id\": 3}]]",
+        "name": "chunk rollback preserves rows",
+        "passed": true
+      },
+      {
+        "actual": "3",
+        "expected": "3",
+        "name": "chunk rollback preserves progress",
+        "passed": true
+      },
+      {
+        "actual": "4:4",
+        "expected": "4:4",
+        "name": "chunk commit advances rows and progress together",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk parent key update preserves FK",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk fenced physical mutation refuses unknown generation",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "chunk append refuses completed copy",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "chunk parent deletion cascades every chunk",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "chunk parent deletion clears expanded rows",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "retired row table cannot accept hidden rows",
+        "passed": true
+      },
+      {
+        "actual": "5001",
+        "expected": "5001",
+        "name": "narrow native copy stages all rows while publication waits",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "narrow native copy obeys configured row cap",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "narrow native copy retains byte budget and singleton exception",
+        "passed": true
+      },
+      {
+        "actual": 1000,
+        "expected": 1000,
+        "name": "narrow copy actually uses selected row cap",
+        "passed": true
+      },
+      {
+        "actual": "5001:0:5000",
+        "expected": "5001:0:5000",
+        "name": "narrow copy ordinals stay contiguous",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "narrow copy publishes exact data after admission release",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "narrow drop removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "220",
+        "expected": "220",
+        "name": "wide native copy stages all rows while publication waits",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "wide native copy obeys configured row cap",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "wide native copy retains byte budget and singleton exception",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "wide copy flushes on bytes before row cap",
+        "passed": true
+      },
+      {
+        "actual": "220:0:219",
+        "expected": "220:0:219",
+        "name": "wide copy ordinals stay contiguous",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "wide copy publishes exact data after admission release",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "wide drop removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "3",
+        "expected": "3",
+        "name": "oversized native copy stages all rows while publication waits",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "oversized native copy obeys configured row cap",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "oversized native copy retains byte budget and singleton exception",
+        "passed": true
+      },
+      {
+        "actual": 1,
+        "expected": 1,
+        "name": "single oversized row retains existing behavior",
+        "passed": true
+      },
+      {
+        "actual": "3:0:2",
+        "expected": "3:0:2",
+        "name": "oversized copy ordinals stay contiguous",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "oversized copy publishes exact data after admission release",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "oversized drop removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "t",
+        "expected": "t",
+        "name": "admin can admit and inspect staging",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "read-only role cannot acquire staging permit",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed fixture starts streaming",
+        "passed": true
+      },
+      {
+        "actual": "8:67108864",
+        "expected": "8:67108864",
+        "name": "managed defaults install count and byte policy",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "first journal reservation succeeds",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "second journal reservation succeeds",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "full journal returns retry without consuming commit",
+        "passed": true
+      },
+      {
+        "actual": "0/1D9177A",
+        "expected": "0/1D9177A",
+        "name": "full journal leaves checkpoint unchanged",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "legacy staging API cannot bypass managed bound",
+        "passed": true
+      },
+      {
+        "actual": "ok",
+        "expected": "ok",
+        "name": "retry releases checkpoint lock before caller sleeps",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "one newly free slot is reserved",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "concurrent producer sees committed capacity",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "full-journal replay remains idempotent",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "conflicting replay remains an error at capacity",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "first two-byte payload fits byte allowance",
+        "passed": true
+      },
+      {
+        "actual": "false",
+        "expected": "false",
+        "name": "byte bound applies independently from count",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "oversized transaction fails without endless admission retry",
+        "passed": true
+      },
+      {
+        "actual": "1:2",
+        "expected": "1:2",
+        "name": "journal view reports normalized payload bytes",
+        "passed": true
+      },
+      {
+        "actual": "",
+        "expected": "",
+        "name": "streamed commit returns NULL at capacity",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "streamed admission retry preserves durable segments",
+        "passed": true
+      },
+      {
+        "actual": "1",
+        "expected": "1",
+        "name": "streamed commit succeeds when capacity returns",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "accepted streamed commit clears segment state",
+        "passed": true
+      },
+      {
+        "actual": 0,
+        "expected": 0,
+        "name": "worker fence coexists with an uncommitted heartbeat",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "stop control lock refuses new worker admission",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "reconfiguration lock refuses new worker admission",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "publisher waits behind engine slots with managed identity",
+        "passed": true
+      },
+      {
+        "actual": "8",
+        "expected": "8",
+        "name": "native receiver stops at eight unpublished transactions",
+        "passed": true
+      },
+      {
+        "actual": "0/1DE5E50",
+        "expected": "0/1DE5E50",
+        "name": "native admission wait preserves durable source feedback",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "stop cancels publisher before waiting on its fence",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "native supervisor drains with publisher blocked",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "stopped worker cannot mutate copy state",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "enable advances worker generation",
+        "passed": true
+      },
+      {
+        "actual": "12",
+        "expected": "12",
+        "name": "resume publishes retained committed source data",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "old generation remains fenced after re-enable",
+        "passed": true
+      },
+      {
+        "actual": "13:91",
+        "expected": "13:91",
+        "name": "replacement receiver continues exact streaming",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "long-lived receiver reports live cycle counters",
+        "passed": true
+      },
+      {
+        "actual": "t",
+        "expected": "t",
+        "name": "managed byte accounting tracks each payload",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed drop removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_wait reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_wait releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_wait leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_wait resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_wait copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_wait removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_held reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_held releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_held leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_held resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_held copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_held removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_crash_wait reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "managed_copy_crash_wait locates native initial-sync child",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait detects abrupt peer disconnect",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_crash_wait resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_crash_wait copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_wait removes source slot",
+        "passed": true
+      },
+      {
+        "actual": "true",
+        "expected": "true",
+        "name": "managed_copy_crash_held reaches real staging permit",
+        "passed": true
+      },
+      {
+        "actual": true,
+        "expected": true,
+        "name": "managed_copy_crash_held locates native initial-sync child",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held detects abrupt peer disconnect",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held releases disconnected staging backend",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held leaves no partial copy rows",
+        "passed": true
+      },
+      {
+        "actual": "streaming",
+        "expected": "streaming",
+        "name": "managed_copy_crash_held resumes initial copy",
+        "passed": true
+      },
+      {
+        "actual": "10:55",
+        "expected": "10:55",
+        "name": "managed_copy_crash_held copies exact data",
+        "passed": true
+      },
+      {
+        "actual": "0",
+        "expected": "0",
+        "name": "managed_copy_crash_held removes source slot",
+        "passed": true
+      }
+    ],
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.4-linux-arm64.tar.gz",
+      "archive_sha256": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+      "source_revision": "a2282cda4d1d563dcf8923b03ea566350d1bb6c9-dirty"
+    },
+    "inputs": {
+      "Cargo.lock": "9b41b01aa6d7749ea85b205c592b6a9781833fbe65765169a06e20e07a325ffa",
+      "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+      "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+      "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+      "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+      "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+      "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+      "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+      "extensions/lake_replication/Makefile": "ea9b145b1689133f62b9947e1ae219190588fce78d0b35b82923fc560aae8316",
+      "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+      "extensions/lake_replication/lake_replication.c": "453b0e4de938675413a56df77bdff8d748407066060cc81cf8b3b5a773d97316",
+      "extensions/lake_replication/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+      "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+      "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+      "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+      "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+      "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+      "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+      "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+      "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+      "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+      "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+      "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+      "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+      "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+      "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+      "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+      "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+      "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+      "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+      "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+      "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+      "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+      "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+      "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+      "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+      "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+      "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+      "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+      "tests/admission/checkpoint_split_probe.py": "c7ff5f98dc38426857f8f8f7f9babf595a3121cebb69f2f18e1ef66564c60d44",
+      "tests/admission/copy_chunk_bounds.py": "8efcf43e150a7cd43846d606a84bb4d01fd841b833d28fd8f22a2ee2b220ed55",
+      "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+      "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+      "tests/admission/probe.py": "61a7844bc35e350c20db166666a990694be27a2144383283651d1361e1501e4e",
+      "tests/admission/staging_chunk_operations.py": "62fd4f58adf72e09945563230b767332cae2e56d0f53940ece21536b14ccaaf9",
+      "tests/admission/staging_chunks.sql": "9e719e5341dcc44f998533139216ce3d72e9576c7d59e88fb0db93ebc841e70e",
+      "tests/qualification/probe.py": "0bb5ed0b888ad6c030ec46bd95c6fbf6fe355c5c266d5882256f119e18bbd4b7",
+      "worker/Cargo.toml": "8da2a60721a6ebde95857712570e1cd1e3482cd84d83dcafc7dd0c92c6c693b9",
+      "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+      "worker/src/initial_sync.rs": "68d53a3550ef7df1b35c4fb0368293df29d626adc0640346c79fa7631af9abc5",
+      "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+      "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+      "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+      "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+      "worker/src/managed.rs": "8a01d95edbe918179e320c682ec5a5154d59ac7e1e3e338659490ef7909caed7",
+      "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+      "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+      "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+      "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+    },
+    "prototype": {
+      "scope": "Checkpoint partition diagnostic: original control or SQL overlay, never release qualification. Variant=split; SQL overlay=True; SQL profiling=False; copy chunk rows=None.",
+      "variant": "split",
+      "sql_overlay": true,
+      "focused_operations": true,
+      "production_migrations_changed": false,
+      "sql_profiling": false,
+      "staging_profiling": false,
+      "chunk_storage": true,
+      "initial_copy_override": null,
+      "service_cpu_affinity": "0-1",
+      "installations": [
+        "analytics",
+        "checkpoint_split_test",
+        "staging_chunk_integrity",
+        "copy_chunk_bounds",
+        "managed_test",
+        "managed_native",
+        "managed_copy_wait",
+        "managed_copy_held",
+        "managed_copy_crash_wait",
+        "managed_copy_crash_held"
+      ],
+      "inputs": {
+        "tests/admission/checkpoint_split_probe.py": "c7ff5f98dc38426857f8f8f7f9babf595a3121cebb69f2f18e1ef66564c60d44",
+        "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+        "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+        "tests/admission/staging_chunks.sql": "9e719e5341dcc44f998533139216ce3d72e9576c7d59e88fb0db93ebc841e70e",
+        "tests/admission/staging_chunk_operations.py": "62fd4f58adf72e09945563230b767332cae2e56d0f53940ece21536b14ccaaf9",
+        "tests/admission/copy_chunk_bounds.py": "8efcf43e150a7cd43846d606a84bb4d01fd841b833d28fd8f22a2ee2b220ed55"
+      }
+    }
+  },
+  "development": {
+    "evidence": ".qualification/qualification_20261030_073828_production_admission",
+    "status": "passed",
+    "assertions": 131,
+    "qualification_eligible": false,
+    "reason": "Development run overlapped edits to diagnostic harness/helper sources; retained but superseded for safety claims by one frozen-input fixture, not selected by performance outcome."
+  },
+  "performance": {
+    "evidence": ".qualification/qualification_20261030_074134_staging_chunk_comparison",
+    "results_sha256": "13f1b66c65669e64a5187f60e9ccb44e7609c65d9622b6deb248c36b0d64cc6c",
+    "comparison": {
+      "scope": "Fixed control/treatment/control comparison on one host; not release qualification.\n\nEvery workload gate and failed observation is retained. Findings do not stop the\nsequence; fixture/provenance errors do. No best-of or automatic retries.\n",
+      "status": "passed",
+      "sequence": [
+        "per_row",
+        "chunks",
+        "per_row"
+      ],
+      "shared_cpu_affinity": "0-1",
+      "experiment": "staging_chunks",
+      "chunk_storage": [
+        false,
+        true,
+        false
+      ],
+      "copy_chunk_caps": [
+        null,
+        null,
+        null
+      ],
+      "runs": [
+        {
+          "variant": "per_row",
+          "checkpoint_variant": "split",
+          "chunk_storage": false,
+          "initial_copy_override": null,
+          "image_id": "sha256:d4f74a2505507ed60227c5c501bb4f7679f2c559406a052fef84c570ce73959f",
+          "evidence": ".qualification/qualification_20261030_074134_production_admission",
+          "results_sha256": "ed9b372619e6073140b96d8606e807de3c15c599050dbdb3dbcfd91afa09b7be",
+          "status": "passed",
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "workload_passed": true,
+          "failed_gates": [],
+          "copy_elapsed_seconds": 73.11254215240479,
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "database": "analytics",
+              "p95_publication_ms": 462.60881423950195,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 365.7071590423584,
+                "journal_insert_to_batch_ms": 116.77002906799316,
+                "source_to_journal_insert_ms": 14.422178268432617
+              },
+              "source_max_schedule_lateness_seconds": 0.010182000056374818,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_1",
+              "p95_publication_ms": 458.3749771118164,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 382.13491439819336,
+                "journal_insert_to_batch_ms": 117.7830696105957,
+                "source_to_journal_insert_ms": 12.024164199829102
+              },
+              "source_max_schedule_lateness_seconds": 0.010240166040603071,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_2",
+              "p95_publication_ms": 461.09986305236816,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 359.73501205444336,
+                "journal_insert_to_batch_ms": 117.41995811462402,
+                "source_to_journal_insert_ms": 12.3748779296875
+              },
+              "source_max_schedule_lateness_seconds": 0.010111416049767286,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            }
+          ]
+        },
+        {
+          "variant": "chunks",
+          "checkpoint_variant": "split",
+          "chunk_storage": true,
+          "initial_copy_override": null,
+          "image_id": "sha256:d4f74a2505507ed60227c5c501bb4f7679f2c559406a052fef84c570ce73959f",
+          "evidence": ".qualification/qualification_20261030_074332_production_admission",
+          "results_sha256": "c9c1291f7d683960b4db15d9b182695ab438e8460d0d8904709f10ffa0b3323a",
+          "status": "passed",
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "workload_passed": true,
+          "failed_gates": [],
+          "copy_elapsed_seconds": 40.57605004310608,
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "database": "analytics",
+              "p95_publication_ms": 376.24311447143555,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 286.7398262023926,
+                "journal_insert_to_batch_ms": 112.52808570861816,
+                "source_to_journal_insert_ms": 11.528968811035156
+              },
+              "source_max_schedule_lateness_seconds": 0.010379792016465217,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_1",
+              "p95_publication_ms": 429.3711185455322,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 324.01204109191895,
+                "journal_insert_to_batch_ms": 116.50300025939941,
+                "source_to_journal_insert_ms": 22.804975509643555
+              },
+              "source_max_schedule_lateness_seconds": 0.010213667002972215,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_2",
+              "p95_publication_ms": 366.91808700561523,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 322.71313667297363,
+                "journal_insert_to_batch_ms": 117.49601364135742,
+                "source_to_journal_insert_ms": 10.432958602905273
+              },
+              "source_max_schedule_lateness_seconds": 0.010909624979831278,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            }
+          ]
+        },
+        {
+          "variant": "per_row",
+          "checkpoint_variant": "split",
+          "chunk_storage": false,
+          "initial_copy_override": null,
+          "image_id": "sha256:d4f74a2505507ed60227c5c501bb4f7679f2c559406a052fef84c570ce73959f",
+          "evidence": ".qualification/qualification_20261030_074512_production_admission",
+          "results_sha256": "f9f76383e4cb4861759ec3cc233f67f8e50f3c74f3103209e7a45a5d5c289338",
+          "status": "passed",
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "workload_passed": true,
+          "failed_gates": [],
+          "copy_elapsed_seconds": 72.08486890792847,
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "database": "analytics",
+              "p95_publication_ms": 418.05505752563477,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 340.47794342041016,
+                "journal_insert_to_batch_ms": 122.42507934570312,
+                "source_to_journal_insert_ms": 14.940023422241211
+              },
+              "source_max_schedule_lateness_seconds": 0.010421041981317103,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_1",
+              "p95_publication_ms": 438.5080337524414,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 348.16598892211914,
+                "journal_insert_to_batch_ms": 115.88215827941895,
+                "source_to_journal_insert_ms": 21.96788787841797
+              },
+              "source_max_schedule_lateness_seconds": 0.010271832987200469,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_2",
+              "p95_publication_ms": 428.12609672546387,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 340.015172958374,
+                "journal_insert_to_batch_ms": 122.56598472595215,
+                "source_to_journal_insert_ms": 14.495134353637695
+              },
+              "source_max_schedule_lateness_seconds": 0.010489583015441895,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            }
+          ]
+        }
+      ],
+      "runner_source_sha256": "5544eb267f14129a082aa09ce67b8d6b0ac033bb4cb201de4d28ffb705038726",
+      "common_inputs": {
+        "archive": {
+          "architecture": "arm64",
+          "archive": "lake_replication-0.1.0-beta.4-linux-arm64.tar.gz",
+          "archive_sha256": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+          "source_revision": "a2282cda4d1d563dcf8923b03ea566350d1bb6c9-dirty"
+        },
+        "inputs": {
+          "Cargo.lock": "9b41b01aa6d7749ea85b205c592b6a9781833fbe65765169a06e20e07a325ffa",
+          "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+          "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+          "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+          "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+          "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+          "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+          "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+          "extensions/lake_replication/Makefile": "ea9b145b1689133f62b9947e1ae219190588fce78d0b35b82923fc560aae8316",
+          "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+          "extensions/lake_replication/lake_replication.c": "453b0e4de938675413a56df77bdff8d748407066060cc81cf8b3b5a773d97316",
+          "extensions/lake_replication/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+          "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+          "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+          "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+          "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+          "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+          "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+          "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+          "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+          "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+          "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+          "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+          "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+          "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+          "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+          "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+          "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+          "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+          "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+          "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+          "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+          "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+          "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+          "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+          "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+          "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+          "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+          "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+          "tests/admission/checkpoint_split_probe.py": "c7ff5f98dc38426857f8f8f7f9babf595a3121cebb69f2f18e1ef66564c60d44",
+          "tests/admission/copy_chunk_bounds.py": "8efcf43e150a7cd43846d606a84bb4d01fd841b833d28fd8f22a2ee2b220ed55",
+          "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+          "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+          "tests/admission/probe.py": "61a7844bc35e350c20db166666a990694be27a2144383283651d1361e1501e4e",
+          "tests/admission/staging_chunk_operations.py": "62fd4f58adf72e09945563230b767332cae2e56d0f53940ece21536b14ccaaf9",
+          "tests/admission/staging_chunks.sql": "9e719e5341dcc44f998533139216ce3d72e9576c7d59e88fb0db93ebc841e70e",
+          "tests/qualification/probe.py": "0bb5ed0b888ad6c030ec46bd95c6fbf6fe355c5c266d5882256f119e18bbd4b7",
+          "worker/Cargo.toml": "8da2a60721a6ebde95857712570e1cd1e3482cd84d83dcafc7dd0c92c6c693b9",
+          "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+          "worker/src/initial_sync.rs": "68d53a3550ef7df1b35c4fb0368293df29d626adc0640346c79fa7631af9abc5",
+          "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+          "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+          "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+          "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+          "worker/src/managed.rs": "8a01d95edbe918179e320c682ec5a5154d59ac7e1e3e338659490ef7909caed7",
+          "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+          "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+          "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+          "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+        },
+        "image_id": "sha256:d4f74a2505507ed60227c5c501bb4f7679f2c559406a052fef84c570ce73959f"
+      },
+      "comparison": {
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "candidate_workload_passed": true,
+        "all_workloads_passed": true,
+        "control_copy_drift_ratio": 0.9859439541531176,
+        "candidate_copy_ratio_to_control_mean": 0.5589087263580159,
+        "inference_limit": "One sequential comparison; host drift is bracketed, not eliminated. No statistical speedup or release qualification is claimed."
+      }
+    },
+    "resource_observations": [
+      {
+        "evidence": ".qualification/qualification_20261030_074134_production_admission",
+        "fairness_sha256": "addd548b085a25bec9a0d9860b45c57a00f834a7b8ede2afde3a14f3d6a9d067",
+        "max_active_copy_publications": 4,
+        "resources": {
+          "destination": {
+            "max_sampled_memory_current_bytes": 4071976960,
+            "max_sampled_cpu_cores": 1.1985808839102592,
+            "cpu_quota_throttled_usec_delta": 0
+          },
+          "pgduck": {
+            "max_sampled_memory_current_bytes": 237502464,
+            "max_sampled_cpu_cores": 0.30129750882489087,
+            "cpu_quota_throttled_usec_delta": 0
+          },
+          "max_sampled_initial_sync_aggregate_pss_bytes": 6258688
+        },
+        "limit": "Periodic samples, not exact peaks; memory.current includes file cache."
+      },
+      {
+        "evidence": ".qualification/qualification_20261030_074332_production_admission",
+        "fairness_sha256": "cb48a47c53f91697d2ff0bb13d7d8df11e8ae68145aa3c6b1e6c883c260956ef",
+        "max_active_copy_publications": 4,
+        "resources": {
+          "destination": {
+            "max_sampled_memory_current_bytes": 1188487168,
+            "max_sampled_cpu_cores": 1.0957413176682338,
+            "cpu_quota_throttled_usec_delta": 0
+          },
+          "pgduck": {
+            "max_sampled_memory_current_bytes": 233885696,
+            "max_sampled_cpu_cores": 0.4036419087383393,
+            "cpu_quota_throttled_usec_delta": 0
+          },
+          "max_sampled_initial_sync_aggregate_pss_bytes": 4341760
+        },
+        "limit": "Periodic samples, not exact peaks; memory.current includes file cache."
+      },
+      {
+        "evidence": ".qualification/qualification_20261030_074512_production_admission",
+        "fairness_sha256": "28e175aec6555a48f641c983b017104125dff408ec775e5b4d0ce7ef11acf69b",
+        "max_active_copy_publications": 4,
+        "resources": {
+          "destination": {
+            "max_sampled_memory_current_bytes": 4101488640,
+            "max_sampled_cpu_cores": 1.188534914099312,
+            "cpu_quota_throttled_usec_delta": 0
+          },
+          "pgduck": {
+            "max_sampled_memory_current_bytes": 305655808,
+            "max_sampled_cpu_cores": 0.29156507302137635,
+            "cpu_quota_throttled_usec_delta": 0
+          },
+          "max_sampled_initial_sync_aggregate_pss_bytes": 6712320
+        },
+        "limit": "Periodic samples, not exact peaks; memory.current includes file cache."
+      }
+    ]
+  },
+  "one_cpu_sensitivity": {
+    "evidence": ".qualification/qualification_20261030_074828_production_admission",
+    "results_sha256": "3045f8ebdeb1863e0732eda282f3d94a795bbc6cd54ea1391f5136e7f2b3c106",
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.4-linux-arm64.tar.gz",
+      "archive_sha256": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+      "source_revision": "a2282cda4d1d563dcf8923b03ea566350d1bb6c9-dirty"
+    },
+    "inputs": {
+      "Cargo.lock": "9b41b01aa6d7749ea85b205c592b6a9781833fbe65765169a06e20e07a325ffa",
+      "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+      "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+      "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+      "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+      "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+      "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+      "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+      "extensions/lake_replication/Makefile": "ea9b145b1689133f62b9947e1ae219190588fce78d0b35b82923fc560aae8316",
+      "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+      "extensions/lake_replication/lake_replication.c": "453b0e4de938675413a56df77bdff8d748407066060cc81cf8b3b5a773d97316",
+      "extensions/lake_replication/lake_replication.control": "49075712d4dff0917f09bb8342c40f44093cd9c6f9b16b0602a12eba6a1f24c9",
+      "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+      "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+      "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+      "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+      "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+      "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+      "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+      "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+      "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+      "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+      "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+      "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+      "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+      "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+      "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+      "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+      "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+      "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+      "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+      "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+      "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+      "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+      "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+      "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+      "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+      "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+      "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+      "tests/admission/checkpoint_split_probe.py": "c7ff5f98dc38426857f8f8f7f9babf595a3121cebb69f2f18e1ef66564c60d44",
+      "tests/admission/copy_chunk_bounds.py": "8efcf43e150a7cd43846d606a84bb4d01fd841b833d28fd8f22a2ee2b220ed55",
+      "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+      "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+      "tests/admission/probe.py": "61a7844bc35e350c20db166666a990694be27a2144383283651d1361e1501e4e",
+      "tests/admission/staging_chunk_operations.py": "62fd4f58adf72e09945563230b767332cae2e56d0f53940ece21536b14ccaaf9",
+      "tests/admission/staging_chunks.sql": "9e719e5341dcc44f998533139216ce3d72e9576c7d59e88fb0db93ebc841e70e",
+      "tests/qualification/probe.py": "0bb5ed0b888ad6c030ec46bd95c6fbf6fe355c5c266d5882256f119e18bbd4b7",
+      "worker/Cargo.toml": "8da2a60721a6ebde95857712570e1cd1e3482cd84d83dcafc7dd0c92c6c693b9",
+      "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+      "worker/src/initial_sync.rs": "68d53a3550ef7df1b35c4fb0368293df29d626adc0640346c79fa7631af9abc5",
+      "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+      "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+      "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+      "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+      "worker/src/managed.rs": "8a01d95edbe918179e320c682ec5a5154d59ac7e1e3e338659490ef7909caed7",
+      "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+      "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+      "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+      "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+    },
+    "prototype": {
+      "scope": "Checkpoint partition diagnostic: original control or SQL overlay, never release qualification. Variant=split; SQL overlay=True; SQL profiling=False; copy chunk rows=None.",
+      "variant": "split",
+      "sql_overlay": true,
+      "focused_operations": false,
+      "production_migrations_changed": false,
+      "sql_profiling": false,
+      "staging_profiling": false,
+      "chunk_storage": true,
+      "initial_copy_override": null,
+      "service_cpu_affinity": "0",
+      "installations": [
+        "analytics",
+        "fair_stream_1",
+        "fair_stream_2",
+        "fair_copy",
+        "fair_copy_1",
+        "fair_copy_2",
+        "fair_copy_3"
+      ],
+      "inputs": {
+        "tests/admission/checkpoint_split_probe.py": "c7ff5f98dc38426857f8f8f7f9babf595a3121cebb69f2f18e1ef66564c60d44",
+        "tests/admission/checkpoint_split.sql": "4b393227e5af1bb18a7b37dc7c3bda61427a1645dda9c9fd87d2d2094ed1ac65",
+        "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+        "tests/admission/staging_chunks.sql": "9e719e5341dcc44f998533139216ce3d72e9576c7d59e88fb0db93ebc841e70e",
+        "tests/admission/staging_chunk_operations.py": "62fd4f58adf72e09945563230b767332cae2e56d0f53940ece21536b14ccaaf9",
+        "tests/admission/copy_chunk_bounds.py": "8efcf43e150a7cd43846d606a84bb4d01fd841b833d28fd8f22a2ee2b220ed55"
+      }
+    },
+    "summary": {
+      "status": "passed",
+      "measurement_valid": true,
+      "source_producer": "independent_sessions",
+      "observer_clock_sampling": "query_return_monotonic",
+      "workload_passed": true,
+      "failed_gates": [],
+      "copy_elapsed_seconds": 79.00616383552551,
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "streams": [
+        {
+          "database": "analytics",
+          "p95_publication_ms": 1525.9759426116943,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 910.6850624084473,
+            "journal_insert_to_batch_ms": 690.8268928527832,
+            "source_to_journal_insert_ms": 10.477066040039062
+          },
+          "source_max_schedule_lateness_seconds": 0.010177250020205975,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_1",
+          "p95_publication_ms": 1530.2660465240479,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 890.423059463501,
+            "journal_insert_to_batch_ms": 666.84889793396,
+            "source_to_journal_insert_ms": 12.102842330932617
+          },
+          "source_max_schedule_lateness_seconds": 0.01025295804720372,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_2",
+          "p95_publication_ms": 1534.646987915039,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 884.6909999847412,
+            "journal_insert_to_batch_ms": 668.0488586425781,
+            "source_to_journal_insert_ms": 12.82191276550293
+          },
+          "source_max_schedule_lateness_seconds": 0.010237916023470461,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        }
+      ]
+    }
+  }
+}

@@ -21,7 +21,11 @@ def run(q,c,rows):
                 owner.query('BEGIN; SELECT lake_replication.admit_bulk()')
                 sql(f"CREATE SUBSCRIPTION {sub} CONNECTION '{connection}' PUBLICATION {pub} WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
                 q.check(name+' native copy stages all rows while publication waits',q.wait_for('destination',database,f"SELECT coalesce(max(rows_copied),0) FROM lake_replication.initial_copies",str(count),timeout=60),str(count))
-                chunks=json.loads(sql("SELECT jsonb_agg(t) FROM (SELECT xmin::text AS xid,count(*) AS rows,sum(octet_length(row_data::text)) AS bytes FROM lake_replication.initial_copy_rows GROUP BY xmin::text) t"))
+                if getattr(q,'STAGING_ROWS','initial_copy_rows')=='initial_copy_chunks':
+                    chunk_query="SELECT jsonb_agg(t) FROM (SELECT c.xmin::text AS xid,count(*) AS rows,sum(octet_length(r.row_data::text)) AS bytes FROM lake_replication.initial_copy_chunks c CROSS JOIN LATERAL jsonb_array_elements(c.rows) r(row_data) GROUP BY c.xmin::text) t"
+                else:
+                    chunk_query="SELECT jsonb_agg(t) FROM (SELECT xmin::text AS xid,count(*) AS rows,sum(octet_length(row_data::text)) AS bytes FROM lake_replication.initial_copy_rows GROUP BY xmin::text) t"
+                chunks=json.loads(sql(chunk_query))
                 q.check(name+' native copy obeys configured row cap',max(x['rows'] for x in chunks)<=rows,True)
                 q.check(name+' native copy retains byte budget and singleton exception',all(x['bytes']<=8388608 or x['rows']==1 for x in chunks),True)
                 if name=='narrow':q.check('narrow copy actually uses selected row cap',max(x['rows'] for x in chunks),rows)

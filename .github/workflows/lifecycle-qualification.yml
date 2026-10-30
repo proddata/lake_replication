@@ -52,6 +52,12 @@ on:
           - '2000'
           - '4000'
 
+      staging_chunk_comparison:
+        description: Per-row/chunk/per-row staging with unchanged copy limits (ARM64 diagnostic only)
+        required: false
+        default: false
+        type: boolean
+
 permissions:
   contents: read
   actions: read
@@ -78,6 +84,7 @@ jobs:
           CHECKPOINT_SPLIT: ${{ inputs.checkpoint_split_diagnostic }}
           CHECKPOINT_COMPARE: ${{ inputs.checkpoint_split_comparison }}
           COPY_CHUNK: ${{ inputs.copy_chunk_comparison }}
+          STAGING_CHUNKS: ${{ inputs.staging_chunk_comparison }}
         run: |
           if [[ "$NATIVE_PROBE" == true && "$FAIRNESS_DIAGNOSTIC" == true ]]; then
             echo 'Select native_probe or fairness_diagnostic, not both.' >&2
@@ -97,6 +104,10 @@ jobs:
             exit 1
           fi
           case "$COPY_CHUNK" in disabled|2000|4000) ;; *) exit 1 ;; esac
+          if [[ "$STAGING_CHUNKS" == true && ( "$NATIVE_PROBE" != true || "$PROBE_ARCH" != arm64 || "$CHECKPOINT_SPLIT" == true || "$CHECKPOINT_COMPARE" == true || "$COPY_CHUNK" != disabled ) ]]; then
+            echo 'Staging chunk comparison requires its own ARM64 native probe.' >&2
+            exit 1
+          fi
           if [[ "$COPY_CHUNK" != disabled && ( "$NATIVE_PROBE" != true || "$PROBE_ARCH" != arm64 || "$CHECKPOINT_SPLIT" == true || "$CHECKPOINT_COMPARE" == true ) ]]; then
             echo 'Copy chunk comparison requires its own ARM64 native probe.' >&2
             exit 1
@@ -233,7 +244,7 @@ jobs:
           done
           exit "$status"
       - name: Focused native admission and four-copy probe
-        if: ${{ inputs.native_probe && !inputs.checkpoint_split_diagnostic && !inputs.checkpoint_split_comparison && inputs.copy_chunk_comparison == 'disabled' }}
+        if: ${{ inputs.native_probe && !inputs.checkpoint_split_diagnostic && !inputs.checkpoint_split_comparison && !inputs.staging_chunk_comparison && inputs.copy_chunk_comparison == 'disabled' }}
         timeout-minutes: 15
         run: python3 tests/admission/probe.py --cases managed fairness
       - name: Checkpoint partition prototype diagnostic (SQL overlay)
@@ -251,6 +262,10 @@ jobs:
         env:
           COPY_CHUNK: ${{ inputs.copy_chunk_comparison }}
         run: python3 tests/admission/checkpoint_compare.py --cpuset 0-1 --copy-chunk-rows "$COPY_CHUNK"
+      - name: Staging representation comparison (SQL overlays, unchanged worker and copy limits)
+        if: ${{ inputs.native_probe && inputs.staging_chunk_comparison }}
+        timeout-minutes: 20
+        run: python3 tests/admission/checkpoint_compare.py --chunk-store --cpuset 0-1
       - name: Fresh packaged lifecycle
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: make lifecycle-test

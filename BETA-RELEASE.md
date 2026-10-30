@@ -48,7 +48,13 @@ original byte target and archived binary. Its [valid native comparison](docs/bul
 copies in 133.04 seconds but fails all three streaming p95 gates at 2.02–2.06
 seconds. The 1,000-row controls copy in 141.78–142.60 seconds, with one control
 also missing one latency gate. Do not promote the larger row cap. Diagnose the
-publication path locally; no production default or schema change is integrated.
+publication path locally; no production default or schema change is integrated. The
+[subsequent chunk-storage prototype](docs/staging-chunk-prototype.md) identifies
+per-row foreign-key checks as a major isolated staging cost. At the unchanged
+1,000-row cap it passes 131 frozen safety assertions and a valid local
+73.11/40.58/72.08-second per-row/chunk/per-row comparison, plus a one-CPU
+sensitivity at 79.01 seconds and 1.526–1.535-second streaming p95. Native confirmation
+and a hardened migration remain required.
 
 Beta.4 integrates the staging permit, journal count/byte admission and managed
 worker generation fencing. [Current evidence](docs/staging-journal-migration-results.md)

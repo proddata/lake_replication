@@ -125,6 +125,7 @@ def native(q,c,connection):
 def staging(q,c,connection):
     """Real initial-sync backends release global admission on worker stop."""
     q.sql('source','application','TRUNCATE managed_src; INSERT INTO managed_src SELECT generate_series(1,10)')
+    staging_rows=getattr(q,'STAGING_ROWS','initial_copy_rows')
     for held,crash in [(False,False),(True,False),(False,True),(True,True)]:
         database=('managed_copy_crash_' if crash else 'managed_copy_')+('held' if held else 'wait')
         sub=database+'_sub'
@@ -135,7 +136,7 @@ def staging(q,c,connection):
         paused=None
         try:
             if held:
-                sql("CREATE FUNCTION public.hold_copy() RETURNS trigger LANGUAGE plpgsql AS $$BEGIN PERFORM pg_advisory_xact_lock(1280460112,72); RETURN NEW; END$$; CREATE TRIGGER hold_copy BEFORE INSERT ON lake_replication.initial_copy_rows FOR EACH ROW EXECUTE FUNCTION public.hold_copy()")
+                sql("CREATE FUNCTION public.hold_copy() RETURNS trigger LANGUAGE plpgsql AS $$BEGIN PERFORM pg_advisory_xact_lock(1280460112,72); RETURN NEW; END$$; CREATE TRIGGER hold_copy BEFORE INSERT ON lake_replication."+staging_rows+" FOR EACH ROW EXECUTE FUNCTION public.hold_copy()")
                 owner.query('BEGIN; SELECT pg_advisory_xact_lock(1280460112,72)')
             else:owner.query('BEGIN; SELECT lake_replication.admit_staging()')
             sql(f"CREATE SUBSCRIPTION {sub} CONNECTION '{connection}' PUBLICATION managed_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
@@ -157,7 +158,7 @@ def staging(q,c,connection):
             q.check(database+' leaves no partial copy rows',sql('SELECT count(*) FROM lake_replication.initial_copy_rows'),'0')
             if not crash:q.wait_for('destination',database,"SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND backend_type='lake_replication supervisor'",'0',timeout=5)
             owner.query('ROLLBACK');owner.close();owner=None
-            if held:sql('DROP TRIGGER hold_copy ON lake_replication.initial_copy_rows')
+            if held:sql('DROP TRIGGER hold_copy ON lake_replication.'+staging_rows)
             if crash:
                 q.compose('exec','-T','destination','kill','-CONT',paused);paused=None
             else:sql('ALTER SUBSCRIPTION '+sub+' ENABLE')

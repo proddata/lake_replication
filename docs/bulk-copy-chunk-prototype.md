@@ -206,3 +206,8 @@ not improve latency; interval CPU samples and local SQL averages cannot choose
 that fix. Require a concrete locally verified improvement before another native
 comparison. Do not retry the unchanged cohort or relax thresholds. The hardened
 checkpoint production migration remains deferred.
+
+The [subsequent chunk-storage investigation](staging-chunk-prototype.md) measures
+per-row foreign-key work and tests one durable chunk per unchanged 1,000-row
+transaction. Its local integrity and fixed performance cohort pass; no production
+row-cap change is adopted.
