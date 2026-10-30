@@ -5,10 +5,12 @@ BYTE_BUDGET=8*1024*1024
 
 
 class Overlay:
-    def __init__(self,q,rows):
+    def __init__(self,q,rows,pause_ms=0):
         if rows not in (1000,2000,4000):raise ValueError('unsupported diagnostic row cap')
-        self.q,self.rows=q,rows
+        if pause_ms not in (0,40):raise ValueError('unsupported diagnostic post-commit pause')
+        self.q,self.rows,self.pause_ms=q,rows,pause_ms
         self.metadata=dict(chunk_rows=rows,chunk_row_text_bytes=BYTE_BUDGET,
+            pause_after_chunk_ms=pause_ms,pause_placement='after_managed_transaction_commit',
             scope=__doc__,single_oversized_row_behavior='unchanged')
 
     def build(self,context):
@@ -20,6 +22,7 @@ class Overlay:
         wrapper=('#!/bin/bash\n'
             f'export LAKE_INITIAL_COPY_CHUNK_ROWS={self.rows}\n'
             f'export LAKE_INITIAL_COPY_CHUNK_BYTES={BYTE_BUDGET}\n'
+            f'export LAKE_INITIAL_COPY_CHUNK_PAUSE_MS={self.pause_ms}\n'
             f'exec -a {executable} {original} "$@"\n')
         (context/'copy-chunk-wrapper').write_text(wrapper)
         recipe=f'FROM {q.DESTINATION_IMAGE}\nUSER root\nRUN mv {executable} {original}\nCOPY --chmod=0755 copy-chunk-wrapper {executable}\n'

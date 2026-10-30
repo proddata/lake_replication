@@ -126,5 +126,22 @@ class ComparisonTests(unittest.TestCase):
         self.assertFalse(result['candidate_workload_passed'])
         self.assertEqual(result['candidate_copy_ratio_to_control_mean'],.8)
 
+    def test_pacing_requires_matching_metadata_and_post_commit_configuration(self):
+        def run(pause):
+            return dict(archive='archive',image_id=f'wrapped-{pause}',inputs='sources',prototype=dict(
+                variant='split',sql_overlay=True,focused_operations=False,sql_profiling=False,
+                chunk_storage=True,pause_after_chunk_ms=pause,service_cpu_affinity='0-1',
+                initial_copy_override=dict(chunk_rows=1000,chunk_row_text_bytes=8388608,
+                    pause_after_chunk_ms=pause,pause_placement='after_managed_transaction_commit',
+                    base_destination_image_id='base',worker_sha256='worker')))
+        control=run(0);candidate=run(40)
+        self.assertEqual(m.runtime_identity(control,'split','0-1',1000,True,0),
+                         m.runtime_identity(candidate,'split','0-1',1000,True,40))
+        with self.assertRaises(ValueError):m.runtime_identity(candidate,'split','0-1',1000,True,0)
+        candidate['prototype']['initial_copy_override']['pause_after_chunk_ms']=0
+        with self.assertRaises(ValueError):m.runtime_identity(candidate,'split','0-1',1000,True,40)
+        candidate=run(40);candidate['prototype']['initial_copy_override']['pause_placement']='inside_transaction'
+        with self.assertRaises(ValueError):m.runtime_identity(candidate,'split','0-1',1000,True,40)
+
 
 if __name__=='__main__':unittest.main()

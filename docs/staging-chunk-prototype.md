@@ -196,3 +196,8 @@ Re-run cancellation/bounds safety and one-CPU sensitivity before another native
 comparison. Do not add CPUs, change input cadence or loosen thresholds. A valid
 local pacing result is necessary before testing the combined candidate natively;
 a hardened production migration remains deferred.
+
+The [subsequent pacing diagnostic](staging-pacing-prototype.md) executes this
+40 ms candidate. Its two paced observations, one-CPU sensitivity and safety
+checks pass. Both local bracketed comparisons retain unpaced overlap misses
+and remain inconclusive; a prospective native comparison is required.

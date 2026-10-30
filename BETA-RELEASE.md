@@ -48,7 +48,12 @@ regression before observed bulk publication and increased source CPU pressure.
 Test post-commit whole-bulk-pipeline pacing locally before another native run.
 The [staging investigation](docs/staging-chunk-prototype.md) records all findings
 and the limits of this interpretation. Production storage and defaults remain
-unchanged, and the hardened checkpoint migration remains deferred.
+unchanged, and the hardened checkpoint migration remains deferred. The
+[subsequent 40 ms pacing diagnostic](docs/staging-pacing-prototype.md) passes
+131 safety checks, both paced observations at 103.65–104.50 seconds and one-CPU
+sensitivity at 124.59 seconds. Both full local comparisons remain inconclusive
+because of unpaced publication-overlap misses. A prospective native comparison
+is pending; no gate or historical finding is waived.
 
 Earlier findings remain retained: the [independent-source checkpoint trial](docs/checkpoint-split-prototype.md#prospective-independent-source-native-result)
 misses copy completion at 182.15 seconds and has an invalid final control;

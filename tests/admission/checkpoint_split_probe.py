@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--profile-sql',action='store_true',help='Local pg_stat_statements instrumentation; not comparable to unprofiled timings')
     parser.add_argument('--profile-staging',action='store_true',help='Isolated rollback-only append plans before managed safety checks')
     parser.add_argument('--chunk-store',action='store_true',help='Store each unchanged 1000-row transaction as one durable JSON chunk (diagnostic only)')
+    parser.add_argument('--chunk-pause-ms',type=int,choices=[0,40],default=0,help='Archived post-commit pacing configuration; requires chunk storage')
     parser.add_argument('--copy-chunk-rows',type=int,choices=[1000,2000,4000],help='Archived initial-sync configuration overlay; byte budget stays 8 MiB')
     args=parser.parse_args()
     if not re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*',args.cpuset):
@@ -32,6 +33,8 @@ def main():
         parser.error('staging profiling requires the managed safety fixture')
     if args.chunk_store and (args.variant!='split' or args.profile_staging or args.copy_chunk_rows not in (None,1000)):
         parser.error('chunk storage requires split checkpoints, the unchanged 1000-row cap, and no isolated per-row profile')
+    if args.chunk_pause_ms and not args.chunk_store:
+        parser.error('post-commit pacing requires chunk storage')
     spec=importlib.util.spec_from_file_location('production_probe',Path(__file__).with_name('probe.py'))
     p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
     original_sql=p.q.sql;original_compose=p.q.compose;original_text=p.m.compose_text
@@ -47,10 +50,10 @@ def main():
         profiler=importlib.util.module_from_spec(spec);spec.loader.exec_module(profiler)
         profile=profiler.Profile(p.q,original_sql)
     chunk=None
-    if args.copy_chunk_rows:
+    if args.copy_chunk_rows or args.chunk_pause_ms:
         spec=importlib.util.spec_from_file_location('copy_chunk',Path(__file__).with_name('copy_chunk.py'))
         chunk_module=importlib.util.module_from_spec(spec);spec.loader.exec_module(chunk_module)
-        chunk=chunk_module.Overlay(p.q,args.copy_chunk_rows)
+        chunk=chunk_module.Overlay(p.q,args.copy_chunk_rows or 1000,args.chunk_pause_ms)
         original_build=p.q.build_images
         def build_images(archive,context):
             original_build(archive,context)
@@ -116,6 +119,7 @@ def main():
         sql_profiling=args.profile_sql,
         staging_profiling=args.profile_staging,
         chunk_storage=args.chunk_store,
+        pause_after_chunk_ms=args.chunk_pause_ms,
         initial_copy_override=chunk.metadata if chunk else None,
         service_cpu_affinity=args.cpuset,installations=installs,inputs=inputs)
     directory=p.ROOT/'.qualification'/(p.q.RUN+'_production_admission')
