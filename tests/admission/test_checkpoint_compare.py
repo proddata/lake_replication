@@ -42,7 +42,9 @@ class ComparisonTests(unittest.TestCase):
 
     def test_clock_invalidity_prevents_passing_comparison(self):
         observed=observation();observed['cases'][0]['timing_validation']['valid']=False
-        self.assertFalse(m.summarize(observed)['workload_passed'])
+        result=m.summarize(observed)
+        self.assertFalse(result['workload_passed'])
+        self.assertIn('observer_clock_validation',result['failed_gates'])
 
     def test_root_finding_cannot_be_promoted_by_passed_case(self):
         observed=observation();observed['status']='completed_with_findings'

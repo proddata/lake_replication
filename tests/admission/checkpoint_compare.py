@@ -33,6 +33,9 @@ def summarize(result):
     if case.get('cleanup_returncode')!=0:
         raise ValueError('fixture cleanup failed')
     failures=[key for key,value in case['checks'].items() if not value]
+    if not case['timing_validation']['valid']:failures.append('observer_clock_validation')
+    if case['engine_oom']:failures.append('engine_oom')
+    if case['unexpected_pg_crash']:failures.append('unexpected_pg_crash')
     for stream in case['streams']:
         failures.extend(stream['database']+':'+key for key,value in stream['checks'].items() if not value)
     valid=(case['timing_validation']['valid'] and not case['engine_oom']

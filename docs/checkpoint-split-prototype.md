@@ -310,3 +310,51 @@ native cohort, not an unchanged retry of the invalid serial-source workload.
 [Independent-source local evidence](evidence/2026-10-30-independent-source-local.json)
 retains the full three-run cohort and its hashes. Production migration remains
 unimplemented pending valid native evidence.
+
+## Prospective independent-source native result
+
+[Native comparison 41007547690](https://github.com/proddata/lake_replication/actions/runs/41007547690)
+at `7c5d901` completes original/split/original with matching archive, destination
+image, harness and independent-source regime. All three observations meet the
+unchanged 500 ms source-start lateness limit. The serial source scheduling
+coupling is removed in the measured native workload.
+
+| Observation | Copy duration | Stream p95 range | Maximum source lateness | Measurement validity |
+|---|---:|---:|---:|---|
+| Original before | 183.17 s | 2.43–3.96 s | 3.64 ms | Valid; copy/latency gates fail |
+| Split | 182.15 s | 1.71–1.74 s | 199.97 ms | Valid; only copy gate fails |
+| Original after | 178.26 s | 1.90–2.15 s | 141.96 ms | Invalid observer clock audit |
+
+The candidate passes exact data, overlap, source cadence, clock validity and
+streaming latency/catch-up/gap checks, with no engine OOM or PostgreSQL crash.
+Its remaining failed gate is 182.15-second copy completion against 180 seconds.
+The valid first control also misses copy completion and streaming latency.
+This supports independent checkpoints as the latency direction; it does not
+qualify the candidate or prove a statistical copy performance result.
+
+The final control reports `observer wall clock differs from monotonic trace`.
+The root cause of that audit mismatch is not established; it must not be
+reclassified as a passing observation or silently discarded. Consequently the
+full bracketed comparison remains invalid, even though source cadence is valid
+in every observation. The summary reporter now includes clock/OOM/crash
+validity failures explicitly in `failed_gates`; thresholds and acceptance logic
+are unchanged.
+
+Source completion markers show durable INSERT round trips reaching roughly
+560–699 ms in the split run, while subsequent source-start lateness remains
+62–200 ms, within the limit. The observation queries are much shorter (at most
+about 12 ms). Independent schedules prevent those delays from cascading across
+all streams as in the old shared source loop.
+
+**Decision:** keep the split checkpoint prototype, and keep production migration
+deferred. The next runtime work is local bulk-copy throughput/headroom, using
+the retained staging and publication profiles and preserving row integrity,
+transaction/memory/admission bounds, exact data and all existing timing gates.
+Do not loosen the three-minute limit or launch another unchanged native run.
+Requalify the complete workload and clock audit after a concrete, locally tested
+copy improvement; then implement the hardened production schema/upgrade.
+
+[Prospective native evidence](evidence/2026-10-30-independent-source-native.json)
+retains the valid pair, invalid final control, source round trips and all failed
+gates. This remains an experiment; the production archive still uses the shared
+checkpoint row.
