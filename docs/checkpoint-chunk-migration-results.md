@@ -164,3 +164,31 @@ results and retained development failures are recorded in the
 [machine-readable evidence](evidence/2026-10-31-checkpoint-chunk-migration-results.json).
 The cached pg_lake prerequisite is pinned at `8180647d4535`; the separately
 uncommitted DuckDB build optimization is not cold-build qualified here.
+
+## Focused native ARM64 result
+
+[CI 41207977968](https://github.com/proddata/lake_replication/actions/runs/41207977968)
+passes repository checks and both native bundle builds at `f4a4019`.
+[Qualification 41229368517](https://github.com/proddata/lake_replication/actions/runs/41229368517)
+then passes all 166 checks using its unmodified ARM64 archive, with clean source
+revision `f4a4019198e8b765249827fa1b50d8f8db88a8c4` and archive SHA256
+`4af51f3e5349c5078e236aa3e0caf1adad3326dc72d28e23c4c78a3a5958ec2e`.
+All recorded source inputs match that commit. The downloaded archive's internal
+checksums and all ten frozen historical SQL payloads were independently checked.
+
+Pipeline migration/restore, temporary-table security regressions, copy leases,
+native chunk bounds and managed-worker safety all pass. The shared-two-CPU
+four-copy workload completes in **127.57 seconds**. Streaming p95 is
+**1702.63 / 1652.95 / 1734.15 ms**, maximum publication gap is 1.14 seconds,
+and maximum catch-up is 1.44 seconds. All three streams publish 109 commits
+during copy. Four overlapping publications and a real admission wait are
+observed. Source scheduling and observer timing are valid; exact data, workload,
+cleanup and safety gates all pass, with no engine OOM or PostgreSQL crash.
+
+This qualifies one absolute working point for the production archive. It is
+neither a statistical performance comparison nor full release qualification.
+The verified prerequisite cache uses the committed original build recipe; the
+separate local DuckDB build optimization remains unqualified. Full native
+qualification on both architectures and the remaining recovery, compatibility,
+security and soak gates are still required. Detailed hashes, checks and measured
+values are in the [native evidence](evidence/2026-10-31-beta5-native-arm64-results.json).
