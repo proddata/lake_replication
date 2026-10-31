@@ -1,7 +1,7 @@
 # lake_replication extension
 comment = 'Durable external logical replication from PostgreSQL heap tables to pg_lake Iceberg tables'
-default_version = '0.1.0-beta.4'
+default_version = '0.1.0-beta.5'
 module_pathname = '$libdir/lake_replication'
 relocatable = false
-requires = 'pg_lake,dblink,pg_extension_base'
+requires = 'pg_lake,dblink,pg_extension_base,btree_gist'
 #!shared_preload_libraries

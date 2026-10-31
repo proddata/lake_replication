@@ -4,14 +4,18 @@ OBJS = lake_replication.o
 BASELINE_VERSION = 0.1.0
 PREVIOUS_VERSION = 0.1.0-beta.1
 FROZEN_VERSION = 0.1.0-beta.2
-EXTVERSION = 0.1.0-beta.4
+EXTVERSION = 0.1.0-beta.5
+ADMISSION_VERSION = 0.1.0-beta.4
 BULK_VERSION = 0.1.0-beta.3
 ALL_MIGRATIONS = $(sort $(wildcard ../../migrations/[0-9][0-9][0-9][0-9]_*.sql))
+PIPELINE_MIGRATIONS = ../../migrations/0026_split_checkpoints.sql ../../migrations/0027_chunk_staging.sql ../../migrations/0028_initial_copy_leases.sql
+ADMISSION_MIGRATIONS = $(filter-out $(PIPELINE_MIGRATIONS),$(ALL_MIGRATIONS))
 ADMISSION_MIGRATION = ../../migrations/0025_staging_and_journal_admission.sql
-BULK_MIGRATIONS = $(filter-out $(ADMISSION_MIGRATION),$(ALL_MIGRATIONS))
+BULK_MIGRATIONS = $(filter-out $(ADMISSION_MIGRATION),$(ADMISSION_MIGRATIONS))
 BULK_MIGRATION = ../../migrations/0024_bulk_admission.sql
 MIGRATIONS = $(filter-out $(BULK_MIGRATION),$(BULK_MIGRATIONS))
 EXTENSION_METADATA = extension-config-dump.sql
+PIPELINE_METADATA = extension-config-dump-beta5.sql
 PREVIOUS_UPGRADES = ../../migrations/0016_observability.sql \
 	../../migrations/0017_common_parameterized_types.sql \
 	../../migrations/0018_postgres_integration.sql \
@@ -30,9 +34,11 @@ UPGRADE_SQL = $(EXTENSION)--$(PREVIOUS_VERSION)--$(FROZEN_VERSION).sql
 BASELINE_UPGRADE_SQL = $(EXTENSION)--$(BASELINE_VERSION)--$(FROZEN_VERSION).sql
 BULK_SQL = $(EXTENSION)--$(BULK_VERSION).sql
 BULK_UPGRADE_SQL = $(EXTENSION)--$(FROZEN_VERSION)--$(BULK_VERSION).sql
-ADMISSION_SQL = $(EXTENSION)--$(EXTVERSION).sql
-ADMISSION_UPGRADE_SQL = $(EXTENSION)--$(BULK_VERSION)--$(EXTVERSION).sql
-DATA_built = $(ADMISSION_SQL) $(ADMISSION_UPGRADE_SQL) $(BULK_SQL) $(BULK_UPGRADE_SQL) $(BASELINE_SQL) $(PREVIOUS_SQL) $(CURRENT_SQL) $(PREVIOUS_UPGRADE_SQL) $(UPGRADE_SQL) $(BASELINE_UPGRADE_SQL)
+ADMISSION_SQL = $(EXTENSION)--$(ADMISSION_VERSION).sql
+ADMISSION_UPGRADE_SQL = $(EXTENSION)--$(BULK_VERSION)--$(ADMISSION_VERSION).sql
+PIPELINE_SQL = $(EXTENSION)--$(EXTVERSION).sql
+PIPELINE_UPGRADE_SQL = $(EXTENSION)--$(ADMISSION_VERSION)--$(EXTVERSION).sql
+DATA_built = $(PIPELINE_SQL) $(PIPELINE_UPGRADE_SQL) $(ADMISSION_SQL) $(ADMISSION_UPGRADE_SQL) $(BULK_SQL) $(BULK_UPGRADE_SQL) $(BASELINE_SQL) $(PREVIOUS_SQL) $(CURRENT_SQL) $(PREVIOUS_UPGRADE_SQL) $(UPGRADE_SQL) $(BASELINE_UPGRADE_SQL)
 PG_CONFIG ?= pg_config
 PG_CPPFLAGS += -I$(shell $(PG_CONFIG) --includedir)
 SHLIB_LINK += -lpq
@@ -67,11 +73,17 @@ $(BULK_SQL): build-extension-sql.sh $(BULK_MIGRATIONS) $(EXTENSION_METADATA)
 $(BULK_UPGRADE_SQL): build-extension-sql.sh $(BULK_MIGRATION)
 	./build-extension-sql.sh $@ $(BULK_MIGRATION)
 
-$(ADMISSION_SQL): build-extension-sql.sh $(ALL_MIGRATIONS) $(EXTENSION_METADATA)
-	./build-extension-sql.sh $@ $(ALL_MIGRATIONS) $(EXTENSION_METADATA)
+$(ADMISSION_SQL): build-extension-sql.sh $(ADMISSION_MIGRATIONS) $(EXTENSION_METADATA)
+	./build-extension-sql.sh $@ $(ADMISSION_MIGRATIONS) $(EXTENSION_METADATA)
 
 $(ADMISSION_UPGRADE_SQL): build-extension-sql.sh $(ADMISSION_MIGRATION)
 	./build-extension-sql.sh $@ $(ADMISSION_MIGRATION)
+
+$(PIPELINE_SQL): build-extension-sql.sh $(ALL_MIGRATIONS) $(PIPELINE_METADATA)
+	./build-extension-sql.sh $@ $(ALL_MIGRATIONS) $(PIPELINE_METADATA)
+
+$(PIPELINE_UPGRADE_SQL): build-extension-sql.sh $(PIPELINE_MIGRATIONS)
+	./build-extension-sql.sh $@ $(PIPELINE_MIGRATIONS)
 
 EXTRA_CLEAN = $(DATA_built)
 

@@ -91,6 +91,17 @@ impl ManagedClient {
             sql,
         )
     }
+
+    pub fn initial_copy_lease(&mut self) -> Result<Rows, Error> {
+        // Wait before the generation fence. Session admission survives COMMIT,
+        // so a failure after acquisition must close the session, not reuse it.
+        let result = self.transaction("SELECT lake_replication.admit_initial_copy(); ", "SELECT 1");
+        if result.is_err() {
+            self.poisoned = true;
+            self.client.abort();
+        }
+        result
+    }
 }
 
 #[cfg(test)]
@@ -185,6 +196,37 @@ mod tests {
         assert!(
             matches!(client.simple_query("SELECT 2"),Err(Error::Protocol(message)) if message.contains("unusable"))
         );
+        server.join().unwrap();
+    }
+
+    #[test]
+    fn failed_generation_fence_after_session_admission_closes_the_session() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap().to_string();
+        let server = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            handshake(&mut stream);
+            let request = query(&mut stream);
+            assert!(
+                request.find("admit_initial_copy()").unwrap()
+                    < request.find("assert_worker(").unwrap()
+            );
+            message(&mut stream, b'E', b"SERROR\0C55000\0Mstopped worker\0\0");
+            message(&mut stream, b'Z', b"E");
+            assert_eq!(query(&mut stream), "ROLLBACK");
+            message(&mut stream, b'C', b"ROLLBACK\0");
+            message(&mut stream, b'Z', b"I");
+            // ROLLBACK alone would retain an acquired session lease.
+            let mut byte = [0];
+            assert_eq!(stream.read(&mut byte).unwrap(), 0);
+        });
+        let mut client =
+            ManagedClient::connect(&address, "postgres", "analytics", None, None, 1, 1).unwrap();
+        assert!(matches!(client.initial_copy_lease(), Err(Error::Server(_))));
+        assert!(matches!(
+            client.simple_query("SELECT 1"),
+            Err(Error::Protocol(_))
+        ));
         server.join().unwrap();
     }
 }

@@ -132,6 +132,8 @@
 #include "nodes/pg_list.h"
 #include "commands/defrem.h"
 #include "commands/dbcommands.h"
+#include "commands/extension.h"
+#include "parser/parser.h"
 #include "executor/spi.h"
 #include "catalog/pg_type_d.h"
 #include "utils/builtins.h"
@@ -163,10 +165,51 @@ static ProcessUtility_hook_type prev_ProcessUtility = NULL;
 static char *LogDirectory = "/tmp";
 static char *LauncherDatabaseName = NULL;
 static char *LegacyDatabaseName = NULL;
+static int InitialCopyPauseMs = 40;
 /* Own the Rust process group and reap descendants before retiring a wrapper. */
 static pid_t LauncherSupervisorPid = 0;
 static volatile sig_atomic_t LauncherWorkerTerminated = false;
 static MemoryContext LauncherHandleContext = NULL;
+
+/* A copied operator GRANT must remain an operator change for pg_dump, not
+ * become pg_init_privs for a fresh extension install. Limit the context switch
+ * to one GRANT during this extension's own upgrade and restore it on ERROR.
+ * Core GRANT still performs authorization and dependency bookkeeping.
+ */
+PG_FUNCTION_INFO_V1(lake_replication_migration_grant);
+
+Datum
+lake_replication_migration_grant(PG_FUNCTION_ARGS)
+{
+    char *sql = text_to_cstring(PG_GETARG_TEXT_PP(0));
+    List *statements = raw_parser(sql, RAW_PARSE_DEFAULT);
+    bool saved_creating_extension = creating_extension;
+    RawStmt *raw;
+
+    if (!creating_extension || CurrentExtensionObject != get_extension_oid("lake_replication", true))
+        ereport(ERROR, (errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
+                        errmsg("operator grant transfer is only valid during lake_replication installation or upgrade")));
+    if (list_length(statements) != 1)
+        ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE), errmsg("one GRANT is required")));
+    raw = linitial_node(RawStmt, statements);
+    if (!IsA(raw->stmt, GrantStmt) || !((GrantStmt *) raw->stmt)->is_grant)
+        ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE), errmsg("one GRANT is required")));
+    if (SPI_connect() != SPI_OK_CONNECT)
+        elog(ERROR, "could not connect SPI for operator grant transfer");
+    PG_TRY();
+    {
+        creating_extension = false;
+        if (SPI_execute(sql, false, 0) != SPI_OK_UTILITY)
+            elog(ERROR, "operator grant transfer did not execute a GRANT");
+    }
+    PG_FINALLY();
+    {
+        creating_extension = saved_creating_extension;
+    }
+    PG_END_TRY();
+    SPI_finish();
+    PG_RETURN_VOID();
+}
 
 static void
 LauncherWorkerSigterm(SIGNAL_ARGS)
@@ -1740,6 +1783,9 @@ _PG_init(void)
     DefineCustomBoolVariable("lake_replication.allow_legacy_binding_upgrade",
         "Allow explicit adoption of stopped legacy bindings during a verified original-destination upgrade.",
         NULL, &AllowLegacyBindingUpgrade, false, PGC_SUSET, 0, NULL, NULL, NULL);
+    DefineCustomIntVariable("lake_replication.initial_copy_pause_ms",
+        "Post-commit pause per initial-copy chunk; captured when a copy starts.",
+        NULL, &InitialCopyPauseMs, 40, 0, 1000, PGC_SUSET, 0, NULL, NULL, NULL);
 
 	DefineCustomStringVariable("lake_replication.credential_file",
 							   "Default absolute path to the owner-only worker credential file. "
@@ -1823,5 +1869,65 @@ lake_replication_admit_staging(PG_FUNCTION_ARGS)
     SET_LOCKTAG_ADVISORY(tag, InvalidOid, 0x4c524550U, 71, 1);
     if (!LockHeldByMe(&tag, ExclusiveLock, false))
         (void) LockAcquire(&tag, ExclusiveLock, false, false);
+    PG_RETURN_VOID();
+}
+
+/* Session leases bound admitted native COPY pipelines, including publication,
+ * across databases. Acquire on the staging connection before opening a source
+ * snapshot. A dead backend releases its lease; that worker cannot stage another
+ * chunk. This is not a hard CPU or remote-snapshot-retention bound.
+ */
+PG_FUNCTION_INFO_V1(lake_replication_admit_initial_copy);
+
+Datum
+lake_replication_admit_initial_copy(PG_FUNCTION_ARGS)
+{
+    LOCKTAG tags[4];
+    LOCKTAG gate;
+    int i;
+
+    for (i = 0; i < 4; i++)
+    {
+        SET_LOCKTAG_ADVISORY(tags[i], InvalidOid, 0x4c524550U, 80 + i, 1);
+        if (LockHeldByMe(&tags[i], ExclusiveLock, false))
+            PG_RETURN_VOID();
+    }
+    /* One contender scans all slots; later arrivals queue behind it. Never
+     * pin a long-lived copy to an occupied slot while another slot is free.
+     * The transaction gate is released automatically on cancellation/error.
+     */
+    SET_LOCKTAG_ADVISORY(gate, InvalidOid, 0x4c524550U, 84, 1);
+    (void) LockAcquire(&gate, ExclusiveLock, false, false);
+    for (;;)
+    {
+        CHECK_FOR_INTERRUPTS();
+        for (i = 0; i < 4; i++)
+            if (LockAcquire(&tags[i], ExclusiveLock, true, true) != LOCKACQUIRE_NOT_AVAIL)
+            {
+                (void) LockRelease(&gate, ExclusiveLock, false);
+                PG_RETURN_VOID();
+            }
+        (void) WaitLatch(MyLatch, WL_LATCH_SET | WL_TIMEOUT | WL_EXIT_ON_PM_DEATH,
+                         100L, 0);
+        ResetLatch(MyLatch);
+    }
+}
+
+PG_FUNCTION_INFO_V1(lake_replication_assert_initial_copy_lease);
+
+Datum
+lake_replication_assert_initial_copy_lease(PG_FUNCTION_ARGS)
+{
+    LOCKTAG tag;
+    int i;
+
+    for (i = 0; i < 4; i++)
+    {
+        SET_LOCKTAG_ADVISORY(tag, InvalidOid, 0x4c524550U, 80 + i, 1);
+        if (LockHeldByMe(&tag, ExclusiveLock, false))
+            PG_RETURN_VOID();
+    }
+    ereport(ERROR, (errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
+                    errmsg("managed initial copy requires a live initial-copy lease")));
     PG_RETURN_VOID();
 }

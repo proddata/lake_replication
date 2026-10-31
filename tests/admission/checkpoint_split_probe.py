@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -35,8 +36,10 @@ def main():
         parser.error('chunk storage requires split checkpoints, the unchanged 1000-row cap, and no isolated per-row profile')
     if args.chunk_pause_ms and not args.chunk_store:
         parser.error('post-commit pacing requires chunk storage')
+    os.environ.setdefault('VERSION','0.1.0-beta.4')
     spec=importlib.util.spec_from_file_location('production_probe',Path(__file__).with_name('probe.py'))
     p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
+    if p.q.VERSION!='0.1.0-beta.4':parser.error('historical overlays require a beta.4 archive; use the unmodified archive probe for beta.5')
     original_sql=p.q.sql;original_compose=p.q.compose;original_text=p.m.compose_text
     installed=set();installs=[]
     overlay=Path(__file__).with_name('checkpoint_split.sql').read_text()

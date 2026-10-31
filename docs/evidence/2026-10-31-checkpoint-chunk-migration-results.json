@@ -1,0 +1,878 @@
+{
+  "artifacts": {
+    "documented": {
+      "path": ".qualification/beta5_pipeline_build/lake_replication-0.1.0-beta.5.tar.gz",
+      "payload_sha256": {
+        "COMPATIBILITY.md": "ce5cabebfeddad441542ff2e064afe2a966ad154a4f72be0fb54ab55e5d87f73",
+        "LICENSE": "ca810d86640cda2ad293f731c7a5c0922d9788d0ef34960472facedaab30538f",
+        "README.md": "f2cdd1bcbe636ace6ab2131e084fcb68d7cefe82cce224771f04e5854ed545b0",
+        "SHA256SUMS": "949ab5a4c4e460795d553e7124c3b0b1c65cfe0d858aaa3a9004b63255c0ab27",
+        "SOURCE_REVISION": "6c1f06e1992a2ecb0b25c66fb7fa8c8bf66d31bb1e02ab2dfb9f63c7415251b7",
+        "TARGETARCH": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        "UPGRADE.md": "49c2d16add75bef8d32ea2a5ddf788de9f7940b90511c606946db30e5b714949",
+        "VERSION": "e3da5d8a391cbe7d0438d0d1250a740fc2f2b1bdc1160b20fd234c230b1fee56",
+        "install.sh": "b68b524f8d64fc754d1deb33a9b4790130ee7e803c7d228b9b49d0d177cfcca5",
+        "payload/bin/lake-replication-initial-sync": "ac9f33015aac06261abe231d3d41e05f6cf2b5d9207acce547b34805fe8a97c4",
+        "payload/bin/lake-replication-publisher": "ccf05a30968341b49e1e6c859c5dd3b0a6f675878196f29bb8b62daacebc2c07",
+        "payload/bin/lake-replication-receiver": "75407827d8cf693c302fc0d506933542b33512f460a6e6f0ac1fe82744e373b7",
+        "payload/bin/lake-replication-supervisor": "905aa636041fac3ae2a69aef292e798a6f9e6e3024f6d421a242e2ffb43b59de",
+        "payload/extension/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+        "payload/extension/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+        "payload/extension/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+        "payload/extension/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+        "payload/extension/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "9ab9461483a11815411da68b64618f3ee2665d3ba75ce2aab77fe2cfea508177",
+        "payload/extension/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+        "payload/extension/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql": "9012c4cb9dfee49efc106d0af504120b8aeb8c8dd09a62463606f8f892edd386",
+        "payload/extension/lake_replication--0.1.0-beta.3.sql": "fe02eb376e8467e3c69c51ce1e9c4f415810a5a54dcf2a402ec77742bdf3d35d",
+        "payload/extension/lake_replication--0.1.0-beta.4--0.1.0-beta.5.sql": "aa0808ff4164e52320c9fdd99c9ae7a9dfcd6a0fdc0e91c4e478eda31646f2e0",
+        "payload/extension/lake_replication--0.1.0-beta.4.sql": "775a341ea3aa019974ef9dcd6ef2ed9f2e032619491f132814ae6c845442af0e",
+        "payload/extension/lake_replication--0.1.0-beta.5.sql": "ad1901aa25ed03ed5c026c388b8793209cf522b65a9122d6e1d96005cf3e81fd",
+        "payload/extension/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+        "payload/extension/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "payload/lib/lake_replication.so": "aef4e5a3a4ed1f26c67f39b15a367234b107c55856111ea7746d5d7bf212e24d",
+        "uninstall.sh": "5911c469fd1d4be287c3ad98d23638c5e7f9a43d0b85db3ec6992e91cc08e807"
+      },
+      "sha256": "0544f5aeb46305619533a67e0d86486e69cbcaaa220dd02b7aae7e49a765f687"
+    },
+    "measured": {
+      "path": ".qualification/beta5_hardened_measured/lake_replication-0.1.0-beta.5.tar.gz",
+      "payload_sha256": {
+        "COMPATIBILITY.md": "ce5cabebfeddad441542ff2e064afe2a966ad154a4f72be0fb54ab55e5d87f73",
+        "LICENSE": "ca810d86640cda2ad293f731c7a5c0922d9788d0ef34960472facedaab30538f",
+        "README.md": "8df75c1c192c4aa2fa700888a38199079e1ce7bc9b3bc4cb92c2693f5831702a",
+        "SHA256SUMS": "0d896da1f0fa86fb241f91e3944bb266a4a099a533662e72311421f9af694ce4",
+        "SOURCE_REVISION": "6c1f06e1992a2ecb0b25c66fb7fa8c8bf66d31bb1e02ab2dfb9f63c7415251b7",
+        "TARGETARCH": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        "UPGRADE.md": "adfdd12dbd5eac33d9a895e17c483a8f000cbf68c747b8be8abc2487c9d0bcdc",
+        "VERSION": "e3da5d8a391cbe7d0438d0d1250a740fc2f2b1bdc1160b20fd234c230b1fee56",
+        "install.sh": "b68b524f8d64fc754d1deb33a9b4790130ee7e803c7d228b9b49d0d177cfcca5",
+        "payload/bin/lake-replication-initial-sync": "ac9f33015aac06261abe231d3d41e05f6cf2b5d9207acce547b34805fe8a97c4",
+        "payload/bin/lake-replication-publisher": "ccf05a30968341b49e1e6c859c5dd3b0a6f675878196f29bb8b62daacebc2c07",
+        "payload/bin/lake-replication-receiver": "75407827d8cf693c302fc0d506933542b33512f460a6e6f0ac1fe82744e373b7",
+        "payload/bin/lake-replication-supervisor": "905aa636041fac3ae2a69aef292e798a6f9e6e3024f6d421a242e2ffb43b59de",
+        "payload/extension/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+        "payload/extension/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+        "payload/extension/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+        "payload/extension/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+        "payload/extension/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "9ab9461483a11815411da68b64618f3ee2665d3ba75ce2aab77fe2cfea508177",
+        "payload/extension/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+        "payload/extension/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql": "9012c4cb9dfee49efc106d0af504120b8aeb8c8dd09a62463606f8f892edd386",
+        "payload/extension/lake_replication--0.1.0-beta.3.sql": "fe02eb376e8467e3c69c51ce1e9c4f415810a5a54dcf2a402ec77742bdf3d35d",
+        "payload/extension/lake_replication--0.1.0-beta.4--0.1.0-beta.5.sql": "aa0808ff4164e52320c9fdd99c9ae7a9dfcd6a0fdc0e91c4e478eda31646f2e0",
+        "payload/extension/lake_replication--0.1.0-beta.4.sql": "775a341ea3aa019974ef9dcd6ef2ed9f2e032619491f132814ae6c845442af0e",
+        "payload/extension/lake_replication--0.1.0-beta.5.sql": "ad1901aa25ed03ed5c026c388b8793209cf522b65a9122d6e1d96005cf3e81fd",
+        "payload/extension/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+        "payload/extension/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "payload/lib/lake_replication.so": "aef4e5a3a4ed1f26c67f39b15a367234b107c55856111ea7746d5d7bf212e24d",
+        "uninstall.sh": "5911c469fd1d4be287c3ad98d23638c5e7f9a43d0b85db3ec6992e91cc08e807"
+      },
+      "sha256": "82b3764a33302d17b0679e566cfe00fc4d6e0db1a5d784f2e131c44f46c7fbe1"
+    },
+    "performance_measured": {
+      "note": "Runtime payloads verified identical before documentation-only re-export; original export path reused, payload manifest retained.",
+      "payload_sha256": {
+        "lake_replication-0.1.0-beta.5/COMPATIBILITY.md": "ce5cabebfeddad441542ff2e064afe2a966ad154a4f72be0fb54ab55e5d87f73",
+        "lake_replication-0.1.0-beta.5/LICENSE": "ca810d86640cda2ad293f731c7a5c0922d9788d0ef34960472facedaab30538f",
+        "lake_replication-0.1.0-beta.5/README.md": "839bd28625fb470fe6a759632c54f3211d544f75456d488ef1dad820fc3e4485",
+        "lake_replication-0.1.0-beta.5/SHA256SUMS": "a113ab4781ba48f35aed1606258f153ed952f55b15b94e55f7e7a8913495568d",
+        "lake_replication-0.1.0-beta.5/SOURCE_REVISION": "6c1f06e1992a2ecb0b25c66fb7fa8c8bf66d31bb1e02ab2dfb9f63c7415251b7",
+        "lake_replication-0.1.0-beta.5/TARGETARCH": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        "lake_replication-0.1.0-beta.5/UPGRADE.md": "9ebda901c0e0f3c3acc4bce9280e508650192fde207b46c566c1a78a5778a74a",
+        "lake_replication-0.1.0-beta.5/VERSION": "e3da5d8a391cbe7d0438d0d1250a740fc2f2b1bdc1160b20fd234c230b1fee56",
+        "lake_replication-0.1.0-beta.5/install.sh": "b68b524f8d64fc754d1deb33a9b4790130ee7e803c7d228b9b49d0d177cfcca5",
+        "lake_replication-0.1.0-beta.5/payload/bin/lake-replication-initial-sync": "ac9f33015aac06261abe231d3d41e05f6cf2b5d9207acce547b34805fe8a97c4",
+        "lake_replication-0.1.0-beta.5/payload/bin/lake-replication-publisher": "ccf05a30968341b49e1e6c859c5dd3b0a6f675878196f29bb8b62daacebc2c07",
+        "lake_replication-0.1.0-beta.5/payload/bin/lake-replication-receiver": "75407827d8cf693c302fc0d506933542b33512f460a6e6f0ac1fe82744e373b7",
+        "lake_replication-0.1.0-beta.5/payload/bin/lake-replication-supervisor": "905aa636041fac3ae2a69aef292e798a6f9e6e3024f6d421a242e2ffb43b59de",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "9ab9461483a11815411da68b64618f3ee2665d3ba75ce2aab77fe2cfea508177",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql": "9012c4cb9dfee49efc106d0af504120b8aeb8c8dd09a62463606f8f892edd386",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.3.sql": "fe02eb376e8467e3c69c51ce1e9c4f415810a5a54dcf2a402ec77742bdf3d35d",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.4--0.1.0-beta.5.sql": "aa0808ff4164e52320c9fdd99c9ae7a9dfcd6a0fdc0e91c4e478eda31646f2e0",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.4.sql": "775a341ea3aa019974ef9dcd6ef2ed9f2e032619491f132814ae6c845442af0e",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0-beta.5.sql": "ad1901aa25ed03ed5c026c388b8793209cf522b65a9122d6e1d96005cf3e81fd",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e",
+        "lake_replication-0.1.0-beta.5/payload/extension/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "lake_replication-0.1.0-beta.5/payload/lib/lake_replication.so": "aef4e5a3a4ed1f26c67f39b15a367234b107c55856111ea7746d5d7bf212e24d",
+        "lake_replication-0.1.0-beta.5/uninstall.sh": "5911c469fd1d4be287c3ad98d23638c5e7f9a43d0b85db3ec6992e91cc08e807"
+      },
+      "sha256": "2784e1c7744d5a78af09f383d57540a2519441a355c44e8e3089213d5c31d428"
+    }
+  },
+  "changed_payloads": [
+    "README.md",
+    "UPGRADE.md",
+    "SHA256SUMS"
+  ],
+  "date": "2026-10-31",
+  "historical_sql_sha256": {
+    "lake_replication--0.1.0--0.1.0-beta.1.sql": "624ffc95db24c82b3f1b6558b77ef3da11f4ba7ea906f5efe15a4ed6fabb5ff3",
+    "lake_replication--0.1.0--0.1.0-beta.2.sql": "4ef17b17feddafa22d1cfc2247b1b55f613c18d2d56c3f2dc6a6220b55fa589d",
+    "lake_replication--0.1.0-beta.1--0.1.0-beta.2.sql": "f75fc3576bb32a05b68251818ee3e70eb0b58ca4014ec01b34a8ece59117d145",
+    "lake_replication--0.1.0-beta.1.sql": "cfda40d4d12efa7a669b337349831d6b342b494aee07fd629b0b173136b6ca16",
+    "lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql": "9ab9461483a11815411da68b64618f3ee2665d3ba75ce2aab77fe2cfea508177",
+    "lake_replication--0.1.0-beta.2.sql": "2079a45c0f1ae552059065a335b5cf6f40ad5cf2d0717bdca3589ab649f4160d",
+    "lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql": "9012c4cb9dfee49efc106d0af504120b8aeb8c8dd09a62463606f8f892edd386",
+    "lake_replication--0.1.0-beta.3.sql": "fe02eb376e8467e3c69c51ce1e9c4f415810a5a54dcf2a402ec77742bdf3d35d",
+    "lake_replication--0.1.0-beta.4.sql": "775a341ea3aa019974ef9dcd6ef2ed9f2e032619491f132814ae6c845442af0e",
+    "lake_replication--0.1.0.sql": "cc8110fdd40df700bed6fb11bb5276fae93b2adbff7e7c3c9b53ca610114107e"
+  },
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "qualification": [
+    {
+      "all_checks_passed": true,
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5.tar.gz",
+        "archive_sha256": "82b3764a33302d17b0679e566cfe00fc4d6e0db1a5d784f2e131c44f46c7fbe1",
+        "source_revision": "a2098785fbdfe76c72575c6282d7e83613798d25-dirty"
+      },
+      "cases": [
+        {
+          "case": "pipeline",
+          "cleanup_returncode": 0,
+          "omitted_raw_fields": [],
+          "status": "passed"
+        },
+        {
+          "case": "managed",
+          "cleanup_returncode": 0,
+          "omitted_raw_fields": [],
+          "status": "passed"
+        },
+        {
+          "case": "locks",
+          "cleanup_returncode": 0,
+          "omitted_raw_fields": [],
+          "status": "passed"
+        },
+        {
+          "case": "pool",
+          "cleanup_returncode": 0,
+          "completed_waiters": 8,
+          "deadlock_error": "psql exited: ERROR:  40P01: deadlock detected\nDETAIL:  Process 467 waits for ExclusiveLock on advisory lock [0,1280460112,2,1]; blocked by process 439.\nProcess 439 waits for ExclusiveLock on advisory lock [0,1280460112,6,1]; blocked by process 467.\nHINT:  See server log for query details.\nLOCATION:  DeadLockReport, deadlock.c:1133\nERROR:  40P01: deadlock detected\nDETAIL:  Process 467 waits for ExclusiveLock on advisory lock [0,1280460112,2,1]; blocked by process 439.\nProcess 439 waits for ExclusiveLock on advisory lock [0,1280460112,6,1]; blocked by process 467.\nHINT:  See server log for query details.\nLOCATION:  DeadLockReport, deadlock.c:1133\n",
+          "maximum_observed_holders": 4,
+          "omitted_raw_fields": [],
+          "status": "passed"
+        },
+        {
+          "case": "schema",
+          "cleanup_returncode": 0,
+          "deadlock_error": "psql exited: ERROR:  40P01: deadlock detected\nDETAIL:  Process 392 waits for ExclusiveLock on advisory lock [0,1280460112,2,1]; blocked by process 176.\nProcess 176 waits for ShareLock on transaction 813; blocked by process 392.\nHINT:  See server log for query details.\nCONTEXT:  SQL statement \"SELECT lake_replication.admit_bulk()\"\nPL/pgSQL function reconcile_relation_schema(bigint,oid,bigint) line 109 at PERFORM\nLOCATION:  DeadLockReport, deadlock.c:1133\n",
+          "omitted_raw_fields": [],
+          "status": "passed",
+          "timeout_observation": {
+            "error": "ERROR:  canceling statement due to lock timeout\nCONTEXT:  SQL statement \"SELECT lake_replication.admit_bulk()\"\nPL/pgSQL function reconcile_relation_schema(bigint,oid,bigint) line 109 at PERFORM",
+            "response": "SET",
+            "returncode": 3,
+            "state": "streaming:true"
+          }
+        },
+        {
+          "case": "rebuild",
+          "cleanup_returncode": 0,
+          "omitted_raw_fields": [],
+          "status": "passed"
+        },
+        {
+          "case": "cancel",
+          "cleanup_returncode": 0,
+          "engine_write_observation": {
+            "began": 1793453987.249787,
+            "line_sha256": "0e7e006dadb32d57183293f88ef5752d8b30739499cfa784d7d60f874afaa2e1",
+            "logged_epoch": 1793453989.356021,
+            "operation": "COPY",
+            "pid": 148,
+            "wait_event": "Extension",
+            "wait_event_type": "Extension"
+          },
+          "omitted_raw_fields": [],
+          "status": "passed"
+        }
+      ],
+      "checks": 231,
+      "cleanup_returncode": null,
+      "evidence": ".qualification/qualification_20261031_133458_production_admission/results.json",
+      "inputs": {
+        "Cargo.lock": "39d90965a863c9a3b08ed7ae75ccf0c3de167570d7db51b0f9d255e9bc58582b",
+        "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/beta5_cases.py": "14cfa278f275cfb770eb97091f2980f67c66485d8753b597e9c996152589f5af",
+        "tests/admission/checkpoint_split_operations.py": "1edb6b2425bbdb34260ac4a4062769a06e3007edd19aeac8e0f15bffc4f95c74",
+        "tests/admission/copy_chunk_bounds.py": "8efcf43e150a7cd43846d606a84bb4d01fd841b833d28fd8f22a2ee2b220ed55",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "d3a78a8517bfa8e5d920ab003f3d112d028c5e9f1c9e040f4bf659ea5d5e929d",
+        "tests/qualification/probe.py": "84f19de282e7c5edc8f1db9ddb2856254011c2a07acaf5698982d568e2abcd4d",
+        "worker/Cargo.toml": "188e8509398bc0d66dec25be39890e230eb530215d82dc87187006a2291fd1f8",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "parameters": {
+        "cases": [
+          "pipeline",
+          "managed",
+          "locks",
+          "pool",
+          "schema",
+          "rebuild",
+          "cancel"
+        ],
+        "fairness_copies": 4,
+        "old_archive": "/Users/georg/Developer/proddata/pg_lake_replication/dist/release/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz"
+      },
+      "results_sha256": "b8f9b1b6b9584f44b04cbfc30231cc8a7387d5b0aa3d955adf79876ce3a31256",
+      "status": "passed"
+    },
+    {
+      "all_checks_passed": true,
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5.tar.gz",
+        "archive_sha256": "82b3764a33302d17b0679e566cfe00fc4d6e0db1a5d784f2e131c44f46c7fbe1",
+        "source_revision": "a2098785fbdfe76c72575c6282d7e83613798d25-dirty"
+      },
+      "cases": [],
+      "checks": 119,
+      "cleanup_returncode": 0,
+      "evidence": ".qualification/qualification_20261031_133710_base_lifecycle/results.json",
+      "inputs": {
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/lifecycle/cases.py": "85f6881ca3aed649d77398314b09931e454c9ab34ad472d1052ea0858044b995",
+        "tests/lifecycle/probe.py": "e43f02eb05e73d3d76010a01ac732b42b941ecc960486aadce6ef058738cf2b5",
+        "tests/lifecycle/upgrade.py": "dc33b4282bbadd23703c2c4569cb27feb9a611935f70372d94df2c494bd48dc6",
+        "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "parameters": null,
+      "results_sha256": "98f8c89b6b1716e6c9cddc5a253aeb7ecf2b3073030474dfee070d71a45cb142",
+      "status": "passed"
+    },
+    {
+      "all_checks_passed": true,
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5.tar.gz",
+        "archive_sha256": "82b3764a33302d17b0679e566cfe00fc4d6e0db1a5d784f2e131c44f46c7fbe1",
+        "source_revision": "a2098785fbdfe76c72575c6282d7e83613798d25-dirty"
+      },
+      "cases": [
+        {
+          "case": "upgrade",
+          "cleanup_returncode": 0,
+          "old_archive": {
+            "architecture": "arm64",
+            "archive": "lake_replication-0.1.0-beta.4-linux-arm64.tar.gz",
+            "archive_sha256": "a4dfcdcb7f4459f0d20c9d52454a5ecf44948237cbed0e8371b8a12337e55cbd",
+            "source_revision": "a2282cda4d1d563dcf8923b03ea566350d1bb6c9-dirty"
+          },
+          "old_version": "0.1.0-beta.4",
+          "omitted_raw_fields": [],
+          "status": "passed"
+        }
+      ],
+      "checks": 24,
+      "cleanup_returncode": null,
+      "evidence": ".qualification/qualification_20261031_133642_production_admission/results.json",
+      "inputs": {
+        "Cargo.lock": "39d90965a863c9a3b08ed7ae75ccf0c3de167570d7db51b0f9d255e9bc58582b",
+        "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "fd2034589ee4fae2afc9a6b61e2524407d7df73fbdac919b96b2dfda8482d0e5",
+        "tests/qualification/probe.py": "84f19de282e7c5edc8f1db9ddb2856254011c2a07acaf5698982d568e2abcd4d",
+        "worker/Cargo.toml": "188e8509398bc0d66dec25be39890e230eb530215d82dc87187006a2291fd1f8",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "parameters": {
+        "cases": [
+          "upgrade"
+        ],
+        "cpuset": "0-1",
+        "fairness_copies": 4,
+        "old_archive": "/Users/georg/Developer/proddata/pg_lake_replication/.qualification/beta4_heartbeat_fix/lake_replication-0.1.0-beta.4-linux-arm64.tar.gz"
+      },
+      "results_sha256": "4a08f824ef3062020e6e9a87dd816cf702827e8d5a3ff063b8b821610d06d55a",
+      "status": "passed"
+    },
+    {
+      "all_checks_passed": true,
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5.tar.gz",
+        "archive_sha256": "2784e1c7744d5a78af09f383d57540a2519441a355c44e8e3089213d5c31d428",
+        "source_revision": "a2098785fbdfe76c72575c6282d7e83613798d25-dirty"
+      },
+      "cases": [
+        {
+          "case": "scale",
+          "cleanup_returncode": 0,
+          "databases": 4,
+          "live_all_visible_seconds": 1.9037616670248099,
+          "omitted_raw_fields": [
+            "active_inventory",
+            "disabled_inventory",
+            "dropped_inventory",
+            "empty_inventory",
+            "restart_inventory"
+          ],
+          "restarted_all_visible_seconds": 1.9026451249956153,
+          "setup_until_all_streaming_seconds": 3.6177117499755695,
+          "status": "passed",
+          "subscriptions": 16,
+          "worker_budget": 64
+        },
+        {
+          "bulk_copies": 4,
+          "case": "fairness",
+          "checks": {
+            "all_stream_targets_pass": true,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "publication_overlap_observed": true,
+            "waiting_observed": true
+          },
+          "cleanup_returncode": 0,
+          "copy_commit_epoch": 1793454278.966682,
+          "copy_elapsed_seconds": 104.40452790260315,
+          "copy_rows": 2000000,
+          "copy_start_epoch": 1793454174.562154,
+          "engine_oom": false,
+          "image": "lake-replication-production-admission:qualification_20261031_134139",
+          "limits": {
+            "catchup_seconds": 5,
+            "copy_timeout_seconds": 180,
+            "max_publication_gap_seconds": 5,
+            "min_commits_during_copy": 5,
+            "p95_publication_ms": 2000
+          },
+          "log_sha256": "c0cbd9f7b5a5a0b2b7d22ba93c6e29a215b32d0088113384b74ba919089a744e",
+          "max_active_copy_publications": 4,
+          "observer_clock_sampling": "query_return_monotonic",
+          "observer_interval_ms": 500,
+          "offered_interval_ms": 500,
+          "omitted_raw_fields": [
+            "after",
+            "before",
+            "resource_trace",
+            "source_transactions",
+            "trace"
+          ],
+          "source_producer": "independent_sessions",
+          "status": "passed",
+          "stream_rows_per_transaction": 20,
+          "stream_transactions": 120,
+          "streams": [
+            {
+              "catchup_seconds": 0.1755218505859375,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 109,
+              "database": "analytics",
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 230.36789894104004,
+                "journal_insert_to_batch_ms": 104.97498512268066,
+                "source_to_journal_insert_ms": 7.749080657958984
+              },
+              "max_publication_gap_seconds": 0.6439170837402344,
+              "p95_publication_ms": 304.65197563171387,
+              "source_max_schedule_lateness_seconds": 0.010330374992918223,
+              "transaction_count": 120
+            },
+            {
+              "catchup_seconds": 0.16118383407592773,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 109,
+              "database": "fair_stream_1",
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 220.67904472351074,
+                "journal_insert_to_batch_ms": 106.39119148254395,
+                "source_to_journal_insert_ms": 7.457971572875977
+              },
+              "max_publication_gap_seconds": 0.6740438938140869,
+              "p95_publication_ms": 307.53588676452637,
+              "source_max_schedule_lateness_seconds": 0.01041666598757729,
+              "transaction_count": 120
+            },
+            {
+              "catchup_seconds": 0.1700599193572998,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 109,
+              "database": "fair_stream_2",
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 218.59097480773926,
+                "journal_insert_to_batch_ms": 109.33804512023926,
+                "source_to_journal_insert_ms": 9.706974029541016
+              },
+              "max_publication_gap_seconds": 0.6355381011962891,
+              "p95_publication_ms": 305.39798736572266,
+              "source_max_schedule_lateness_seconds": 0.010410165996290743,
+              "transaction_count": 120
+            }
+          ],
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "unexpected_pg_crash": false,
+          "variant": "bulk_only"
+        }
+      ],
+      "checks": 82,
+      "cleanup_returncode": null,
+      "evidence": ".qualification/qualification_20261031_134139_production_admission/results.json",
+      "inputs": {
+        "Cargo.lock": "39d90965a863c9a3b08ed7ae75ccf0c3de167570d7db51b0f9d255e9bc58582b",
+        "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "fd2034589ee4fae2afc9a6b61e2524407d7df73fbdac919b96b2dfda8482d0e5",
+        "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+        "worker/Cargo.toml": "188e8509398bc0d66dec25be39890e230eb530215d82dc87187006a2291fd1f8",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "parameters": {
+        "cases": [
+          "scale",
+          "fairness"
+        ],
+        "cpuset": "0-1",
+        "fairness_copies": 4,
+        "old_archive": "/Users/georg/Developer/proddata/pg_lake_replication/dist/release/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz"
+      },
+      "results_sha256": "fe45b0af3cc91bd72476690fecdde913c0d06fb794663dda234f12b0e565b038",
+      "status": "passed"
+    },
+    {
+      "all_checks_passed": true,
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5.tar.gz",
+        "archive_sha256": "2784e1c7744d5a78af09f383d57540a2519441a355c44e8e3089213d5c31d428",
+        "source_revision": "a2098785fbdfe76c72575c6282d7e83613798d25-dirty"
+      },
+      "cases": [
+        {
+          "bulk_copies": 4,
+          "case": "fairness",
+          "checks": {
+            "all_stream_targets_pass": true,
+            "copy_progress_observed": true,
+            "copy_within_three_minutes": true,
+            "publication_overlap_observed": true,
+            "waiting_observed": true
+          },
+          "cleanup_returncode": 0,
+          "copy_commit_epoch": 1793454446.333113,
+          "copy_elapsed_seconds": 118.03145003318787,
+          "copy_rows": 2000000,
+          "copy_start_epoch": 1793454328.301663,
+          "engine_oom": false,
+          "image": "lake-replication-production-admission:qualification_20261031_134442",
+          "limits": {
+            "catchup_seconds": 5,
+            "copy_timeout_seconds": 180,
+            "max_publication_gap_seconds": 5,
+            "min_commits_during_copy": 5,
+            "p95_publication_ms": 2000
+          },
+          "log_sha256": "ad74c9f5fa459ea45db520237f1b8b3dda88cc8623b26538f949cb424a01b31e",
+          "max_active_copy_publications": 4,
+          "observer_clock_sampling": "query_return_monotonic",
+          "observer_interval_ms": 500,
+          "offered_interval_ms": 500,
+          "omitted_raw_fields": [
+            "after",
+            "before",
+            "resource_trace",
+            "source_transactions",
+            "trace"
+          ],
+          "source_producer": "independent_sessions",
+          "status": "passed",
+          "stream_rows_per_transaction": 20,
+          "stream_transactions": 120,
+          "streams": [
+            {
+              "catchup_seconds": 0.32787299156188965,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 107,
+              "database": "analytics",
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 590.203046798706,
+                "journal_insert_to_batch_ms": 374.1769790649414,
+                "source_to_journal_insert_ms": 12.58993148803711
+              },
+              "max_publication_gap_seconds": 0.884986162185669,
+              "p95_publication_ms": 958.2140445709229,
+              "source_max_schedule_lateness_seconds": 0.010274166997987777,
+              "transaction_count": 120
+            },
+            {
+              "catchup_seconds": 0.3221418857574463,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 108,
+              "database": "fair_stream_1",
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 604.1898727416992,
+                "journal_insert_to_batch_ms": 393.3451175689697,
+                "source_to_journal_insert_ms": 12.292861938476562
+              },
+              "max_publication_gap_seconds": 1.0764610767364502,
+              "p95_publication_ms": 985.7699871063232,
+              "source_max_schedule_lateness_seconds": 0.010267209028825164,
+              "transaction_count": 120
+            },
+            {
+              "catchup_seconds": 0.30995702743530273,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              },
+              "commits_during_copy": 107,
+              "database": "fair_stream_2",
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 625.7760524749756,
+                "journal_insert_to_batch_ms": 432.7700138092041,
+                "source_to_journal_insert_ms": 14.856100082397461
+              },
+              "max_publication_gap_seconds": 0.9723379611968994,
+              "p95_publication_ms": 969.8019027709961,
+              "source_max_schedule_lateness_seconds": 0.010270584025420249,
+              "transaction_count": 120
+            }
+          ],
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "unexpected_pg_crash": false,
+          "variant": "bulk_only"
+        }
+      ],
+      "checks": 12,
+      "cleanup_returncode": null,
+      "evidence": ".qualification/qualification_20261031_134442_production_admission/results.json",
+      "inputs": {
+        "Cargo.lock": "39d90965a863c9a3b08ed7ae75ccf0c3de167570d7db51b0f9d255e9bc58582b",
+        "experiments/admission/admission_measure.py": "9e63ccd07f268f73bdd5ebce4f614ab3482dc35637e63ebc962f597c21087834",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "fd2034589ee4fae2afc9a6b61e2524407d7df73fbdac919b96b2dfda8482d0e5",
+        "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+        "worker/Cargo.toml": "188e8509398bc0d66dec25be39890e230eb530215d82dc87187006a2291fd1f8",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "parameters": {
+        "cases": [
+          "fairness"
+        ],
+        "cpuset": "0",
+        "fairness_copies": 4,
+        "old_archive": "/Users/georg/Developer/proddata/pg_lake_replication/dist/release/lake_replication-0.1.0-beta.2-linux-arm64.tar.gz"
+      },
+      "results_sha256": "793b5bf7b3d1aa12e525d332de8be984563242114a4448ad6f8b4a26e701d307",
+      "status": "passed"
+    }
+  ],
+  "remaining": [
+    "Clean-commit CI archives and native ARM64/AMD64 qualification",
+    "Second pg_lake revision compatibility",
+    "Coordinated PostgreSQL/object-store recovery rehearsal",
+    "Supply-chain/security review and 24-hour RC soak",
+    "Signed prerelease publication and downloaded-asset verification"
+  ],
+  "repository_checks": {
+    "actionlint": "passed for modified workflows",
+    "git_diff_check": "passed",
+    "make_check": {
+      "log": "/tmp/lake-beta5-check-final4.log",
+      "sha256": "ec9ab549af315425ac16ff4e9389dcf73164324a9a551ef352c9852553f37214",
+      "status": "passed"
+    }
+  },
+  "retained_development_failures": [
+    {
+      "evidence": ".qualification/qualification_20261031_124643_production_admission",
+      "finding": "Copied GRANTs recorded as extension initial privileges disappeared on logical restore; fixed with private extension-DDL-only GRANT bridge."
+    },
+    {
+      "evidence": ".qualification/qualification_20261031_131709_production_admission",
+      "finding": "Unhardened privileged row trigger redirected edits into a temporary table; fixed by explicitly placing pg_temp last in all extension-owned configured/definer search paths."
+    },
+    {
+      "evidence": ".qualification/qualification_20261031_133601_base_lifecycle",
+      "finding": "Historical beta.4 dump fixture recreated extension at beta.5 default; fixture now upgrades to target version before dump. Old backups require matching extension version before upgrade."
+    }
+  ],
+  "scope": "Local production migration candidate; actual exported archives, no SQL/binary overlays; not release qualification",
+  "source_revision": "a2098785fbdfe76c72575c6282d7e83613798d25-dirty",
+  "version": "0.1.0-beta.5"
+}

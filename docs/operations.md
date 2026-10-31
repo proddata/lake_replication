@@ -143,6 +143,29 @@ These limits do not bound staging memory, connections, retained source WAL or
 application SQL sent directly to the engine. Continue monitoring source WAL and
 journal backlog while copies wait.
 
+## Initial-copy pipeline admission (beta.5)
+
+Four instance-wide session leases cover native initial copy through publication,
+across all databases. A queued copy opens no source snapshot until admitted.
+Inspect the current holders and waiters:
+
+```sql
+SELECT * FROM lake_replication.initial_copy_admission;
+SHOW lake_replication.initial_copy_pause_ms;
+```
+
+Waiters have a NULL slot and use the next available lease. Stop cancels admission;
+disconnect releases the lease. The staging connection holds it across commits
+and must reacquire after reconnecting. These are admitted-session limits, not
+hard CPU, RSS, or remote snapshot-retention limits after a connection failure.
+
+The pause defaults to 40 ms after each committed native staging chunk, holds no
+transaction permit, and accepts 0–1,000 ms. Configure it as a superuser and restart
+affected subscriptions so new copies capture the setting. Explicit direct-worker
+`LAKE_INITIAL_COPY_CHUNK_PAUSE_MS` overrides the PostgreSQL setting. Zero disables
+pacing. See [migration and restore contracts](checkpoint-chunk-migration-results.md)
+for checkpoint/storage changes and post-restore validation.
+
 ## Staging and journal admission (beta.4)
 
 Initial-copy append transactions share one instance-wide staging permit. Native

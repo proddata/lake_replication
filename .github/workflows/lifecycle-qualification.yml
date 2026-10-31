@@ -83,7 +83,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       ARTIFACT_RUN_ID: ${{ inputs.artifact_run_id }}
-      QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.4-linux-${{ matrix.arch }}.tar.gz
+      QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.5-linux-${{ matrix.arch }}.tar.gz
     steps:
       - name: Validate probe selection
         env:
@@ -261,7 +261,7 @@ jobs:
       - name: Focused native admission and four-copy probe
         if: ${{ inputs.native_probe && !inputs.checkpoint_split_diagnostic && !inputs.checkpoint_split_comparison && !inputs.staging_chunk_comparison && inputs.copy_chunk_comparison == 'disabled' }}
         timeout-minutes: 15
-        run: python3 tests/admission/probe.py --cases managed fairness
+        run: python3 tests/admission/probe.py --cases pipeline managed fairness
       - name: Checkpoint partition prototype diagnostic (SQL overlay)
         if: ${{ inputs.native_probe && inputs.checkpoint_split_diagnostic }}
         timeout-minutes: 15

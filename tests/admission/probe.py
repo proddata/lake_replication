@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import re
 from pathlib import Path
 import shutil
 import tempfile
@@ -17,10 +18,11 @@ q,c,m,s=o.q,o.c,o.m,o.p.s
 o.ADMIT='lake_replication.admit_bulk()'
 o.p.VIEW='lake_replication.bulk_admission'
 VIEW=o.p.VIEW
+if q.VERSION=='0.1.0-beta.5':q.STAGING_ROWS='initial_copy_chunks'
 
 
 def contract():
-    q.check('candidate SQL version',o.sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),'0.1.0-beta.4')
+    q.check('candidate SQL version',o.sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),q.VERSION)
     q.check('exactly five bulk entry points',o.sql("SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='lake_replication' AND p.prosrc LIKE '%PERFORM lake_replication.admit_bulk();%'"),'5')
     q.check('streaming entry points do not acquire bulk admission',o.sql("SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='lake_replication' AND p.proname IN ('publish_insert_batch','apply_change_run') AND p.prosrc LIKE '%admit_bulk%'"),'0')
     q.check('both streaming entry points acquire stream admission',o.sql("SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='lake_replication' AND p.proname IN ('publish_insert_batch','apply_change_run') AND p.prosrc LIKE '%PERFORM lake_replication.admit_stream();%'"),'2')
@@ -67,7 +69,7 @@ def upgrade(result,new_image,old_archive):
     with tarfile.open(old_archive) as bundle:
         version_file=next(member for member in bundle.getmembers() if member.name.endswith('/VERSION'))
         old_version=bundle.extractfile(version_file).read().decode().strip()
-    if old_version not in ['0.1.0-beta.2','0.1.0-beta.3']:raise RuntimeError('unsupported admission upgrade fixture')
+    if old_version not in ['0.1.0-beta.2','0.1.0-beta.3','0.1.0-beta.4']:raise RuntimeError('unsupported admission upgrade fixture')
     result['old_version']=old_version
     result['old_archive']={k:q.EVIDENCE[k] for k in ['archive','archive_sha256','architecture','source_revision']}
     with tempfile.TemporaryDirectory(prefix='lake-bulk-old-') as temp:q.build_images(old_archive,Path(temp))
@@ -84,13 +86,13 @@ def upgrade(result,new_image,old_archive):
     q.compose('stop','destination','pgduck',timeout=120)
     q.ENV['QUALIFICATION_DESTINATION_IMAGE']=new_image
     q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
-    rejected=q.sql_result('destination','analytics',"BEGIN; UPDATE lake_replication.worker_launch_config SET desired_state='running'; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4'",check_result=False)
+    rejected=q.sql_result('destination','analytics',f"BEGIN; UPDATE lake_replication.worker_launch_config SET desired_state='running'; ALTER EXTENSION lake_replication UPDATE TO '{q.VERSION}'",check_result=False)
     q.check('admission upgrade rejects an enabled subscription',rejected.returncode!=0 and 'stop subscriptions' in rejected.stderr and 'upgrade' in rejected.stderr,True)
-    o.sql("BEGIN; ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4'; ROLLBACK")
-    q.check('upgrade rollback preserves previous SQL and no staging helper',o.sql("SELECT extversion||':'||(to_regprocedure('lake_replication.admit_staging()') IS NULL)::text FROM pg_extension WHERE extname='lake_replication'"),old_version+':true')
+    o.sql(f"BEGIN; ALTER EXTENSION lake_replication UPDATE TO '{q.VERSION}'; ROLLBACK")
+    q.check('upgrade rollback preserves previous SQL and no staging helper',o.sql("SELECT extversion||':'||(to_regprocedure('lake_replication.admit_staging()') IS NULL)::text FROM pg_extension WHERE extname='lake_replication'"),old_version+(':'+str(old_version!='0.1.0-beta.4').lower()))
     expected_helpers='false' if old_version=='0.1.0-beta.2' else 'true'
     q.check('rollback restores the previous engine admission helpers',o.sql("SELECT (to_regprocedure('lake_replication.admit_bulk()') IS NOT NULL)::text || ':' || (to_regprocedure('lake_replication.admit_stream()') IS NOT NULL)::text || ':' || (to_regclass('lake_replication.stream_admission') IS NOT NULL)::text"),':'.join([expected_helpers]*3))
-    o.sql("ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4'")
+    o.sql(f"ALTER EXTENSION lake_replication UPDATE TO '{q.VERSION}'")
     contract()
     q.check('upgrade preserves published checkpoint',o.sql('SELECT published_lsn FROM lake_replication.checkpoints'),checkpoint)
     q.check('upgrade preserves original Iceberg data',o.sql('SELECT count(*)||\':\'||min(id) FROM admission_upgrade'),'1:1')
@@ -104,10 +106,13 @@ def upgrade(result,new_image,old_archive):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--cases',nargs='+',choices=['checkpoint','managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'],default=['managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'])
+    parser.add_argument('--cpuset',default='0-1',help='Shared CPU affinity for source, destination, engine and storage')
+    parser.add_argument('--cases',nargs='+',choices=['pipeline','checkpoint','managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'],default=['pipeline','managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'])
     parser.add_argument('--old-archive',type=Path,default=ROOT/f'dist/release/lake_replication-0.1.0-beta.2-linux-{q.native_architecture()}.tar.gz')
     parser.add_argument('--fairness-copies',type=int,choices=[0,1,4],default=4,help='Zero/one-copy diagnostic control or the unchanged four-copy release case')
     args=parser.parse_args()
+    if not re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*',args.cpuset):
+        parser.error('invalid CPU affinity')
     root=ROOT/'.qualification'/(q.RUN+'_production_admission');root.mkdir(parents=True);q.RESULTS=root
     q.PROJECT+='-production-admission';q.SOURCE_IMAGE+='-production-admission';q.DESTINATION_IMAGE+='-production-admission'
     q.ENV.update(QUALIFICATION_SOURCE_IMAGE=q.SOURCE_IMAGE,QUALIFICATION_DESTINATION_IMAGE=q.DESTINATION_IMAGE)
@@ -115,6 +120,7 @@ def main():
     paths=[Path(__file__),Path(__file__).with_name('managed_cases.py'),Path(__file__).with_name('pool_cases.py'),ROOT/'experiments/admission/operational_probe.py',ROOT/'experiments/admission/reserved_probe.py',ROOT/'experiments/admission/admission_measure.py',ROOT/'experiments/admission/compare.py',ROOT/'experiments/admission/sample.py',ROOT/'experiments/admission/scale.py',ROOT/'tests/qualification/probe.py',ROOT/'Cargo.lock',ROOT/'worker/Cargo.toml',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),*[ROOT/'extensions/lake_replication'/name for name in ['lake_replication.c','lake_replication.control','Makefile','build-extension-sql.sh']]]
     paths.append(ROOT/'experiments/admission/source_workload.py')
     if 'checkpoint' in args.cases:paths.append(Path(__file__).with_name('checkpoint_cases.py'))
+    if 'pipeline' in args.cases:paths.extend(Path(__file__).with_name(name) for name in ['beta5_cases.py','checkpoint_split_operations.py','copy_chunk_bounds.py'])
     paths.extend(getattr(m, 'diagnostic_sources', []))
     result['inputs']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     for path in paths:
@@ -129,6 +135,8 @@ def main():
         q.command(['docker','tag',q.DESTINATION_IMAGE,image])
         result['image_id']=q.command(['docker','image','inspect','--format','{{.Id}}',image]).stdout.strip()
         text=m.compose_text().replace('      - -c\n      - lake_replication.prototype_instance_id=measurement-owner\n','')
+        for service in ('source','destination','pgduck','storage'):
+            text=re.sub(rf'^  {service}:$',f'  {service}:\n    cpuset: "{args.cpuset}"',text,flags=re.MULTILINE)
         for case in args.cases:
             print('CASE',case,flush=True);directory=root/case
             observed=dict(case=case,status='running')
@@ -149,6 +157,10 @@ def main():
                             spec=importlib.util.spec_from_file_location('checkpoint_cases',Path(__file__).with_name('checkpoint_cases.py'))
                             checkpoint=importlib.util.module_from_spec(spec);spec.loader.exec_module(checkpoint)
                             checkpoint.run(q,c,observed)
+                        elif case=='pipeline':
+                            spec=importlib.util.spec_from_file_location('beta5_cases',Path(__file__).with_name('beta5_cases.py'))
+                            pipeline=importlib.util.module_from_spec(spec);spec.loader.exec_module(pipeline)
+                            pipeline.run(q,c)
                         elif case=='managed':
                             spec=importlib.util.spec_from_file_location('managed_cases',Path(__file__).with_name('managed_cases.py'))
                             managed=importlib.util.module_from_spec(spec);spec.loader.exec_module(managed)

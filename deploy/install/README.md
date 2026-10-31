@@ -62,7 +62,7 @@ with:
 BEGIN;
 -- For beta.1/baseline bindings, only after verifying the original destination:
 SET LOCAL lake_replication.allow_legacy_binding_upgrade = on;
-ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4';
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.5';
 COMMIT;
 ```
 
@@ -74,7 +74,15 @@ admission migration. Inspect `lake_replication.bulk_admission` and
 `lake_replication.stream_admission` for holders and waiters. Beta.4 adds a separate
 initial-copy staging permit, managed worker fencing, and default journal budgets
 of eight committed unpublished transactions and 64 MiB of normalized payload
-per subscription. See the bundled operations guide for scope and tuning.
+per subscription. Beta.5 splits checkpoint ingress/publication and stores new
+staging appends as chunks while retaining writable logical row interfaces and
+old staged rows. It adds four instance-wide initial-copy session leases before
+source snapshots and a default 40 ms post-commit chunk pause. Inspect
+`lake_replication.initial_copy_admission` and configure the superuser setting
+`lake_replication.initial_copy_pause_ms` before restarting affected copies.
+These limits do not bound total CPU or RSS. Read `UPGRADE.md` for customization
+restrictions, matching-version logical restore, and the required
+`lake_replication.validate_runtime_state()` check before resuming restored work.
 
 ## Removal
 
@@ -108,7 +116,7 @@ dirty source tree so its recorded revision is unambiguous. For a local test of
 uncommitted packaging changes, opt in explicitly with
 `ALLOW_DIRTY=1 make install-bundles`.
 
-Pushing a version tag such as `v0.1.0-beta.4` runs the release workflow. The tag must
+Pushing a version tag such as `v0.1.0-beta.5` runs the release workflow. The tag must
 match the worker and SQL-extension versions. The workflow builds both bundles,
 generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
 keylessly signs every archive, SBOM, and checksum manifest with Sigstore

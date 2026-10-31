@@ -14,7 +14,7 @@ COMPOSE = [
 RUN = datetime.now(timezone.utc).strftime("install_%Y%m%d_%H%M%S")
 DATABASE = f"lake_bundle_{RUN.removeprefix('install_')}"
 RESULTS = ROOT / ".lab" / RUN
-BUNDLE = RESULTS / "dist/lake_replication-0.1.0-beta.4"
+BUNDLE = RESULTS / "dist/lake_replication-0.1.0-beta.5"
 CONTAINER_BUNDLE = f"/tmp/{RUN}"
 EVIDENCE = {"run": RUN, "database": DATABASE, "checks": []}
 
@@ -55,7 +55,7 @@ def main():
     exit_code = 1
     try:
         command([str(ROOT / "deploy/install/build-bundle.sh"), str(RESULTS / "dist")])
-        archive = RESULTS / "dist/lake_replication-0.1.0-beta.4.tar.gz"
+        archive = RESULTS / "dist/lake_replication-0.1.0-beta.5.tar.gz"
         check("release archive produced", archive.is_file(), True)
         compatibility = (BUNDLE / "COMPATIBILITY.md").read_text()
         check(
@@ -114,7 +114,7 @@ def main():
                   FROM pg_extension
                  WHERE extname = 'lake_replication'
             """),
-            "lake_replication:0.1.0-beta.4",
+            "lake_replication:0.1.0-beta.5",
         )
         links = command([
             "docker", "exec", container, "sh", "-ec",
@@ -140,6 +140,8 @@ def main():
                 "/usr/share/postgresql/18/extension/lake_replication--0.1.0.sql",
                 "/usr/share/postgresql/18/extension/lake_replication--0.1.0-beta.4.sql",
                 "/usr/share/postgresql/18/extension/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql",
+                "/usr/share/postgresql/18/extension/lake_replication--0.1.0-beta.5.sql",
+                "/usr/share/postgresql/18/extension/lake_replication--0.1.0-beta.4--0.1.0-beta.5.sql",
             ], check_result=False)
         EVIDENCE["passed"] = exit_code == 0
         (RESULTS / "results.json").write_text(

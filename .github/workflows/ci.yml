@@ -76,7 +76,7 @@ jobs:
         run: python3 tests/qualification/storage_preflight.py
       - name: Qualify amd64 archive on PostgreSQL 18 with pg_lake
         env:
-          QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.4-linux-amd64.tar.gz
+          QUALIFICATION_ARCHIVE: ${{ github.workspace }}/dist/release/lake_replication-0.1.0-beta.5-linux-amd64.tar.gz
         run: make qualification-test
       - name: Upload qualification evidence
         if: ${{ always() }}

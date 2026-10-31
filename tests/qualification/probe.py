@@ -25,7 +25,7 @@ from urllib.parse import quote
 
 
 ROOT = Path(__file__).resolve().parents[2]
-VERSION = os.environ.get("VERSION", "0.1.0-beta.4")
+VERSION = os.environ.get("VERSION", "0.1.0-beta.5")
 RUN = datetime.now(timezone.utc).strftime("qualification_%Y%m%d_%H%M%S")
 RESULTS = ROOT / ".qualification" / RUN
 COMPOSE_FILE = ROOT / "deploy/qualification/compose.yml"
@@ -313,6 +313,7 @@ test ! -e /usr/local/bin/lake-replication-supervisor
 test ! -e "$(pg_config --pkglibdir)/lake_replication.so"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication.control"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.4.sql"
+test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.5.sql"
 test ! -e "$(pg_config --sharedir)/extension/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql"
 test -e "$(pg_config --sharedir)/extension/pg_lake.control"
 printf 'uninstall-verified\\n'
@@ -366,7 +367,7 @@ def verify_upgrade_contract():
         sql(
             "destination",
             database,
-            "ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4';",
+            f"ALTER EXTENSION lake_replication UPDATE TO '{VERSION}';",
         )
         sql(
             "destination",
@@ -398,7 +399,7 @@ def verify_upgrade_contract():
                 "WHERE e.extname='lake_replication' "
                 "AND s.subscription_name='upgrade_fixture'",
             ),
-            "0.1.0-beta.4:upgrade_fixture:0/10:degraded",
+            f"{VERSION}:upgrade_fixture:0/10:degraded",
         )
         check(
             "extension upgrade installs common parameterized type resolution",
@@ -432,7 +433,7 @@ def verify_upgrade_contract():
                 "WHERE extname='lake_replication') || ':' || "
                 "(SELECT count(*) FROM lake_replication.worker_launch_config)",
             ),
-            "20:1",
+            "22:1" if VERSION == "0.1.0-beta.5" else "20:1",
         )
         logical_dump = compose(
             "exec",
@@ -492,7 +493,7 @@ def verify_upgrade_contract():
                 "(SELECT count(*) FROM lake_replication.subscriptions) || ':' || "
                 "(SELECT count(*) FROM lake_replication.worker_launch_config)",
             ),
-            "0.1.0-beta.4:1:1",
+            f"{VERSION}:1:1",
         )
         check(
             "no unsupported SQL downgrade path is advertised",
@@ -500,7 +501,7 @@ def verify_upgrade_contract():
                 "destination",
                 database,
                 "SELECT count(*) FROM pg_extension_update_paths('lake_replication') "
-                "WHERE source='0.1.0-beta.4' AND target='0.1.0' "
+                f"WHERE source='{VERSION}' AND target='0.1.0' "
                 "AND path IS NOT NULL",
             ),
             "0",
@@ -1186,7 +1187,7 @@ def main():
                 "FROM pg_extension WHERE extname IN "
                 "('lake_replication')",
             ),
-            "lake_replication:0.1.0-beta.4",
+            f"lake_replication:{VERSION}",
         )
         verify_upgrade_contract()
         exercise_replication()

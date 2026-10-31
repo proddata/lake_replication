@@ -29,8 +29,10 @@ The generated SQL files are build output. Version boundaries are explicit:
 - Frozen `0.1.0-beta.3`: migrations 0001–0024 plus config-dump registration.
 - `beta.2` to `beta.3`: 0024 (one bulk transaction and four streaming transactions). Earlier versions
   upgrade through the preserved beta.2 paths.
-- `0.1.0-beta.4`: migrations 0001–0025 plus config-dump registration.
+- Frozen `0.1.0-beta.4`: migrations 0001–0025 plus config-dump registration.
 - `beta.3` to `beta.4`: 0025 (staging admission, journal budgets and managed worker fencing).
+- `0.1.0-beta.5`: migrations 0001–0028 plus the new physical-store dump registration.
+- `beta.4` to `beta.5`: 0026–0028 (split checkpoints, chunk staging, initial-copy session admission and privileged search-path hardening).
 
 Both development-baseline upgrade paths are shipped. The beta.1 scripts match
 the previously qualified archive; an already-fixed beta.1 installation can also
@@ -54,3 +56,15 @@ and `lake_replication.journal_admission` exposes per-subscription journal budget
 Streaming slots use separate native queues rather than one
 global FIFO. This policy does not
 bound total memory or arbitrary application engine queries.
+
+Native initial copies additionally hold one of four instance-wide session leases
+on their staging connection before opening source snapshots. Inspect
+`lake_replication.initial_copy_admission`; waiters have no assigned slot and can
+use any released lease. The default `lake_replication.initial_copy_pause_ms=40`
+is captured at copy startup and pauses after staging COMMIT. These settings
+bound admitted sessions, not total CPU, RSS or remote snapshot retention.
+
+The logical checkpoint and row interfaces remain writable, while their physical
+storage changes. Read [migration contracts](../../docs/checkpoint-chunk-migration-results.md)
+before upgrade or logical restore; validate restored runtime state before
+resuming subscriptions.

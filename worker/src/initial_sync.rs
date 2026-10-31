@@ -21,7 +21,7 @@ fn main() {
 }
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
-    let config = Config::from_env()?;
+    let mut config = Config::from_env()?;
     let mut sync_guard = ManagedClient::connect(
         config.destination_address.as_str(),
         &config.destination_user,
@@ -71,6 +71,25 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         config.subscription_id,
         config.config_generation,
     )?;
+    destination.initial_copy_lease()?;
+    if env::var_os("LAKE_INITIAL_COPY_CHUNK_PAUSE_MS").is_none() {
+        let rows = destination
+            .simple_query("SELECT current_setting('lake_replication.initial_copy_pause_ms')")?;
+        config.pause_after_chunk_ms = single_value(&rows, "initial-copy pacing")?.parse()?;
+    }
+    log_event(
+        "initial_sync",
+        "INFO",
+        "initial_copy_admitted",
+        "initial-copy pipeline lease acquired",
+        &[
+            ("subscription_id", config.subscription_id.to_string()),
+            (
+                "pause_after_chunk_ms",
+                config.pause_after_chunk_ms.to_string(),
+            ),
+        ],
+    );
 
     let mut source = Client::connect_secure(
         config.source_address.as_str(),
@@ -321,6 +340,7 @@ fn copy_table_with_retry(
                     config.subscription_id,
                     config.config_generation,
                 )?;
+                destination.initial_copy_lease()?;
                 destination.simple_query(&format!(
                     "SELECT lake_replication.reset_initial_copy({}, {}, {})",
                     config.subscription_id, plan.relation_id, plan.schema_version
@@ -753,7 +773,7 @@ impl Config {
             fail_once_after_rows: value("LAKE_INITIAL_COPY_FAIL_ONCE_AFTER_ROWS", "0").parse()?,
             fail_once_triggered: AtomicBool::new(false),
             pause_after_snapshot_ms: value("LAKE_INITIAL_COPY_PAUSE_MS", "0").parse()?,
-            pause_after_chunk_ms: value("LAKE_INITIAL_COPY_CHUNK_PAUSE_MS", "0").parse()?,
+            pause_after_chunk_ms: value("LAKE_INITIAL_COPY_CHUNK_PAUSE_MS", "40").parse()?,
             slot_failover: value("LAKE_SLOT_FAILOVER", "1") == "1",
             create_slot: value("LAKE_CREATE_SLOT", "1") == "1",
             table_copy_retries: value("LAKE_INITIAL_COPY_TABLE_RETRIES", "2").parse()?,

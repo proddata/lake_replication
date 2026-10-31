@@ -3,7 +3,7 @@ set -eu
 
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
-version=${VERSION:-0.1.0-beta.4}
+version=${VERSION:-0.1.0-beta.5}
 output=${1:-$root/dist/release}
 revision=${REVISION:-$(git -C "$root" rev-parse HEAD)}
 arches=${ARCHES:-"amd64 arm64"}

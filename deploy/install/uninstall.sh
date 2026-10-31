@@ -43,7 +43,9 @@ for file in \
     "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.3.sql" \
     "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.2--0.1.0-beta.3.sql" \
     "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.4.sql" \
-    "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql"
+    "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.3--0.1.0-beta.4.sql" \
+    "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.5.sql" \
+    "$destination_root$shared_extension_dir/lake_replication--0.1.0-beta.4--0.1.0-beta.5.sql"
 do
     if [ -e "$file" ]; then
         rm -f -- "$file"

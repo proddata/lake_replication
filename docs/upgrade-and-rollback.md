@@ -1,6 +1,6 @@
 # Upgrade, backup, and rollback
 
-This procedure applies to the `v0.1.0-beta.4` candidate on PostgreSQL 18 with a
+This procedure applies to the `v0.1.0-beta.5` development candidate on PostgreSQL 18 with a
 supported pg_lake installation. Rehearse it on a restored copy before changing
 a production-like destination.
 
@@ -40,7 +40,10 @@ missing from an independently restored object store. The `beta.1` extensions
 register their durable tables with `pg_dump`, but a physical backup plus an
 object-store snapshot remains the recommended beta recovery mechanism.
 
-For a rehearsed logical restore, use a custom-format archive and restore into
+Restore with the matching extension archive/version first, then perform any
+version upgrade. PostgreSQL dumps recreate extensions using their installed
+default version; restoring an older table-layout dump directly against beta.5
+is not supported. For a rehearsed logical restore, use a custom-format archive and restore into
 an empty database in three phases as a PostgreSQL superuser: `pre-data`, `data`
 with `--disable-triggers`, then `post-data`. (`--disable-triggers` only applies
 to a data-only restore.) Subscription inserts normally initialize maintenance
@@ -49,7 +52,24 @@ those defaults from colliding with the retained policy and status rows in the
 archive. Validate the result against the matching object-store snapshot before
 use.
 
-## Upgrade to beta.4
+Beta.5 introduces split checkpoints and chunk staging. Stop every managed
+subscription before SQL upgrade. The migration preserves existing staged rows
+and ordinary owner-issued grants, but refuses custom runtime-table ownership,
+RLS, triggers, dependent user views/functions and non-owner grant chains. See
+[migration contracts and qualification](https://github.com/proddata/lake_replication/blob/main/docs/checkpoint-chunk-migration-results.md)
+for the writable logical interfaces and restrictions. Rehearse customizations
+separately before attempting the upgrade.
+
+After logical restore and before enabling subscriptions, run:
+
+```sql
+SELECT lake_replication.validate_runtime_state();
+```
+
+The paired checkpoint foreign keys require the disabled-trigger data pass above.
+Keep both PostgreSQL and object-store backups; SQL downgrade is not supplied.
+
+## Upgrade to beta.5
 
 1. Verify the new archive checksum and unpack it.
 2. Stop PostgreSQL. Run the new bundle's `install.sh` as root; it replaces the
@@ -76,7 +96,7 @@ separately:
 ```sql
 BEGIN;
 SET LOCAL lake_replication.allow_legacy_binding_upgrade = on;
-ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.4';
+ALTER EXTENSION lake_replication UPDATE TO '0.1.0-beta.5';
 COMMIT;
 ```
 
