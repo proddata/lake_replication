@@ -192,3 +192,11 @@ separate local DuckDB build optimization remains unqualified. Full native
 qualification on both architectures and the remaining recovery, compatibility,
 security and soak gates are still required. Detailed hashes, checks and measured
 values are in the [native evidence](evidence/2026-10-31-beta5-native-arm64-results.json).
+
+The full qualification workflow now reuses the same verified, architecture- and
+source-keyed prerequisite cache as focused probes. Identity, recipe hashes,
+archive checksum and loaded image ID must match before reuse. A cache miss
+builds upstream pg_lake with a 60-minute step limit; the full job retains its
+180-minute limit. AMD64 runners reclaim unused SDK space before either lane.
+The current ARM64 cache is available; AMD64 still requires its first cold build.
+This changes runner setup only, with no production-package or gate changes.
