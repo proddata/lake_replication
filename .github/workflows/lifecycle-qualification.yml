@@ -67,6 +67,16 @@ on:
           - '0'
           - '40'
 
+      copy_configuration_comparison:
+        description: Fixed pacing or TOAST GUC comparison; unchanged archive and gates (native diagnostic only)
+        required: false
+        default: disabled
+        type: choice
+        options:
+          - disabled
+          - pacing
+          - toast
+
 permissions:
   contents: read
   actions: read
@@ -95,12 +105,17 @@ jobs:
           COPY_CHUNK: ${{ inputs.copy_chunk_comparison }}
           STAGING_CHUNKS: ${{ inputs.staging_chunk_comparison }}
           STAGING_PAUSE: ${{ inputs.staging_chunk_pause_ms }}
+          COPY_CONFIGURATION: ${{ inputs.copy_configuration_comparison }}
         run: |
           if [[ "$NATIVE_PROBE" == true && "$FAIRNESS_DIAGNOSTIC" == true ]]; then
             echo 'Select native_probe or fairness_diagnostic, not both.' >&2
             exit 1
           fi
           case "$PROBE_ARCH" in both|arm64|amd64) ;; *) exit 1 ;; esac
+          if [[ "$COPY_CONFIGURATION" != disabled && ( "$NATIVE_PROBE" != true || "$FAIRNESS_DIAGNOSTIC" == true || "$CHECKPOINT_SPLIT" == true || "$CHECKPOINT_COMPARE" == true || "$COPY_CHUNK" != disabled || "$STAGING_CHUNKS" == true || "$STAGING_PAUSE" != 0 ) ]]; then
+            echo 'Copy configuration comparison requires its own native probe with all overlays disabled.' >&2
+            exit 1
+          fi
           if [[ "$NATIVE_PROBE" != true && "$PROBE_ARCH" != both ]]; then
             echo 'Architecture selection requires native_probe=true.' >&2
             exit 1
@@ -255,9 +270,15 @@ jobs:
           done
           exit "$status"
       - name: Focused native admission and four-copy probe
-        if: ${{ inputs.native_probe && !inputs.checkpoint_split_diagnostic && !inputs.checkpoint_split_comparison && !inputs.staging_chunk_comparison && inputs.copy_chunk_comparison == 'disabled' }}
+        if: ${{ inputs.native_probe && inputs.copy_configuration_comparison == 'disabled' && !inputs.checkpoint_split_diagnostic && !inputs.checkpoint_split_comparison && !inputs.staging_chunk_comparison && inputs.copy_chunk_comparison == 'disabled' }}
         timeout-minutes: 15
         run: python3 tests/admission/probe.py --cases pipeline managed fairness
+      - name: Configured copy comparison
+        if: ${{ inputs.native_probe && inputs.copy_configuration_comparison != 'disabled' }}
+        timeout-minutes: 20
+        env:
+          COMPARISON_MODE: ${{ inputs.copy_configuration_comparison }}
+        run: python3 tests/admission/copy_configuration_compare.py --mode "$COMPARISON_MODE" --cpuset 0-1
       - name: Checkpoint partition prototype diagnostic (SQL overlay)
         if: ${{ inputs.native_probe && inputs.checkpoint_split_diagnostic }}
         timeout-minutes: 15

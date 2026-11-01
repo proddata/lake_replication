@@ -158,6 +158,15 @@ def fairness(args, variant, image, text, directory):
         monitor = c.Psql('destination', 'analytics')
         clients.extend(destinations + copies + [monitor])
         result['before'] = s.inventory()
+        expected_pause=getattr(args,'expected_initial_copy_pause_ms',None)
+        expected_toast=getattr(args,'expected_toast_compression',None)
+        if expected_toast is not None:
+            result['toast_configuration']={db:q.sql('destination',db,'SHOW default_toast_compression') for db in names+copy_names}
+            result['copy_compression_observed']={}
+            q.check('all measured databases use declared TOAST configuration',set(result['toast_configuration'].values())=={expected_toast},True)
+        if expected_pause is not None:
+            result['copy_pacing_configuration']={db:int(q.sql('destination',db,'SHOW lake_replication.initial_copy_pause_ms')) for db in names+copy_names}
+            q.check('all measured databases use declared copy pacing',set(result['copy_pacing_configuration'].values())=={expected_pause},True)
         producer_connections=[]
         for _ in names:
             connection_client=c.Psql('source','application')
@@ -200,6 +209,11 @@ def fairness(args, variant, image, text, directory):
                 read_started=time.monotonic()-started
                 values = copy.query("SELECT coalesce((SELECT state FROM lake_replication.subscriptions WHERE subscription_name LIKE 'fair_copy_sub%'),'absent'),coalesce(max(rows_copied),0),coalesce(min(extract(epoch FROM started_at)),0),coalesce(max(extract(epoch FROM pg_xact_commit_timestamp(xmin))),0),extract(epoch FROM clock_timestamp()) FROM lake_replication.initial_copies")[0].split('|')
                 sample['copies'].append(dict(state=values[0], rows_copied=int(values[1]), started_epoch=float(values[2]), last_row_commit_epoch=float(values[3]), observed_epoch=float(values[4]),read_started_seconds=read_started,read_finished_seconds=time.monotonic()-started))
+            if expected_toast is not None:
+                for database,copy,progress in zip(copy_names,copies,sample['copies']):
+                    if progress['rows_copied']>=1000 and database not in result['copy_compression_observed']:
+                        method=copy.query('SELECT pg_column_compression(rows) FROM lake_replication.initial_copy_chunks LIMIT 1')
+                        if method:result['copy_compression_observed'][database]=method[0]
             sample['observer_epoch'] = max(x['observed_epoch'] for x in sample['streams'])
             sample['copy'] = None
             if bulk_copies:
@@ -298,6 +312,16 @@ def fairness(args, variant, image, text, directory):
         for i, copy in enumerate(copies):
             q.check(f'large copy {i} exact final Iceberg rows', copy.query("SELECT count(*),count(DISTINCT id),min(id),max(id),sum(id),bool_and(payload=repeat('b',128)) FROM fair_big")[0], f'{n}|{n}|1|{n}|{n*(n+1)//2}|t')
         result['after'] = s.inventory()
+        if expected_toast is not None:
+            q.check('all measured copies store the declared compression method',len(result['copy_compression_observed'])==bulk_copies and set(result['copy_compression_observed'].values())==({expected_toast} if bulk_copies else set()),True)
+        if expected_pause is not None:
+            admitted=[]
+            for line in q.worker_logs().splitlines():
+                try:record=json.loads(line)
+                except json.JSONDecodeError:continue
+                if record.get('event')=='initial_copy_admitted':admitted.append(int(record['pause_after_chunk_ms']))
+            result['copy_pacing_worker_values']=admitted
+            q.check('archived workers capture declared copy pacing',len(admitted)>=len(names)+bulk_copies and set(admitted)=={expected_pause},True)
         result['checks'] = dict(all_stream_targets_pass=all(all(row['checks'].values()) for row in result['streams']))
         if bulk_copies:
             result['checks'].update(

@@ -1,0 +1,1595 @@
+{
+  "scope": "Retained valid native latency failure and fixed local diagnostic cohorts; not release qualification",
+  "source_revision": "820f402a1a78083e555235439a30247b454d9a88",
+  "native_run": "https://github.com/proddata/lake_replication/actions/runs/41289535953",
+  "native": {
+    "arm64": {
+      "evidence": ".qualification/failed_native_820f402/lifecycle-qualification-arm64/qualification_20261101_084631_production_admission/results.json",
+      "results_sha256": "59d8aba1d2db582e5fc78dd2acaa8531f32510fe6ec3eaa24244c266ea55725c",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+        "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+        "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+      },
+      "fairness": {
+        "status": "completed_with_findings",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": false,
+        "failed_gates": [
+          "all_stream_targets_pass",
+          "analytics:p95_below_two_seconds",
+          "fair_stream_1:p95_below_two_seconds",
+          "fair_stream_2:p95_below_two_seconds"
+        ],
+        "copy_elapsed_seconds": 133.21506714820862,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 2039.5309925079346,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1219.7189331054688,
+              "journal_insert_to_batch_ms": 921.968936920166,
+              "source_to_journal_insert_ms": 95.87788581848145
+            },
+            "source_max_schedule_lateness_seconds": 0.0004607700000178738,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 2087.800979614258,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1257.2789192199707,
+              "journal_insert_to_batch_ms": 869.830846786499,
+              "source_to_journal_insert_ms": 115.07010459899902
+            },
+            "source_max_schedule_lateness_seconds": 0.00048123000010491523,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 2133.333921432495,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1226.423978805542,
+              "journal_insert_to_batch_ms": 928.2848834991455,
+              "source_to_journal_insert_ms": 43.578147888183594
+            },
+            "source_max_schedule_lateness_seconds": 0.0006354699999064906,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      "other_admission_cases": {
+        "pipeline": "passed",
+        "managed": "passed",
+        "locks": "passed",
+        "pool": "passed",
+        "schema": "passed",
+        "rebuild": "passed",
+        "cancel": "passed",
+        "upgrade": "passed",
+        "scale": "passed"
+      },
+      "assertions_passed": 333,
+      "later_beta1_handoff": "skipped after admission failure"
+    },
+    "amd64": {
+      "evidence": ".qualification/failed_native_820f402/lifecycle-qualification-amd64/qualification_20261101_085039_production_admission/results.json",
+      "results_sha256": "742e38fc26ee4b879617b145d72c63285f7f0e8b413995f4eb568aa32e74f260",
+      "archive": {
+        "architecture": "amd64",
+        "archive": "lake_replication-0.1.0-beta.5-linux-amd64.tar.gz",
+        "archive_sha256": "325bcd334c1f3509f7233055426c2b202e5d089cf354c9fea1bce339ca8497be",
+        "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+      },
+      "fairness": {
+        "status": "completed_with_findings",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": false,
+        "failed_gates": [
+          "all_stream_targets_pass",
+          "analytics:p95_below_two_seconds",
+          "fair_stream_1:p95_below_two_seconds",
+          "fair_stream_2:p95_below_two_seconds"
+        ],
+        "copy_elapsed_seconds": 162.46723413467407,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 2131.582021713257,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1259.7770690917969,
+              "journal_insert_to_batch_ms": 942.3909187316895,
+              "source_to_journal_insert_ms": 61.68079376220703
+            },
+            "source_max_schedule_lateness_seconds": 0.00039659000003666733,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 2101.8710136413574,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1246.80495262146,
+              "journal_insert_to_batch_ms": 958.6019515991211,
+              "source_to_journal_insert_ms": 76.29203796386719
+            },
+            "source_max_schedule_lateness_seconds": 0.0006629499998780375,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 2249.790906906128,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1199.962854385376,
+              "journal_insert_to_batch_ms": 1038.8858318328857,
+              "source_to_journal_insert_ms": 53.61604690551758
+            },
+            "source_max_schedule_lateness_seconds": 0.0005130539998390304,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      "other_admission_cases": {
+        "pipeline": "passed",
+        "managed": "passed",
+        "locks": "passed",
+        "pool": "passed",
+        "schema": "passed",
+        "rebuild": "passed",
+        "cancel": "passed",
+        "upgrade": "passed",
+        "scale": "passed"
+      },
+      "assertions_passed": 333,
+      "later_beta1_handoff": "skipped after admission failure"
+    }
+  },
+  "local": {
+    "archive_control": {
+      "evidence": ".qualification/archive_compare_20261101_100158/results.json",
+      "results_sha256": "e9f585e854ca609d2c5d86813d16d34db061974672c4169000c7f9f244ffbe09",
+      "report": {
+        "scope": "Fixed previous/current/previous exact-archive comparison on one local CPU; no SQL or binary overlays; diagnostic only",
+        "sequence": [
+          "previous",
+          "current",
+          "previous"
+        ],
+        "cpuset": "0",
+        "harness_revision": "820f402a1a78083e555235439a30247b454d9a88",
+        "runs": [
+          {
+            "variant": "previous",
+            "archive": {
+              "architecture": "arm64",
+              "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+              "archive_sha256": "bb4c4dd28354a72a09ac25c23718528b90d4d61c62b823775195a5aa92b4961c",
+              "source_revision": "14dc705f3968f49a82df5150ec54ee71667d01e0"
+            },
+            "archive_path": "/Users/georg/Developer/proddata/pg_lake_replication/.qualification/beta5_ci_14dc705/lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+            "archive_sha256": "bb4c4dd28354a72a09ac25c23718528b90d4d61c62b823775195a5aa92b4961c",
+            "returncode": 0,
+            "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/qualification_20261101_100159_production_admission/results.json",
+            "results_sha256": "a975e49c14e54c3d9a794054d211bfeb697d9998ef72d1395fa1f35685e60f0c",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 123.71764802932739,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 1135.7100009918213,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 766.8099403381348,
+                  "journal_insert_to_batch_ms": 518.8319683074951,
+                  "source_to_journal_insert_ms": 15.907049179077148
+                },
+                "source_max_schedule_lateness_seconds": 0.009087707963772118,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 1169.5818901062012,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 758.5220336914062,
+                  "journal_insert_to_batch_ms": 540.6599044799805,
+                  "source_to_journal_insert_ms": 14.250993728637695
+                },
+                "source_max_schedule_lateness_seconds": 0.008725916966795921,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 1188.5008811950684,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 754.8270225524902,
+                  "journal_insert_to_batch_ms": 528.6369323730469,
+                  "source_to_journal_insert_ms": 12.89987564086914
+                },
+                "source_max_schedule_lateness_seconds": 0.009003291954286397,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ]
+          },
+          {
+            "variant": "current",
+            "archive": {
+              "architecture": "arm64",
+              "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+              "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+              "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+            },
+            "archive_path": "/Users/georg/Developer/proddata/pg_lake_replication/.qualification/beta5_ci_820f402/lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+            "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+            "returncode": 0,
+            "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/qualification_20261101_100454_production_admission/results.json",
+            "results_sha256": "59c7f385599110e7b16aba6f8f067c6f0d85f3a1f9206f5c7e80afbc8c209767",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 124.19230103492737,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 1253.9119720458984,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 739.2640113830566,
+                  "journal_insert_to_batch_ms": 586.2209796905518,
+                  "source_to_journal_insert_ms": 25.703907012939453
+                },
+                "source_max_schedule_lateness_seconds": 0.0056766250636428595,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 1216.839075088501,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 814.4359588623047,
+                  "journal_insert_to_batch_ms": 565.438985824585,
+                  "source_to_journal_insert_ms": 15.24496078491211
+                },
+                "source_max_schedule_lateness_seconds": 0.005381459021009505,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 1246.6979026794434,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 721.8999862670898,
+                  "journal_insert_to_batch_ms": 573.3239650726318,
+                  "source_to_journal_insert_ms": 20.31993865966797
+                },
+                "source_max_schedule_lateness_seconds": 0.005601792014203966,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ]
+          },
+          {
+            "variant": "previous",
+            "archive": {
+              "architecture": "arm64",
+              "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+              "archive_sha256": "bb4c4dd28354a72a09ac25c23718528b90d4d61c62b823775195a5aa92b4961c",
+              "source_revision": "14dc705f3968f49a82df5150ec54ee71667d01e0"
+            },
+            "archive_path": "/Users/georg/Developer/proddata/pg_lake_replication/.qualification/beta5_ci_14dc705/lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+            "archive_sha256": "bb4c4dd28354a72a09ac25c23718528b90d4d61c62b823775195a5aa92b4961c",
+            "returncode": 0,
+            "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/qualification_20261101_100748_production_admission/results.json",
+            "results_sha256": "f8de3034499319a76777bc391be374ab31cb30b9efc8ec07370994d2dad32e56",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 129.705668926239,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 1459.6898555755615,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 895.3900337219238,
+                  "journal_insert_to_batch_ms": 697.59202003479,
+                  "source_to_journal_insert_ms": 19.912004470825195
+                },
+                "source_max_schedule_lateness_seconds": 0.005281833000481129,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 1514.3840312957764,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 919.9080467224121,
+                  "journal_insert_to_batch_ms": 761.7800235748291,
+                  "source_to_journal_insert_ms": 22.077083587646484
+                },
+                "source_max_schedule_lateness_seconds": 0.00527966592926532,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 1521.1670398712158,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 960.8778953552246,
+                  "journal_insert_to_batch_ms": 759.8319053649902,
+                  "source_to_journal_insert_ms": 18.97406578063965
+                },
+                "source_max_schedule_lateness_seconds": 0.005176750011742115,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ]
+          }
+        ],
+        "status": "completed",
+        "comparison": {
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "candidate_workload_passed": true,
+          "all_workloads_passed": true,
+          "control_copy_drift_ratio": 1.0484007010502832,
+          "candidate_copy_ratio_to_control_mean": 0.9801173982479476,
+          "inference_limit": "One sequential comparison; host drift is bracketed, not eliminated. No statistical speedup or release qualification is claimed."
+        }
+      }
+    },
+    "pacing_control": {
+      "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/pacing_configuration_20261101_101647/results.json",
+      "results_sha256": "c8b997adb75bb4cf139831e526ef78ae98f60bc45b30415465373b690782c0eb",
+      "report": {
+        "scope": "Fixed 40/50/40 GUC comparison on one host, unchanged archive and workload.\n\nConfiguration diagnostic only. Keep every validity/performance finding; never\nretry or choose a best run. No SQL schema/function or executable overlay.\n",
+        "sequence": [
+          40,
+          50,
+          40
+        ],
+        "cpuset": "0",
+        "runs": [
+          {
+            "variant": "pause40",
+            "returncode": 0,
+            "evidence": ".qualification/qualification_20261101_101647_production_admission/results.json",
+            "results_sha256": "0f0812fc42b3a0885e20c92664a1d688c114aefe1dbaaa00280055a389e891db",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 127.12115097045898,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 1550.5270957946777,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 929.8691749572754,
+                  "journal_insert_to_batch_ms": 688.6961460113525,
+                  "source_to_journal_insert_ms": 18.25404167175293
+                },
+                "source_max_schedule_lateness_seconds": 0.0054717910243198276,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 1499.330997467041,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 847.3877906799316,
+                  "journal_insert_to_batch_ms": 651.404857635498,
+                  "source_to_journal_insert_ms": 27.009963989257812
+                },
+                "source_max_schedule_lateness_seconds": 0.005461290944367647,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 1589.6430015563965,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 917.820930480957,
+                  "journal_insert_to_batch_ms": 663.5580062866211,
+                  "source_to_journal_insert_ms": 40.09580612182617
+                },
+                "source_max_schedule_lateness_seconds": 0.005595082999207079,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ],
+            "observed_worker_pauses": [
+              40,
+              40,
+              40,
+              40,
+              40,
+              40,
+              40
+            ]
+          },
+          {
+            "variant": "pause50",
+            "returncode": 0,
+            "evidence": ".qualification/qualification_20261101_101946_production_admission/results.json",
+            "results_sha256": "2c034564e580c1bc8ac935035804d134d264852a9bc16e13eff3d11578c4f1a8",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 142.6949439048767,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 1084.5181941986084,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 653.5778045654297,
+                  "journal_insert_to_batch_ms": 468.40810775756836,
+                  "source_to_journal_insert_ms": 19.27018165588379
+                },
+                "source_max_schedule_lateness_seconds": 0.012940292013809085,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 1163.8400554656982,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 655.674934387207,
+                  "journal_insert_to_batch_ms": 487.5321388244629,
+                  "source_to_journal_insert_ms": 18.085002899169922
+                },
+                "source_max_schedule_lateness_seconds": 0.01265020901337266,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 1217.1649932861328,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 661.6430282592773,
+                  "journal_insert_to_batch_ms": 491.81485176086426,
+                  "source_to_journal_insert_ms": 17.225980758666992
+                },
+                "source_max_schedule_lateness_seconds": 0.012336959014646709,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ],
+            "observed_worker_pauses": [
+              50,
+              50,
+              50,
+              50,
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "variant": "pause40",
+            "returncode": 0,
+            "evidence": ".qualification/qualification_20261101_102257_production_admission/results.json",
+            "results_sha256": "18a85ed2442b5a723387d41c8d36b9077b8cab4d69cfdbfe91c2178a167e8f56",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 122.70235085487366,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 1205.0011157989502,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 703.0959129333496,
+                  "journal_insert_to_batch_ms": 551.1040687561035,
+                  "source_to_journal_insert_ms": 12.221097946166992
+                },
+                "source_max_schedule_lateness_seconds": 0.005377541994675994,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 1129.9221515655518,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 773.8769054412842,
+                  "journal_insert_to_batch_ms": 522.5911140441895,
+                  "source_to_journal_insert_ms": 15.788078308105469
+                },
+                "source_max_schedule_lateness_seconds": 0.005487291957251728,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 1171.1030006408691,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 748.9969730377197,
+                  "journal_insert_to_batch_ms": 563.9989376068115,
+                  "source_to_journal_insert_ms": 12.051105499267578
+                },
+                "source_max_schedule_lateness_seconds": 0.00561025005299598,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ],
+            "observed_worker_pauses": [
+              40,
+              40,
+              40,
+              40,
+              40,
+              40,
+              40
+            ]
+          }
+        ],
+        "status": "completed",
+        "runner_sha256": "ce0d8b5b526bce03d694e6487382ea548f38f4e902f0f5c2b779b9c61f5b92ca",
+        "common_identity": {
+          "archive": {
+            "architecture": "arm64",
+            "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+            "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+            "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+          },
+          "image_id": "sha256:25d417a2ea7560362346f38e71af544491c9c69f175e22e76d9a8c43cec4e5f1",
+          "inputs": {
+            "Cargo.lock": "1b4d9fdcc9bbb07a21148eca8e1964615ca70ed7c92351e69053a06c58b8b6c1",
+            "experiments/admission/admission_measure.py": "3aee250dd818651c2da178c745133bdbec4949be2e0061926f1b99e2fb47125f",
+            "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+            "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+            "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+            "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+            "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+            "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+            "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+            "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+            "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+            "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+            "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+            "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+            "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+            "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+            "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+            "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+            "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+            "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+            "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+            "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+            "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+            "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+            "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+            "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+            "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+            "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+            "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+            "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+            "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+            "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+            "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+            "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+            "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+            "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+            "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+            "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+            "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+            "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+            "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+            "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+            "tests/admission/probe.py": "adc92bca6b6d521ba1d8d40fc55ac796d4456ad9ae4fc24a82415ae96de2b8b3",
+            "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+            "worker/Cargo.toml": "fe1d5d6bd0d780f416bec5711bb46ad56fc824832866548756f6f8274bbfc423",
+            "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+            "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+            "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+            "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+            "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+            "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+            "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+            "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+            "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+            "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+            "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+          }
+        },
+        "comparison": {
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "candidate_workload_passed": true,
+          "all_workloads_passed": true,
+          "control_copy_drift_ratio": 0.9652394579355863,
+          "candidate_copy_ratio_to_control_mean": 1.1423660533318738,
+          "inference_limit": "One sequential comparison; host drift is bracketed, not eliminated. No statistical speedup or release qualification is claimed."
+        }
+      }
+    },
+    "toast_micro": {
+      "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/qualification_20261101_103721_toast_micro/results.json",
+      "results_sha256": "5ec68098f8a410500d5025c1014012f45bc46a0406005b78ccca7045f07e6084",
+      "report": {
+        "scope": "Exploratory append API storage-codec microbenchmark; not end-to-end qualification",
+        "runs": [
+          {
+            "method": "pglz",
+            "rows": 2000000,
+            "chunks": 2000,
+            "seconds": 1.320532,
+            "compression": "pglz",
+            "relation_bytes": 11763712,
+            "mean_stored_bytes": 4663.0
+          },
+          {
+            "method": "lz4",
+            "rows": 2000000,
+            "chunks": 2000,
+            "seconds": 0.643672,
+            "compression": "lz4",
+            "relation_bytes": 13123584,
+            "mean_stored_bytes": 5580.0
+          },
+          {
+            "method": "pglz",
+            "rows": 2000000,
+            "chunks": 2000,
+            "seconds": 1.272006,
+            "compression": "pglz",
+            "relation_bytes": 11763712,
+            "mean_stored_bytes": 4663.0
+          }
+        ],
+        "status": "completed",
+        "cleanup_returncode": 0
+      },
+      "runner_source": "from pathlib import Path\nimport importlib.util,json,tempfile\nroot=Path(__file__).resolve().parents[2]\ns=importlib.util.spec_from_file_location('qualification',Path(__file__).with_name('probe.py'));q=importlib.util.module_from_spec(s);s.loader.exec_module(q)\nq.RESULTS=root/'.qualification'/(q.RUN+'_toast_micro');q.RESULTS.mkdir();q.PROJECT+='-toast-micro';q.COMPOSE_FILE=q.RESULTS/'compose.yml';q.COMPOSE_FILE.write_text((root/'deploy/qualification/compose.yml').read_text())\ndef sql(text):return q.sql('destination','analytics',text)\nreport={'scope':'Exploratory append API storage-codec microbenchmark; not end-to-end qualification','runs':[]}\ntry:\n a=q.archive_path();q.verify_archive(a)\n with tempfile.TemporaryDirectory() as d:q.build_images(a,Path(d))\n q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)\n sid=int(sql(\"SELECT lake_replication.create_subscription(42,1,1,'toast_bench','toast_bench',ARRAY['pub'])\"))\n sql(f\"CREATE TABLE public.toast_target(id bigint); INSERT INTO lake_replication.relations(subscription_id,remote_relation_id,schema_version,source_namespace,source_relation,replica_identity,columns) VALUES({sid},42,1,'public','toast_target','d','[]'); INSERT INTO lake_replication.initial_copies(subscription_id,remote_relation_id,relation_schema_version,destination_relation,consistent_lsn,snapshot_name,state,overwrite_destination) VALUES({sid},42,1,'public.toast_target','0/1','bench-snapshot','copying',false); CREATE TABLE public.toast_timings(seconds double precision)\")\n for method in ['pglz','lz4','pglz']:\n  sql(f\"TRUNCATE lake_replication.initial_copy_chunks,public.toast_timings; UPDATE lake_replication.initial_copies SET rows_copied=0; SET default_toast_compression={method}; DO $bench$ DECLARE payload jsonb:=(SELECT jsonb_agg(jsonb_build_object('id',n::text,'payload',repeat('b',128))) FROM generate_series(1,1000) n); began timestamptz; BEGIN began:=clock_timestamp(); FOR chunk IN 0..1999 LOOP PERFORM lake_replication.append_initial_copy_rows({sid},42,1,chunk::bigint*1000,payload); END LOOP; INSERT INTO public.toast_timings VALUES(extract(epoch FROM clock_timestamp()-began)); END $bench$\")\n  data=json.loads(sql(\"SELECT jsonb_build_object('seconds',(SELECT seconds FROM public.toast_timings),'chunks',count(*),'rows',sum(jsonb_array_length(rows)),'mean_stored_bytes',avg(pg_column_size(rows)),'compression',min(pg_column_compression(rows)),'relation_bytes',pg_total_relation_size('lake_replication.initial_copy_chunks')) FROM lake_replication.initial_copy_chunks\"))\n  assert data['compression']==method and data['rows']==2000000\n  report['runs'].append(dict(method=method,**data));print(report['runs'][-1],flush=True)\n report['status']='completed'\nexcept Exception as e:report.update(status='error',error=str(e));print('ERROR',e,flush=True)\nfinally:\n cleanup=q.compose('down','-v','--remove-orphans',check_result=False,timeout=300);report['cleanup_returncode']=cleanup.returncode;(q.RESULTS/'results.json').write_text(json.dumps(report,indent=2)+'\\n');print('Evidence:',q.RESULTS,flush=True)\n",
+      "runner_sha256": "c40a331445eec1e005818160677655f88dcff7136530d96ee25b7d89fd1464e4",
+      "limitation": "Exploratory API loop; raw report does not independently retain archive identity. End-to-end cohort verifies the exact archive separately."
+    },
+    "toast_control": {
+      "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/copy_configuration_20261101_104934/results.json",
+      "results_sha256": "1067d2c79b8014845f295f4c9d9b988f33bd467c2b99c537503089ad4cb5aa04",
+      "report": {
+        "scope": "Fixed GUC comparison on one host, unchanged archive and workload.\n\nConfiguration diagnostic only. Keep every validity/performance finding; never\nretry or choose a best run. No SQL schema/function or executable overlay.\n",
+        "mode": "toast",
+        "sequence": [
+          "pglz",
+          "lz4",
+          "pglz"
+        ],
+        "cpuset": "0",
+        "runs": [
+          {
+            "variant": "pglz",
+            "returncode": 0,
+            "evidence": ".qualification/qualification_20261101_104934_production_admission/results.json",
+            "results_sha256": "27d382e760195549e80b9ba95af3025cb3fb38a790d057a37c8c78a43f4bfcb1",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 119.43415904045105,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 730.0839424133301,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 533.3960056304932,
+                  "journal_insert_to_batch_ms": 201.13682746887207,
+                  "source_to_journal_insert_ms": 11.05189323425293
+                },
+                "source_max_schedule_lateness_seconds": 0.010449000052176416,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 808.9828491210938,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 534.6391201019287,
+                  "journal_insert_to_batch_ms": 272.8238105773926,
+                  "source_to_journal_insert_ms": 10.401010513305664
+                },
+                "source_max_schedule_lateness_seconds": 0.01023195800371468,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 813.8740062713623,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 582.5271606445312,
+                  "journal_insert_to_batch_ms": 276.18885040283203,
+                  "source_to_journal_insert_ms": 10.185956954956055
+                },
+                "source_max_schedule_lateness_seconds": 0.010568500030785799,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ],
+            "observed_worker_pauses": [
+              40,
+              40,
+              40,
+              40,
+              40,
+              40,
+              40
+            ],
+            "observed_compression": {
+              "fair_copy": "pglz",
+              "fair_copy_1": "pglz",
+              "fair_copy_2": "pglz",
+              "fair_copy_3": "pglz"
+            }
+          },
+          {
+            "variant": "lz4",
+            "returncode": 0,
+            "evidence": ".qualification/qualification_20261101_105220_production_admission/results.json",
+            "results_sha256": "48dd0725e7def98eb647df6478b401940dd9baed07779f5e38129fe5376c319f",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 117.62186813354492,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 733.644962310791,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 544.2681312561035,
+                  "journal_insert_to_batch_ms": 170.52984237670898,
+                  "source_to_journal_insert_ms": 12.490987777709961
+                },
+                "source_max_schedule_lateness_seconds": 0.010218709008768201,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 756.721019744873,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 534.588098526001,
+                  "journal_insert_to_batch_ms": 216.8099880218506,
+                  "source_to_journal_insert_ms": 12.206792831420898
+                },
+                "source_max_schedule_lateness_seconds": 0.010344416950829327,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 752.8970241546631,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 550.0390529632568,
+                  "journal_insert_to_batch_ms": 208.80913734436035,
+                  "source_to_journal_insert_ms": 11.873006820678711
+                },
+                "source_max_schedule_lateness_seconds": 0.01027137495111674,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ],
+            "observed_worker_pauses": [
+              40,
+              40,
+              40,
+              40,
+              40,
+              40,
+              40
+            ],
+            "observed_compression": {
+              "fair_copy": "lz4",
+              "fair_copy_1": "lz4",
+              "fair_copy_2": "lz4",
+              "fair_copy_3": "lz4"
+            }
+          },
+          {
+            "variant": "pglz",
+            "returncode": 0,
+            "evidence": ".qualification/qualification_20261101_105503_production_admission/results.json",
+            "results_sha256": "ec0e6d8dc0200e65b25be8da298ba54f787b545737781d962ded80f06ed02010",
+            "status": "passed",
+            "measurement_valid": true,
+            "source_producer": "independent_sessions",
+            "observer_clock_sampling": "query_return_monotonic",
+            "workload_passed": true,
+            "failed_gates": [],
+            "copy_elapsed_seconds": 120.80563497543335,
+            "timing_validation": {
+              "errors": [],
+              "tolerance_seconds": 1.0,
+              "valid": true
+            },
+            "engine_oom": false,
+            "unexpected_pg_crash": false,
+            "streams": [
+              {
+                "database": "analytics",
+                "p95_publication_ms": 842.4668312072754,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 582.1378231048584,
+                  "journal_insert_to_batch_ms": 312.6800060272217,
+                  "source_to_journal_insert_ms": 13.905048370361328
+                },
+                "source_max_schedule_lateness_seconds": 0.01024862495251,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_1",
+                "p95_publication_ms": 905.5559635162354,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 582.0538997650146,
+                  "journal_insert_to_batch_ms": 349.5149612426758,
+                  "source_to_journal_insert_ms": 12.868881225585938
+                },
+                "source_max_schedule_lateness_seconds": 0.010303415940143168,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              },
+              {
+                "database": "fair_stream_2",
+                "p95_publication_ms": 917.1230792999268,
+                "latency_phases_p95_ms": {
+                  "batch_to_publication_commit_ms": 584.6061706542969,
+                  "journal_insert_to_batch_ms": 350.98814964294434,
+                  "source_to_journal_insert_ms": 10.154962539672852
+                },
+                "source_max_schedule_lateness_seconds": 0.010251374915242195,
+                "checks": {
+                  "at_least_five_commits_during_copy": true,
+                  "catchup_within_five_seconds": true,
+                  "max_gap_within_five_seconds": true,
+                  "p95_below_two_seconds": true,
+                  "source_schedule_within_one_interval": true
+                }
+              }
+            ],
+            "observed_worker_pauses": [
+              40,
+              40,
+              40,
+              40,
+              40,
+              40,
+              40
+            ],
+            "observed_compression": {
+              "fair_copy": "pglz",
+              "fair_copy_1": "pglz",
+              "fair_copy_2": "pglz",
+              "fair_copy_3": "pglz"
+            }
+          }
+        ],
+        "status": "passed",
+        "configuration_only": true,
+        "sql_overlay": false,
+        "binary_overlay": false,
+        "runner_sha256": "b7e7b95cfcd56e96a31fc3e066691d4c04c1b5dd3f8c17258fb7299f71fdb4f9",
+        "summary_sha256": "5f67023034ed2df3ac973c271cf16642c5be9ce7c117067e76c994d7617651c0",
+        "common_identity": {
+          "archive": {
+            "architecture": "arm64",
+            "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+            "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+            "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+          },
+          "image_id": "sha256:25d417a2ea7560362346f38e71af544491c9c69f175e22e76d9a8c43cec4e5f1",
+          "inputs": {
+            "Cargo.lock": "1b4d9fdcc9bbb07a21148eca8e1964615ca70ed7c92351e69053a06c58b8b6c1",
+            "experiments/admission/admission_measure.py": "6a8e2677fea0cbec6aa2f427942c6dac51a8ad0ccef86e4969dd5e057cb625d2",
+            "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+            "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+            "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+            "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+            "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+            "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+            "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+            "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+            "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+            "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+            "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+            "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+            "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+            "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+            "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+            "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+            "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+            "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+            "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+            "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+            "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+            "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+            "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+            "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+            "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+            "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+            "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+            "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+            "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+            "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+            "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+            "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+            "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+            "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+            "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+            "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+            "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+            "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+            "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+            "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+            "tests/admission/probe.py": "cf4b2a682caa7b36af0def8b035731e65f5be1e5002f591ce9d18d8ef99f61d2",
+            "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+            "worker/Cargo.toml": "fe1d5d6bd0d780f416bec5711bb46ad56fc824832866548756f6f8274bbfc423",
+            "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+            "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+            "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+            "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+            "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+            "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+            "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+            "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+            "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+            "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+            "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+          }
+        },
+        "comparison": {
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "candidate_workload_passed": true,
+          "all_workloads_passed": true,
+          "control_copy_drift_ratio": 1.011483112921805,
+          "candidate_copy_ratio_to_control_mean": 0.979203870993728,
+          "inference_limit": "One sequential comparison; host drift is bracketed, not eliminated. No statistical speedup or release qualification is claimed."
+        }
+      }
+    }
+  },
+  "decision": "Keep rustls security fix and current production defaults. Local pacing/codec controls do not establish sufficient latency headroom. Complete server message timings are substantially larger than publication statement timings; investigate publication transaction finalization and queueing next. This is not proof of a single cause of the native failure.",
+  "profiles": {
+    "statements": {
+      "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/qualification_20261101_105934_production_admission/results.json",
+      "results_sha256": "f7b11a7313ae7b9493bc392db2f96ad5ac557244072786904a9864c8366ba6bd",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+        "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+        "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+      },
+      "harness_inputs": {
+        "Cargo.lock": "1b4d9fdcc9bbb07a21148eca8e1964615ca70ed7c92351e69053a06c58b8b6c1",
+        "experiments/admission/admission_measure.py": "6a8e2677fea0cbec6aa2f427942c6dac51a8ad0ccef86e4969dd5e057cb625d2",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/checkpoint_sql_profile.py": "91cf1016cca43a962d292eb1f86ddea06a38e37b9ef1ad6a2d1dd5a373635720",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "cf4b2a682caa7b36af0def8b035731e65f5be1e5002f591ce9d18d8ef99f61d2",
+        "tests/admission/sql_profile_probe.py": "83283bbea3d49bc4c81ef45338b6bddb04159c7858644e5659d254c29939a3d9",
+        "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+        "worker/Cargo.toml": "fe1d5d6bd0d780f416bec5711bb46ad56fc824832866548756f6f8274bbfc423",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "original_runner_status": "passed",
+      "original_runner_error": null,
+      "case_status": "passed",
+      "all_assertions_passed": true,
+      "copy_elapsed_seconds": 119.45613288879395,
+      "stream_p95_ms": [
+        942.3589706420898,
+        925.1229763031006,
+        936.2039566040039
+      ],
+      "sql_profile_sha256": "e880f1fa685ef5dfeca0e3fc64a3978235de1582374454e926dc7cfb1c7029a1",
+      "scope": "Instrumented diagnosis only; no release qualification or CPU attribution",
+      "publication_statements": [
+        {
+          "database": "fair_stream_1",
+          "calls": 118,
+          "mean_exec_time": 35.116859093220334,
+          "max_exec_time": 82.968125,
+          "total_exec_time": 4143.789373,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        },
+        {
+          "database": "fair_stream_2",
+          "calls": 118,
+          "mean_exec_time": 36.17679376271186,
+          "max_exec_time": 91.508249,
+          "total_exec_time": 4268.861664000001,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        },
+        {
+          "database": "analytics",
+          "calls": 118,
+          "mean_exec_time": 37.47525177118644,
+          "max_exec_time": 111.363208,
+          "total_exec_time": 4422.079708999998,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        }
+      ]
+    },
+    "utility_statements": {
+      "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/qualification_20261101_110353_production_admission/results.json",
+      "results_sha256": "9834cae394d66b8361efac5ea86908299959eec45c784ac5a90515e910a87bee",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+        "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+        "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+      },
+      "harness_inputs": {
+        "Cargo.lock": "1b4d9fdcc9bbb07a21148eca8e1964615ca70ed7c92351e69053a06c58b8b6c1",
+        "experiments/admission/admission_measure.py": "6a8e2677fea0cbec6aa2f427942c6dac51a8ad0ccef86e4969dd5e057cb625d2",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/checkpoint_sql_profile.py": "c599ea95b3b7f927cdb3555c275496d32dbf26ac95ac6eba432d20248a993a17",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "cf4b2a682caa7b36af0def8b035731e65f5be1e5002f591ce9d18d8ef99f61d2",
+        "tests/admission/sql_profile_probe.py": "13a40d912ed23139866a2ae36cea12dbe6dc89ed95b4109f4a5f64732dcd340f",
+        "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+        "worker/Cargo.toml": "fe1d5d6bd0d780f416bec5711bb46ad56fc824832866548756f6f8274bbfc423",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "original_runner_status": "passed",
+      "original_runner_error": null,
+      "case_status": "passed",
+      "all_assertions_passed": true,
+      "copy_elapsed_seconds": 120.45802879333496,
+      "stream_p95_ms": [
+        817.1179294586182,
+        812.8600120544434,
+        803.6448955535889
+      ],
+      "sql_profile_sha256": "929ed6ab9b2c7b3e21b787950b48d7f18577f42e3ab19066996f81803af51d30",
+      "scope": "Instrumented diagnosis only; no release qualification or CPU attribution",
+      "publication_statements": [
+        {
+          "database": "fair_stream_1",
+          "calls": 118,
+          "mean_exec_time": 37.006680805084734,
+          "max_exec_time": 79.224042,
+          "total_exec_time": 4366.788335,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        },
+        {
+          "database": "fair_stream_2",
+          "calls": 118,
+          "mean_exec_time": 38.71949438135592,
+          "max_exec_time": 96.542917,
+          "total_exec_time": 4568.900336999999,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        },
+        {
+          "database": "analytics",
+          "calls": 118,
+          "mean_exec_time": 37.69801200847457,
+          "max_exec_time": 93.927541,
+          "total_exec_time": 4448.365417,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        }
+      ]
+    },
+    "server_durations": {
+      "evidence": "/private/tmp/lake-beta5-performance-820f402/.qualification/qualification_20261101_110823_production_admission/results.json",
+      "results_sha256": "d1704f36f8c44b9be2b6e7ff5aee9666915ab45fbbe0964e1c772b07687ebdf4",
+      "archive": {
+        "architecture": "arm64",
+        "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+        "archive_sha256": "1c3baa2ae3792ba85ac936caa83a8303d0db757ba375336e451f7d16b67f0730",
+        "source_revision": "820f402a1a78083e555235439a30247b454d9a88"
+      },
+      "harness_inputs": {
+        "Cargo.lock": "1b4d9fdcc9bbb07a21148eca8e1964615ca70ed7c92351e69053a06c58b8b6c1",
+        "experiments/admission/admission_measure.py": "6a8e2677fea0cbec6aa2f427942c6dac51a8ad0ccef86e4969dd5e057cb625d2",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/checkpoint_sql_profile.py": "1e68c775672edc891084bdfbfc0b38ad6e8a5483010a1b11c64922242d4130b3",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "cf4b2a682caa7b36af0def8b035731e65f5be1e5002f591ce9d18d8ef99f61d2",
+        "tests/admission/sql_profile_probe.py": "ce317241ebeead0d231d77a621d5cb835b59b7c0e0bac5aee184f7a5d5e24801",
+        "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+        "worker/Cargo.toml": "fe1d5d6bd0d780f416bec5711bb46ad56fc824832866548756f6f8274bbfc423",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "41baa6102fcfca055753eaccf4ae4dcd0e947d9b714775b00862af46ce740502",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "3987e3b3757fafa79e10c5b0bda0b9c78f369e07347230c304a6661ceb652e46",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "129851d2428926fa12a3514ad6e56bd82acfeafebc3a5ad720271ef11fe911b6",
+        "worker/src/supervisor.rs": "7750b3ddcb41511e0758bc90e402fe738214e226eb61aa454196864b5da650a0",
+        "worker/src/wire.rs": "13cf4009f867d90537c8867e319383ecd04cd306830b4540043e7b7418194452"
+      },
+      "original_runner_status": "error",
+      "original_runner_error": "worker duration logs missing measured databases",
+      "case_status": "passed",
+      "all_assertions_passed": true,
+      "copy_elapsed_seconds": 120.27997493743896,
+      "stream_p95_ms": [
+        954.0247917175293,
+        917.2840118408203,
+        932.2528839111328
+      ],
+      "sql_profile_sha256": "90a5c46587820e6cc54d3a4c04d40a78c3ce2c2d75b3d6c7c56889b55fefdc15",
+      "scope": "Instrumented diagnosis only; no release qualification or CPU attribution",
+      "publication_statements": [
+        {
+          "database": "fair_stream_1",
+          "calls": 117,
+          "mean_exec_time": 40.017935521367534,
+          "max_exec_time": 137.291458,
+          "total_exec_time": 4682.098456000001,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        },
+        {
+          "database": "fair_stream_2",
+          "calls": 117,
+          "mean_exec_time": 41.14395479487178,
+          "max_exec_time": 81.552333,
+          "total_exec_time": 4813.842710999999,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        },
+        {
+          "database": "analytics",
+          "calls": 117,
+          "mean_exec_time": 40.13329068376068,
+          "max_exec_time": 139.722667,
+          "total_exec_time": 4695.595009999999,
+          "query": "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch($1, $2, $3::pg_lsn, $4::pg_lsn)"
+        }
+      ],
+      "log_sha256": "64acb3a7dedb3ed52bd07f66ce1fbba269247c0632c17536ea2074050a88ec30",
+      "parser_replay": {
+        "scope": "Simple-query message durations including transaction finalization; worker sessions only, includes setup and validation, not CPU time. No individual statement attribution.",
+        "databases": {
+          "analytics": {
+            "count": 667,
+            "total_ms": 38516.527,
+            "p95_ms": 410.762,
+            "max_ms": 826.47
+          },
+          "fair_stream_1": {
+            "count": 667,
+            "total_ms": 38574.189,
+            "p95_ms": 413.714,
+            "max_ms": 851.1
+          },
+          "fair_stream_2": {
+            "count": 669,
+            "total_ms": 38461.587,
+            "p95_ms": 418.409,
+            "max_ms": 846.603
+          },
+          "fair_copy_2": {
+            "count": 2015,
+            "total_ms": 24893.469,
+            "p95_ms": 20.145,
+            "max_ms": 8261.383
+          },
+          "fair_copy_1": {
+            "count": 2015,
+            "total_ms": 22121.999,
+            "p95_ms": 19.852,
+            "max_ms": 5628.048
+          },
+          "fair_copy": {
+            "count": 2015,
+            "total_ms": 27465.388,
+            "p95_ms": 19.257,
+            "max_ms": 10783.827
+          },
+          "fair_copy_3": {
+            "count": 2015,
+            "total_ms": 19497.73,
+            "p95_ms": 20.323,
+            "max_ms": 2912.691
+          }
+        }
+      },
+      "parser_replay_status": "passed; all seven databases found",
+      "parser_correction": "Original runner required a space before LOG; actual prefix has no space. Original error result retained; corrected parser replayed the same log without rerunning the workload.",
+      "parser_sha256": "cb9faaa2097bbeafbe6c63f1381a3ab9be21407183ef090a3a38f18a019dae6b"
+    }
+  }
+}

@@ -107,16 +107,24 @@ def upgrade(result,new_image,old_archive):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cpuset',default='0-1',help='Shared CPU affinity for source, destination, engine and storage')
+    parser.add_argument('--initial-copy-pause-ms',type=int,help='Fairness-only configuration diagnostic; omit to qualify archived defaults')
+    parser.add_argument('--toast-compression',choices=['pglz','lz4'],help='Fairness-only PostgreSQL storage configuration diagnostic')
     parser.add_argument('--cases',nargs='+',choices=['pipeline','checkpoint','managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'],default=['pipeline','managed','locks','pool','schema','rebuild','cancel','upgrade','scale','fairness'])
     parser.add_argument('--old-archive',type=Path,default=ROOT/f'dist/release/lake_replication-0.1.0-beta.2-linux-{q.native_architecture()}.tar.gz')
     parser.add_argument('--fairness-copies',type=int,choices=[0,1,4],default=4,help='Zero/one-copy diagnostic control or the unchanged four-copy release case')
     args=parser.parse_args()
+    if args.initial_copy_pause_ms is not None and (not 0<=args.initial_copy_pause_ms<=1000 or args.cases!=['fairness']):
+        parser.error('pacing overrides require --cases fairness and a value from 0 to 1000')
+    if args.toast_compression is not None and args.cases!=['fairness']:parser.error('compression overrides require --cases fairness')
     if not re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*',args.cpuset):
         parser.error('invalid CPU affinity')
     root=ROOT/'.qualification'/(q.RUN+'_production_admission');root.mkdir(parents=True);q.RESULTS=root
     q.PROJECT+='-production-admission';q.SOURCE_IMAGE+='-production-admission';q.DESTINATION_IMAGE+='-production-admission'
     q.ENV.update(QUALIFICATION_SOURCE_IMAGE=q.SOURCE_IMAGE,QUALIFICATION_DESTINATION_IMAGE=q.DESTINATION_IMAGE)
     result=dict(status='running',scope=__doc__,cases=[],parameters={**vars(args),'old_archive':str(args.old_archive)})
+    result['configuration_diagnostic']=args.initial_copy_pause_ms is not None or args.toast_compression is not None
+    if result['configuration_diagnostic']:
+        result['scope']='Explicit PostgreSQL configuration diagnostic; does not qualify archived defaults. '+__doc__
     paths=[Path(__file__),Path(__file__).with_name('managed_cases.py'),Path(__file__).with_name('pool_cases.py'),ROOT/'experiments/admission/operational_probe.py',ROOT/'experiments/admission/reserved_probe.py',ROOT/'experiments/admission/admission_measure.py',ROOT/'experiments/admission/compare.py',ROOT/'experiments/admission/sample.py',ROOT/'experiments/admission/scale.py',ROOT/'tests/qualification/probe.py',ROOT/'Cargo.lock',ROOT/'worker/Cargo.toml',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),*[ROOT/'extensions/lake_replication'/name for name in ['lake_replication.c','lake_replication.control','Makefile','build-extension-sql.sh']]]
     paths.append(ROOT/'experiments/admission/source_workload.py')
     if 'checkpoint' in args.cases:paths.append(Path(__file__).with_name('checkpoint_cases.py'))
@@ -135,6 +143,13 @@ def main():
         q.command(['docker','tag',q.DESTINATION_IMAGE,image])
         result['image_id']=q.command(['docker','image','inspect','--format','{{.Id}}',image]).stdout.strip()
         text=m.compose_text().replace('      - -c\n      - lake_replication.prototype_instance_id=measurement-owner\n','')
+        if result['configuration_diagnostic']:
+            anchor='      - lake_replication.log_directory=/worker-logs\n'
+            if text.count(anchor)!=1:raise RuntimeError('destination configuration anchor changed')
+            settings=[]
+            if args.initial_copy_pause_ms is not None:settings.append(f'lake_replication.initial_copy_pause_ms={args.initial_copy_pause_ms}')
+            if args.toast_compression is not None:settings.append(f'default_toast_compression={args.toast_compression}')
+            text=text.replace(anchor,anchor+''.join('      - -c\n      - '+setting+'\n' for setting in settings))
         for service in ('source','destination','pgduck','storage'):
             text=re.sub(rf'^  {service}:$',f'  {service}:\n    cpuset: "{args.cpuset}"',text,flags=re.MULTILINE)
         for case in args.cases:
@@ -144,7 +159,7 @@ def main():
                 q.ENV['QUALIFICATION_DESTINATION_IMAGE']=image
                 if case=='scale':observed.update(s.scale_case(4,16,64,image,text,directory))
                 elif case=='fairness':
-                    observed.update(m.fairness(argparse.Namespace(copy_rows=2000000,stream_transactions=120,bulk_copies=args.fairness_copies,require_queue=args.fairness_copies>1,capture_stream_admission=True,seed_after_subscriptions=False,admission_view=VIEW), 'bulk_only',image,text,directory))
+                    observed.update(m.fairness(argparse.Namespace(copy_rows=2000000,stream_transactions=120,bulk_copies=args.fairness_copies,require_queue=args.fairness_copies>1,capture_stream_admission=True,seed_after_subscriptions=False,admission_view=VIEW,expected_initial_copy_pause_ms=args.initial_copy_pause_ms,expected_toast_compression=args.toast_compression), 'bulk_only',image,text,directory))
                     observed['timing_validation']=m.fairness_timing_validation(observed)
                     if not observed['timing_validation']['valid']:observed['status']='finding'
                 else:
