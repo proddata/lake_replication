@@ -8,6 +8,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 import tarfile
@@ -81,6 +82,9 @@ tar -czf /snapshot/postgres.tar.gz -C /var/lib/postgresql/18/data .
 tar -czf /snapshot/objects.tar.gz -C /recovery-objects .
 tar -czf /snapshot/credentials.tar.gz -C /credentials .
 """
+        # Linux bind mounts retain container-root ownership. Keep backups private
+        # while allowing the host runner to hash its own generated snapshots.
+        command += f"chown {os.getuid()}:{os.getgid()} /snapshot/postgres.tar.gz /snapshot/objects.tar.gz /snapshot/credentials.tar.gz\n"
     q.compose(*args, 'destination', '-ec', command, timeout=300)
     digest = q.compose('run', '--rm', '--no-deps', '-T', '--user', 'root',
                        '--entrypoint', '/bin/sh', 'destination', '-ec',
