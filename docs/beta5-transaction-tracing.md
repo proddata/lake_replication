@@ -58,6 +58,36 @@ and fairness cases with all tracing and profiling disabled: 166 assertions,
 121.27-second four-copy completion, and streaming p95 0.879–0.924 seconds.
 This verifies the local default path; it does not replace native qualification.
 
+## Native AMD64 confirmation
+
+[Native diagnostic 41324056257](https://github.com/proddata/lake_replication/actions/runs/41324056257)
+uses the clean `fac7079` archive from
+[CI 41323582724](https://github.com/proddata/lake_replication/actions/runs/41323582724).
+CI, CodeQL and both archive security audits pass. The native diagnostic remains
+red: analytics streaming p95 is 2.007067 seconds, exceeding the unchanged
+two-second gate. The other streams reach 1.927332 and 1.918589 seconds. Copies
+finish in 144.12 seconds; exact data, timing validation, concurrent publication,
+queue observation, catch-up and maximum-gap checks pass. No OOM or unexpected
+PostgreSQL crash occurs.
+
+All 265 successful publications match, with no correlation errors. All 94
+publisher spawns have a recorded connection. Mean server phase durations:
+
+| Phase | analytics | fair_stream_1 | fair_stream_2 |
+|---|---:|---:|---:|
+| Begin | 0.01 ms | 0.01 ms | 0.01 ms |
+| Generation fence | 0.26 ms | 0.28 ms | 0.23 ms |
+| Publication statement | 60.55 ms | 62.21 ms | 56.55 ms |
+| Commit/finalization | 513.73 ms | 517.77 ms | 518.94 ms |
+
+Commit p95 is 988–1055 ms. Outer publisher connections average 9–10 ms;
+startup before connecting averages 1.4–2.3 ms. Commit dominates this measured
+native path as well. It remains necessary to separate metadata preparation,
+upload completion, internal engine connection work and PostgreSQL durability.
+Outer connection timings do not measure connections created inside pg_lake.
+The split instrumentation perturbs execution, so this run cannot qualify the
+normal transaction path or establish a causal regression against an older VM.
+
 ## Reproduce and interpret
 
 Build the archive from an isolated checkout, then set `QUALIFICATION_ARCHIVE`
@@ -98,11 +128,10 @@ gates and retain failures; neither qualifies production defaults.
 
 1. Completed locally: verify the new archive with tracing disabled, including
    pipeline, managed-worker safety and the unchanged four-copy workload.
-2. Run a short matched native diagnostic on the architecture with the larger
-   miss (AMD64) after clean CI archives are available. Confirm which phases are
-   slow there before choosing an optimization.
-3. If commit dominates natively, instrument its metadata preparation, file
-   uploads and durability waits separately. Preserve the pinned upstream source
+2. Completed: short matched AMD64 phase diagnostic from clean CI artifacts.
+   Commit dominates; the valid latency miss is retained.
+3. Instrument commit metadata preparation, internal engine connection work,
+   file uploads and durability waits separately. Preserve the pinned upstream source
    as the control and clearly label any diagnostic instrumentation.
 4. Implement one evidence-backed change, then use fixed local control/candidate/
    control runs and focused native tests on both architectures. Retain the

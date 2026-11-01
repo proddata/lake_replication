@@ -41,9 +41,11 @@ local controls](docs/beta5-latency-investigation.md). No production default or
 release gate has been changed.
 
 The [matched publication trace](docs/beta5-transaction-tracing.md) now measures
-complete worker/server transactions and separate diagnostic phases. Commit is
-the largest measured local phase; a short native confirmation is the next step.
-This tracing work does not resolve the native gate or change resource defaults.
+complete worker/server transactions and separate diagnostic phases. A short
+AMD64 diagnostic confirms that commit dominates (514–519 ms mean); one stream
+still misses latency at 2.007067 seconds. Its failed gate remains retained.
+This tracing work does not resolve the native gate or change resource defaults;
+the next step is separating metadata, upload and durability work inside commit.
 
 The dependency review now patches rustls 0.23.45 to 0.23.46 for four upstream
 advisories. [Security review](docs/dependency-security-review.md) records the
