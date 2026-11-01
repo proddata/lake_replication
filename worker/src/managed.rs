@@ -8,6 +8,7 @@ pub struct ManagedClient {
     subscription: i64,
     generation: i64,
     poisoned: bool,
+    trace_phases: bool,
 }
 
 impl ManagedClient {
@@ -38,6 +39,8 @@ impl ManagedClient {
             subscription,
             generation,
             poisoned: false,
+            trace_phases: std::env::var("LAKE_TRACE_TRANSACTIONS").as_deref() == Ok("1")
+                && std::env::var("LAKE_TRACE_TRANSACTION_PHASES").as_deref() == Ok("1"),
         })
     }
 
@@ -51,16 +54,25 @@ impl ManagedClient {
         )
     }
 
-    fn transaction(&mut self, before_fence: &str, sql: &str) -> Result<Rows, Error> {
+    fn transaction(
+        &mut self,
+        operation: &'static str,
+        before_fence: &str,
+        sql: &str,
+    ) -> Result<Rows, Error> {
         if self.poisoned {
             return Err(Error::Protocol(
                 "managed connection is unusable; reconnect required".into(),
             ));
         }
-        let result = self.client.simple_query(&format!(
-            "BEGIN; {before_fence}{}{sql}; COMMIT",
-            self.fence()
-        ));
+        let result = if self.trace_phases {
+            self.phased_transaction(operation, before_fence, sql)
+        } else {
+            self.client.simple_query_named(
+                operation,
+                &format!("BEGIN; {before_fence}{}{sql}; COMMIT", self.fence()),
+            )
+        };
         match &result {
             Err(Error::Server(_)) => {
                 // Server errors were drained through ReadyForQuery. Only that
@@ -79,14 +91,55 @@ impl ManagedClient {
         result
     }
 
+    // Diagnostic only: extra round trips perturb timings. Retain the same
+    // transaction and generation/admission fences; publish nothing before COMMIT.
+    fn phased_transaction(
+        &mut self,
+        operation: &'static str,
+        before_fence: &str,
+        sql: &str,
+    ) -> Result<Rows, Error> {
+        self.client
+            .simple_query_phase(operation, "begin", "BEGIN")?;
+        let mut rows = Vec::new();
+        if !before_fence.is_empty() {
+            rows.extend(
+                self.client
+                    .simple_query_phase(operation, "admission", before_fence)?,
+            );
+        }
+        let fence = self.fence();
+        if !fence.is_empty() {
+            rows.extend(self.client.simple_query_phase(operation, "fence", &fence)?);
+        }
+        rows.extend(
+            self.client
+                .simple_query_phase(operation, "statement", sql)?,
+        );
+        rows.extend(
+            self.client
+                .simple_query_phase(operation, "commit", "COMMIT")?,
+        );
+        Ok(rows)
+    }
+
     pub fn simple_query(&mut self, sql: &str) -> Result<Rows, Error> {
-        self.transaction("", sql)
+        self.transaction("managed", "", sql)
+    }
+
+    pub fn simple_query_named(
+        &mut self,
+        operation: &'static str,
+        sql: &str,
+    ) -> Result<Rows, Error> {
+        self.transaction(operation, "", sql)
     }
 
     pub fn staging_query(&mut self, sql: &str) -> Result<Rows, Error> {
         // Wait for the instance permit before taking the generation fence.
         // Stop can cancel this waiter without waiting for its config-row lock.
         self.transaction(
+            "stage",
             "SET LOCAL lock_timeout='10s'; SELECT lake_replication.admit_staging(); ",
             sql,
         )
@@ -95,7 +148,11 @@ impl ManagedClient {
     pub fn initial_copy_lease(&mut self) -> Result<Rows, Error> {
         // Wait before the generation fence. Session admission survives COMMIT,
         // so a failure after acquisition must close the session, not reuse it.
-        let result = self.transaction("SELECT lake_replication.admit_initial_copy(); ", "SELECT 1");
+        let result = self.transaction(
+            "initial_copy_lease",
+            "SELECT lake_replication.admit_initial_copy(); ",
+            "SELECT 1",
+        );
         if result.is_err() {
             self.poisoned = true;
             self.client.abort();
@@ -222,6 +279,85 @@ mod tests {
         });
         let mut client =
             ManagedClient::connect(&address, "postgres", "analytics", None, None, 1, 1).unwrap();
+        assert!(matches!(client.initial_copy_lease(), Err(Error::Server(_))));
+        assert!(matches!(
+            client.simple_query("SELECT 1"),
+            Err(Error::Protocol(_))
+        ));
+        server.join().unwrap();
+    }
+
+    #[test]
+    fn phase_diagnostic_does_not_return_rows_before_commit_succeeds() {
+        for failure in ["none", "server", "protocol"] {
+            let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+            let address = listener.local_addr().unwrap().to_string();
+            let server = thread::spawn(move || {
+                let (mut stream, _) = listener.accept().unwrap();
+                handshake(&mut stream);
+                assert_eq!(query(&mut stream), "BEGIN");
+                message(&mut stream, b'Z', b"T");
+                assert!(query(&mut stream).contains("assert_worker(1,1)"));
+                message(&mut stream, b'Z', b"T");
+                assert_eq!(query(&mut stream), "SELECT 7");
+                message(&mut stream, b'D', b"\0\x01\0\0\0\x017");
+                message(&mut stream, b'Z', b"T");
+                assert_eq!(query(&mut stream), "COMMIT");
+                match failure {
+                    "none" => message(&mut stream, b'Z', b"I"),
+                    "server" => {
+                        message(&mut stream, b'E', b"SERROR\0C55000\0Mcommit failed\0\0");
+                        message(&mut stream, b'Z', b"E");
+                        assert_eq!(query(&mut stream), "ROLLBACK");
+                        message(&mut stream, b'Z', b"I");
+                    }
+                    _ => {
+                        message(&mut stream, b'?', b"");
+                        assert_eq!(stream.read(&mut [0]).unwrap(), 0);
+                    }
+                }
+            });
+            let mut client =
+                ManagedClient::connect(&address, "postgres", "analytics", None, None, 1, 1)
+                    .unwrap();
+            client.trace_phases = true;
+            let result = client.simple_query_named("publish_batch", "SELECT 7");
+            match failure {
+                "none" => assert_eq!(result.unwrap()[0][0].as_deref(), Some("7")),
+                "server" => assert!(matches!(result, Err(Error::Server(_)))),
+                _ => {
+                    assert!(matches!(result, Err(Error::Protocol(_))));
+                    assert!(matches!(
+                        client.simple_query("SELECT 8"),
+                        Err(Error::Protocol(_))
+                    ));
+                }
+            }
+            server.join().unwrap();
+        }
+    }
+
+    #[test]
+    fn phase_diagnostic_closes_a_session_lease_after_fence_failure() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap().to_string();
+        let server = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            handshake(&mut stream);
+            assert_eq!(query(&mut stream), "BEGIN");
+            message(&mut stream, b'Z', b"T");
+            assert!(query(&mut stream).contains("admit_initial_copy()"));
+            message(&mut stream, b'Z', b"T");
+            assert!(query(&mut stream).contains("assert_worker(1,1)"));
+            message(&mut stream, b'E', b"SERROR\0C55000\0Mstopped worker\0\0");
+            message(&mut stream, b'Z', b"E");
+            assert_eq!(query(&mut stream), "ROLLBACK");
+            message(&mut stream, b'Z', b"I");
+            assert_eq!(stream.read(&mut [0]).unwrap(), 0);
+        });
+        let mut client =
+            ManagedClient::connect(&address, "postgres", "analytics", None, None, 1, 1).unwrap();
+        client.trace_phases = true;
         assert!(matches!(client.initial_copy_lease(), Err(Error::Server(_))));
         assert!(matches!(
             client.simple_query("SELECT 1"),

@@ -4,9 +4,9 @@ use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, addre
 use std::env;
 use std::io::{self, Write};
 use std::path::Path;
-use std::process::{Child, Command, Output};
+use std::process::{Child, Command, Output, Stdio};
 use std::thread;
-use std::time::{Duration, Instant};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 #[derive(Debug)]
 enum CycleError {
@@ -757,6 +757,7 @@ fn run_cycle(
     consecutive_failures: &mut u32,
     busy: &mut SlotContention,
 ) -> Result<(i64, i64), CycleError> {
+    let trace_publication = env::var("LAKE_TRACE_TRANSACTIONS").as_deref() == Ok("1");
     let source_address = source_preflight(destination, config, busy)?;
     // Inherit child logs rather than buffering an unbounded streamed transaction.
     let mut command = Command::new(receiver);
@@ -820,13 +821,46 @@ fn run_cycle(
         if has_pending_transactions(destination, config)
             .map_err(|error| CycleError::Fatal(error.to_string()))?
         {
-            let output = Command::new(publisher)
+            let mut command = Command::new(publisher);
+            command
                 .env_remove("LAKE_SOURCE_PASSWORD")
-                .env("LAKE_MAX_BATCHES", config.publisher_max_batches.to_string())
-                .output()
-                .map_err(|error| {
-                    CycleError::Retry(format!("could not start publisher: {error}"))
-                })?;
+                .env("LAKE_MAX_BATCHES", config.publisher_max_batches.to_string());
+            let output = if trace_publication {
+                let started_unix_ms = SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_millis();
+                let started = Instant::now();
+                let child = command
+                    .stdin(Stdio::null())
+                    .stdout(Stdio::piped())
+                    .stderr(Stdio::piped())
+                    .spawn()
+                    .map_err(|error| {
+                        CycleError::Retry(format!("could not start publisher: {error}"))
+                    })?;
+                log_event(
+                    "supervisor",
+                    "INFO",
+                    "publisher_spawn",
+                    "Opt-in publisher startup timing",
+                    &[
+                        ("child_pid", child.id().to_string()),
+                        ("database", config.destination_database.clone()),
+                        ("subscription_id", config.subscription_id.to_string()),
+                        ("generation", config.config_generation.to_string()),
+                        ("started_unix_ms", started_unix_ms.to_string()),
+                        (
+                            "spawn_elapsed_us",
+                            started.elapsed().as_micros().to_string(),
+                        ),
+                    ],
+                );
+                child.wait_with_output()
+            } else {
+                command.output()
+            }
+            .map_err(|error| CycleError::Retry(format!("could not start publisher: {error}")))?;
             ensure_success("publisher", &output).map_err(CycleError::Retry)?;
             published += 1;
         }

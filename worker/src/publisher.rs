@@ -36,7 +36,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
     let mut published_batches = 0_u64;
     while published_batches < config.max_batches {
-        let rows = destination.simple_query(&format!(
+        let rows = destination.simple_query_named("next_batch", &format!(
             "SELECT first_end_lsn::text, last_end_lsn::text, transaction_count::text, row_count::text, byte_count::text FROM lake_replication.next_batch({}, {}, {}, {})",
             config.subscription_id,
             config.max_transactions,
@@ -64,7 +64,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             "subscription-{}:{}-{}",
             config.subscription_id, first_lsn, last_lsn
         );
-        let result = destination.simple_query(&format!(
+        let result = destination.simple_query_named("publish_batch", &format!(
             "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch({}, {}, {}::pg_lsn, {}::pg_lsn)",
             config.subscription_id,
             sql_literal(&batch_key),

@@ -112,3 +112,7 @@ rerun to repair the parser. Raw-result and log hashes retain that distinction.
 [Machine-readable evidence](evidence/2026-11-01-beta5-latency-investigation.json)
 retains archive identities, raw-result hashes, failed gates, local controls,
 and the limits of each comparison.
+
+The follow-up [matched transaction trace](beta5-transaction-tracing.md) identifies
+commit/finalization as the largest measured local publication phase. Native
+confirmation remains required; this does not qualify a production change.

@@ -55,6 +55,7 @@ impl From<io::Error> for Error {
 pub struct Client {
     stream: Transport,
     reader: MessageReader,
+    trace: Option<crate::trace::QueryTrace>,
 }
 
 enum Transport {
@@ -139,6 +140,7 @@ impl Client {
         application_name: &str,
         password: Option<&str>,
     ) -> Result<Self, Error> {
+        let trace = crate::trace::QueryTrace::from_env(database, application_name);
         let stream = connect_tcp(address, CONNECT_TIMEOUT)?;
         stream.set_nodelay(true)?;
         Self::startup(
@@ -148,6 +150,7 @@ impl Client {
             replication,
             application_name,
             password,
+            trace,
         )
     }
 
@@ -160,6 +163,7 @@ impl Client {
         password: Option<&str>,
         tls: Option<&TlsConfig>,
     ) -> Result<Self, Error> {
+        let trace = crate::trace::QueryTrace::from_env(database, application_name);
         let stream = connect_tcp(address, CONNECT_TIMEOUT)?;
         stream.set_nodelay(true)?;
         let stream = match tls {
@@ -173,6 +177,7 @@ impl Client {
             replication,
             application_name,
             password,
+            trace,
         )
     }
 
@@ -202,6 +207,7 @@ impl Client {
         replication: bool,
         application_name: &str,
         password: Option<&str>,
+        trace: Option<crate::trace::QueryTrace>,
     ) -> Result<Self, Error> {
         let mut body = Vec::new();
         body.extend(196_608_u32.to_be_bytes());
@@ -220,6 +226,7 @@ impl Client {
         let mut client = Self {
             stream,
             reader: MessageReader::default(),
+            trace,
         };
         let mut scram = None;
         let mut scram_verified = false;
@@ -293,7 +300,12 @@ impl Client {
                         read_u32(&body, 0)?
                     )));
                 }
-                b'S' | b'K' | b'N' => {}
+                b'K' => {
+                    if let Some(trace) = &mut client.trace {
+                        trace.backend_pid = read_u32(&body, 0)?;
+                    }
+                }
+                b'S' | b'N' => {}
                 b'E' => return Err(Error::Server(error_message(&body))),
                 b'Z' if authentication_ok => break,
                 b'Z' => {
@@ -307,6 +319,9 @@ impl Client {
                     )));
                 }
             }
+        }
+        if let Some(trace) = &client.trace {
+            trace.connected();
         }
         Ok(client)
     }
@@ -328,6 +343,41 @@ impl Client {
     }
 
     pub fn simple_query(&mut self, sql: &str) -> Result<Vec<Vec<Option<String>>>, Error> {
+        self.simple_query_named("query", sql)
+    }
+
+    pub fn simple_query_named(
+        &mut self,
+        operation: &'static str,
+        sql: &str,
+    ) -> Result<Vec<Vec<Option<String>>>, Error> {
+        self.simple_query_phase(operation, "message", sql)
+    }
+
+    pub fn simple_query_phase(
+        &mut self,
+        operation: &'static str,
+        phase: &'static str,
+        sql: &str,
+    ) -> Result<Vec<Vec<Option<String>>>, Error> {
+        let timing = self.trace.as_mut().map(|trace| {
+            trace.sequence += 1;
+            std::time::Instant::now()
+        });
+        let result = self.simple_query_inner(sql);
+        if let (Some(trace), Some(started)) = (&self.trace, timing) {
+            let status = match &result {
+                Ok(_) => "ok",
+                Err(Error::Server(_)) => "server_error",
+                Err(Error::Protocol(_)) => "protocol_error",
+                Err(Error::Io(_)) => "io_error",
+            };
+            trace.emit(operation, phase, started.elapsed().as_micros(), status);
+        }
+        result
+    }
+
+    fn simple_query_inner(&mut self, sql: &str) -> Result<Vec<Vec<Option<String>>>, Error> {
         self.send_message(b'Q', nul_terminated(sql).as_slice())?;
         let mut rows = Vec::new();
         let mut server_error = None;

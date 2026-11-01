@@ -68,7 +68,7 @@ on:
           - '40'
 
       copy_configuration_comparison:
-        description: Fixed pacing or TOAST GUC comparison; unchanged archive and gates (native diagnostic only)
+        description: Fixed configuration comparison or matched transaction timing (native diagnostic only)
         required: false
         default: disabled
         type: choice
@@ -76,6 +76,8 @@ on:
           - disabled
           - pacing
           - toast
+          - transaction_trace
+          - transaction_trace_phases
 
 permissions:
   contents: read
@@ -274,11 +276,22 @@ jobs:
         timeout-minutes: 15
         run: python3 tests/admission/probe.py --cases pipeline managed fairness
       - name: Configured copy comparison
-        if: ${{ inputs.native_probe && inputs.copy_configuration_comparison != 'disabled' }}
+        if: ${{ inputs.native_probe && (inputs.copy_configuration_comparison == 'pacing' || inputs.copy_configuration_comparison == 'toast') }}
         timeout-minutes: 20
         env:
           COMPARISON_MODE: ${{ inputs.copy_configuration_comparison }}
         run: python3 tests/admission/copy_configuration_compare.py --mode "$COMPARISON_MODE" --cpuset 0-1
+      - name: Matched publication transaction diagnostic
+        if: ${{ inputs.native_probe && (inputs.copy_configuration_comparison == 'transaction_trace' || inputs.copy_configuration_comparison == 'transaction_trace_phases') }}
+        timeout-minutes: 15
+        env:
+          TRACE_MODE: ${{ inputs.copy_configuration_comparison }}
+        run: |
+          args=(--cpuset 0-1 --trace-workers)
+          if [[ "$TRACE_MODE" == transaction_trace_phases ]]; then
+            args+=(--trace-phases)
+          fi
+          python3 tests/admission/sql_profile_probe.py "${args[@]}"
       - name: Checkpoint partition prototype diagnostic (SQL overlay)
         if: ${{ inputs.native_probe && inputs.checkpoint_split_diagnostic }}
         timeout-minutes: 15
