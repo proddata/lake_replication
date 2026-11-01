@@ -8,6 +8,10 @@ RUN cargo build --release --locked --bins \
              target/release/lake-replication-publisher \
              target/release/lake-replication-initial-sync \
              target/release/lake-replication-supervisor
+RUN apt-get update && apt-get install -y --no-install-recommends python3 \
+    && rm -rf /var/lib/apt/lists/*
+COPY deploy/install/third-party-licenses.py /tools/third-party-licenses.py
+RUN python3 /tools/third-party-licenses.py /third-party-licenses
 
 FROM postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af AS extension-builder
 RUN apt-get update \
@@ -51,6 +55,8 @@ COPY deploy/install/install.sh deploy/install/uninstall.sh \
      deploy/install/README.md deploy/install/COMPATIBILITY.md ./
 COPY docs/upgrade-and-rollback.md UPGRADE.md
 COPY LICENSE ./
+COPY --from=worker-builder /src/Cargo.lock ./Cargo.lock
+COPY --from=worker-builder /third-party-licenses ./THIRD-PARTY-LICENSES/
 RUN printf '%s\n' "$VERSION" > VERSION \
     && printf '%s\n' "$REVISION" > SOURCE_REVISION \
     && printf '%s\n' "$TARGETARCH" > TARGETARCH \

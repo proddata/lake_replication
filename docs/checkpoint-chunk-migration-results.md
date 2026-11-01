@@ -200,3 +200,53 @@ builds upstream pg_lake with a 60-minute step limit; the full job retains its
 180-minute limit. AMD64 runners reclaim unused SDK space before either lane.
 The current ARM64 cache is available; AMD64 still requires its first cold build.
 This changes runner setup only, with no production-package or gate changes.
+
+## Full native ARM64 and AMD64 results
+
+[Full qualification 41236044124](https://github.com/proddata/lake_replication/actions/runs/41236044124)
+passes on both architectures at `14dc705f3968f49a82df5150ec54ee71667d01e0`,
+using the exact archives from [CI 41235931261](https://github.com/proddata/lake_replication/actions/runs/41235931261).
+Each architecture passes **614 checks**: two storage-fixture checks, 119 fresh
+lifecycle checks, 17 child-crash checks, 96 receiver regressions, 333 production
+admission checks, and 47 beta.1 handoff checks. The admission suite includes
+populated pipeline migration/restore, managed safety, locking, schema/rebuild,
+cancellation during a real write, beta.2 upgrade, sixteen-stream live/restart
+and the four-copy workload. Every case passes and cleans up its fixture.
+
+| Shared two-CPU workload | ARM64 | AMD64 |
+|---|---:|---:|
+| Four-copy completion | 124.53 s | 133.49 s |
+| Streaming p95 across three streams | 1527.80–1554.34 ms | 1771.19–1837.54 ms |
+| Timing and workload gates | PASS | PASS |
+| Engine OOM / PostgreSQL crash | none / none | none / none |
+
+Both results have valid source/observer timing, exact data, actual admission
+waiting and four overlapping copy publications. The previously unresolved
+AMD64 cold-build, receiver and historical-package disk-cleanup lanes complete
+successfully in this run. The separate local DuckDB build optimization remains
+unqualified and uncommitted. This is full candidate package qualification at
+the pinned pg_lake revision, not second-revision compatibility, a physical
+recovery rehearsal or a 24-hour soak. [Retained evidence](evidence/2026-11-01-beta5-full-native-results.json)
+records archive identities, per-lane source/result hashes, every check name and
+fairness values for each architecture.
+
+## Security patch and remaining release gates
+
+The subsequent rustls 0.23.46 patch changes worker binaries, so the full native
+results above remain the pre-patch baseline. [Dependency review](dependency-security-review.md)
+records the four fixed advisories, verified dependency/runtime notice packaging,
+SBOM coverage and the new cross-architecture CI artifact audit.
+
+The patched local runtime passes 57 compatibility checks at each exact pg_lake
+endpoint, 19 archived-worker TLS checks, 24 same-version physical-recovery
+checks and 30 committed-upgrade/old-binary physical-rollback checks. Its final
+notice-bearing archive has zero matches in the validated vulnerability database;
+the pre-patch control detects all four advisories. All required 42 native
+registry dependencies appear in the 55-package SBOM. Runtime hashes match across
+the local documentation/notice-only archive rebuilds. [Local evidence](evidence/2026-11-01-beta5-local-release-gates.json)
+retains those artifact identities and development fixture findings.
+
+Clean CI artifact audits and full native requalification of the patched workers
+remain pending. The full workflow now includes archived TLS/SCRAM and physical
+upgrade/rollback drills on both architectures. A 24-hour frozen-candidate soak
+and signed publication remain required afterward.

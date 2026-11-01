@@ -84,6 +84,13 @@ These limits do not bound total CPU or RSS. Read `UPGRADE.md` for customization
 restrictions, matching-version logical restore, and the required
 `lake_replication.validate_runtime_state()` check before resuming restored work.
 
+The archive includes `Cargo.lock` and `THIRD-PARTY-LICENSES/inventory.json`, with
+the published license/notice files for the locked native Rust dependency graph.
+Build dependencies are included conservatively. Notice files are verified
+against crate archives whose checksums match Cargo.lock. Keep these notices
+with redistributed worker binaries. PostgreSQL, pg_lake and host shared
+libraries are separately installed dependencies.
+
 ## Removal
 
 Disable or drop managed subscriptions, then drop `lake_replication` in every

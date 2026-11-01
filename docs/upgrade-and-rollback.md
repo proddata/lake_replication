@@ -156,12 +156,42 @@ or its confirmed position is ahead of the restored checkpoint, leave the
 subscription stopped and follow the rebuild procedure instead of forcing the
 checkpoint forward.
 
-## Current evidence boundary
+## Rehearsal command and evidence boundary
 
-The packaged lifecycle lanes exercise fresh install, baseline upgrade, a stopped-
-server beta.1-to-beta.2 handoff with retained data/slot/checkpoint, rolled-back
-upgrade, explicit origin adoption, and resumed replication. See the migration
-qualification report for the exact archive and platform results. The beta.3-to-
-beta.4 stopped-server handoff is covered in the [current migration evidence](staging-journal-migration-results.md). A full physical
-backup/object-store restore drill, SQL downgrade, online handoff, distributed
-fencing and automatic physical takeover are not covered by those lanes.
+Run the artifact-only recovery probe on disposable Docker volumes, with the
+candidate and earlier archive checksums adjacent:
+
+```sh
+QUALIFICATION_ARCHIVE=/path/to/candidate.tar.gz \
+  python3 tests/qualification/recovery.py --old-archive /path/to/earlier.tar.gz
+```
+
+It disables and drains subscriptions, stops PostgreSQL/engine/storage, and saves
+physical PostgreSQL data, the matching object-store volume and credential files.
+It commits the candidate SQL upgrade, then restores both the old data/schema and
+its exact original binary image. Engine containers are recreated to clear caches.
+The source cluster is not restored or modified by the restore operation. The
+probe checks retained local identity, all frontiers, exact Iceberg data and
+credential bytes, followed by safe catch-up of inserts, updates and deletes.
+
+A second restoration deliberately uses the older backup after the original
+source slot has advanced. That restore must refuse continuity, leave checkpoint
+and data unchanged, and require an explicit destination rebuild. The rehearsal
+retains the backup, drops the obsolete subscription/slot and disposable target,
+creates a fresh subscription/snapshot, and verifies live replication afterward.
+For an operator rebuild, inventory every affected target and preserve the
+coordinated backup before removing destination tables. Never force an old
+checkpoint forward to match an advanced source slot.
+
+The local patched beta.5 archive passes 24 same-version recovery checks and
+30 committed beta.2-to-beta.5 upgrade/physical-rollback checks. The fresh native
+workflow repeats the cross-version drill on both architectures. Earlier full
+native lifecycle/child-crash/receiver/admission/upgrade lanes pass at `14dc705`.
+See [local release-gate evidence](https://github.com/proddata/lake_replication/blob/main/docs/evidence/2026-11-01-beta5-local-release-gates.json)
+and [full native evidence](https://github.com/proddata/lake_replication/blob/main/docs/evidence/2026-11-01-beta5-full-native-results.json).
+
+These are rehearsals on one original destination identity with controlled writes
+and source-slot retention. SQL downgrade, online handoff, distributed fencing
+and automatic physical takeover remain unsupported. Private backup contents are
+excluded from uploaded CI artifacts; backup hashes and verification results are
+retained.

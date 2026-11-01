@@ -287,6 +287,9 @@ jobs:
       - name: Fresh packaged lifecycle
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: make lifecycle-test
+      - name: Archived worker TLS and SCRAM
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
+        run: python3 tests/qualification/tls.py
       - name: Forced Rust child crashes
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: make lifecycle-fault-test
@@ -313,6 +316,11 @@ jobs:
         env:
           ARCHES: ${{ matrix.arch }}
         run: ./deploy/install/build-release.sh "$GITHUB_WORKSPACE/.qualification/beta2-artifacts"
+      - name: Coordinated physical upgrade rollback
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
+        env:
+          OLD_ARCHIVE: ${{ github.workspace }}/.qualification/beta2-artifacts/lake_replication-0.1.0-beta.2-linux-${{ matrix.arch }}.tar.gz
+        run: python3 tests/qualification/recovery.py --old-archive "$OLD_ARCHIVE"
       - name: Production admission and beta.2 upgrade
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         env:
@@ -351,6 +359,7 @@ jobs:
             .qualification/
             !.qualification/legacy-source/
             !.qualification/beta2-source/
+            !.qualification/**/private-snapshot/
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 30
