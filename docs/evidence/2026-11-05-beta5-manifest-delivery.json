@@ -1,0 +1,1219 @@
+{
+  "scope": "Native guarded comparison and unguarded delivery verification; diagnostic overlays, no release qualification",
+  "native": {
+    "run_url": "https://github.com/proddata/lake_replication/actions/runs/42092260358",
+    "workflow_conclusion": "failure",
+    "results_sha256": "2d8e07fcc9ae44cf553dc5b6b02cae82e9580c4dfa52c449eb295f3a631e7bf6",
+    "scope": "Fixed control/candidate/control for a guarded pg_lake cleanup prototype.",
+    "status": "completed_with_findings",
+    "runs": [
+      {
+        "variant": "control",
+        "evidence": ".qualification/qualification_20261105_192513_production_admission/results.json",
+        "results_sha256": "a7873a1191ef1566e7d34cba29f5416e31bef10eba0d12ec7cef0e2748f84ae3",
+        "status": "completed_with_findings",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": false,
+        "failed_gates": [
+          "all_stream_targets_pass",
+          "analytics:p95_below_two_seconds",
+          "fair_stream_1:p95_below_two_seconds",
+          "fair_stream_2:p95_below_two_seconds"
+        ],
+        "copy_elapsed_seconds": 161.94439101219177,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 2274.4288444519043,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1291.3620471954346,
+              "journal_insert_to_batch_ms": 1092.585802078247,
+              "source_to_journal_insert_ms": 93.09792518615723
+            },
+            "source_max_schedule_lateness_seconds": 0.0006449750000001586,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 2170.590877532959,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1306.6329956054688,
+              "journal_insert_to_batch_ms": 1008.6989402770996,
+              "source_to_journal_insert_ms": 46.0820198059082
+            },
+            "source_max_schedule_lateness_seconds": 0.0006389359999730004,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 2267.9221630096436,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1302.2990226745605,
+              "journal_insert_to_batch_ms": 1020.6661224365234,
+              "source_to_journal_insert_ms": 76.34401321411133
+            },
+            "source_max_schedule_lateness_seconds": 0.0006726450000087425,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      {
+        "variant": "candidate",
+        "evidence": ".qualification/qualification_20261105_192911_production_admission/results.json",
+        "results_sha256": "77cad27fd6005587b19265ecf0601f2754930dd4a31d8d769937d9ff38e49756",
+        "status": "passed",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": true,
+        "failed_gates": [],
+        "copy_elapsed_seconds": 160.7599391937256,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 1584.0580463409424,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 941.9240951538086,
+              "journal_insert_to_batch_ms": 684.9379539489746,
+              "source_to_journal_insert_ms": 75.22702217102051
+            },
+            "source_max_schedule_lateness_seconds": 0.0016105739999829893,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 1544.6069240570068,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 934.0698719024658,
+              "journal_insert_to_batch_ms": 717.6108360290527,
+              "source_to_journal_insert_ms": 60.04190444946289
+            },
+            "source_max_schedule_lateness_seconds": 0.0006302790000063396,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 1678.0359745025635,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 936.9988441467285,
+              "journal_insert_to_batch_ms": 728.8508415222168,
+              "source_to_journal_insert_ms": 58.01200866699219
+            },
+            "source_max_schedule_lateness_seconds": 0.0006023859999686465,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      {
+        "variant": "control",
+        "evidence": ".qualification/qualification_20261105_193309_production_admission/results.json",
+        "results_sha256": "cf127c45d0bb82ba580e0d0cc93a629c98054b1d24695cf16ef230deb88d1761",
+        "status": "completed_with_findings",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": false,
+        "failed_gates": [
+          "all_stream_targets_pass",
+          "analytics:p95_below_two_seconds",
+          "fair_stream_1:p95_below_two_seconds",
+          "fair_stream_2:p95_below_two_seconds"
+        ],
+        "copy_elapsed_seconds": 161.07466316223145,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 2301.455020904541,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1247.8668689727783,
+              "journal_insert_to_batch_ms": 1077.8419971466064,
+              "source_to_journal_insert_ms": 147.57084846496582
+            },
+            "source_max_schedule_lateness_seconds": 0.0018732799999270355,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 2355.8969497680664,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1218.7509536743164,
+              "journal_insert_to_batch_ms": 1057.2919845581055,
+              "source_to_journal_insert_ms": 117.20609664916992
+            },
+            "source_max_schedule_lateness_seconds": 0.0010649539999576518,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 2106.8930625915527,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 1199.404001235962,
+              "journal_insert_to_batch_ms": 904.4780731201172,
+              "source_to_journal_insert_ms": 90.61217308044434
+            },
+            "source_max_schedule_lateness_seconds": 0.001120958999990762,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": false,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      }
+    ],
+    "binary_overlay": true,
+    "release_qualification": false,
+    "correctness_only": false,
+    "correctness": {
+      "runs": [
+        {
+          "variant": "control",
+          "evidence": ".qualification/qualification_20261105_192308_manifest_cleanup/results.json",
+          "results_sha256": "63524d91a0b3a3361ad22f3b13defd248edbb43a262d27a419e651c5f42653bc",
+          "snapshots_sha256": "ae4f358545b6861bfef81d6f3b513c8f461b8f982b10dd779e58a5d0c4086dac",
+          "skip_witness_count": 0,
+          "libraries": {
+            "pg_lake_engine": "6904f249a9041194d4381622d7461ac3b1b217f676fd5449c5335cfdb772a535",
+            "pg_lake_iceberg": "2ea035431f2c49c239bab2610617f3626b98ad48165d5f1308d27a7685641f4d",
+            "pg_lake_table": "10b5817c9192046ef09919b5db4832030f6fbf5620a3c75940654cc36ef1dd6f"
+          }
+        },
+        {
+          "variant": "candidate",
+          "evidence": ".qualification/qualification_20261105_192454_manifest_cleanup/results.json",
+          "results_sha256": "a4d51b0250b60f9b6f0e0157b69493279f366d9fe8817613a98ac0abe35aa9d6",
+          "snapshots_sha256": "ae4f358545b6861bfef81d6f3b513c8f461b8f982b10dd779e58a5d0c4086dac",
+          "skip_witness_count": 5,
+          "libraries": {
+            "pg_lake_engine": "6904f249a9041194d4381622d7461ac3b1b217f676fd5449c5335cfdb772a535",
+            "pg_lake_iceberg": "2ea035431f2c49c239bab2610617f3626b98ad48165d5f1308d27a7685641f4d",
+            "pg_lake_table": "10b5817c9192046ef09919b5db4832030f6fbf5620a3c75940654cc36ef1dd6f"
+          }
+        }
+      ],
+      "canonical_snapshots_equal": true
+    },
+    "common_identity": {
+      "archive": {
+        "architecture": "amd64",
+        "archive": "lake_replication-0.1.0-beta.5-linux-amd64.tar.gz",
+        "archive_sha256": "e1db4efa0ac75a328ce1d6ef7c0538a1ce926d208785775a589e62afae38237f",
+        "source_revision": "fb29d5d2f8b33201962b275c313eb254f6301226"
+      },
+      "image_id": "sha256:afdb18339367a6d2064918d6c8a31dd7ecc1c1b21189b7db0ab2e46c18df5d6c",
+      "inputs": {
+        "Cargo.lock": "1b4d9fdcc9bbb07a21148eca8e1964615ca70ed7c92351e69053a06c58b8b6c1",
+        "experiments/admission/admission_measure.py": "6a8e2677fea0cbec6aa2f427942c6dac51a8ad0ccef86e4969dd5e057cb625d2",
+        "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+        "experiments/admission/operational_probe.py": "3be9ce139274de728913643751536b8011aa6602bb34ef7c526e084eb2de69de",
+        "experiments/admission/reserved_probe.py": "1f70877afeaa0f8780ee3ad07ab6316d775e0cb0a11cd9d707386e160dcd97ce",
+        "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+        "experiments/admission/scale.py": "3a418548da82ffce14b9730777eb9a77fa6b9f2da38e1b6e5a5037586c369fa5",
+        "experiments/admission/source_workload.py": "f73c5c646365d2a1f431f77311a94d3c88fc4bfac53a5241282efabc7020643e",
+        "extensions/lake_replication/Makefile": "8b16250aa48cab1b5eb6df817b1419c243c09ca33f9422546725587945da8efe",
+        "extensions/lake_replication/build-extension-sql.sh": "f88181b99b706b80fd534d93f84e7f969fc7c03d549d23da274d29ae6eddddf1",
+        "extensions/lake_replication/lake_replication.c": "09dc576ab5b93d93281636d5139188042f71cbe7028b7b971e74d873f0f79656",
+        "extensions/lake_replication/lake_replication.control": "c75350bf7dff06e75a9ef5fe4d2225095f1722851e76faecf600c1caf47e0884",
+        "migrations/0001_journal.sql": "6735ff0b74fda3463f111084ad1697eba6d316177430caa204976f9aa5fb75cf",
+        "migrations/0002_transport.sql": "7cbb23eb7ece81c11f45cd3d2a56da0da6e93ba95d2b6fd6cc699b6f3d0efac5",
+        "migrations/0003_publisher.sql": "e346f6011831ba8d7d64429c27131ca30b77999f239b207de71f40d575ac05c7",
+        "migrations/0004_mutations.sql": "4e183e36e12c4d09fd54769482dd4a184f9bfaf78da23534810bb483e8f54118",
+        "migrations/0005_streaming.sql": "db82a34c3403c688ab3742a5a4776673369b807b10a8b7f5d84778a7909979a4",
+        "migrations/0006_initial_sync.sql": "1c08371bb70ce4919f96f9555e6a13560df7ffc029dc07fe14abed7078d5b910",
+        "migrations/0007_multi_table_sync.sql": "af716217734806bd86daf355249cd0306eee01ebc3090e3ef2a047a9d7c2a377",
+        "migrations/0008_type_contracts.sql": "18fa69aa8516091a419c960a4eff8b752f963ae7054e1dd1aef02e0fc96e77ef",
+        "migrations/0009_schema_evolution.sql": "3b3eac2eb23e98eba3d8e36ef4255ad31207f8bb7d230073a481d759f267fc90",
+        "migrations/0010_rebuild_promotion.sql": "6b3da8248d96060c949386abcdfb17ac2ebf756a45bfc27cf67475968d6a98b7",
+        "migrations/0011_supervisor.sql": "5a18985df7666adbf1607fd66d0e2e1a2dd447ef20d54b662dec1b3bd3735b1a",
+        "migrations/0012_service_reconnect.sql": "3b7ed8f797acf088c87f067db16996ee7854b55469881be7c7017496faab35f6",
+        "migrations/0013_source_continuity.sql": "1789daf0afc66ab6cd4621fdb04b3da786d39126e7a8f0f3ee40a0379228609e",
+        "migrations/0014_source_endpoints.sql": "0dc1265837433e5c1aed062be107e823a105d732d533d3be8b719bfc1752aa5f",
+        "migrations/0015_journal_maintenance.sql": "62cdf57c597a6ca0f4aca977549804442529bc5d17cc2336be900a1ad1a5ecea",
+        "migrations/0016_observability.sql": "459e5ad5da0df4026b35c96d1e610e2ca064f17efe252ea989e01fa97bbd500b",
+        "migrations/0017_common_parameterized_types.sql": "591da74aae47b2c4f1ec1c0c3a9b166d32e02bf95cdaab5d7cd83b237b4d9f16",
+        "migrations/0018_postgres_integration.sql": "6c8b257d635e11b0236be41d7b8e116220045eebc2c9a9915e1455d20fad35ec",
+        "migrations/0019_connection_credentials.sql": "3d926f52fd0f520ab6ff3f7c9a87404e3a95a17e36091afd7721afe42f7ed641",
+        "migrations/0020_set_based_apply.sql": "7da96329aede58673494cb1dff37edd03cbc9c88f46fecc166db89c49c1c8a96",
+        "migrations/0021_initial_sync_recovery.sql": "acef47a95b71111091b5ce2199cde2e1abc9b907832a005fae670a9ae90d7bb0",
+        "migrations/0022_empty_filtered_transactions.sql": "e4da92595cfd7e415ccb941b767eb4ec755bde20c1282ac8cb3e3dcfeae9e5b2",
+        "migrations/0023_base_worker_lifecycle.sql": "15b2b46526de772578f336aa6cd459adc464e539ad561b78130bfd24ccbb4d9d",
+        "migrations/0024_bulk_admission.sql": "256f7d0828ffcc6944bdf2aa86ecb5eba38db6da6c4b96cb43e7541bd0d02b40",
+        "migrations/0025_staging_and_journal_admission.sql": "412cc9418a3d5b8412b18256c01e72782f38ef54fa2ea8e6c713f98c37ae950d",
+        "migrations/0026_split_checkpoints.sql": "b5696a956b84060d96f42aa4a5ffce7183676b5123a94684bd151c787101fe6d",
+        "migrations/0027_chunk_staging.sql": "7b9ac9f822070eac67bda70cb9c3f96c7efed1f1fca4ff1954bd5497e1f35166",
+        "migrations/0028_initial_copy_leases.sql": "be2afdbae6d9826d110582643d228112d44c40d32d5ddcf86f34b8b6329311dc",
+        "tests/admission/commit_profile_overlay.py": "db381ee4ac313e4a3650bb374687751d7fc88db113df99f54c5af5dc5526f7f4",
+        "tests/admission/managed_cases.py": "4be372828bd6c35e9a3db5ad3c020eab25ab8f077a228ebdd6a19aaec6ced5a5",
+        "tests/admission/manifest_cleanup_probe.py": "a40e42f501f9e7d15bfcc8e855f7218da919a27f321ce038a492b608a1305cbf",
+        "tests/admission/pool_cases.py": "0e7c7957acc493460ffe873cec630c6bdc8b8eaa5943e906244aab6498e3c1c6",
+        "tests/admission/probe.py": "ffe201e427722c4668ecd3b23b6a3d882ccee8744d868241a3cbab55143dd4ab",
+        "tests/qualification/probe.py": "8fefd40f249c6478001f18caf2266e2ed593cff4ee7034afb3eab84be564959e",
+        "worker/Cargo.toml": "fe1d5d6bd0d780f416bec5711bb46ad56fc824832866548756f6f8274bbfc423",
+        "worker/src/credentials.rs": "e12f9207c3b0795a428ae668fa25ba50698ecf5e9e1354a16c67b35b2c48921e",
+        "worker/src/initial_sync.rs": "70375347809387c350a08998d0e0e8f2480538f74c84da3a0e08e570a2872229",
+        "worker/src/journal.rs": "90e8fdaeb97496cdb9332942c88fee4681477275917b8175ba7d4bb6230853f5",
+        "worker/src/lib.rs": "4e1b3384c1418340f19c2bc25fe69242554701f220c9055648e8948924cfbc92",
+        "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+        "worker/src/main.rs": "93e5a9f195508cff0e80394068bad54ae5a4dae042038694c697ae59dbbd0ddf",
+        "worker/src/managed.rs": "9c0ae649d025eda13c3ee52bef5eb3eb4ea4097b033da1a3a02de105af72c39c",
+        "worker/src/pgoutput.rs": "0312da07f61383e05a034807a25fb10376e54100b1dbb04c3fbffdd2f0f0d32a",
+        "worker/src/publisher.rs": "8ac8881b0aeb448a630d94ad12a4ff8d3a21c062922333a42aedf33fef865c5f",
+        "worker/src/supervisor.rs": "bc6b59b6981efa0d52491cc3ce0efa59be33f685e61467c0db61e80401b2b1b3",
+        "worker/src/trace.rs": "3b0207cefb2182ebce06e9c7876247df06b457fdcf34b24a0597bdaad1a972a8",
+        "worker/src/wire.rs": "0f1f6463600917546db8a29ab2c4f0dd58d2f9019aa780d3f811be37abd3c15a"
+      },
+      "overlay": {
+        "scope": "Diagnostic-only pg_lake binary overlay, built from verified pinned sources.",
+        "binary_overlay": true,
+        "sql_overlay": false,
+        "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "detail_version": 2,
+        "guarded_cleanup_candidate": true,
+        "preserves_unknown_deleted_counts": true,
+        "sources": {
+          "pg_lake_table/src/transaction/track_iceberg_metadata_changes.c": {
+            "original_sha256": "1be74dc2db57d7378c686c0ca844963c54a52be7d2abd3fddaa5291a0ae034fa",
+            "patched_sha256": "46fc02243c8873317122eb944da122177e85c3921a339fcf24e3a407b1f33deb"
+          },
+          "pg_lake_engine/src/utils/s3_writer_utils.c": {
+            "original_sha256": "a5c3ef752571e4f79f7e5ce842a22474668858889c7b8fce2c1c54cf3e215b78",
+            "patched_sha256": "efe2aceb1e79a0b6db7c01e648c9d387dae1da959db2969e24d19d919198b74c"
+          },
+          "pg_lake_engine/src/pgduck/parallel_command.c": {
+            "original_sha256": "d3a9ccff48b6fbcb4350294880f82f34aaa6d8c95f8248deced25367b24f2ae1",
+            "patched_sha256": "c6b2a5236d6bd2403c87f9ee0e80f1fd43852f8d3aad1dddb477c06ab910acb1"
+          },
+          "pg_lake_iceberg/src/iceberg/metadata_operations.c": {
+            "original_sha256": "d58570455ac147be11998add4634f923cb51434d1b2c832a37abd8dab1985110",
+            "patched_sha256": "df19be21b3f372b84cabf1b4dd03723379f10743b73578196c9bdabbb88965b2"
+          },
+          "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": {
+            "original_sha256": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149",
+            "patched_sha256": "3332c9316977f8b5da178c73e670abc607ea8e4bc4e06e9cb78ccd7afe2dcb0a"
+          },
+          "pg_lake_iceberg/src/iceberg/read_manifest.c": {
+            "original_sha256": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+            "patched_sha256": "2acced6469364c001cd2774f3dd7eb063ed5698533309ffff804140ca5e0b64e"
+          },
+          "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": {
+            "original_sha256": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+            "patched_sha256": "eff87c415c2ae0efa0df11427edeae40d2a94239db17bf6ecb949911a604d140"
+          }
+        },
+        "base_destination_image_id": "sha256:3f88271f8d597980f70ea1cb761f2313d306218db9d4e414820f2d876c58559a",
+        "original_libraries": {
+          "pg_lake_engine": "5e6748449bc48b579b69528783e92cc797e1219fd90b734b2283520fc7af0bb5",
+          "pg_lake_iceberg": "aff2304f65d501209fc8e416e6c6146e945fd478d33d62e9bc5e2e4e86720430",
+          "pg_lake_table": "a3d4d7a2f0ed091b16af920c23c349e0d0d55c7678565c75644a9776c30f356d"
+        },
+        "profiled_libraries": {
+          "pg_lake_engine": "6904f249a9041194d4381622d7461ac3b1b217f676fd5449c5335cfdb772a535",
+          "pg_lake_iceberg": "2ea035431f2c49c239bab2610617f3626b98ad48165d5f1308d27a7685641f4d",
+          "pg_lake_table": "10b5817c9192046ef09919b5db4832030f6fbf5620a3c75940654cc36ef1dd6f"
+        },
+        "header_sha256": "b0fa0355c9faffcb59e0f9e2cd265d51d154d9c1b999071fc943e59a5a8c14eb"
+      }
+    },
+    "comparison": {
+      "measurement_valid": true,
+      "source_producer": "independent_sessions",
+      "observer_clock_sampling": "query_return_monotonic",
+      "candidate_workload_passed": true,
+      "all_workloads_passed": false,
+      "control_copy_drift_ratio": 0.9946294660498933,
+      "candidate_copy_ratio_to_control_mean": 0.9953588626813249,
+      "inference_limit": "One sequential comparison; host drift is bracketed, not eliminated. No statistical speedup or release qualification is claimed."
+    }
+  },
+  "unguarded_initial": {
+    "results_path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261105_192711_production_admission/results.json",
+    "results_sha256": "200af07fa2dd14d6f41b1f77585ba237fa3fe373f00bfa76dcc7e61d95e68573",
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+      "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+      "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+    },
+    "image_id": "sha256:437b5fd86a7cacdd3458352af66545375ab6ff9282b17cb1d227935808b3862b",
+    "overlay": {
+      "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+      "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+      "binary_overlay": true,
+      "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "diagnostic_guc": false,
+      "timers": false,
+      "base_image_id": "sha256:95bda8d7bc331fa93a071071c4a4e3eeb454e6b44cb1cfc705b40b18b68b284c",
+      "original_libraries": {
+        "pg_lake_iceberg": "9f50d2821ee197d3b8b275d9ed2376b024370ce051162682ddde72b945527ea4",
+        "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+      },
+      "patched_libraries": {
+        "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+        "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+      }
+    },
+    "checks_passed": 166,
+    "cases": [
+      {
+        "case": "pipeline",
+        "status": "passed"
+      },
+      {
+        "case": "managed",
+        "status": "passed"
+      },
+      {
+        "case": "fairness",
+        "status": "finding"
+      }
+    ],
+    "fairness": {
+      "status": "completed_with_findings",
+      "measurement_valid": true,
+      "source_producer": "independent_sessions",
+      "observer_clock_sampling": "query_return_monotonic",
+      "workload_passed": false,
+      "failed_gates": [
+        "all_stream_targets_pass",
+        "analytics:p95_below_two_seconds",
+        "fair_stream_1:p95_below_two_seconds",
+        "fair_stream_2:p95_below_two_seconds"
+      ],
+      "copy_elapsed_seconds": 136.1620969772339,
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "streams": [
+        {
+          "database": "analytics",
+          "p95_publication_ms": 3014.845848083496,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 1792.6371097564697,
+            "journal_insert_to_batch_ms": 1537.1999740600586,
+            "source_to_journal_insert_ms": 198.6539363861084
+          },
+          "source_max_schedule_lateness_seconds": 0.08921483298763633,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_1",
+          "p95_publication_ms": 2993.1211471557617,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 1793.071985244751,
+            "journal_insert_to_batch_ms": 1541.614055633545,
+            "source_to_journal_insert_ms": 128.587007522583
+          },
+          "source_max_schedule_lateness_seconds": 0.0872774999588728,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_2",
+          "p95_publication_ms": 2974.261999130249,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 1862.703800201416,
+            "journal_insert_to_batch_ms": 1466.9368267059326,
+            "source_to_journal_insert_ms": 137.41779327392578
+          },
+          "source_max_schedule_lateness_seconds": 0.09090687497518957,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": false,
+            "source_schedule_within_one_interval": true
+          }
+        }
+      ]
+    }
+  },
+  "conclusion": "Guarded candidate passes native AMD64; controls fail latency. Fixed local guarded/minimal/guarded cohort passes all trials with similar performance, showing no reproducible slowdown in the minimal binary. Initial unguarded failure remains retained and unexplained; exact unguarded native verification and full production qualification remain required.",
+  "local_guarded_minimal_guarded": {
+    "results_path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/manifest_delivery_comparison_20261105_194303/results.json",
+    "results_sha256": "ee730153b717b85e54a3a75f768eca6b68960d8b5abd0c6c4971abf5dbab2356",
+    "scope": "Predeclared guarded/minimal/guarded diagnostic; retained earlier minimal failure; not release qualification",
+    "status": "completed",
+    "sequence": [
+      "guarded",
+      "minimal",
+      "guarded"
+    ],
+    "runs": [
+      {
+        "variant": "guarded",
+        "evidence": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261105_194303_production_admission/results.json",
+        "sha256": "48df20ee9642ecb48f531f0d86e98658b1ebae8a6f6cf988d0e1d482ecfeb4ac",
+        "archive": {
+          "architecture": "arm64",
+          "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+          "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+          "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+        },
+        "image_id": "sha256:ab7deaca057224d3d3b30158be5084ef174dfdd4747766a76bb332e99d2213d2",
+        "overlay": {
+          "variant": "candidate",
+          "setting": "on",
+          "overlay": {
+            "scope": "Diagnostic-only pg_lake binary overlay, built from verified pinned sources.",
+            "binary_overlay": true,
+            "sql_overlay": false,
+            "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+            "detail_version": 2,
+            "guarded_cleanup_candidate": true,
+            "preserves_unknown_deleted_counts": true,
+            "sources": {
+              "pg_lake_table/src/transaction/track_iceberg_metadata_changes.c": {
+                "original_sha256": "1be74dc2db57d7378c686c0ca844963c54a52be7d2abd3fddaa5291a0ae034fa",
+                "patched_sha256": "46fc02243c8873317122eb944da122177e85c3921a339fcf24e3a407b1f33deb"
+              },
+              "pg_lake_engine/src/utils/s3_writer_utils.c": {
+                "original_sha256": "a5c3ef752571e4f79f7e5ce842a22474668858889c7b8fce2c1c54cf3e215b78",
+                "patched_sha256": "efe2aceb1e79a0b6db7c01e648c9d387dae1da959db2969e24d19d919198b74c"
+              },
+              "pg_lake_engine/src/pgduck/parallel_command.c": {
+                "original_sha256": "d3a9ccff48b6fbcb4350294880f82f34aaa6d8c95f8248deced25367b24f2ae1",
+                "patched_sha256": "c6b2a5236d6bd2403c87f9ee0e80f1fd43852f8d3aad1dddb477c06ab910acb1"
+              },
+              "pg_lake_iceberg/src/iceberg/metadata_operations.c": {
+                "original_sha256": "d58570455ac147be11998add4634f923cb51434d1b2c832a37abd8dab1985110",
+                "patched_sha256": "df19be21b3f372b84cabf1b4dd03723379f10743b73578196c9bdabbb88965b2"
+              },
+              "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": {
+                "original_sha256": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149",
+                "patched_sha256": "3332c9316977f8b5da178c73e670abc607ea8e4bc4e06e9cb78ccd7afe2dcb0a"
+              },
+              "pg_lake_iceberg/src/iceberg/read_manifest.c": {
+                "original_sha256": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+                "patched_sha256": "2acced6469364c001cd2774f3dd7eb063ed5698533309ffff804140ca5e0b64e"
+              },
+              "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": {
+                "original_sha256": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+                "patched_sha256": "eff87c415c2ae0efa0df11427edeae40d2a94239db17bf6ecb949911a604d140"
+              }
+            },
+            "base_destination_image_id": "sha256:95bda8d7bc331fa93a071071c4a4e3eeb454e6b44cb1cfc705b40b18b68b284c",
+            "original_libraries": {
+              "pg_lake_engine": "7c7b882c27c91382117bfc4bf4d43167878dfc7879a5f8846c38d75a34374380",
+              "pg_lake_iceberg": "9f50d2821ee197d3b8b275d9ed2376b024370ce051162682ddde72b945527ea4",
+              "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+            },
+            "profiled_libraries": {
+              "pg_lake_engine": "fbc9e2a52c01a65960e1aa8779fd99fc01cf40c0f46692feae3b84798cf0b428",
+              "pg_lake_iceberg": "db0da922920dafb98fca37746654e9820d4faa77290641b76b99b272a8e794fe",
+              "pg_lake_table": "5c693546a5fb7f579f16a9eaf8628d65a0939dc15c1fe01c87f8c29e6af4fbe1"
+            },
+            "header_sha256": "b0fa0355c9faffcb59e0f9e2cd265d51d154d9c1b999071fc943e59a5a8c14eb"
+          },
+          "timing_instrumentation": false,
+          "correctness_schema_instrumentation": false
+        },
+        "status": "passed",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": true,
+        "failed_gates": [],
+        "copy_elapsed_seconds": 121.5852210521698,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 532.055139541626,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 374.3700981140137,
+              "journal_insert_to_batch_ms": 146.6050148010254,
+              "source_to_journal_insert_ms": 13.751983642578125
+            },
+            "source_max_schedule_lateness_seconds": 0.005218875012360513,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 539.1130447387695,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 402.7211666107178,
+              "journal_insert_to_batch_ms": 140.9308910369873,
+              "source_to_journal_insert_ms": 12.683868408203125
+            },
+            "source_max_schedule_lateness_seconds": 0.005184750072658062,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 490.40985107421875,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 371.8888759613037,
+              "journal_insert_to_batch_ms": 139.57905769348145,
+              "source_to_journal_insert_ms": 12.386798858642578
+            },
+            "source_max_schedule_lateness_seconds": 0.005243000108748674,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      {
+        "variant": "minimal",
+        "evidence": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261105_194609_production_admission/results.json",
+        "sha256": "ddbdd8406a54ce4a6e33eb44e900cfcabbb5d9f58460c6557c5ec43361a54370",
+        "archive": {
+          "architecture": "arm64",
+          "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+          "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+          "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+        },
+        "image_id": "sha256:437b5fd86a7cacdd3458352af66545375ab6ff9282b17cb1d227935808b3862b",
+        "overlay": {
+          "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "binary_overlay": true,
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+          "diagnostic_guc": false,
+          "timers": false,
+          "base_image_id": "sha256:95bda8d7bc331fa93a071071c4a4e3eeb454e6b44cb1cfc705b40b18b68b284c",
+          "original_libraries": {
+            "pg_lake_iceberg": "9f50d2821ee197d3b8b275d9ed2376b024370ce051162682ddde72b945527ea4",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          },
+          "patched_libraries": {
+            "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          }
+        },
+        "status": "passed",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": true,
+        "failed_gates": [],
+        "copy_elapsed_seconds": 117.29135203361511,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 456.95996284484863,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 384.04107093811035,
+              "journal_insert_to_batch_ms": 131.3159465789795,
+              "source_to_journal_insert_ms": 14.01209831237793
+            },
+            "source_max_schedule_lateness_seconds": 0.005262291058897972,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 483.74009132385254,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 384.40394401550293,
+              "journal_insert_to_batch_ms": 142.61507987976074,
+              "source_to_journal_insert_ms": 12.09115982055664
+            },
+            "source_max_schedule_lateness_seconds": 0.005279083037748933,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 482.8150272369385,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 399.1820812225342,
+              "journal_insert_to_batch_ms": 137.53294944763184,
+              "source_to_journal_insert_ms": 16.188859939575195
+            },
+            "source_max_schedule_lateness_seconds": 0.005433541024103761,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      },
+      {
+        "variant": "guarded",
+        "evidence": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261105_194855_production_admission/results.json",
+        "sha256": "b9e6423c4315d2112a77783e338ae77bfd7489f05a578ba526d65e1d45604dc1",
+        "archive": {
+          "architecture": "arm64",
+          "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+          "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+          "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+        },
+        "image_id": "sha256:ab7deaca057224d3d3b30158be5084ef174dfdd4747766a76bb332e99d2213d2",
+        "overlay": {
+          "variant": "candidate",
+          "setting": "on",
+          "overlay": {
+            "scope": "Diagnostic-only pg_lake binary overlay, built from verified pinned sources.",
+            "binary_overlay": true,
+            "sql_overlay": false,
+            "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+            "detail_version": 2,
+            "guarded_cleanup_candidate": true,
+            "preserves_unknown_deleted_counts": true,
+            "sources": {
+              "pg_lake_table/src/transaction/track_iceberg_metadata_changes.c": {
+                "original_sha256": "1be74dc2db57d7378c686c0ca844963c54a52be7d2abd3fddaa5291a0ae034fa",
+                "patched_sha256": "46fc02243c8873317122eb944da122177e85c3921a339fcf24e3a407b1f33deb"
+              },
+              "pg_lake_engine/src/utils/s3_writer_utils.c": {
+                "original_sha256": "a5c3ef752571e4f79f7e5ce842a22474668858889c7b8fce2c1c54cf3e215b78",
+                "patched_sha256": "efe2aceb1e79a0b6db7c01e648c9d387dae1da959db2969e24d19d919198b74c"
+              },
+              "pg_lake_engine/src/pgduck/parallel_command.c": {
+                "original_sha256": "d3a9ccff48b6fbcb4350294880f82f34aaa6d8c95f8248deced25367b24f2ae1",
+                "patched_sha256": "c6b2a5236d6bd2403c87f9ee0e80f1fd43852f8d3aad1dddb477c06ab910acb1"
+              },
+              "pg_lake_iceberg/src/iceberg/metadata_operations.c": {
+                "original_sha256": "d58570455ac147be11998add4634f923cb51434d1b2c832a37abd8dab1985110",
+                "patched_sha256": "df19be21b3f372b84cabf1b4dd03723379f10743b73578196c9bdabbb88965b2"
+              },
+              "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": {
+                "original_sha256": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149",
+                "patched_sha256": "3332c9316977f8b5da178c73e670abc607ea8e4bc4e06e9cb78ccd7afe2dcb0a"
+              },
+              "pg_lake_iceberg/src/iceberg/read_manifest.c": {
+                "original_sha256": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+                "patched_sha256": "2acced6469364c001cd2774f3dd7eb063ed5698533309ffff804140ca5e0b64e"
+              },
+              "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": {
+                "original_sha256": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+                "patched_sha256": "eff87c415c2ae0efa0df11427edeae40d2a94239db17bf6ecb949911a604d140"
+              }
+            },
+            "base_destination_image_id": "sha256:95bda8d7bc331fa93a071071c4a4e3eeb454e6b44cb1cfc705b40b18b68b284c",
+            "original_libraries": {
+              "pg_lake_engine": "7c7b882c27c91382117bfc4bf4d43167878dfc7879a5f8846c38d75a34374380",
+              "pg_lake_iceberg": "9f50d2821ee197d3b8b275d9ed2376b024370ce051162682ddde72b945527ea4",
+              "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+            },
+            "profiled_libraries": {
+              "pg_lake_engine": "fbc9e2a52c01a65960e1aa8779fd99fc01cf40c0f46692feae3b84798cf0b428",
+              "pg_lake_iceberg": "db0da922920dafb98fca37746654e9820d4faa77290641b76b99b272a8e794fe",
+              "pg_lake_table": "5c693546a5fb7f579f16a9eaf8628d65a0939dc15c1fe01c87f8c29e6af4fbe1"
+            },
+            "header_sha256": "b0fa0355c9faffcb59e0f9e2cd265d51d154d9c1b999071fc943e59a5a8c14eb"
+          },
+          "timing_instrumentation": false,
+          "correctness_schema_instrumentation": false
+        },
+        "status": "passed",
+        "measurement_valid": true,
+        "source_producer": "independent_sessions",
+        "observer_clock_sampling": "query_return_monotonic",
+        "workload_passed": true,
+        "failed_gates": [],
+        "copy_elapsed_seconds": 118.89130902290344,
+        "timing_validation": {
+          "errors": [],
+          "tolerance_seconds": 1.0,
+          "valid": true
+        },
+        "engine_oom": false,
+        "unexpected_pg_crash": false,
+        "streams": [
+          {
+            "database": "analytics",
+            "p95_publication_ms": 465.15703201293945,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 367.3121929168701,
+              "journal_insert_to_batch_ms": 139.69898223876953,
+              "source_to_journal_insert_ms": 13.101816177368164
+            },
+            "source_max_schedule_lateness_seconds": 0.005222124978899956,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_1",
+            "p95_publication_ms": 445.6210136413574,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 376.6591548919678,
+              "journal_insert_to_batch_ms": 137.27116584777832,
+              "source_to_journal_insert_ms": 11.601924896240234
+            },
+            "source_max_schedule_lateness_seconds": 0.00538533297367394,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          },
+          {
+            "database": "fair_stream_2",
+            "p95_publication_ms": 465.8482074737549,
+            "latency_phases_p95_ms": {
+              "batch_to_publication_commit_ms": 366.6958808898926,
+              "journal_insert_to_batch_ms": 143.26190948486328,
+              "source_to_journal_insert_ms": 12.246847152709961
+            },
+            "source_max_schedule_lateness_seconds": 0.005301082972437143,
+            "checks": {
+              "at_least_five_commits_during_copy": true,
+              "catchup_within_five_seconds": true,
+              "max_gap_within_five_seconds": true,
+              "p95_below_two_seconds": true,
+              "source_schedule_within_one_interval": true
+            }
+          }
+        ]
+      }
+    ],
+    "all_workloads_passed": true
+  },
+  "unguarded_correctness": {
+    "results_path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261105_195238_manifest_patch/results.json",
+    "results_sha256": "b3b3ab39290bfe259336007a715efe618db36bd1012569f8cd9630b1291fdfe8",
+    "snapshots_sha256": "ae4f358545b6861bfef81d6f3b513c8f461b8f982b10dd779e58a5d0c4086dac",
+    "canonical_snapshots_equal": true,
+    "reference_path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261105_185208_manifest_cleanup/snapshots.json",
+    "status": "passed",
+    "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+    "archive": {
+      "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+      "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+      "architecture": "arm64",
+      "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+    },
+    "image_id": "sha256:437b5fd86a7cacdd3458352af66545375ab6ff9282b17cb1d227935808b3862b",
+    "cleanup_returncode": 0,
+    "checks": [
+      {
+        "name": "release archive checksum",
+        "passed": true,
+        "actual": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+        "expected": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4"
+      },
+      {
+        "name": "archive architecture matches qualification host",
+        "passed": true,
+        "actual": "arm64",
+        "expected": "arm64"
+      },
+      {
+        "name": "empty exact rows",
+        "passed": true,
+        "actual": [],
+        "expected": []
+      },
+      {
+        "name": "insert1 exact rows",
+        "passed": true,
+        "actual": [
+          [
+            1,
+            "a"
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            "a"
+          ]
+        ]
+      },
+      {
+        "name": "insert2 exact rows",
+        "passed": true,
+        "actual": [
+          [
+            1,
+            "a"
+          ],
+          [
+            2,
+            "b"
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            "a"
+          ],
+          [
+            2,
+            "b"
+          ]
+        ]
+      },
+      {
+        "name": "insert3 exact rows",
+        "passed": true,
+        "actual": [
+          [
+            1,
+            "a"
+          ],
+          [
+            2,
+            "b"
+          ],
+          [
+            3,
+            "c"
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            "a"
+          ],
+          [
+            2,
+            "b"
+          ],
+          [
+            3,
+            "c"
+          ]
+        ]
+      },
+      {
+        "name": "savepoint exact rows",
+        "passed": true,
+        "actual": [
+          [
+            1,
+            "a"
+          ],
+          [
+            2,
+            "b"
+          ],
+          [
+            3,
+            "c"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            "a"
+          ],
+          [
+            2,
+            "b"
+          ],
+          [
+            3,
+            "c"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ]
+      },
+      {
+        "name": "delete exact rows",
+        "passed": true,
+        "actual": [
+          [
+            1,
+            "a"
+          ],
+          [
+            3,
+            "c"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            "a"
+          ],
+          [
+            3,
+            "c"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ]
+      },
+      {
+        "name": "update exact rows",
+        "passed": true,
+        "actual": [
+          [
+            1,
+            "a"
+          ],
+          [
+            3,
+            "changed"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            "a"
+          ],
+          [
+            3,
+            "changed"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ]
+      },
+      {
+        "name": "vacuum exact rows",
+        "passed": true,
+        "actual": [
+          [
+            1,
+            "a"
+          ],
+          [
+            3,
+            "changed"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            "a"
+          ],
+          [
+            3,
+            "changed"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ]
+      },
+      {
+        "name": "delete_all exact rows",
+        "passed": true,
+        "actual": [],
+        "expected": []
+      },
+      {
+        "name": "empty_vacuum exact rows",
+        "passed": true,
+        "actual": [],
+        "expected": []
+      },
+      {
+        "name": "truncate exact rows",
+        "passed": true,
+        "actual": [],
+        "expected": []
+      },
+      {
+        "name": "insert_after_truncate exact rows",
+        "passed": true,
+        "actual": [
+          [
+            6,
+            "f"
+          ]
+        ],
+        "expected": [
+          [
+            6,
+            "f"
+          ]
+        ]
+      },
+      {
+        "name": "rollback exact rows",
+        "passed": true,
+        "actual": [
+          [
+            6,
+            "f"
+          ]
+        ],
+        "expected": [
+          [
+            6,
+            "f"
+          ]
+        ]
+      }
+    ],
+    "upstream_patch": {
+      "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+      "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+      "binary_overlay": true,
+      "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "diagnostic_guc": false,
+      "timers": false,
+      "base_image_id": "sha256:95bda8d7bc331fa93a071071c4a4e3eeb454e6b44cb1cfc705b40b18b68b284c",
+      "sources": {
+        "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+        "pg_lake_iceberg/src/iceberg/read_manifest.c": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+        "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149"
+      },
+      "original_libraries": {
+        "pg_lake_iceberg": "9f50d2821ee197d3b8b275d9ed2376b024370ce051162682ddde72b945527ea4",
+        "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+      },
+      "patched_libraries": {
+        "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+        "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+      }
+    },
+    "fixture_sha256": "a40e42f501f9e7d15bfcc8e855f7218da919a27f321ce038a492b608a1305cbf"
+  }
+}

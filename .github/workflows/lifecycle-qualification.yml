@@ -79,6 +79,7 @@ on:
           - transaction_trace
           - transaction_trace_phases
           - manifest_cleanup
+          - manifest_patch
 
 permissions:
   contents: read
@@ -115,7 +116,7 @@ jobs:
             exit 1
           fi
           case "$PROBE_ARCH" in both|arm64|amd64) ;; *) exit 1 ;; esac
-          case "$COPY_CONFIGURATION" in disabled|pacing|toast|transaction_trace|transaction_trace_phases|manifest_cleanup) ;; *) exit 1 ;; esac
+          case "$COPY_CONFIGURATION" in disabled|pacing|toast|transaction_trace|transaction_trace_phases|manifest_cleanup|manifest_patch) ;; *) exit 1 ;; esac
           if [[ "$COPY_CONFIGURATION" != disabled && ( "$NATIVE_PROBE" != true || "$FAIRNESS_DIAGNOSTIC" == true || "$CHECKPOINT_SPLIT" == true || "$CHECKPOINT_COMPARE" == true || "$COPY_CHUNK" != disabled || "$STAGING_CHUNKS" == true || "$STAGING_PAUSE" != 0 ) ]]; then
             echo 'Copy configuration comparison requires its own native probe with all overlays disabled.' >&2
             exit 1
@@ -298,6 +299,12 @@ jobs:
         if: ${{ inputs.native_probe && inputs.copy_configuration_comparison == 'manifest_cleanup' }}
         timeout-minutes: 20
         run: python3 tests/admission/manifest_cleanup_compare.py --cpuset 0-1
+      - name: Unguarded manifest patch verification (upstream binary overlay)
+        if: ${{ inputs.native_probe && inputs.copy_configuration_comparison == 'manifest_patch' }}
+        timeout-minutes: 20
+        run: |
+          python3 tests/admission/manifest_patch_verify.py --correctness-only
+          python3 tests/admission/manifest_patch_verify.py --cpuset 0-1
       - name: Checkpoint partition prototype diagnostic (SQL overlay)
         if: ${{ inputs.native_probe && inputs.checkpoint_split_diagnostic }}
         timeout-minutes: 15

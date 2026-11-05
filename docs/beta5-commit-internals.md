@@ -105,6 +105,68 @@ reader checks and every control/candidate result. The native workflow's
 `manifest_cleanup` diagnostic runs the guarded comparison on a selected
 architecture and keeps any failed control red.
 
-Native comparison and a production prerequisite containing the reviewed fix are
-still required before this can close the beta latency gate. Longer-term growth
-and maintenance behavior also remain part of full qualification and the soak.
+## Native comparison and delivery verification
+
+The fixed AMD64 [native comparison](https://github.com/proddata/lake_replication/actions/runs/42092260358)
+at `fb29d5d` completes with valid measurements. Both correctness fixtures pass
+with identical normalized snapshots. All three workload trials pass exact-data
+and safety assertions, with no OOM or PostgreSQL crash:
+
+| Trial | Four-copy completion | Three streaming p95 values |
+|---|---:|---|
+| Control | 161.94 s | 2.274 / 2.171 / 2.268 s |
+| Guarded candidate | 160.76 s | 1.584 / 1.545 / 1.678 s |
+| Control | 161.07 s | 2.301 / 2.356 / 2.107 s |
+
+The candidate passes every workload gate. The workflow remains red because both
+controls fail the unchanged two-second latency limit. This is evidence for the
+shortcut, not release qualification.
+
+A separate local build applies the minimal unguarded patch to the same original
+prerequisite image used by the earlier local cohort. It rebuilds Iceberg and
+table objects together and leaves the engine unchanged. The pipeline and
+managed-worker cases pass, as do all 166 assertions. However, its fairness case
+fails valid streaming p95 at 3.015 / 2.993 / 2.974 seconds. Copy completion passes
+at 136.16 seconds; no OOM or PostgreSQL crash occurs. This finding is retained
+and prevents qualifying that run. The different case order, rebuilt binaries
+and host conditions prevent assigning a cause from this observation alone.
+
+A predeclared local guarded/minimal/guarded sequence then isolates the same
+fairness case on fresh fixtures, with the same archived workers and prerequisite
+base. Internal timers and worker query tracing remain disabled:
+
+| Trial | Four-copy completion | Three streaming p95 values |
+|---|---:|---|
+| Guarded candidate | 121.59 s | 0.532 / 0.539 / 0.490 s |
+| Minimal unguarded patch | 117.29 s | 0.457 / 0.484 / 0.483 s |
+| Guarded candidate | 118.89 s | 0.465 / 0.446 / 0.466 s |
+
+All three trials pass every gate with valid measurements. There is no
+reproducible slowdown from removing the diagnostic code in this cohort. This
+does not explain away the earlier failure or establish a statistical speedup.
+The exact unguarded patch still needs native verification before delivery.
+
+The unguarded patch's separate correctness fixture also passes all 15 assertions.
+Its 13 normalized row/file/manifest snapshots match the original control exactly,
+including maintenance and rollback cases. This fixture has no diagnostic GUC
+assertion, accounting for one fewer assertion than the guarded fixtures.
+
+[Delivery evidence](evidence/2026-11-05-beta5-manifest-delivery.json) records the
+native trials, unsuccessful initial unguarded verification and complete fixed
+follow-up cohort, including artifact, image, library and raw-result hashes.
+
+The standalone `tests/admission/manifest_patch_verify.py` runner verifies pinned
+source hashes, applies the minimal patch and records the original and rebuilt
+libraries. Its default sequence is pipeline, managed-worker and fairness cases;
+`--cases fairness` isolates the unchanged performance workload. The separate
+`--correctness-only` mode runs the same independent row/file/manifest fixture
+without diagnostic GUCs or internal timers. Use an isolated checkout with the
+committed prerequisite recipe and an explicitly selected CI archive. These
+binary overlays do not qualify the archived production prerequisite.
+The native workflow's `manifest_patch` option runs the independent fixture
+followed by the default pipeline/managed/fairness sequence, without timers or
+diagnostic GUCs. Every unchanged latency and safety gate remains enforced.
+
+A verified production prerequisite containing the reviewed fix is still
+required before this can close the beta latency gate. Longer-term growth and
+maintenance behavior also remain part of full qualification and the soak.

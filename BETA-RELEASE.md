@@ -51,8 +51,14 @@ The [local commit investigation](docs/beta5-commit-internals.md) now identifies
 previous-snapshot scans and snapshot finalization as the main measured costs.
 A guarded upstream cleanup candidate passes correctness checks and a fixed
 local comparison, with streaming p95 0.591–0.628 seconds versus 1.285–1.899 seconds
-in its controls. Native comparison is next; the upstream pin and production
-defaults are unchanged.
+in its controls. The native AMD64 guarded candidate also passes at 1.545–1.678
+seconds while both controls fail at 2.107–2.356 seconds; the workflow retains
+those failures. A separate local unguarded-patch run fails valid latency at
+2.974–3.015 seconds despite passing correctness and copy completion. A fixed
+guarded/minimal/guarded local follow-up passes all three trials; the minimal
+patch reaches 0.457–0.484 seconds. The original failure is retained, and exact
+unguarded native verification remains required before promoting the fix. The
+upstream pin and production defaults are unchanged.
 
 The dependency review now patches rustls 0.23.45 to 0.23.46 for four upstream
 advisories. [Security review](docs/dependency-security-review.md) records the
