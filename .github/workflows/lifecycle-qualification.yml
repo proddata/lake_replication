@@ -68,7 +68,7 @@ on:
           - '40'
 
       copy_configuration_comparison:
-        description: Fixed configuration comparison or matched transaction timing (native diagnostic only)
+        description: Fixed comparisons, transaction timing or manifest cleanup prototype (native diagnostic only)
         required: false
         default: disabled
         type: choice
@@ -78,6 +78,7 @@ on:
           - toast
           - transaction_trace
           - transaction_trace_phases
+          - manifest_cleanup
 
 permissions:
   contents: read
@@ -114,6 +115,7 @@ jobs:
             exit 1
           fi
           case "$PROBE_ARCH" in both|arm64|amd64) ;; *) exit 1 ;; esac
+          case "$COPY_CONFIGURATION" in disabled|pacing|toast|transaction_trace|transaction_trace_phases|manifest_cleanup) ;; *) exit 1 ;; esac
           if [[ "$COPY_CONFIGURATION" != disabled && ( "$NATIVE_PROBE" != true || "$FAIRNESS_DIAGNOSTIC" == true || "$CHECKPOINT_SPLIT" == true || "$CHECKPOINT_COMPARE" == true || "$COPY_CHUNK" != disabled || "$STAGING_CHUNKS" == true || "$STAGING_PAUSE" != 0 ) ]]; then
             echo 'Copy configuration comparison requires its own native probe with all overlays disabled.' >&2
             exit 1
@@ -292,6 +294,10 @@ jobs:
             args+=(--trace-phases)
           fi
           python3 tests/admission/sql_profile_probe.py "${args[@]}"
+      - name: Guarded manifest cleanup comparison (upstream binary overlay)
+        if: ${{ inputs.native_probe && inputs.copy_configuration_comparison == 'manifest_cleanup' }}
+        timeout-minutes: 20
+        run: python3 tests/admission/manifest_cleanup_compare.py --cpuset 0-1
       - name: Checkpoint partition prototype diagnostic (SQL overlay)
         if: ${{ inputs.native_probe && inputs.checkpoint_split_diagnostic }}
         timeout-minutes: 15

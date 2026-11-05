@@ -47,6 +47,13 @@ still misses latency at 2.007067 seconds. Its failed gate remains retained.
 This tracing work does not resolve the native gate or change resource defaults;
 the next step is separating metadata, upload and durability work inside commit.
 
+The [local commit investigation](docs/beta5-commit-internals.md) now identifies
+previous-snapshot scans and snapshot finalization as the main measured costs.
+A guarded upstream cleanup candidate passes correctness checks and a fixed
+local comparison, with streaming p95 0.591–0.628 seconds versus 1.285–1.899 seconds
+in its controls. Native comparison is next; the upstream pin and production
+defaults are unchanged.
+
 The dependency review now patches rustls 0.23.45 to 0.23.46 for four upstream
 advisories. [Security review](docs/dependency-security-review.md) records the
 scope and validation. The new worker binaries require fresh archive and native

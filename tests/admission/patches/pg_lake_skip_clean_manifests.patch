@@ -1,0 +1,72 @@
+--- a/pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h
++++ b/pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h
+@@ -160,6 +160,7 @@
+ 
+ 	char	   *key_metadata;
+ 	size_t		key_metadata_length;
++	bool		deleted_files_count_known;
+ }			IcebergManifest;
+ 
+ /*
+--- a/pg_lake_iceberg/src/iceberg/read_manifest.c
++++ b/pg_lake_iceberg/src/iceberg/read_manifest.c
+@@ -183,6 +183,22 @@
+ 	return manifestEntries;
+ }
+ 
++static bool
++LakeDeletedCountKnown(avro_value_t *record, const char *name)
++{
++    avro_value_t value;
++    if (avro_value_get_by_name(record, name, &value, NULL) != 0)
++        return false;
++    if (avro_value_get_type(&value) == AVRO_UNION)
++    {
++        avro_value_t branch;
++        if (avro_value_get_current_branch(&value, &branch) != 0)
++            return false;
++        return avro_value_get_type(&branch) == AVRO_INT32;
++    }
++    return avro_value_get_type(&value) == AVRO_INT32;
++}
++
+ static void
+ ReadIcebergManifestFromAvro(avro_value_t * record, IcebergManifest * manifest, void *context)
+ {
+@@ -219,10 +235,12 @@
+ 	if (AvroFieldExists(record, "deleted_data_files_count"))
+ 	{
+ 		AvroGetInt32Field(record, "deleted_data_files_count", AVRO_FIELD_REQUIRED, &manifest->deleted_files_count);
++		manifest->deleted_files_count_known = LakeDeletedCountKnown(record, "deleted_data_files_count");
+ 	}
+ 	else
+ 	{
+ 		AvroGetInt32Field(record, "deleted_files_count", AVRO_FIELD_REQUIRED, &manifest->deleted_files_count);
++		manifest->deleted_files_count_known = LakeDeletedCountKnown(record, "deleted_files_count");
+ 	}
+ 
+ 	AvroGetInt64Field(record, "added_rows_count", AVRO_FIELD_REQUIRED, &manifest->added_rows_count);
+--- a/pg_lake_iceberg/src/iceberg/operations/manifest_merge.c
++++ b/pg_lake_iceberg/src/iceberg/operations/manifest_merge.c
+@@ -492,10 +492,21 @@
+  * true if the manifest was modified, false otherwise.
+  */
+ static bool
++LakeCleanupCanSkip(const IcebergManifest *manifest)
++{
++    return manifest->deleted_files_count_known && manifest->deleted_files_count == 0 &&
++           manifest->added_files_count >= 0 && manifest->existing_files_count >= 0 &&
++           (manifest->added_files_count > 0 || manifest->existing_files_count > 0);
++}
++
++static bool
+ RemoveDeletedManifestEntriesInternal(IcebergManifest * *manifest, IcebergSnapshot * currentSnapshot,
+ 									 List *allTransforms, IcebergManifestContentType contentType,
+ 									 const char *metadataLocation, const char *snapshotUUID, int *manifestIndex)
+ {
++	if (LakeCleanupCanSkip(*manifest))
++		return false;
++
+ 	/*
+ 	 * Reading one manifest's entries plus its Partition Field Map can take
+ 	 * tens of MB on large changelog tables.  When the caller calls us in a

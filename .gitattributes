@@ -1,0 +1,2 @@
+# Unified-diff context requires a leading space, including before tabs and on blank lines.
+tests/admission/patches/*.patch whitespace=-blank-at-eol,-space-before-tab
