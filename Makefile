@@ -188,6 +188,8 @@ check:
 	python3 -m py_compile tests/install/probe.py
 	python3 -m py_compile tests/qualification/probe.py tests/qualification/runtime.py tests/qualification/storage.py tests/qualification/storage_preflight.py tests/qualification/prerequisite.py
 	python3 -m unittest discover -s tests/qualification -p 'test_*.py'
+	python3 -m py_compile tests/soak/probe.py tests/soak/model.py
+	python3 -m unittest discover -s tests/soak -p 'test_*.py'
 	python3 -m py_compile tests/qualification/compatibility.py tests/qualification/recovery.py tests/qualification/tls.py tests/qualification/security.py deploy/install/third-party-licenses.py
 	$(MAKE) -C extensions/lake_replication generate
 	python3 -m unittest discover -s tests/admission -p 'test_*.py'

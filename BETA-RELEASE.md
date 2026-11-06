@@ -2,10 +2,17 @@
 
 Target: `v0.1.0-beta.5` development candidate
 
-Status: **not releasable yet**. The artifact, clean-host qualification,
-operations/observability contract, and operator documentation exist, but the
-current native latency gate, 24-hour soak, and the first signed prerelease
-still need evidence. Patched archives pass security audits and recovery drills.
+Status: **not releasable yet**. Candidate `b0a703a` passes full native runtime
+qualification on ARM64 and AMD64, including latency, security audits and
+recovery. The candidate compatibility refresh, 24-hour soak and first signed
+prerelease still need evidence. A short soak validates its runner separately.
+
+The [ten-minute packaged soak](docs/beta5-short-soak.md) now passes: 1,166
+transactions, 45 assertions, exact data after all four faults, and complete
+subscription/fixture cleanup. It is not the 24-hour gate. Object storage grows
+to 912.8 MiB despite a bounded live dataset, dominated by retained Iceberg
+metadata JSON. Review retention/maintenance and resource growth before the
+full-day run.
 
 This file is the release control document. Historical `docs/milestone-*.md`
 files remain the engineering evidence journal; new beta work updates the gates
@@ -19,18 +26,24 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PARTIAL | Required checks pass on the release commit in GitHub | [CI 41289230898](https://github.com/proddata/lake_replication/actions/runs/41289230898) passes at 820f402, including both archive security audits. Full native qualification at this revision fails streaming latency on both architectures. Recheck all required gates on the eventual release commit. |
-| G1. Installable artifacts | PARTIAL | amd64 and arm64 archives install and load from exported artifacts; checksums verify | The clean CI beta.5 ARM64 and AMD64 archives pass full native artifact-only qualification, with checksum/provenance validation and no SQL/binary overlays. See [full native evidence](docs/evidence/2026-11-01-beta5-full-native-results.json). |
-| G2. Clean-host qualification | PARTIAL | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | Both native architectures pass 119 fresh lifecycle checks from their exported CI archives, including logical restore, interrupted copy, management and uninstall. Upstream prerequisites are separately source/architecture verified. |
-| G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Pre-patch full qualification passes at 14dc705. The patched 820f402 run passes correctness, lifecycle, crash, receiver, and physical recovery checks but fails valid streaming p95 (ARM64 2.040–2.133 s; AMD64 2.102–2.250 s). Four-copy completion passes at 133.22/162.47 s; no OOM or PostgreSQL crash. Resolve latency, repeat full qualification, then complete the 24-hour RC soak. |
+| G0. Remote CI | PASS | Required checks pass on the release commit in GitHub | Candidate `b0a703a` passes [CI 42201527552](https://github.com/proddata/lake_replication/actions/runs/42201527552), archive security audits and [CodeQL](https://github.com/proddata/lake_replication/actions/runs/42201526645). Recheck if the release candidate changes. |
+| G1. Installable artifacts | PASS | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Candidate `b0a703a` passes full native artifact-only qualification on both architectures with verified archive, source and supported prerequisite identities. See [current evidence](docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json). |
+| G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | Both native architectures pass all 119 fresh lifecycle checks from the candidate CI archives, including restore, interrupted copy, management and uninstall. The supported pg_lake runtime is separately built and verified. |
+| G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Candidate `b0a703a` passes 662 checks per architecture. Valid four-copy completion is 124.46 s ARM64 / 119.80 s AMD64; streaming p95 is 0.903–1.064 s / 0.618–0.870 s, with no OOM or unexpected PostgreSQL crash. The short-run harness validation and 24-hour RC soak are separate evidence; the day-long gate remains open. |
 | G4. Compatibility range | PARTIAL | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | The patched local beta.5 ARM64 archive passes 57 artifact-only checks at each exact pg_lake endpoint 8180647d4535 and f609ecb17891, using the committed original build recipe. These are two tested points, not every intervening commit. Clean patched archive/native qualification remains pending. See [local evidence](docs/evidence/2026-11-01-beta5-local-release-gates.json). |
 | G5. Operations and observability | PASS | Operators can detect unhealthy subscriptions, lag, retries, and last failure without reading ad-hoc files | Local beta.5 lifecycle and admission checks verify documented metrics, failures, fencing, live counters and cleanup. The operations guide now covers split checkpoints, chunk staging, initial-copy session admission and pacing. See [current qualification](docs/checkpoint-chunk-migration-results.md). |
 | G6. Supply-chain and security review | PARTIAL | Published files have checksums, SBOMs, signatures, vulnerability results, and an approved runtime license inventory with no unresolved high-severity finding | rustls is patched to 0.23.46. The bundle includes checked dependency and Rust runtime/toolchain notices. Local Syft/Grype audit covers all 42 native dependencies within a 55-package SBOM and finds zero vulnerabilities; a pre-patch control finds all four rustls advisories. CI now audits both exported archives with pinned tools and a high/critical severity gate. Both architecture archive audits pass at 820f402 (zero matches); refreshed dependency alerts have zero open findings. See [security review](docs/dependency-security-review.md). |
-| G7. Upgrade and rollback | PARTIAL | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | Historical full native handoffs pass at 14dc705. The patched local archive adds 24 coordinated same-version restore checks and 30 committed beta.2-to-beta.5 upgrade/physical-rollback checks, restoring old PostgreSQL/object/credential state and the exact old binary. Safe catch-up, advanced-slot refusal, explicit rebuild and live continuation pass. The patched native run at 820f402 passes all 30 cross-version recovery checks on each architecture; its later beta.1 handoff remains skipped after the latency failure. No SQL downgrade is supplied. See [procedure](docs/upgrade-and-rollback.md). |
+| G7. Upgrade and rollback | PASS | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | Candidate `b0a703a` passes all 30 coordinated physical recovery/rollback checks, production admission with beta.2 upgrade, and 47 beta.1 package-handoff checks on both native architectures. No SQL downgrade is supplied. See [procedure](docs/upgrade-and-rollback.md) and [native evidence](docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json). |
 | G8. Operator documentation | PASS | A new operator can install, configure, verify, monitor, troubleshoot, upgrade, and remove the beta from published documentation alone | The README covers evaluation, install, configuration, verification, and lifecycle; the operations guide covers monitoring, alerts, logs, and first response; the shipped bundle includes backup/upgrade/rollback and conservative uninstall procedures. |
 | G9. Signed prerelease publication | PARTIAL | GitHub prerelease `v0.1.0-beta.5` is published and independently verified from downloaded assets on a non-build machine | Worker, primary extension, and artifact versions now match `0.1.0-beta.5`, and prerelease tags create GitHub prereleases. Publish, then verify checksums, Sigstore identities, SBOMs, and installation from downloaded assets. |
 
 ## Release decision
+
+Current candidate `b0a703a` passes the complete native suite on both architectures
+in [run 42201838803](https://github.com/proddata/lake_replication/actions/runs/42201838803).
+Both pass 662 checks, including the corrected receiver interruption fixture and
+the unchanged copy/streaming limits. The earlier failures below remain retained
+as historical evidence; they do not describe the current native result.
 
 The current patched candidate at `820f402` **fails native streaming latency on
 both architectures** in [run 41289535953](https://github.com/proddata/lake_replication/actions/runs/41289535953).

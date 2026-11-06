@@ -46,3 +46,26 @@ records both native architectures, exact archive and prerequisite identities,
 raw-result and artifact checksums, the local original/fixed probes and retained
 log hashes. All general checks pass. Full qualification on the corrected
 fixture, the release-candidate soak and final publication gates remain open.
+
+## Corrected full native run
+
+[Run 42201838803](https://github.com/proddata/lake_replication/actions/runs/42201838803)
+passes at `b0a703a` on both architectures, with 662 checks each. This includes
+the corrected receiver fixture's 97 checks, all lifecycle/TLS/crash scenarios,
+physical recovery, production admission and both historical upgrade handoffs.
+
+| Architecture | Four-copy completion | Three streaming p95 values |
+|---|---:|---|
+| ARM64 | 124.46 s | 0.903 / 1.003 / 1.064 s |
+| AMD64 | 119.80 s | 0.621 / 0.870 / 0.618 s |
+
+Both measurements are valid with every original workload gate enforced. Neither
+has an OOM or unexpected PostgreSQL crash. Variation between native runs does
+not establish a speedup attributable to the fixture correction.
+
+[Accepted native evidence](evidence/2026-11-06-beta5-full-native-runtime-pass.json)
+retains archive/prerequisite identities, result checksums and both artifact ZIP
+digests, verified against GitHub. The earlier ARM64 failure remains retained.
+The release-candidate compatibility refresh, day-long soak and signed
+publication remain separate gates. The packaged
+[soak runner](../tests/soak/README.md) validates its short profile independently.

@@ -1,0 +1,324 @@
+{
+  "scope": "Ten-minute soak-runner validation; not a 24-hour release soak",
+  "status": "passed",
+  "candidate_source_revision": "b0a703ab9f65a8f26904b21ed91c87df1944cdbc",
+  "path": "/private/tmp/lake-soak-b0a703a/.qualification/qualification_20261106_130253_soak/results.json",
+  "results_sha256": "965fe608837c5978518a3ff46b89e30f8adeedb8cdf2addaf17a82047069ec51",
+  "raw_file_sha256": {
+    "storage-files.tsv": "ae7c43e136eb8d226651db34261770a0334f11dd2e8b8da9739d91fae293d029",
+    "docker-events.jsonl": "5439b49a1dcea76e81a9fed9a9aad1887c697aace81aa8b18dec34c231cdfc5c",
+    "docker-events.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results.json": "965fe608837c5978518a3ff46b89e30f8adeedb8cdf2addaf17a82047069ec51",
+    "resources.jsonl": "346267e4e36e6c1dd84d749711d774d77951b55dbf798e6b0ed597fb612a3f3f",
+    "storage-breakdown.json": "4def871a6f5f1ab1ac6361a4f7013313a6481702beb25eeceeffa277a73511f9",
+    "workers.jsonl": "63f25bae04abc42076b1339e7a40a5480935960021589160ac597b30dd4f7242",
+    "compose.log": "2bf8a1e8d7da4b2d315679000c6de7cffe636b59250e16924c0f955a4ade20e9",
+    "compose.yml": "d2e8774b9453ba9fd590b56b80f40174e9e24b931ea4edb712e972aceb69e062"
+  },
+  "archive_sha256": "c67e8d19361282876fa0db3c2d87a42f6a01bc437e911a3a6cd7afd2677181fc",
+  "prerequisite": {
+    "identity": {
+      "format": 1,
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "architecture": "arm64",
+      "inputs": {
+        "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+        "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+        "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+      }
+    },
+    "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+    "runtime": {
+      "identity": {
+        "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+        "architecture": "arm64",
+        "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "inputs": {
+          "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+          "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+          "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+          "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+          "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+          "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+          "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+          "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+        }
+      },
+      "image_id": "sha256:fc5c66b8b62653eca3cb2518bd560fc0187d8cb76b70503dbceeccdfba8a6fde",
+      "installed": {
+        "patchset": "lake-replication-manifest-cleanup-v1",
+        "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+        "state": "after",
+        "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+        "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+        "libraries": {
+          "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+          "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+        }
+      }
+    }
+  },
+  "measured_runner_inputs": {
+    "tests/soak/probe.py": "59edf78dc31fc575245bdde101dcf9261f6b601a5f53933d10f31b24d5f12e26",
+    "tests/soak/model.py": "e01422fad1c84f67a90eb01ec695486160674b5bd6c7fa6751ea91110e4ba634",
+    "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+    "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+    "tests/qualification/probe.py": "cbe4824157f2a9c5e6a165d15950ab0d0dfa132c4bf61695e9cc469c0566fc04"
+  },
+  "parameters": {
+    "duration_seconds": 600,
+    "interval_seconds": 0.5,
+    "sample_seconds": 5,
+    "catchup_seconds": 60,
+    "max_storage_mib": 4096,
+    "cpuset": "0-1"
+  },
+  "elapsed_with_cleanup_seconds": 603.4651368330233,
+  "source_transactions": 1166,
+  "checks_passed": 45,
+  "faults": [
+    {
+      "name": "worker_crash",
+      "planned_seconds": 120.0,
+      "started_seconds": 120.10384091595188,
+      "victim_pid": 137,
+      "completed_seconds": 121.15480383299291,
+      "source_transactions_during_event": 2
+    },
+    {
+      "name": "storage_outage",
+      "planned_seconds": 240.0,
+      "started_seconds": 240.28092783293687,
+      "completed_seconds": 257.28596929099876,
+      "source_transactions_during_event": 23
+    },
+    {
+      "name": "destination_restart",
+      "planned_seconds": 360.0,
+      "started_seconds": 360.00628224993125,
+      "completed_seconds": 362.18000687495805,
+      "source_transactions_during_event": 4
+    },
+    {
+      "name": "backlog",
+      "planned_seconds": 480.0,
+      "started_seconds": 480.09780058299657,
+      "completed_seconds": 497.1352217500098,
+      "source_transactions_during_event": 23
+    }
+  ],
+  "checkpoints": [
+    {
+      "name": "initial snapshot",
+      "sequence": 0,
+      "rows": 128,
+      "data_sha256": "ff55f645e1f768805be38330016485571ef900b0457f8cf8d7e2293d3dbcb4a6",
+      "elapsed_seconds": 0.2919777079951018,
+      "catchup_seconds": 0.29195400001481175
+    },
+    {
+      "name": "periodic",
+      "sequence": 1,
+      "rows": 127,
+      "data_sha256": "d7182672cf2ca7db2be986a50210b4e31a8e26a25641bf76e8d95c457f0866ff",
+      "elapsed_seconds": 0.9396950829541311,
+      "catchup_seconds": 0.3063369580777362
+    },
+    {
+      "name": "periodic",
+      "sequence": 121,
+      "rows": 960,
+      "data_sha256": "08681089938df604acc1086ade887d15d79cf2c5255d916fa82a59b5f8b1416a",
+      "elapsed_seconds": 61.77779562503565,
+      "catchup_seconds": 0.7991545828990638
+    },
+    {
+      "name": "after worker_crash",
+      "sequence": 239,
+      "rows": 960,
+      "data_sha256": "b8ccee76091a3ecf22c269e89167e77ffb309b9db575b698944a753132687e3b",
+      "elapsed_seconds": 121.07775349996518,
+      "catchup_seconds": 0.7536166670033708
+    },
+    {
+      "name": "periodic",
+      "sequence": 242,
+      "rows": 960,
+      "data_sha256": "383f39e6ced3e1a33914d0c976961a7b97778a0759a40eba6d63b483406f470f",
+      "elapsed_seconds": 122.62148574995808,
+      "catchup_seconds": 0.7478213330032304
+    },
+    {
+      "name": "periodic",
+      "sequence": 363,
+      "rows": 960,
+      "data_sha256": "9b6671509a391ab8eda65a3ab143569bda46b15dcb119826b2ad6564688b229a",
+      "elapsed_seconds": 183.43350099993404,
+      "catchup_seconds": 0.7476116659818217
+    },
+    {
+      "name": "after storage_outage",
+      "sequence": 498,
+      "rows": 960,
+      "data_sha256": "226b4fa621616f56e76d8b1005b09a62e7d9d42820ed8a7abc1a5247672eb581",
+      "elapsed_seconds": 257.19918941601645,
+      "catchup_seconds": 6.4108685839455575
+    },
+    {
+      "name": "periodic",
+      "sequence": 501,
+      "rows": 960,
+      "data_sha256": "40bb08f9e8b5a440fa47d26dd29e5a3242daf5a128267ee58ebc80e5908bfc71",
+      "elapsed_seconds": 258.5125478330301,
+      "catchup_seconds": 0.7325557080330327
+    },
+    {
+      "name": "periodic",
+      "sequence": 621,
+      "rows": 960,
+      "data_sha256": "beda1e1eea4e46051f116555e72d576d2e7a3af5230a6e561b3a72741f74e683",
+      "elapsed_seconds": 318.9391827080399,
+      "catchup_seconds": 0.3951024169800803
+    },
+    {
+      "name": "after destination_restart",
+      "sequence": 705,
+      "rows": 960,
+      "data_sha256": "53c1c9940e28a0589150a9c7cba2681f322421648307d6aea2e34abe14613620",
+      "elapsed_seconds": 362.0979677910218,
+      "catchup_seconds": 1.567052041995339
+    },
+    {
+      "name": "periodic",
+      "sequence": 741,
+      "rows": 960,
+      "data_sha256": "124fef012a772f64d1e2803e76c8b0288566e4da59e8c1dd35ba949e158bdf4f",
+      "elapsed_seconds": 380.32634370797314,
+      "catchup_seconds": 0.7844034580048174
+    },
+    {
+      "name": "periodic",
+      "sequence": 861,
+      "rows": 960,
+      "data_sha256": "24dbb3a58ac7ba0c990431181e2d99ce0d3ee4348bf3a7017ed2648da1e85943",
+      "elapsed_seconds": 440.74466454098,
+      "catchup_seconds": 0.3622349579818547
+    },
+    {
+      "name": "after backlog",
+      "sequence": 961,
+      "rows": 960,
+      "data_sha256": "81bc2d54c49f63f600766592b17162b5766a4d923e25f6827db0ef4e9fee1507",
+      "elapsed_seconds": 497.0522289159708,
+      "catchup_seconds": 6.351717708981596
+    },
+    {
+      "name": "periodic",
+      "sequence": 970,
+      "rows": 960,
+      "data_sha256": "fff26c01f8a7cc53210913daccea7f6065a705954db87d371eb609e47b399dcf",
+      "elapsed_seconds": 501.5852887079818,
+      "catchup_seconds": 0.7452231249772012
+    },
+    {
+      "name": "periodic",
+      "sequence": 1090,
+      "rows": 960,
+      "data_sha256": "d560d80a49cb2d2c42302798cd876251db41b3282bbc4d4865e0f9f7bb855de8",
+      "elapsed_seconds": 562.0664439999964,
+      "catchup_seconds": 0.44434583303518593
+    },
+    {
+      "name": "final data",
+      "sequence": 1166,
+      "rows": 960,
+      "data_sha256": "c1f3ecff75118293d95b2141cef2c13a070b3a30a5f55a7f9cb30a677310b0e1",
+      "elapsed_seconds": 600.4289157079766,
+      "catchup_seconds": 0.363606582977809
+    }
+  ],
+  "resource_samples": 109,
+  "max_memory_bytes": {
+    "destination": 317673472,
+    "pgduck": 1717706752
+  },
+  "visibility_observations": {
+    "count": 1166,
+    "max_seconds": 21.97836654202547,
+    "buckets": {
+      "1": 115,
+      "2": 216,
+      "5": 594,
+      "10": 201,
+      "30": 40,
+      "60": 0,
+      "over_60": 0
+    }
+  },
+  "container_deaths": {
+    "source": 0,
+    "destination": 1,
+    "pgduck": 0,
+    "storage": 1
+  },
+  "cleanup_returncode": 0,
+  "cleanup_errors": [],
+  "qualifies_24_hour_soak": false,
+  "storage": {
+    "first_allocated_bytes": 450560,
+    "last_allocated_bytes": 957177856,
+    "inventory": {
+      "scope": "Read-only storage inventory at the recorded pre-teardown point; apparent bytes include MinIO object representation",
+      "last_elapsed_seconds": 583.0940630410332,
+      "source_transactions": 1133,
+      "counts": {
+        "minio_internal": 18,
+        "parquet": 5709,
+        "iceberg_manifest_avro": 6715,
+        "iceberg_metadata_json": 3934
+      },
+      "apparent_bytes": {
+        "minio_internal": 44909,
+        "parquet": 6600358,
+        "iceberg_manifest_avro": 50938587,
+        "iceberg_metadata_json": 717056633
+      },
+      "table_apparent_bytes": {
+        "soak_items": {
+          "parquet": 5746890,
+          "iceberg_manifest_avro": 27659884,
+          "iceberg_metadata_json": 356935289
+        },
+        "soak_progress": {
+          "parquet": 853468,
+          "iceberg_manifest_avro": 23278703,
+          "iceberg_metadata_json": 360121344
+        }
+      }
+    }
+  },
+  "initial_setup_failure": {
+    "path": "/private/tmp/lake-soak-b0a703a/.qualification/qualification_20261106_130155_soak/results.json",
+    "sha256": "7e7d8278cd592ead4d3d93f8231e8ebcba76d0cb38a438e0083f2a21d8f2abd4",
+    "status": "error",
+    "error": "failed to parse /private/tmp/lake-soak-b0a703a/.qualification/qualification_20261106_130155_soak/compose.yml: go-yaml load error in scanner at L106.C18: mapping values are not allowed in this context",
+    "source_transactions": 0
+  },
+  "post_smoke_controller_hardening": [
+    "Resource collection has an explicit 15-second timeout",
+    "Cleanup failures still attempt teardown and preserve the primary failure",
+    "Day-long qualification is evaluated only after cleanup",
+    "A recovery response arriving after its deadline is rejected",
+    "Nonfinite sampling parameters are rejected"
+  ],
+  "controller_unit_tests_passed": 10,
+  "max_individual_process_pss_bytes": {
+    "destination:postgres": 31355904,
+    "destination:framework": 7853056,
+    "destination:wrapper": 4123648,
+    "destination:rust": 1326080,
+    "pgduck:engine": 674179072
+  }
+}
