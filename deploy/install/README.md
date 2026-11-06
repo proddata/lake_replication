@@ -4,6 +4,15 @@ This directory builds the artifact installed next to an existing PostgreSQL 18
 and pg_lake installation. It does not contain PostgreSQL, pg_lake, MinIO, or the
 laboratory crash patch.
 
+The beta's concurrent-copy latency qualification uses the supported
+[pg_lake prerequisite patchset](https://github.com/proddata/lake_replication/tree/main/deploy/pg_lake).
+Its source, manifest and offline instructions are shipped under
+`PG_LAKE_PREREQUISITE/` in the archive. Build or install that
+prerequisite separately before deploying the release archive. The worker bundle
+does not patch pg_lake or enforce its revision during installation. Record the
+patchset marker and both library checksums with the deployment; an upstream
+commit alone does not identify the qualified runtime.
+
 Build the native-platform bundle with:
 
 ```sh

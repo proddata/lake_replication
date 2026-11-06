@@ -37,15 +37,15 @@ both architectures** in [run 41289535953](https://github.com/proddata/lake_repli
 The measurements are valid; correctness, copy completion, TLS, and physical
 recovery pass. The subsequent beta.1 handoff is skipped. The earlier pre-patch
 full pass does not qualify this candidate. See the [investigation and retained
-local controls](docs/beta5-latency-investigation.md). No production default or
-release gate has been changed.
+local controls](docs/beta5-latency-investigation.md). The failed measurements
+remain retained and the release thresholds are unchanged.
 
 The [matched publication trace](docs/beta5-transaction-tracing.md) now measures
 complete worker/server transactions and separate diagnostic phases. A short
 AMD64 diagnostic confirms that commit dominates (514–519 ms mean); one stream
 still misses latency at 2.007067 seconds. Its failed gate remains retained.
-This tracing work does not resolve the native gate or change resource defaults;
-the next step is separating metadata, upload and durability work inside commit.
+This trace precedes the internal profiling below and does not qualify the
+runtime dependency or change worker resource defaults.
 
 The [local commit investigation](docs/beta5-commit-internals.md) now identifies
 previous-snapshot scans and snapshot finalization as the main measured costs.
@@ -56,9 +56,22 @@ seconds while both controls fail at 2.107–2.356 seconds; the workflow retains
 those failures. A separate local unguarded-patch run fails valid latency at
 2.974–3.015 seconds despite passing correctness and copy completion. A fixed
 guarded/minimal/guarded local follow-up passes all three trials; the minimal
-patch reaches 0.457–0.484 seconds. The original failure is retained, and exact
-unguarded native verification remains required before promoting the fix. The
-upstream pin and production defaults are unchanged.
+patch reaches 0.457–0.484 seconds. The original failure is retained. Exact
+unguarded native verification now passes both architectures at `e0d34f6`:
+ARM64 p95 0.989–1.076 seconds and AMD64 1.711–1.756 seconds, with 125.67/160.97
+second copies. Each passes all 181 assertions. The fix is delivered as the
+[pinned runtime prerequisite patchset](deploy/pg_lake/README.md), selected by
+qualification and shipped separately from workers. Full qualification on this
+runtime, compatibility refresh, soak and final release gates remain required.
+The upstream submodule and worker resource defaults are unchanged.
+The supported runtime's local pipeline and managed cases pass. Its first
+fairness run is rejected for a 91.97-second clock discontinuity; the retained
+copy gate also fails. One frozen-input follow-up passes valid timing at
+0.514–0.552 seconds p95 with 125.16-second copies. The patched runtime also
+passes 57 artifact-only checks at each compatibility endpoint. Final installer
+builds produce the same library bytes as these tested images. These local
+checks use an explicitly selected CI archive; the final delivery commit still
+needs full native qualification with its newly exported archives.
 
 The dependency review now patches rustls 0.23.45 to 0.23.46 for four upstream
 advisories. [Security review](docs/dependency-security-review.md) records the

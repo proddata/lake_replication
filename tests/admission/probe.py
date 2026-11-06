@@ -137,6 +137,7 @@ def main():
         archive=q.archive_path();q.verify_archive(archive)
         result['archive']={k:q.EVIDENCE[k] for k in ['archive','archive_sha256','architecture','source_revision']}
         with tempfile.TemporaryDirectory(prefix='lake-production-admission-') as temp:q.build_images(archive,Path(temp))
+        result['prerequisite']=q.EVIDENCE['prerequisite']
         # The old-package build reuses q.DESTINATION_IMAGE. Preserve the actual
         # candidate under a separate tag before testing package replacement.
         image='lake-replication-production-admission:'+q.RUN

@@ -44,6 +44,15 @@ Result JSON and captured logs are written under `.qualification/`. The probe
 always removes its containers and volumes; it does not start, stop, or modify
 the development lab.
 
+The current beta runtime adds the pinned
+[pg_lake manifest-cleanup patchset](../pg_lake/README.md) over the cached upstream
+image. This separate layer rebuilds Iceberg and table modules together, without
+rebuilding DuckDB. Qualification records the original prerequisite and runtime
+image identities, patchset inputs and installed library checksums. An upstream
+revision alone no longer identifies the beta's performance prerequisite.
+The historical guarded/minimal comparison modes explicitly use the original
+upstream image to preserve their experimental controls.
+
 The `pg-lake-base` build target contains only PostgreSQL and pg_lake
 prerequisites. Qualification rejects an image that already contains replication
 libraries or workers, so source-built files cannot mask omissions from the

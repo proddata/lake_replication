@@ -1,0 +1,455 @@
+{
+  "scope": "Supported runtime dependency delivery; local archived workers with explicit prerequisite identities",
+  "initial": {
+    "path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261106_055241_production_admission/results.json",
+    "sha256": "e22725d653b9e7ae99922f3b70005f348ece7161abb613415b63f6ef0c83609e",
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+      "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+      "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+    },
+    "prerequisite": {
+      "identity": {
+        "architecture": "arm64",
+        "format": 1,
+        "inputs": {
+          "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+          "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+          "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+        },
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+      },
+      "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+      "runtime": {
+        "identity": {
+          "architecture": "arm64",
+          "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+          "inputs": {
+            "deploy/pg_lake/Dockerfile": "5131b1ec4e6446233ba623db6593e776df7c4ec88be198b664f34042e142ad8a",
+            "deploy/pg_lake/README.md": "4137a94a2569a527cc146f412cebd077c9d0362206f03e47d6a4ddef06f21368",
+            "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+            "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+            "deploy/pg_lake/patchset.py": "c750f2b438b4edf2ff300fee0d3c9de28e954fa48a4c27febf84a301294401fb",
+            "tests/qualification/runtime.py": "5c03e49d4970ad0e5b73723dc9bea6ae38a474695d65af70b92decfee1b04637"
+          }
+        },
+        "image_id": "sha256:1da193bfa2b2393c966c15ad335dbf30a2ffb3aa2e4eb808abfc4d923a95bc5a",
+        "installed": {
+          "libraries": {
+            "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          },
+          "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "patchset": "lake-replication-manifest-cleanup-v1",
+          "state": "after",
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+        }
+      }
+    },
+    "status": "completed_with_findings",
+    "checks_passed": 166,
+    "cases": [
+      {
+        "case": "pipeline",
+        "status": "passed"
+      },
+      {
+        "case": "managed",
+        "status": "passed"
+      },
+      {
+        "case": "fairness",
+        "status": "finding"
+      }
+    ],
+    "fairness": {
+      "status": "completed_with_findings",
+      "measurement_valid": false,
+      "source_producer": "independent_sessions",
+      "observer_clock_sampling": "query_return_monotonic",
+      "workload_passed": false,
+      "failed_gates": [
+        "copy_within_three_minutes",
+        "observer_clock_validation"
+      ],
+      "copy_elapsed_seconds": 215.60971903800964,
+      "timing_validation": {
+        "errors": [
+          "observer wall clock differs from monotonic trace",
+          "observer wall clock differs from monotonic trace",
+          "observer wall clock differs from monotonic trace",
+          "observer wall clock differs from monotonic trace",
+          "observer wall clock differs from monotonic trace",
+          "observer wall clock differs from monotonic trace",
+          "observer wall clock differs from monotonic trace",
+          "observer wall clock differs from monotonic trace"
+        ],
+        "tolerance_seconds": 1.0,
+        "valid": false
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "streams": [
+        {
+          "database": "analytics",
+          "p95_publication_ms": 572.9210376739502,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 417.5450801849365,
+            "journal_insert_to_batch_ms": 174.00789260864258,
+            "source_to_journal_insert_ms": 12.572050094604492
+          },
+          "source_max_schedule_lateness_seconds": 0.010092667071148753,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_1",
+          "p95_publication_ms": 547.3768711090088,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 438.3118152618408,
+            "journal_insert_to_batch_ms": 143.44096183776855,
+            "source_to_journal_insert_ms": 24.280071258544922
+          },
+          "source_max_schedule_lateness_seconds": 0.01005837507545948,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_2",
+          "p95_publication_ms": 538.9158725738525,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 431.2419891357422,
+            "journal_insert_to_batch_ms": 142.9898738861084,
+            "source_to_journal_insert_ms": 21.425962448120117
+          },
+          "source_max_schedule_lateness_seconds": 0.010039167013019323,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        }
+      ]
+    },
+    "observer_wall_monotonic_drift_seconds": 91.96893551317044
+  },
+  "disposition": "Initial run retained as invalid timing, with copy gate failed. One predeclared fairness-only measurement after freezing final runtime inputs. No latency threshold changed.",
+  "frozen_final_fairness": {
+    "path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261106_060449_production_admission/results.json",
+    "sha256": "a589809cea21ce80ef2265f33368416a4e08bc3adb74624cb7d5f741a8c9d03f",
+    "archive": {
+      "architecture": "arm64",
+      "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+      "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+      "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+    },
+    "prerequisite": {
+      "identity": {
+        "architecture": "arm64",
+        "format": 1,
+        "inputs": {
+          "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+          "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+          "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+        },
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+      },
+      "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+      "runtime": {
+        "identity": {
+          "architecture": "arm64",
+          "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+          "inputs": {
+            "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+            "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+            "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+            "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+            "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+            "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+            "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+            "deploy/pg_lake/patchset.py": "c750f2b438b4edf2ff300fee0d3c9de28e954fa48a4c27febf84a301294401fb",
+            "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+          },
+          "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+        },
+        "image_id": "sha256:00b4dcf77bd81bf4b9bdde0d0d79b1992f2461e1c426b9066728a9fe49c74ebb",
+        "installed": {
+          "libraries": {
+            "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          },
+          "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "patchset": "lake-replication-manifest-cleanup-v1",
+          "state": "after",
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+        }
+      }
+    },
+    "summary": {
+      "status": "passed",
+      "measurement_valid": true,
+      "source_producer": "independent_sessions",
+      "observer_clock_sampling": "query_return_monotonic",
+      "workload_passed": true,
+      "failed_gates": [],
+      "copy_elapsed_seconds": 125.16339802742004,
+      "timing_validation": {
+        "errors": [],
+        "tolerance_seconds": 1.0,
+        "valid": true
+      },
+      "engine_oom": false,
+      "unexpected_pg_crash": false,
+      "streams": [
+        {
+          "database": "analytics",
+          "p95_publication_ms": 552.1759986877441,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 399.41883087158203,
+            "journal_insert_to_batch_ms": 146.85893058776855,
+            "source_to_journal_insert_ms": 18.763065338134766
+          },
+          "source_max_schedule_lateness_seconds": 0.010178709053434432,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_1",
+          "p95_publication_ms": 547.4810600280762,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 412.9788875579834,
+            "journal_insert_to_batch_ms": 148.10895919799805,
+            "source_to_journal_insert_ms": 18.254995346069336
+          },
+          "source_max_schedule_lateness_seconds": 0.010121500003151596,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        },
+        {
+          "database": "fair_stream_2",
+          "p95_publication_ms": 513.7171745300293,
+          "latency_phases_p95_ms": {
+            "batch_to_publication_commit_ms": 402.10890769958496,
+            "journal_insert_to_batch_ms": 151.18408203125,
+            "source_to_journal_insert_ms": 19.713163375854492
+          },
+          "source_max_schedule_lateness_seconds": 0.010189834050834179,
+          "checks": {
+            "at_least_five_commits_during_copy": true,
+            "catchup_within_five_seconds": true,
+            "max_gap_within_five_seconds": true,
+            "p95_below_two_seconds": true,
+            "source_schedule_within_one_interval": true
+          }
+        }
+      ]
+    }
+  },
+  "same_libraries_as_initial_run": true,
+  "status": "local_validation_passed_with_invalid_trial_retained",
+  "final_delivery_image": {
+    "image": "pg-lake-runtime:arm64-bf1861136d6222da63a2",
+    "identity": {
+      "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+      "architecture": "arm64",
+      "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "inputs": {
+        "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+        "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+        "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+        "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+        "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+        "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+        "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+        "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+        "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+      }
+    },
+    "image_id": "sha256:fc5c66b8b62653eca3cb2518bd560fc0187d8cb76b70503dbceeccdfba8a6fde",
+    "installed": {
+      "patchset": "lake-replication-manifest-cleanup-v1",
+      "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+      "state": "after",
+      "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+      "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+      "libraries": {
+        "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+        "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+      }
+    }
+  },
+  "final_delivery_binary_equivalence": true,
+  "compatibility": [
+    {
+      "path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261106_060926/results.json",
+      "sha256": "72d538858b6b5bccc5bd49174c94db1980d0002178f0200323b9c30c197e3118",
+      "status": "passed",
+      "passed": true,
+      "checks_passed": 57,
+      "archive": {
+        "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+        "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+        "architecture": "arm64",
+        "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+      },
+      "prerequisite": {
+        "identity": {
+          "architecture": "arm64",
+          "format": 1,
+          "inputs": {
+            "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+            "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+            "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+          },
+          "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+        },
+        "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+        "runtime": {
+          "identity": {
+            "architecture": "arm64",
+            "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+            "inputs": {
+              "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+              "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+              "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+              "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+              "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+              "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+              "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+              "deploy/pg_lake/patchset.py": "c750f2b438b4edf2ff300fee0d3c9de28e954fa48a4c27febf84a301294401fb",
+              "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+            },
+            "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+          },
+          "image_id": "sha256:00b4dcf77bd81bf4b9bdde0d0d79b1992f2461e1c426b9066728a9fe49c74ebb",
+          "installed": {
+            "libraries": {
+              "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+              "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+            },
+            "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+            "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+            "patchset": "lake-replication-manifest-cleanup-v1",
+            "state": "after",
+            "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+          }
+        }
+      }
+    },
+    {
+      "path": "/private/tmp/lake-beta5-commit-profile-170839d/.qualification/qualification_20261106_061016/results.json",
+      "sha256": "c37af19f69de4c51a758b2891fdb341051f412ba9b9aa8168abafd4e301572f2",
+      "status": "passed",
+      "passed": true,
+      "checks_passed": 57,
+      "archive": {
+        "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+        "archive_sha256": "79fc1627778cceb34560949c23eb119c8d495d2945aca8142be1a8cb02b1c1e4",
+        "architecture": "arm64",
+        "source_revision": "170839d7048a13a5b43191f4a785f7f882d220e8"
+      },
+      "prerequisite": {
+        "identity": {
+          "architecture": "arm64",
+          "format": 1,
+          "inputs": {
+            "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+            "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+            "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+          },
+          "pg_lake_revision": "f609ecb17891383f021aebb0e249fe2994ed57bb"
+        },
+        "image_id": "sha256:7ae9c9ae54863ac8d7890c43e1ed368450e2eb27e5abe6336d59a716cb0c668f",
+        "runtime": {
+          "identity": {
+            "architecture": "arm64",
+            "base_image_id": "sha256:7ae9c9ae54863ac8d7890c43e1ed368450e2eb27e5abe6336d59a716cb0c668f",
+            "inputs": {
+              "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+              "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+              "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+              "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+              "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+              "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+              "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+              "deploy/pg_lake/patchset.py": "c750f2b438b4edf2ff300fee0d3c9de28e954fa48a4c27febf84a301294401fb",
+              "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+            },
+            "revision": "f609ecb17891383f021aebb0e249fe2994ed57bb"
+          },
+          "image_id": "sha256:41cf19c97c79485b274814f882868badbd7d7ee4dc39a5a89e3c655c98e9a2b4",
+          "installed": {
+            "libraries": {
+              "pg_lake_iceberg": "0df7f4ea8534b9a18c8ac660a242965cd06f7a1034b97089b2e0fedbd1bbe93b",
+              "pg_lake_table": "70f7567049c3bb88079b279403b26d19ce892b02e503247f3365928dc25a8011"
+            },
+            "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+            "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+            "patchset": "lake-replication-manifest-cleanup-v1",
+            "state": "after",
+            "upstream_revision": "f609ecb17891383f021aebb0e249fe2994ed57bb"
+          }
+        }
+      }
+    }
+  ],
+  "final_second_endpoint_image": {
+    "image": "pg-lake-runtime:arm64-d8db4809541637b60f42",
+    "identity": {
+      "base_image_id": "sha256:7ae9c9ae54863ac8d7890c43e1ed368450e2eb27e5abe6336d59a716cb0c668f",
+      "architecture": "arm64",
+      "revision": "f609ecb17891383f021aebb0e249fe2994ed57bb",
+      "inputs": {
+        "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+        "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+        "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+        "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+        "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+        "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+        "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+        "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+        "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+      }
+    },
+    "image_id": "sha256:98efb4f7d5201641272f9793d3a29f6bbb09d3693ead517a9944b9268faf5556",
+    "installed": {
+      "patchset": "lake-replication-manifest-cleanup-v1",
+      "upstream_revision": "f609ecb17891383f021aebb0e249fe2994ed57bb",
+      "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+      "state": "after",
+      "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+      "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+      "libraries": {
+        "pg_lake_iceberg": "0df7f4ea8534b9a18c8ac660a242965cd06f7a1034b97089b2e0fedbd1bbe93b",
+        "pg_lake_table": "70f7567049c3bb88079b279403b26d19ce892b02e503247f3365928dc25a8011"
+      }
+    }
+  },
+  "final_second_endpoint_binary_equivalence": true
+}

@@ -77,6 +77,8 @@ from source revision $(cat "$script_dir/SOURCE_REVISION").
 Compatibility was validated against pg_lake 3.6 at commit
 8180647d4535fdb1ed223f92f301ba6094a8ec3e. See COMPATIBILITY.md in the bundle;
 the installed pg_lake source revision cannot be determined from pg_config.
+Concurrent-copy latency qualification additionally uses the separately installed
+lake-replication-manifest-cleanup-v1 prerequisite. See PG_LAKE_PREREQUISITE/README.md.
 
 Before creating subscriptions:
 1. Add pg_extension_base to shared_preload_libraries and restart PostgreSQL.

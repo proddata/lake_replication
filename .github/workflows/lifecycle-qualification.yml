@@ -197,6 +197,14 @@ jobs:
                   matches = [m for m in bundle.getmembers() if m.name.endswith('/payload/extension/' + sql.name)]
                   assert len(matches) == 1, sql.name
                   assert bundle.extractfile(matches[0]).read() == sql.read_bytes(), sql.name
+              prerequisite = Path('deploy/pg_lake')
+              for source in prerequisite.rglob('*'):
+                  if not source.is_file() or '__pycache__' in source.parts:
+                      continue
+                  suffix = '/PG_LAKE_PREREQUISITE/' + source.relative_to(prerequisite).as_posix()
+                  matches = [m for m in bundle.getmembers() if m.name.endswith(suffix)]
+                  assert len(matches) == 1, suffix
+                  assert bundle.extractfile(matches[0]).read() == source.read_bytes(), suffix
           assert revision == os.environ['CANDIDATE_SHA'], (revision, os.environ['CANDIDATE_SHA'])
           Path('.qualification/candidate-artifact.json').write_text(json.dumps({
               'run_id': os.environ['ARTIFACT_RUN_ID'], 'source_revision': revision,

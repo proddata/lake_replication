@@ -71,6 +71,12 @@ The pg_lake commit above is a validated point, not a claim that every adjacent
 revision is compatible. See the complete
 [compatibility contract](deploy/install/COMPATIBILITY.md).
 
+Concurrent-copy latency qualification now uses the pinned
+[pg_lake prerequisite patchset](deploy/pg_lake/README.md). It is supplied
+separately from the workers, with an offline copy in release archives under
+`PG_LAKE_PREREQUISITE/`. Full qualification of this runtime remains required
+before publishing the beta.
+
 ## Quick start
 
 The following walkthrough assumes a source database named `application` and a

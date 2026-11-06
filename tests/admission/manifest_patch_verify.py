@@ -16,7 +16,9 @@ def main():
     args=parser.parse_args()
     spec=importlib.util.spec_from_file_location('production_probe',Path(__file__).with_name('probe.py'))
     p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
-    patch=p.ROOT/'tests/admission/patches/pg_lake_skip_clean_manifests.patch'
+    # Verify this patch independently against the original upstream image.
+    p.q.USE_RUNTIME_PATCHSET=False
+    patch=p.ROOT/'deploy/pg_lake/patches/skip-clean-manifests.patch'
     metadata=dict(scope=__doc__,patch_sha256=hashlib.sha256(patch.read_bytes()).hexdigest(),binary_overlay=True,
         upstream_revision='8180647d4535fdb1ed223f92f301ba6094a8ec3e',diagnostic_guc=False,timers=False)
     original_build=p.q.build_images

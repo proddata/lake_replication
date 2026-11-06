@@ -6,7 +6,7 @@ is bundled. Qualification is specific to the candidate archive and platform.
 | Component | Candidate target | Current qualification scope |
 |---|---|---|
 | PostgreSQL | 18.x | PostgreSQL 18.6 |
-| pg_lake | Local PostgreSQL catalog; extension version 3.6 | Pinned commit `8180647d4535fdb1ed223f92f301ba6094a8ec3e` |
+| pg_lake | Local PostgreSQL catalog; extension version 3.6 with `lake-replication-manifest-cleanup-v1` for concurrent-copy latency | Native unguarded-patch diagnostics pass at `8180647d4535fdb1ed223f92f301ba6094a8ec3e`; full runtime qualification pending |
 | pg_extension_base | Supplied by the supported pg_lake installation | 3.6, preloaded at server startup |
 | Operating system | Linux with Debian 12-compatible glibc | Pinned Debian 12 container images |
 | CPU architecture | amd64 and arm64 build targets | beta.5 full native qualification passes on arm64 and amd64 at `14dc705` |
@@ -20,6 +20,16 @@ on ARM64 and AMD64 at the pinned revision. The patched local ARM64 archive passe
 ancestry path. These are two tested points, not a guarantee for every intervening
 commit. Clean patched archive audits and native requalification remain pending.
 See the repository's release-gate evidence for exact archive hashes and scope.
+
+The current runtime prerequisite applies the repository-maintained
+`lake-replication-manifest-cleanup-v1` patchset to the pinned upstream source.
+Its exact unguarded patch passes native pipeline, managed-worker, independent
+Iceberg snapshot and four-copy latency diagnostics on ARM64 and AMD64 at
+`e0d34f6`. The supported runtime build, compatibility endpoint and full suite
+must be requalified before release. The marker at
+`$(pg_config --sharedir)/pg_lake/lake-replication-patchset.json` records the exact
+upstream revision, patchset and both library checksums. The worker installer
+does not apply this prerequisite or enforce its revision; deploy it separately.
 
 REST-catalog destinations, PostgreSQL 16/17/19, online static-to-base handoff,
 automatic physical takeover, distributed fencing and a SQL downgrade remain

@@ -58,6 +58,8 @@ def main():
     parser.add_argument('--case',choices=['fairness','correctness'],default='fairness')
     parser.add_argument('--cpuset',default='0')
     args=parser.parse_args();p=load('production_probe','probe.py');q=p.q
+    # This historical comparison intentionally brackets the original prerequisite.
+    q.USE_RUNTIME_PATCHSET=False
     overlay=load('commit_profile_overlay','commit_profile_overlay.py').Overlay(q,p.ROOT,candidate=True)
     original_build=q.build_images
     def build_images(archive,context):original_build(archive,context);overlay.build(context)

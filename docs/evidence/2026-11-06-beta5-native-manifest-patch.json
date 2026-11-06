@@ -1,0 +1,1640 @@
+{
+  "scope": "Exact unguarded pg_lake patch native verification; binary overlays, not full production qualification",
+  "run_url": "https://github.com/proddata/lake_replication/actions/runs/42104428685",
+  "source_revision": "e0d34f6706fda6099f0ab441349db0028b9fcd6a",
+  "architectures": {
+    "arm64": {
+      "correctness": {
+        "path": ".qualification/native_manifest_patch_e0d34f6_arm64/qualification_20261105_203733_manifest_patch/results.json",
+        "sha256": "80f539666eb727bc5dfde6ae30391e3731cae19f4565861fc12b6020f0e81f8e",
+        "snapshots": [
+          {
+            "step": "empty",
+            "rows": [],
+            "files": [],
+            "manifests": [],
+            "has_snapshot": false
+          },
+          {
+            "step": "insert1",
+            "rows": [
+              [
+                1,
+                "a"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "insert2",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                1,
+                0,
+                1,
+                1,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "insert3",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                2,
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "savepoint",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                3,
+                0,
+                1,
+                3,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "delete",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                0,
+                3,
+                1,
+                0,
+                3,
+                1
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "update",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                2,
+                1,
+                1,
+                2,
+                1
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "vacuum",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                2,
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "delete_all",
+            "rows": [],
+            "files": [],
+            "manifests": [
+              [
+                "EXISTING",
+                0,
+                0,
+                3,
+                0,
+                0,
+                3
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "empty_vacuum",
+            "rows": [],
+            "files": [],
+            "manifests": [],
+            "has_snapshot": true
+          },
+          {
+            "step": "truncate",
+            "rows": [],
+            "files": [],
+            "manifests": [],
+            "has_snapshot": true
+          },
+          {
+            "step": "insert_after_truncate",
+            "rows": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "rollback",
+            "rows": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          }
+        ],
+        "snapshots_sha256": "ae4f358545b6861bfef81d6f3b513c8f461b8f982b10dd779e58a5d0c4086dac",
+        "status": "passed",
+        "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+        "archive": {
+          "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+          "archive_sha256": "0f1b479b11a93e6dfe83c69c6280cc51b72c172615faf62b12b35cc814ff53c1",
+          "architecture": "arm64",
+          "source_revision": "e0d34f6706fda6099f0ab441349db0028b9fcd6a"
+        },
+        "image_id": "sha256:d6d2754d390329310c7193a1df6cc49b0cc0bfdf8fa13de99e72f42be310ff70",
+        "cleanup_returncode": 0,
+        "checks": [
+          {
+            "name": "release archive checksum",
+            "passed": true,
+            "actual": "0f1b479b11a93e6dfe83c69c6280cc51b72c172615faf62b12b35cc814ff53c1",
+            "expected": "0f1b479b11a93e6dfe83c69c6280cc51b72c172615faf62b12b35cc814ff53c1"
+          },
+          {
+            "name": "archive architecture matches qualification host",
+            "passed": true,
+            "actual": "arm64",
+            "expected": "arm64"
+          },
+          {
+            "name": "empty exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "insert1 exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ]
+            ]
+          },
+          {
+            "name": "insert2 exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ]
+            ]
+          },
+          {
+            "name": "insert3 exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ]
+            ]
+          },
+          {
+            "name": "savepoint exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "delete exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "update exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "vacuum exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "delete_all exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "empty_vacuum exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "truncate exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "insert_after_truncate exact rows",
+            "passed": true,
+            "actual": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "expected": [
+              [
+                6,
+                "f"
+              ]
+            ]
+          },
+          {
+            "name": "rollback exact rows",
+            "passed": true,
+            "actual": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "expected": [
+              [
+                6,
+                "f"
+              ]
+            ]
+          }
+        ],
+        "upstream_patch": {
+          "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "binary_overlay": true,
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+          "diagnostic_guc": false,
+          "timers": false,
+          "base_image_id": "sha256:1519c9ed9a058a5df1e1d6d82bd526f152ec34c205b1a5130bd4fa83b571a4ba",
+          "sources": {
+            "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+            "pg_lake_iceberg/src/iceberg/read_manifest.c": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+            "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149"
+          },
+          "original_libraries": {
+            "pg_lake_iceberg": "9f50d2821ee197d3b8b275d9ed2376b024370ce051162682ddde72b945527ea4",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          },
+          "patched_libraries": {
+            "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          }
+        },
+        "fixture_sha256": "a40e42f501f9e7d15bfcc8e855f7218da919a27f321ce038a492b608a1305cbf"
+      },
+      "admission": {
+        "path": ".qualification/native_manifest_patch_e0d34f6_arm64/qualification_20261105_203817_production_admission/results.json",
+        "sha256": "175b1a7aa9e65b44fe959afaf5e8ebd2f21d527440dae4ba238c8d4d55b2f59b",
+        "status": "passed",
+        "checks_passed": 166,
+        "archive": {
+          "architecture": "arm64",
+          "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+          "archive_sha256": "0f1b479b11a93e6dfe83c69c6280cc51b72c172615faf62b12b35cc814ff53c1",
+          "source_revision": "e0d34f6706fda6099f0ab441349db0028b9fcd6a"
+        },
+        "image_id": "sha256:d6d2754d390329310c7193a1df6cc49b0cc0bfdf8fa13de99e72f42be310ff70",
+        "overlay": {
+          "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "binary_overlay": true,
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+          "diagnostic_guc": false,
+          "timers": false,
+          "base_image_id": "sha256:1519c9ed9a058a5df1e1d6d82bd526f152ec34c205b1a5130bd4fa83b571a4ba",
+          "sources": {
+            "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+            "pg_lake_iceberg/src/iceberg/read_manifest.c": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+            "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149"
+          },
+          "original_libraries": {
+            "pg_lake_iceberg": "9f50d2821ee197d3b8b275d9ed2376b024370ce051162682ddde72b945527ea4",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          },
+          "patched_libraries": {
+            "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          }
+        },
+        "cases": [
+          {
+            "case": "pipeline",
+            "status": "passed"
+          },
+          {
+            "case": "managed",
+            "status": "passed"
+          },
+          {
+            "case": "fairness",
+            "status": "passed"
+          }
+        ],
+        "fairness": {
+          "status": "passed",
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "workload_passed": true,
+          "failed_gates": [],
+          "copy_elapsed_seconds": 125.6664810180664,
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "database": "analytics",
+              "p95_publication_ms": 1076.3847827911377,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 628.5641193389893,
+                "journal_insert_to_batch_ms": 523.3910083770752,
+                "source_to_journal_insert_ms": 31.34894371032715
+              },
+              "source_max_schedule_lateness_seconds": 0.00115686200001619,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_1",
+              "p95_publication_ms": 989.3441200256348,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 613.8350963592529,
+                "journal_insert_to_batch_ms": 441.7738914489746,
+                "source_to_journal_insert_ms": 45.52102088928223
+              },
+              "source_max_schedule_lateness_seconds": 0.0006947870000431067,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_2",
+              "p95_publication_ms": 1070.220947265625,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 636.4238262176514,
+                "journal_insert_to_batch_ms": 488.4660243988037,
+                "source_to_journal_insert_ms": 46.96321487426758
+              },
+              "source_max_schedule_lateness_seconds": 0.000578140000015992,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            }
+          ]
+        }
+      },
+      "artifact_zip_sha256": "7f7518da09994b57531b431aa7a060a298ca41a7b262329cc21897a3f7902917"
+    },
+    "amd64": {
+      "correctness": {
+        "path": ".qualification/native_manifest_patch_e0d34f6_amd64/qualification_20261105_203955_manifest_patch/results.json",
+        "sha256": "19e94bd4139223151c5710710a1324e76a9bcb89a4c2e782b20b98a9689c1392",
+        "snapshots": [
+          {
+            "step": "empty",
+            "rows": [],
+            "files": [],
+            "manifests": [],
+            "has_snapshot": false
+          },
+          {
+            "step": "insert1",
+            "rows": [
+              [
+                1,
+                "a"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "insert2",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                1,
+                0,
+                1,
+                1,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "insert3",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                2,
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "savepoint",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                3,
+                0,
+                1,
+                3,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "delete",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                0,
+                3,
+                1,
+                0,
+                3,
+                1
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "update",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                2,
+                1,
+                1,
+                2,
+                1
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "vacuum",
+            "rows": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ],
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                2,
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "delete_all",
+            "rows": [],
+            "files": [],
+            "manifests": [
+              [
+                "EXISTING",
+                0,
+                0,
+                3,
+                0,
+                0,
+                3
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "empty_vacuum",
+            "rows": [],
+            "files": [],
+            "manifests": [],
+            "has_snapshot": true
+          },
+          {
+            "step": "truncate",
+            "rows": [],
+            "files": [],
+            "manifests": [],
+            "has_snapshot": true
+          },
+          {
+            "step": "insert_after_truncate",
+            "rows": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          },
+          {
+            "step": "rollback",
+            "rows": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "files": [
+              [
+                "DATA",
+                1
+              ]
+            ],
+            "manifests": [
+              [
+                "EXISTING",
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            ],
+            "has_snapshot": true
+          }
+        ],
+        "snapshots_sha256": "ae4f358545b6861bfef81d6f3b513c8f461b8f982b10dd779e58a5d0c4086dac",
+        "status": "passed",
+        "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+        "archive": {
+          "archive": "lake_replication-0.1.0-beta.5-linux-amd64.tar.gz",
+          "archive_sha256": "4d31adac8054b2af0272669bd839525cceccc03c2d8e47638d9faf1033d8e140",
+          "architecture": "amd64",
+          "source_revision": "e0d34f6706fda6099f0ab441349db0028b9fcd6a"
+        },
+        "image_id": "sha256:c6186981348b013f30d8deb5e259c05af68acc9159f094979f57bfe5e1f9fb1f",
+        "cleanup_returncode": 0,
+        "checks": [
+          {
+            "name": "release archive checksum",
+            "passed": true,
+            "actual": "4d31adac8054b2af0272669bd839525cceccc03c2d8e47638d9faf1033d8e140",
+            "expected": "4d31adac8054b2af0272669bd839525cceccc03c2d8e47638d9faf1033d8e140"
+          },
+          {
+            "name": "archive architecture matches qualification host",
+            "passed": true,
+            "actual": "amd64",
+            "expected": "amd64"
+          },
+          {
+            "name": "empty exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "insert1 exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ]
+            ]
+          },
+          {
+            "name": "insert2 exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ]
+            ]
+          },
+          {
+            "name": "insert3 exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ]
+            ]
+          },
+          {
+            "name": "savepoint exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                2,
+                "b"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "delete exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "c"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "update exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "vacuum exact rows",
+            "passed": true,
+            "actual": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                "a"
+              ],
+              [
+                3,
+                "changed"
+              ],
+              [
+                4,
+                "d"
+              ]
+            ]
+          },
+          {
+            "name": "delete_all exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "empty_vacuum exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "truncate exact rows",
+            "passed": true,
+            "actual": [],
+            "expected": []
+          },
+          {
+            "name": "insert_after_truncate exact rows",
+            "passed": true,
+            "actual": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "expected": [
+              [
+                6,
+                "f"
+              ]
+            ]
+          },
+          {
+            "name": "rollback exact rows",
+            "passed": true,
+            "actual": [
+              [
+                6,
+                "f"
+              ]
+            ],
+            "expected": [
+              [
+                6,
+                "f"
+              ]
+            ]
+          }
+        ],
+        "upstream_patch": {
+          "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "binary_overlay": true,
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+          "diagnostic_guc": false,
+          "timers": false,
+          "base_image_id": "sha256:96133ce6b8b1c21bfac6761617530baa8e861cc6a9c0d836640ad6981c15a629",
+          "sources": {
+            "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+            "pg_lake_iceberg/src/iceberg/read_manifest.c": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+            "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149"
+          },
+          "original_libraries": {
+            "pg_lake_iceberg": "aff2304f65d501209fc8e416e6c6146e945fd478d33d62e9bc5e2e4e86720430",
+            "pg_lake_table": "a3d4d7a2f0ed091b16af920c23c349e0d0d55c7678565c75644a9776c30f356d"
+          },
+          "patched_libraries": {
+            "pg_lake_iceberg": "3bd09ab380c390f226294e6b8643b36ccc7c8d651d26c82d02e8fb26e543e059",
+            "pg_lake_table": "a3d4d7a2f0ed091b16af920c23c349e0d0d55c7678565c75644a9776c30f356d"
+          }
+        },
+        "fixture_sha256": "a40e42f501f9e7d15bfcc8e855f7218da919a27f321ce038a492b608a1305cbf"
+      },
+      "admission": {
+        "path": ".qualification/native_manifest_patch_e0d34f6_amd64/qualification_20261105_204107_production_admission/results.json",
+        "sha256": "395b5a0298a9c67ee5f653da7db4bb68bb63c524960f481415acd7d25a25dbff",
+        "status": "passed",
+        "checks_passed": 166,
+        "archive": {
+          "architecture": "amd64",
+          "archive": "lake_replication-0.1.0-beta.5-linux-amd64.tar.gz",
+          "archive_sha256": "4d31adac8054b2af0272669bd839525cceccc03c2d8e47638d9faf1033d8e140",
+          "source_revision": "e0d34f6706fda6099f0ab441349db0028b9fcd6a"
+        },
+        "image_id": "sha256:c6186981348b013f30d8deb5e259c05af68acc9159f094979f57bfe5e1f9fb1f",
+        "overlay": {
+          "scope": "Verify the unguarded upstream patch locally; explicit binary overlay, not release qualification.",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "binary_overlay": true,
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+          "diagnostic_guc": false,
+          "timers": false,
+          "base_image_id": "sha256:96133ce6b8b1c21bfac6761617530baa8e861cc6a9c0d836640ad6981c15a629",
+          "sources": {
+            "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+            "pg_lake_iceberg/src/iceberg/read_manifest.c": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+            "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149"
+          },
+          "original_libraries": {
+            "pg_lake_iceberg": "aff2304f65d501209fc8e416e6c6146e945fd478d33d62e9bc5e2e4e86720430",
+            "pg_lake_table": "a3d4d7a2f0ed091b16af920c23c349e0d0d55c7678565c75644a9776c30f356d"
+          },
+          "patched_libraries": {
+            "pg_lake_iceberg": "3bd09ab380c390f226294e6b8643b36ccc7c8d651d26c82d02e8fb26e543e059",
+            "pg_lake_table": "a3d4d7a2f0ed091b16af920c23c349e0d0d55c7678565c75644a9776c30f356d"
+          }
+        },
+        "cases": [
+          {
+            "case": "pipeline",
+            "status": "passed"
+          },
+          {
+            "case": "managed",
+            "status": "passed"
+          },
+          {
+            "case": "fairness",
+            "status": "passed"
+          }
+        ],
+        "fairness": {
+          "status": "passed",
+          "measurement_valid": true,
+          "source_producer": "independent_sessions",
+          "observer_clock_sampling": "query_return_monotonic",
+          "workload_passed": true,
+          "failed_gates": [],
+          "copy_elapsed_seconds": 160.97034287452698,
+          "timing_validation": {
+            "errors": [],
+            "tolerance_seconds": 1.0,
+            "valid": true
+          },
+          "engine_oom": false,
+          "unexpected_pg_crash": false,
+          "streams": [
+            {
+              "database": "analytics",
+              "p95_publication_ms": 1733.1819534301758,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 917.9189205169678,
+                "journal_insert_to_batch_ms": 818.9098834991455,
+                "source_to_journal_insert_ms": 68.69196891784668
+              },
+              "source_max_schedule_lateness_seconds": 0.0005992489999471218,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_1",
+              "p95_publication_ms": 1711.3268375396729,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 974.7319221496582,
+                "journal_insert_to_batch_ms": 762.0999813079834,
+                "source_to_journal_insert_ms": 75.1490592956543
+              },
+              "source_max_schedule_lateness_seconds": 0.001095362999990357,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            },
+            {
+              "database": "fair_stream_2",
+              "p95_publication_ms": 1756.0570240020752,
+              "latency_phases_p95_ms": {
+                "batch_to_publication_commit_ms": 958.4119319915771,
+                "journal_insert_to_batch_ms": 772.1250057220459,
+                "source_to_journal_insert_ms": 60.37497520446777
+              },
+              "source_max_schedule_lateness_seconds": 0.0009065680000048815,
+              "checks": {
+                "at_least_five_commits_during_copy": true,
+                "catchup_within_five_seconds": true,
+                "max_gap_within_five_seconds": true,
+                "p95_below_two_seconds": true,
+                "source_schedule_within_one_interval": true
+              }
+            }
+          ]
+        }
+      },
+      "artifact_zip_sha256": "68b216f4de495a9fc5bd99796033b3ef20282dbbe7e2f5c0ad9038e4db90a657"
+    }
+  },
+  "cross_architecture_snapshots_equal": true
+}

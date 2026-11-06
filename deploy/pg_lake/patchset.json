@@ -1,0 +1,23 @@
+{
+  "format": 1,
+  "patchset": "lake-replication-manifest-cleanup-v1",
+  "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+  "files": {
+    "pg_lake_iceberg/include/pg_lake/iceberg/manifest_spec.h": {
+      "before_sha256": "e161516238af2068dc8d270f5b67ea117f4f9f86c9af7f26a3a164d38c167e00",
+      "after_sha256": "eff87c415c2ae0efa0df11427edeae40d2a94239db17bf6ecb949911a604d140"
+    },
+    "pg_lake_iceberg/src/iceberg/read_manifest.c": {
+      "before_sha256": "b2e96e5b64e02759d0a08caaf3eec7f344863063665074c5f46a81f9b905733c",
+      "after_sha256": "59d2b50d6a5f76b419423ba382d24a598bfce1d093d300ba4318fca44960ff06"
+    },
+    "pg_lake_iceberg/src/iceberg/operations/manifest_merge.c": {
+      "before_sha256": "a435c46843cc95e60e3e20e6b3069bd1f9e148ed7eeab9f9ac42a0894ba8f149",
+      "after_sha256": "4ec9e515238e8997ecd02172437219f8456125310fe8c7fc814a50b33e5472a2"
+    }
+  },
+  "upstream_revisions": [
+    "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+    "f609ecb17891383f021aebb0e249fe2994ed57bb"
+  ]
+}

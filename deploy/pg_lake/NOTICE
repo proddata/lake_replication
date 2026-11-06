@@ -1,0 +1,13 @@
+pg_lake prerequisite patchset
+
+Upstream: https://github.com/Snowflake-Labs/pg_lake
+Copyright 2025 Snowflake Inc.
+Upstream source is licensed under Apache-2.0; see UPSTREAM-LICENSE.
+
+Local modifications for lake_replication, 2026:
+- manifest_spec.h: preserve whether the deleted-entry count is known.
+- read_manifest.c: track known counts for plain and nullable Avro integers.
+- manifest_merge.c: skip cleanup reads for known nonempty, deletion-free manifests.
+
+These modifications are distributed as patches, not an upstream release.
+The exact revisions and file hashes are recorded in patchset.json.

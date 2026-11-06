@@ -203,6 +203,9 @@ def build_storage_images():
     return storage.ensure(command,ENV,EVIDENCE,ROOT,RESULTS,native_architecture())
 
 
+USE_RUNTIME_PATCHSET = True
+
+
 def build_images(archive, context):
     # Fail before the expensive prerequisite compilation if S3 fixtures cannot
     # be prepared. Reuse only locally verified source/recipe/architecture IDs.
@@ -213,6 +216,12 @@ def build_images(archive, context):
     prerequisite.ensure(command,ROOT,PG_LAKE_REVISION,BASE_IMAGE)
     expected=prerequisite.identity(ROOT,PG_LAKE_REVISION,native_architecture())
     EVIDENCE['prerequisite']={'identity':expected,'image_id':prerequisite.image(command,BASE_IMAGE,expected)}
+    runtime_image = BASE_IMAGE
+    if USE_RUNTIME_PATCHSET:
+        spec=importlib.util.spec_from_file_location('qualification_runtime',ROOT/'tests/qualification/runtime.py')
+        runtime=importlib.util.module_from_spec(spec);spec.loader.exec_module(runtime)
+        runtime_image, EVIDENCE['prerequisite']['runtime'] = runtime.prepare(
+            command, ROOT, EVIDENCE['prerequisite']['image_id'], native_architecture(), PG_LAKE_REVISION)
     for name in (
         "Dockerfile.destination",
         "Dockerfile.source",
@@ -228,7 +237,7 @@ def build_images(archive, context):
             "docker",
             "build",
             "--build-arg",
-            f"BASE_IMAGE={BASE_IMAGE}",
+            f"BASE_IMAGE={runtime_image}",
             "--tag",
             DESTINATION_IMAGE,
             "--file",

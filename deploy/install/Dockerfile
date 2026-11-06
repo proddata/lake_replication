@@ -54,6 +54,7 @@ COPY --from=extension-builder \
 COPY deploy/install/install.sh deploy/install/uninstall.sh \
      deploy/install/README.md deploy/install/COMPATIBILITY.md ./
 COPY docs/upgrade-and-rollback.md UPGRADE.md
+COPY deploy/pg_lake ./PG_LAKE_PREREQUISITE/
 COPY LICENSE ./
 COPY --from=worker-builder /src/Cargo.lock ./Cargo.lock
 COPY --from=worker-builder /third-party-licenses ./THIRD-PARTY-LICENSES/

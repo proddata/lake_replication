@@ -55,7 +55,7 @@ and empty manifests retain the original cleanup path. The Iceberg specification
 The added internal field requires a coherent rebuild of pg_lake_iceberg and
 pg_lake_table. The diagnostic removes both modules' old objects before building
 them together; only those modules use this struct in the pinned source tree.
-The proposed [upstream patch](../tests/admission/patches/pg_lake_skip_clean_manifests.patch)
+The proposed [upstream patch](../deploy/pg_lake/patches/skip-clean-manifests.patch)
 contains the count-presence tracking and shortcut without the diagnostic GUC
 or timers. It is not automatically applied by production builds.
 
@@ -144,7 +144,7 @@ base. Internal timers and worker query tracing remain disabled:
 All three trials pass every gate with valid measurements. There is no
 reproducible slowdown from removing the diagnostic code in this cohort. This
 does not explain away the earlier failure or establish a statistical speedup.
-The exact unguarded patch still needs native verification before delivery.
+The subsequent native run verifies the exact unguarded patch on both architectures.
 
 The unguarded patch's separate correctness fixture also passes all 15 assertions.
 Its 13 normalized row/file/manifest snapshots match the original control exactly,
@@ -170,3 +170,47 @@ diagnostic GUCs. Every unchanged latency and safety gate remains enforced.
 A verified production prerequisite containing the reviewed fix is still
 required before this can close the beta latency gate. Longer-term growth and
 maintenance behavior also remain part of full qualification and the soak.
+
+## Native unguarded verification and runtime delivery
+
+[Run 42104428685](https://github.com/proddata/lake_replication/actions/runs/42104428685)
+passes at `e0d34f6` on both architectures. Each passes 15 independent Iceberg
+fixture assertions and all 166 pipeline/managed/fairness assertions. All 13
+normalized snapshots match across architectures. Measurements are valid, with
+no OOM or PostgreSQL crash:
+
+| Architecture | Four-copy completion | Three streaming p95 values |
+|---|---:|---|
+| ARM64 | 125.67 s | 1.076 / 0.989 / 1.070 s |
+| AMD64 | 160.97 s | 1.733 / 1.711 / 1.756 s |
+
+[Native evidence](evidence/2026-11-06-beta5-native-manifest-patch.json) retains
+the archive/image/library identities, snapshots and workload checks. Downloaded
+artifact ZIP checksums match GitHub's published digests.
+
+The fix is now delivered as
+[`lake-replication-manifest-cleanup-v1`](../deploy/pg_lake/README.md), with pinned
+patch and source hashes, a standalone offline installer and a runtime image
+layer. Qualification uses this dependency by default, records its identities
+and verifies both installed libraries. The raw upstream cache and submodule are
+retained; historical guarded/minimal diagnostics explicitly select that base.
+Release archives include the prerequisite sources and instructions separately
+from the worker installation. This is a repository-maintained prerequisite
+patchset, not a claim of an upstream release. Full qualification of the final
+runtime and archived workers, compatibility refresh and the soak remain gates.
+
+The supported runtime's local pipeline and managed cases pass all assertions.
+Its first fairness observation is retained as invalid: wall-clock elapsed time
+drifts 91.97 seconds from the monotonic observer, reported copy completion
+exceeds 180 seconds, and the timing validator rejects it. A predeclared
+fairness-only measurement with frozen runtime inputs passes valid timing and
+every gate: p95 0.552 / 0.547 / 0.514 seconds and copy completion 125.16 seconds.
+Both runs install identical library hashes, also matching the earlier unguarded
+patch build. No threshold is relaxed and the invalid run does not qualify.
+[Runtime delivery evidence](evidence/2026-11-06-beta5-runtime-prerequisite.json)
+retains both observations and their prerequisite identities.
+The artifact-only compatibility lane also passes 57 checks at each exact
+endpoint with the patched runtime. The final offline installer explicitly
+selects one PostgreSQL 18 `pg_config` for both builds and installation, and its
+two endpoint builds reproduce the tested libraries byte-for-byte. Their image
+identities and this binary comparison are retained in the runtime evidence.
