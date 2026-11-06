@@ -86,6 +86,7 @@ def preflight(args):
                 pg_lake_revision=expected, architecture=architecture, archive=archive,
                 kernel=platform.release(), cpu_count=info['NCPU'], memory_bytes=info['MemTotal'],
                 docker_version=info['ServerVersion'],
+                buildx_version=command('docker', 'buildx', 'version'),
                 compose_version=command('docker', 'compose', 'version', '--short'),
                 docker_root=info['DockerRootDir'], free_bytes=free,
                 duration_seconds=args.duration_seconds, max_storage_mib=args.max_storage_mib,

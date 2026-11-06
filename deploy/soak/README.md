@@ -51,7 +51,7 @@ HCLOUD_TOKEN='op://YOUR-VAULT/YOUR-ITEM/YOUR-FIELD' op run -- \
     --label purpose=lake-soak --user-data-from-file deploy/soak/host.cloud-config.yml
 ```
 
-The cloud-config installs Ubuntu's Docker/Compose packages, Git and Python;
+The cloud-config installs Ubuntu's Docker/Buildx/Compose packages, Git and Python;
 it starts Docker but starts no workload. Wait for `cloud-init status --wait`.
 If `/var/run/reboot-required` exists, reboot before continuing. Review service
 status and record the chosen server ID/location/type. The host is billed until
