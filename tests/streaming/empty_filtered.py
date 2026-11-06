@@ -121,13 +121,16 @@ def wire():
     check('no durable stream fragments remain',sql(f'SELECT count(*) FROM lake_replication.streamed_transactions WHERE subscription_id={sub}'),'0')
     before=sql(f'SELECT staged_lsn FROM lake_replication.checkpoints WHERE subscription_id={sub}')
     common=['docker','compose','-p',q.PROJECT,'-f',str(q.COMPOSE_FILE),'exec','-T']
-    source=subprocess.Popen(common+['source','psql','-XAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','application','-c',"BEGIN; INSERT INTO excluded SELECT n,repeat('z',2000) FROM generate_series(40001,60000)n; SELECT pg_sleep(8); COMMIT"],env=q.ENV,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-    receiver=subprocess.Popen(common+['-u','postgres','destination','env',*environment,'/usr/local/bin/lake-replication-receiver'],env=q.ENV,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    source=start_exec(common+['source','psql','-XAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','application','-c',"BEGIN; INSERT INTO excluded SELECT n,repeat('z',2000) FROM generate_series(40001,60000)n; SELECT pg_sleep(8); COMMIT"],'interrupted-source.log')
+    receiver=start_exec(common+['-u','postgres','destination','env',*environment,'/usr/local/bin/lake-replication-receiver'],'interrupted-receiver.jsonl')
     try:
         check('uncommitted empty stream is durably retained',q.wait_for('destination','analytics',f'SELECT count(*) FROM lake_replication.streamed_transactions WHERE subscription_id={sub}','1',timeout=6),'1')
         check('uncommitted empty stream does not advance staging',sql(f'SELECT staged_lsn FROM lake_replication.checkpoints WHERE subscription_id={sub}'),before)
+        began=time.monotonic()
         q.compose('exec','-T','destination','pkill','-KILL','-f','^/usr/local/bin/lake-replication-receiver$',timeout=15)
         receiver.communicate(timeout=10)
+        q.EVIDENCE['interrupted_receiver_kill_seconds']=time.monotonic()-began
+        check('interrupted receiver exits from SIGKILL',receiver.returncode,137)
         check('receiver loss leaves durable stream',sql(f'SELECT count(*) FROM lake_replication.streamed_transactions WHERE subscription_id={sub}'),'1')
         _,errors=source.communicate(timeout=20)
         check('source commits while receiver is down',source.returncode,0)
@@ -153,6 +156,18 @@ def wire():
                     operation='kill interrupted receiver',error_type=type(error).__name__,error=str(error)))
             stop_exec(receiver)
         stop_exec(source)
+
+
+def start_exec(command, log_name):
+    """Keep asynchronous Docker output draining while the test inspects state.
+
+    An unread PIPE can fill before communicate() is reached. In particular,
+    debug streamed transactions log each segment while the test waits to kill
+    the receiver. File output preserves evidence without a pipe-size limit.
+    """
+    with (q.RESULTS/log_name).open('w') as output:
+        return subprocess.Popen(command,env=q.ENV,text=True,
+                                stdout=output,stderr=subprocess.STDOUT)
 
 
 def stop_exec(process):
@@ -263,7 +278,7 @@ def native():
     check('persistent receiver recovers after source outage',q.wait_for('destination','analytics',"SELECT string_agg(id::text,',' ORDER BY id) FROM native_items",'1,2,3,4',timeout=60),'1,2,3,4')
     # Stop during an open streamed transaction, not only while idle.
     common=['docker','compose','-p',q.PROJECT,'-f',str(q.COMPOSE_FILE),'exec','-T']
-    source=subprocess.Popen(common+['source','psql','-XAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','application','-c',"BEGIN; INSERT INTO native_items VALUES(5,'interrupted-stream'); INSERT INTO excluded SELECT n,repeat('c',2000) FROM generate_series(2080001,2100000)n; SELECT pg_sleep(8); COMMIT"],env=q.ENV,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    source=start_exec(common+['source','psql','-XAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','application','-c',"BEGIN; INSERT INTO native_items VALUES(5,'interrupted-stream'); INSERT INTO excluded SELECT n,repeat('c',2000) FROM generate_series(2080001,2100000)n; SELECT pg_sleep(8); COMMIT"],'native-interrupted-source.log')
     try:
         check('native receiver retains an uncommitted stream',q.wait_for('destination','analytics',f'SELECT count(*) FROM lake_replication.streamed_transactions WHERE subscription_id={sub}','1',timeout=6),'1')
         began=time.monotonic()

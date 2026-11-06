@@ -3,6 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -12,6 +13,33 @@ p = importlib.util.module_from_spec(spec); spec.loader.exec_module(p)
 
 
 class CleanupTests(unittest.TestCase):
+    def test_unread_pipe_control_blocks_until_output_is_drained(self):
+        size=1024*1024
+        program=f'import os; os.write(1,b"x"*{size}); os.write(2,b"y"*{size})'
+        with subprocess.Popen([sys.executable,'-c',program],stdout=subprocess.PIPE,stderr=subprocess.PIPE) as process:
+            try:
+                with self.assertRaises(subprocess.TimeoutExpired):
+                    process.wait(timeout=0.2)
+            finally:
+                output,errors=process.communicate(timeout=10)
+        self.assertEqual(process.returncode,0)
+        self.assertEqual(output,b'x'*size)
+        self.assertEqual(errors,b'y'*size)
+
+    def test_verbose_async_exec_finishes_before_output_is_read(self):
+        with tempfile.TemporaryDirectory() as directory:
+            size=1024*1024
+            program=f'import os; os.write(1,b"x"*{size}); os.write(2,b"y"*{size})'
+            with patch.object(p.q,'RESULTS',Path(directory)):
+                process=p.start_exec([sys.executable,'-c',program],'verbose.log')
+                try:
+                    # Do not read output until after exit, matching the live test.
+                    process.wait(timeout=10)
+                finally:
+                    p.stop_exec(process)
+            self.assertEqual(process.returncode,0)
+            self.assertEqual((Path(directory)/'verbose.log').read_bytes(),b'x'*size+b'y'*size)
+
     def test_all_docker_timeouts_preserve_primary_failure_and_attempt_teardown(self):
         with tempfile.TemporaryDirectory() as directory:
             evidence={'status':'error','error':'original receiver kill timed out'}

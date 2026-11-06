@@ -73,6 +73,18 @@ builds produce the same library bytes as these tested images. These local
 checks use an explicitly selected CI archive; the final delivery commit still
 needs full native qualification with its newly exported archives.
 
+The [full supported-runtime run](docs/beta5-native-runtime-qualification.md) at
+`6d1ef13` passes all 661 checks on AMD64, including valid p95 1.563–1.707 seconds
+and 162.50-second four-copy completion. ARM64 passes lifecycle, TLS and crash
+tests but fails when its receiver fixture's Docker exec kill command times out;
+later ARM64 qualification steps are skipped. The fixture had unread subprocess
+pipes. File-backed logs now remove that backpressure hazard and preserve the
+output, with the same time limits and a new explicit SIGKILL-exit assertion.
+The corrected local suite passes 97 checks against the exact failed archive.
+The original also passes locally, so the CI timeout's cause is not conclusively
+established. Both the failed ARM64 run and successful AMD64 run are retained;
+full native requalification remains required.
+
 The dependency review now patches rustls 0.23.45 to 0.23.46 for four upstream
 advisories. [Security review](docs/dependency-security-review.md) records the
 scope and validation. The new worker binaries require fresh archive and native
