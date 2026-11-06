@@ -69,3 +69,65 @@ The ten-minute run validates the harness and recovery scenarios; it cannot
 establish long-term memory, metadata-growth or latency stability. The current
 profile leaves journal and Iceberg maintenance defaults unchanged, so growth
 and maintenance requirements must be assessed before starting the full day.
+
+## Explicit maintenance experiments
+
+Two opt-in profiles investigate the two retention layers:
+
+| Profile | Snapshot history | Orphaned-file retention during cleanup |
+|---|---:|---:|
+| `none` (default) | Upstream default: 1,800 seconds | Upstream default: ten days |
+| `snapshot-only` | 60 seconds on the two replicated fixture tables | Ten days |
+| `bounded-test` | 60 seconds on the two replicated fixture tables | 120 seconds, disposable experiment only |
+
+```sh
+QUALIFICATION_ARCHIVE=/absolute/path/to/the-qualified-native-archive.tar.gz \
+  python3 tests/soak/probe.py --duration-seconds 600 \
+    --maintenance-profile snapshot-only --max-storage-mib 512
+```
+
+Use `bounded-test` only on this disposable fixture. It shortens the physical
+file-recovery horizon; it is not a production PITR recommendation. Both profiles
+are experiments and always report `qualifies_24_hour_soak: false`, regardless of
+duration. They do not change the archive, runtime libraries or global settings.
+
+The profiles disable autovacuum on their fixture tables and explicitly run
+targeted `VACUUM (VERBOSE) table` passes about every 30 seconds, with at most two
+compactions and 1,000 removals per table/pass. A control transaction holds the
+private subscription's publication-checkpoint row lock during maintenance.
+Ingress is separate, so source writing and bounded staging continue; publication
+resumes when that control transaction rolls back. The native supervisor must
+stay alive. This uses an internal checkpoint table for an experiment, not a
+new public operator API. Every pass ends with an exact-data barrier.
+
+Acquiring all stream-pool permits is not a supported substitute for this
+barrier: the pool fallback can wait on a permit held by the same maintenance
+group. No production admission algorithm is changed here. Likewise,
+`VACUUM (ICEBERG)` is a whole-catalog command in the pinned version and rejects
+an explicit relation list; these profiles use the targeted command above.
+
+Preflight holds a repeatable-read reader across a vacuum, checks that its data
+stays unchanged, and independently verifies a protected metadata object in
+MinIO. Later passes require the short-retention witness to be actually removed
+after becoming eligible; the ten-day control must keep it. Vacuum warnings
+fail the run because pg_lake may downgrade a failed phase to a warning. Current
+metadata sizes, snapshot ages/counts and deletion-queue state stream to
+`maintenance.jsonl`; full maintenance output is retained separately.
+
+Storage sampling excludes MinIO's ephemeral staging directory. Disappearing-file
+errors elsewhere are retried at most three times with diagnostics retained;
+permission errors, I/O failures and exhausted retries fail. The disk-free
+guard still covers temporary storage. Earlier storage figures that included
+temporary files are not identical measurements of this retained-object scope.
+
+For an independent check while a fixture is live:
+
+```sh
+python3 tests/soak/observe_references.py /absolute/path/to/.qualification/RUN_soak
+```
+
+It enumerates every reference from both current Iceberg metadata states and
+checks the corresponding object representation directly in the pinned,
+unversioned MinIO fixture. This supplements query-based checks when a cache
+could otherwise hide a missing object. It is scoped to this fixture's bucket
+and is not a general object-store inspection tool.

@@ -16,6 +16,29 @@ spec.loader.exec_module(p)
 
 
 class CleanupTests(unittest.TestCase):
+    def test_storage_observation_retries_only_disappearing_files(self):
+        runner = p.Runner.__new__(p.Runner)
+        runner.append = Mock()
+        runner.compose = Mock(side_effect=[
+            subprocess.CompletedProcess('du', 1, '1\t/data\n', "du: cannot access '/data/file': No such file or directory\n"),
+            subprocess.CompletedProcess('du', 0, '12\t/data\n', '')])
+        self.assertEqual(runner.object_storage_bytes(), 12*1024)
+        self.assertEqual(runner.compose.call_count, 2)
+        runner.append.assert_called_once()
+        runner.compose = Mock(return_value=subprocess.CompletedProcess('du', 1, '', 'du: permission denied'))
+        with self.assertRaisesRegex(RuntimeError, 'permission denied'):
+            runner.object_storage_bytes()
+        runner.compose.assert_called_once()
+
+    def test_storage_churn_exhausts_its_bound_and_is_retained(self):
+        runner = p.Runner.__new__(p.Runner)
+        runner.append = Mock()
+        runner.compose = Mock(return_value=subprocess.CompletedProcess('du', 1, '', "du: cannot access '/data/file': No such file or directory\n"))
+        with self.assertRaisesRegex(RuntimeError, 'all bounded observations'):
+            runner.object_storage_bytes()
+        self.assertEqual(runner.compose.call_count, 3)
+        runner.append.assert_called_once()
+
     def test_late_recovery_cannot_pass_the_catchup_deadline(self):
         runner = p.Runner.__new__(p.Runner)
         runner.producer = SimpleNamespace(error=None)

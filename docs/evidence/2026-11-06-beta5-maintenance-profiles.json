@@ -1,0 +1,1053 @@
+{
+  "format": 1,
+  "date": "2026-11-06",
+  "scope": "Two local ARM64 600-second maintenance experiments; neither satisfies the 24-hour gate",
+  "production_defaults_changed": false,
+  "defaults_seconds": {
+    "snapshot": 1800,
+    "orphaned_file": 864000,
+    "autovacuum_naptime": 600
+  },
+  "identical_pair_inputs_verified": true,
+  "shared_identity": {
+    "inputs": {
+      "tests/soak/probe.py": "cc37615322ee2f3d97da655af305f07ec7811dd48584f28d3e6321de3d192c35",
+      "tests/soak/model.py": "d4c5d1112f6118e9046d80c61fcfa9c37341f6eb00c61313f773004c91053083",
+      "tests/soak/maintenance.py": "accf4e69e35f7e6705eb190ec118f954ae053c595086d87e6a884ffa7a1f8f3e",
+      "experiments/admission/compare.py": "1db0bf09f63fd84e23a98e131ccd3e9cc872055c8c9294fef592b4517b8d19ff",
+      "experiments/admission/sample.py": "403c8082cfdc2038cbaf40be7f830b5943e67abf0aed67f68734713374048a4b",
+      "tests/qualification/probe.py": "cbe4824157f2a9c5e6a165d15950ab0d0dfa132c4bf61695e9cc469c0566fc04"
+    },
+    "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+    "archive_sha256": "c67e8d19361282876fa0db3c2d87a42f6a01bc437e911a3a6cd7afd2677181fc",
+    "source_revision": "b0a703ab9f65a8f26904b21ed91c87df1944cdbc",
+    "prerequisite": {
+      "identity": {
+        "format": 1,
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "architecture": "arm64",
+        "inputs": {
+          "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+          "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+          "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+        }
+      },
+      "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+      "runtime": {
+        "identity": {
+          "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+          "architecture": "arm64",
+          "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+          "inputs": {
+            "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+            "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+            "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+            "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+            "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+            "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+            "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+            "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+            "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+          }
+        },
+        "image_id": "sha256:fc5c66b8b62653eca3cb2518bd560fc0187d8cb76b70503dbceeccdfba8a6fde",
+        "installed": {
+          "patchset": "lake-replication-manifest-cleanup-v1",
+          "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+          "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "state": "after",
+          "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+          "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+          "libraries": {
+            "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+            "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+          }
+        }
+      }
+    },
+    "storage_fixtures": {
+      "storage": {
+        "image": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+        "image_id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+        "architecture": "arm64",
+        "source_revision": "0d7408fc9969caf07de6a8c3a84f9fbb10a6739e",
+        "recipe_sha256": "033deb90501718dc5ef25dcf2dc139a637632c160b6d25ea7ef0902ee410938a",
+        "origin": "pinned_source_build"
+      },
+      "storage-init": {
+        "image": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+        "image_id": "sha256:ff0c9bd37f9eb808ba395ae78196da90c343978e83986da37345432a290a6481",
+        "architecture": "arm64",
+        "source_revision": "b00526b153a31b36767991a4f5ce2cced435ee8e",
+        "recipe_sha256": "033deb90501718dc5ef25dcf2dc139a637632c160b6d25ea7ef0902ee410938a",
+        "origin": "pinned_source_build"
+      }
+    },
+    "architecture": "arm64",
+    "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+  },
+  "profiles": {
+    "snapshot-only": {
+      "run": "qualification_20261106_140254",
+      "status": "passed",
+      "parameters": {
+        "duration_seconds": 600,
+        "interval_seconds": 0.5,
+        "sample_seconds": 5,
+        "catchup_seconds": 60,
+        "max_storage_mib": 512,
+        "cpuset": "0-1",
+        "maintenance_profile": "snapshot-only"
+      },
+      "elapsed_seconds": 603.3121956669493,
+      "source_transactions": 1151,
+      "resource_samples": 120,
+      "faults": [
+        {
+          "name": "worker_crash",
+          "planned_seconds": 120.0,
+          "started_seconds": 120.03458724997472,
+          "victim_pid": 122,
+          "completed_seconds": 121.09412616700865,
+          "source_transactions_during_event": 2
+        },
+        {
+          "name": "storage_outage",
+          "planned_seconds": 240.0,
+          "started_seconds": 243.05038816691376,
+          "completed_seconds": 264.6296439169673,
+          "source_transactions_during_event": 22
+        },
+        {
+          "name": "destination_restart",
+          "planned_seconds": 360.0,
+          "started_seconds": 360.0291256249184,
+          "completed_seconds": 361.3274252079427,
+          "source_transactions_during_event": 3
+        },
+        {
+          "name": "backlog",
+          "planned_seconds": 480.0,
+          "started_seconds": 484.2967446249677,
+          "completed_seconds": 498.78312199993525,
+          "source_transactions_during_event": 23
+        }
+      ],
+      "checkpoints": [
+        {
+          "name": "initial snapshot",
+          "sequence": 0,
+          "rows": 128,
+          "data_sha256": "ff55f645e1f768805be38330016485571ef900b0457f8cf8d7e2293d3dbcb4a6",
+          "elapsed_seconds": 0.2954674169886857,
+          "catchup_seconds": 0.2954602079698816
+        },
+        {
+          "name": "periodic",
+          "sequence": 1,
+          "rows": 127,
+          "data_sha256": "d7182672cf2ca7db2be986a50210b4e31a8e26a25641bf76e8d95c457f0866ff",
+          "elapsed_seconds": 0.9694869169034064,
+          "catchup_seconds": 0.3088671669829637
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 64,
+          "rows": 960,
+          "data_sha256": "0cbee24a3874513df690554c57882b8283c81140cee89a7c8b79108955a47882",
+          "elapsed_seconds": 32.92799470794853,
+          "catchup_seconds": 0.3526924999896437
+        },
+        {
+          "name": "periodic",
+          "sequence": 120,
+          "rows": 960,
+          "data_sha256": "d47374acf9a82a46b95757e4ae3f6d3af841461a2805134f429410ca925f9a2a",
+          "elapsed_seconds": 61.368859082926065,
+          "catchup_seconds": 0.39857579208910465
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 131,
+          "rows": 960,
+          "data_sha256": "3460238e753e65e1a1c874e939a05bc0ec1bfce1819478676941cb67d82fab68",
+          "elapsed_seconds": 67.49808537494391,
+          "catchup_seconds": 1.0856283340835944
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 200,
+          "rows": 960,
+          "data_sha256": "ccd9319f9f1f488d1aaa18d3a8f841cccc9345baf73c91c3d30578436a691f9e",
+          "elapsed_seconds": 102.51732683298178,
+          "catchup_seconds": 1.0671472500544041
+        },
+        {
+          "name": "after worker_crash",
+          "sequence": 237,
+          "rows": 960,
+          "data_sha256": "0699967be69b050b536515ff2a3edbc634c2375d10ac4506e47654ba81261c27",
+          "elapsed_seconds": 121.01238237496,
+          "catchup_seconds": 0.7267737500369549
+        },
+        {
+          "name": "periodic",
+          "sequence": 239,
+          "rows": 960,
+          "data_sha256": "b8ccee76091a3ecf22c269e89167e77ffb309b9db575b698944a753132687e3b",
+          "elapsed_seconds": 121.77575849997811,
+          "catchup_seconds": 0.36488025006838143
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 268,
+          "rows": 960,
+          "data_sha256": "0b628c103231de2cfb57eef5c1fa65702948d6745d90505c7e9ddf8e6f076a93",
+          "elapsed_seconds": 137.44028450001497,
+          "catchup_seconds": 1.1305663749808446
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 337,
+          "rows": 960,
+          "data_sha256": "3b2b8bdb6354cb5326cced4bb36007551011286090c4aae181d69365aa56f290",
+          "elapsed_seconds": 172.65549312497023,
+          "catchup_seconds": 1.0963294580578804
+        },
+        {
+          "name": "periodic",
+          "sequence": 357,
+          "rows": 960,
+          "data_sha256": "f93e1391f5ad7b22ebadafcecc75e3a455decc2643935d1042b63d99b974746d",
+          "elapsed_seconds": 182.68740529194474,
+          "catchup_seconds": 0.8142714580753818
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 405,
+          "rows": 960,
+          "data_sha256": "3dd79cc76a8dfa41d5c47f268b67d6a2311d08d7b27b2b5eb6efc7a028b0d37c",
+          "elapsed_seconds": 207.72863724990748,
+          "catchup_seconds": 1.1640276659745723
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 474,
+          "rows": 960,
+          "data_sha256": "113328f317c204c199956bf4cd16b7bea836ee6fb256a3c71c03c91e2e519412",
+          "elapsed_seconds": 242.94386383297388,
+          "catchup_seconds": 1.1806797079043463
+        },
+        {
+          "name": "after storage_outage",
+          "sequence": 496,
+          "rows": 960,
+          "data_sha256": "2a03224a98c1c662e2b6a76e4b51bfe57dbd73eaefab06831a283eaecae9e22e",
+          "elapsed_seconds": 264.5559908329742,
+          "catchup_seconds": 11.055179791990668
+        },
+        {
+          "name": "periodic",
+          "sequence": 498,
+          "rows": 960,
+          "data_sha256": "226b4fa621616f56e76d8b1005b09a62e7d9d42820ed8a7abc1a5247672eb581",
+          "elapsed_seconds": 265.33418595790863,
+          "catchup_seconds": 0.2977263330249116
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 520,
+          "rows": 960,
+          "data_sha256": "4a9b74c1cc838dc7eb14eb0d952a2ec642339e08a79ea4782fd3c38c169cf683",
+          "elapsed_seconds": 276.4498613749165,
+          "catchup_seconds": 0.6847742910031229
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 588,
+          "rows": 960,
+          "data_sha256": "1041eebef3dd9206edecc4f641c912f6c0eea86445f606f0cbeffdb0ba5373ae",
+          "elapsed_seconds": 311.6431216249475,
+          "catchup_seconds": 1.0837098329793662
+        },
+        {
+          "name": "periodic",
+          "sequence": 617,
+          "rows": 960,
+          "data_sha256": "de7022864ae5409670112d2490917e1ab28a6b33bb5dd5b4822acdfbd2e7dfd3",
+          "elapsed_seconds": 326.17897033295594,
+          "catchup_seconds": 0.7865385829936713
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 655,
+          "rows": 960,
+          "data_sha256": "c2196195d8469a8785e3f1db85d85a9d20d8dc4e1bb288d7a45c049e34e56051",
+          "elapsed_seconds": 345.580549916951,
+          "catchup_seconds": 0.6832436670083553
+        },
+        {
+          "name": "after destination_restart",
+          "sequence": 686,
+          "rows": 960,
+          "data_sha256": "4ffdfbe1f6fe16c84a7b10124be54d594cdd1c971169445d64c38b97e4777556",
+          "elapsed_seconds": 361.24802862491924,
+          "catchup_seconds": 0.7260206670034677
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 723,
+          "rows": 960,
+          "data_sha256": "6cfcc4f6654a1597942009b6b235fc0a879c9d92da5e5db046df4b8e1944253d",
+          "elapsed_seconds": 379.9567500000121,
+          "catchup_seconds": 1.0415511659812182
+        },
+        {
+          "name": "periodic",
+          "sequence": 737,
+          "rows": 960,
+          "data_sha256": "4436ee7ca46eeb5a2284181ee16c72ea4bfeb3e16b2d637d81ea734afa39a0f9",
+          "elapsed_seconds": 386.61343983293045,
+          "catchup_seconds": 0.3445062499959022
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 792,
+          "rows": 960,
+          "data_sha256": "6f07d69d8eea756423c4c8247845ff15467a92227b1095e01c1c9e4f0e7d8134",
+          "elapsed_seconds": 415.1717571669724,
+          "catchup_seconds": 1.1171019170433283
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 860,
+          "rows": 960,
+          "data_sha256": "ca6a2a61b9931c3623c0851c5b7878abfac5b12584d1a09f36d7b6c01f96a0fb",
+          "elapsed_seconds": 449.7948730000062,
+          "catchup_seconds": 1.1091574169695377
+        },
+        {
+          "name": "periodic",
+          "sequence": 863,
+          "rows": 960,
+          "data_sha256": "8fd0946763457e11dac99583913d189c2dc0ec194c2260a7b2e8ceaaae897c60",
+          "elapsed_seconds": 450.73043145798147,
+          "catchup_seconds": 0.32680558296851814
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 928,
+          "rows": 960,
+          "data_sha256": "d60e99212802cc5c1db33860ebb504506bdc4ebf42472a125639dbd3a7f85154",
+          "elapsed_seconds": 484.19602579192724,
+          "catchup_seconds": 0.7329974999884143
+        },
+        {
+          "name": "after backlog",
+          "sequence": 951,
+          "rows": 960,
+          "data_sha256": "af43e9fc84736114a658e1cbdbbdca512e99aceee4d7143f7eecd343682a7517",
+          "elapsed_seconds": 498.7011259169085,
+          "catchup_seconds": 3.917269540950656
+        },
+        {
+          "name": "periodic",
+          "sequence": 977,
+          "rows": 960,
+          "data_sha256": "49f5384723721d3f8d615f1fc159d1268b81f94f224875a1bb7f796c58537dbd",
+          "elapsed_seconds": 511.55509512498975,
+          "catchup_seconds": 0.7367391249863431
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 990,
+          "rows": 960,
+          "data_sha256": "8d3329e3ed741ba4e37f336fa48c8cabca53d69056944f1f3020db14b8bd130d",
+          "elapsed_seconds": 518.4481149580097,
+          "catchup_seconds": 0.7030102499993518
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 1058,
+          "rows": 960,
+          "data_sha256": "deedaef328b80a3acb7f1eb18dfe89966fc15b4c20c3e4acc213727b34e4788a",
+          "elapsed_seconds": 552.939906207961,
+          "catchup_seconds": 1.0301707920152694
+        },
+        {
+          "name": "periodic",
+          "sequence": 1097,
+          "rows": 960,
+          "data_sha256": "3ef08a6a7fa2a9411fc729a466fa379ddf1a22ddfc57d09b032fc8b464db9728",
+          "elapsed_seconds": 572.4104113749927,
+          "catchup_seconds": 0.7834439579164609
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 1126,
+          "rows": 960,
+          "data_sha256": "ef1df7882c7328e77eda0326d98ab5f3d89e68a8ff13bb1d5c71aab2b0eb1a01",
+          "elapsed_seconds": 588.0647313329391,
+          "catchup_seconds": 1.4323582499055192
+        },
+        {
+          "name": "final data",
+          "sequence": 1151,
+          "rows": 960,
+          "data_sha256": "91b4f6cd3d707179d248a07af89771845190af6f99681b2b3595e31726a1da94",
+          "elapsed_seconds": 600.5242649579886,
+          "catchup_seconds": 0.3541554999537766
+        }
+      ],
+      "max_memory_bytes": {
+        "destination": 272080896,
+        "pgduck": 1048285184
+      },
+      "maintenance": {
+        "profile": "snapshot-only",
+        "policy": {
+          "snapshot_seconds": 60,
+          "file_seconds": 864000,
+          "interval_seconds": 30
+        },
+        "scope": "Explicit disposable profile; shortened file retention reduces its recovery horizon",
+        "passes": 17,
+        "coordination": "Publication-checkpoint row lock pauses this subscription during bounded vacuum; ingress remains independent",
+        "automatic_vacuum": false,
+        "defaults": {
+          "file_seconds": 864000,
+          "snapshot_seconds": 1800,
+          "autovacuum_seconds": 600
+        },
+        "retention_witness": {
+          "path": "s3://lake-qualification/iceberg/analytics/public/soak_retention_guard/18273/metadata/00001-a55708be-fd9e-4ae9-b623-d92f4a736195.metadata.json",
+          "orphaned_at": "2026-11-06T14:03:10.838164+00:00"
+        },
+        "defaults_after_session_vacuum": {
+          "file_seconds": 864000,
+          "snapshot_seconds": 1800,
+          "autovacuum_seconds": 600
+        },
+        "last": {
+          "elapsed_seconds": 586.6317852919456,
+          "duration_seconds": 3.628713542013429,
+          "before": {
+            "queue": {
+              "failed": 0,
+              "records": 12306,
+              "oldest_seconds": 583.845665
+            },
+            "tables": [
+              {
+                "name": "soak_items",
+                "snapshots": 166,
+                "document_bytes": 101977,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_items/18262/metadata/01030-74810a61-3e49-4441-baff-b7fadf7f73fd.metadata.json",
+                "metadata_log_entries": 166,
+                "oldest_snapshot_seconds": 87.251064
+              },
+              {
+                "name": "soak_progress",
+                "snapshots": 164,
+                "document_bytes": 101615,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_progress/18268/metadata/01014-9262c708-e68a-4d55-a391-e122aa1d6178.metadata.json",
+                "metadata_log_entries": 164,
+                "oldest_snapshot_seconds": 87.285669
+              }
+            ]
+          },
+          "after": {
+            "queue": {
+              "failed": 0,
+              "records": 12958,
+              "oldest_seconds": 587.062355
+            },
+            "tables": [
+              {
+                "name": "soak_items",
+                "snapshots": 115,
+                "document_bytes": 70932,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_items/18262/metadata/01032-5b58f56c-45ef-437a-abee-4e4127bebbb5.metadata.json",
+                "metadata_log_entries": 115,
+                "oldest_snapshot_seconds": 61.981848
+              },
+              {
+                "name": "soak_progress",
+                "snapshots": 110,
+                "document_bytes": 68442,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_progress/18268/metadata/01015-25e67ee5-0342-4be9-a90d-70fa6adaa015.metadata.json",
+                "metadata_log_entries": 110,
+                "oldest_snapshot_seconds": 60.570923
+              }
+            ]
+          },
+          "witness": {
+            "records": 1,
+            "age_seconds": 587.115191
+          },
+          "witness_exists": true
+        }
+      },
+      "visibility_observations": {
+        "count": 1151,
+        "max_seconds": 21.534707417013124,
+        "buckets": {
+          "1": 114,
+          "2": 206,
+          "5": 572,
+          "10": 227,
+          "30": 32,
+          "60": 0,
+          "over_60": 0
+        }
+      },
+      "container_deaths": {
+        "source": 0,
+        "destination": 1,
+        "pgduck": 0,
+        "storage": 1
+      },
+      "cleanup_returncode": 0,
+      "cleanup_errors": [],
+      "qualifies_24_hour_soak": false,
+      "assertions": 118,
+      "all_assertions_passed": true,
+      "raw_directory": "/private/tmp/lake-maintenance-976f313/.qualification/qualification_20261106_140254_soak",
+      "artifact_sha256": {
+        "compose.log": "d4769ffedf9e9f15acaca20d379b9d0c89dc4b1c76e693c04c72a818ca63f96b",
+        "compose.yml": "d2e8774b9453ba9fd590b56b80f40174e9e24b931ea4edb712e972aceb69e062",
+        "docker-events.jsonl": "d30ccc87464a1ccfc5634afdb00ef106ea09de1cb250fe3cf1af9b2c41a596e6",
+        "docker-events.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "maintenance-output.jsonl": "1db4765c258dabacdb4a8543e501612448ef31a180098d845049a570164eec60",
+        "maintenance.jsonl": "9eb2c29f2629a0988f5de434c8a25cf8935607f35e83094d8783b912820ba63d",
+        "resources.jsonl": "0b82a04a16986a21c0dd3d5b833a2e395b79e195d99b49baef875a908ab5b91b",
+        "results.json": "1fdcc072bf99b58155b4d127b51bb5ff4c216ef96f6918a9c5b82a25cb90534d",
+        "workers.jsonl": "f1f5a7fe43167a8e4320a755596adf3d434d2d4106f754c963304f80b4b2d8ed"
+      },
+      "storage_bytes": {
+        "first": 622592,
+        "last": 351371264,
+        "peak": 351371264,
+        "tail_from_seconds": 420,
+        "tail_min": 245579776,
+        "tail_max": 351371264
+      }
+    },
+    "bounded-test": {
+      "run": "qualification_20261106_175606",
+      "status": "passed",
+      "parameters": {
+        "duration_seconds": 600,
+        "interval_seconds": 0.5,
+        "sample_seconds": 5,
+        "catchup_seconds": 60,
+        "max_storage_mib": 512,
+        "cpuset": "0-1",
+        "maintenance_profile": "bounded-test"
+      },
+      "elapsed_seconds": 602.2632779160049,
+      "source_transactions": 1154,
+      "resource_samples": 120,
+      "faults": [
+        {
+          "name": "worker_crash",
+          "planned_seconds": 120.0,
+          "started_seconds": 120.09379233291838,
+          "victim_pid": 123,
+          "completed_seconds": 121.0793910829816,
+          "source_transactions_during_event": 2
+        },
+        {
+          "name": "storage_outage",
+          "planned_seconds": 240.0,
+          "started_seconds": 241.0779105409747,
+          "completed_seconds": 262.82533766597044,
+          "source_transactions_during_event": 23
+        },
+        {
+          "name": "destination_restart",
+          "planned_seconds": 360.0,
+          "started_seconds": 360.0392120409524,
+          "completed_seconds": 361.25993774994276,
+          "source_transactions_during_event": 2
+        },
+        {
+          "name": "backlog",
+          "planned_seconds": 480.0,
+          "started_seconds": 483.64798737491947,
+          "completed_seconds": 497.84696716594044,
+          "source_transactions_during_event": 23
+        }
+      ],
+      "checkpoints": [
+        {
+          "name": "initial snapshot",
+          "sequence": 0,
+          "rows": 128,
+          "data_sha256": "ff55f645e1f768805be38330016485571ef900b0457f8cf8d7e2293d3dbcb4a6",
+          "elapsed_seconds": 0.2985124579863623,
+          "catchup_seconds": 0.2984891659580171
+        },
+        {
+          "name": "periodic",
+          "sequence": 1,
+          "rows": 127,
+          "data_sha256": "d7182672cf2ca7db2be986a50210b4e31a8e26a25641bf76e8d95c457f0866ff",
+          "elapsed_seconds": 0.959515874972567,
+          "catchup_seconds": 0.2967487919377163
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 64,
+          "rows": 960,
+          "data_sha256": "0cbee24a3874513df690554c57882b8283c81140cee89a7c8b79108955a47882",
+          "elapsed_seconds": 32.70729549997486,
+          "catchup_seconds": 0.3340759170241654
+        },
+        {
+          "name": "periodic",
+          "sequence": 121,
+          "rows": 960,
+          "data_sha256": "08681089938df604acc1086ade887d15d79cf2c5255d916fa82a59b5f8b1416a",
+          "elapsed_seconds": 61.38686529092956,
+          "catchup_seconds": 0.3606708749430254
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 131,
+          "rows": 960,
+          "data_sha256": "3460238e753e65e1a1c874e939a05bc0ec1bfce1819478676941cb67d82fab68",
+          "elapsed_seconds": 67.10495041601826,
+          "catchup_seconds": 1.0715860000345856
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 199,
+          "rows": 960,
+          "data_sha256": "e97add57a08f5bbed7cec1f7c466c898cffb78814760a2c4bfb0517fb43ac73f",
+          "elapsed_seconds": 101.43328741600271,
+          "catchup_seconds": 0.672776332939975
+        },
+        {
+          "name": "after worker_crash",
+          "sequence": 238,
+          "rows": 960,
+          "data_sha256": "03d84aa1f5ac2bc975a1d87711900df1866a0d4c10cc7dea521f4e7065c8642b",
+          "elapsed_seconds": 121.00767095794436,
+          "catchup_seconds": 0.6665770829422399
+        },
+        {
+          "name": "periodic",
+          "sequence": 240,
+          "rows": 960,
+          "data_sha256": "2ad776592ca20199f49bde80db325d5b0d2c352af6a7af22dfebe19a0c9201f7",
+          "elapsed_seconds": 121.82141208299436,
+          "catchup_seconds": 0.3339192910352722
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 267,
+          "rows": 960,
+          "data_sha256": "e2a21caf95b527e9b65fa637a80a699cc8eafcaa641672f4b05bd09a3f470147",
+          "elapsed_seconds": 135.73354587494396,
+          "catchup_seconds": 0.7010400419821963
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 336,
+          "rows": 960,
+          "data_sha256": "88e4e6be34428fc4a33491a0b4fe0e155fc740037f6f19e1df92d0a4c740a54c",
+          "elapsed_seconds": 170.8469034159789,
+          "catchup_seconds": 1.0749920839443803
+        },
+        {
+          "name": "periodic",
+          "sequence": 360,
+          "rows": 960,
+          "data_sha256": "9244b50eaaa33f244e8e82fbfe708de9ab3161e3e0d25252c1dcd26e6ae75c16",
+          "elapsed_seconds": 182.55341212498024,
+          "catchup_seconds": 0.30310654104687274
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 405,
+          "rows": 960,
+          "data_sha256": "3dd79cc76a8dfa41d5c47f268b67d6a2311d08d7b27b2b5eb6efc7a028b0d37c",
+          "elapsed_seconds": 205.84098708292004,
+          "catchup_seconds": 1.1141142919659615
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 474,
+          "rows": 960,
+          "data_sha256": "113328f317c204c199956bf4cd16b7bea836ee6fb256a3c71c03c91e2e519412",
+          "elapsed_seconds": 240.97693916596472,
+          "catchup_seconds": 1.0817813749890774
+        },
+        {
+          "name": "after storage_outage",
+          "sequence": 497,
+          "rows": 960,
+          "data_sha256": "60c402b83b94236a56e6b786c090ad1936463d59925c64aa81a8c7b49fc9aff5",
+          "elapsed_seconds": 262.75262799998745,
+          "catchup_seconds": 11.135076417005621
+        },
+        {
+          "name": "periodic",
+          "sequence": 500,
+          "rows": 960,
+          "data_sha256": "c0a6e0a27ed60fa49651cdb251a6a65be9f37b6b1e2421d5b3251bab3fe06cc8",
+          "elapsed_seconds": 263.76526120794006,
+          "catchup_seconds": 0.33248287497553974
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 521,
+          "rows": 960,
+          "data_sha256": "acea448fbfa13f4e88a3960c4ac3f53447b3212f220592de37fd013ac25b9708",
+          "elapsed_seconds": 274.88692874996923,
+          "catchup_seconds": 0.6747230420587584
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 589,
+          "rows": 960,
+          "data_sha256": "435cae5c1b17371c905427a7dfcd4837c252368d15b4cc4e69f2ca858b6135f9",
+          "elapsed_seconds": 309.55450699990615,
+          "catchup_seconds": 1.0779498749179766
+        },
+        {
+          "name": "periodic",
+          "sequence": 619,
+          "rows": 960,
+          "data_sha256": "5562ec439252d56b1d734a9f400eadd95b9dffa39212ec88de43ad426ad0babd",
+          "elapsed_seconds": 324.55304625001736,
+          "catchup_seconds": 0.7702528749359772
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 657,
+          "rows": 960,
+          "data_sha256": "3c27a7d2a0495b3960c787572f8a3ef99e35f35bdbbf11166f785bdea930aa9b",
+          "elapsed_seconds": 344.15913241601083,
+          "catchup_seconds": 1.0569656249135733
+        },
+        {
+          "name": "after destination_restart",
+          "sequence": 691,
+          "rows": 960,
+          "data_sha256": "e79f48f836da37f1327c486513babed5a279a2265b53a2b7f258e5e33ccb0867",
+          "elapsed_seconds": 361.18644670792855,
+          "catchup_seconds": 0.6746025839820504
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 725,
+          "rows": 960,
+          "data_sha256": "4ec0cb862ef075ad57d110eef916e5d39cbd8b90cfb2f4788eeb1be723560451",
+          "elapsed_seconds": 378.50566483300645,
+          "catchup_seconds": 0.690365916932933
+        },
+        {
+          "name": "periodic",
+          "sequence": 739,
+          "rows": 960,
+          "data_sha256": "5ea4bddd0b99caf82b171e86ccf11ae92f606eba6c875136cf74bb012a4e7232",
+          "elapsed_seconds": 385.42154620797373,
+          "catchup_seconds": 0.7932018750580028
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 794,
+          "rows": 960,
+          "data_sha256": "ae68e6834536fec3d7d89ae4413625cdef87d6dae5e6139b154bf032629b6d61",
+          "elapsed_seconds": 413.63433575001545,
+          "catchup_seconds": 1.0652956248959526
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 862,
+          "rows": 960,
+          "data_sha256": "f79267145e4db12cfc9293236defc75f1d5a233a02ed823584e312570e689603",
+          "elapsed_seconds": 448.55159858299885,
+          "catchup_seconds": 1.1058955419575796
+        },
+        {
+          "name": "periodic",
+          "sequence": 865,
+          "rows": 960,
+          "data_sha256": "69d97a49707059c0f9adc95ff12332ec82f32e2f4244608500844378a3097f08",
+          "elapsed_seconds": 449.8134724999545,
+          "catchup_seconds": 0.742864542058669
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 930,
+          "rows": 960,
+          "data_sha256": "8cbab293383444711b448f736059915c0b21cdf07e5894863710c36642dca3a3",
+          "elapsed_seconds": 483.5408455829602,
+          "catchup_seconds": 1.0868563329568133
+        },
+        {
+          "name": "after backlog",
+          "sequence": 953,
+          "rows": 960,
+          "data_sha256": "0b297b441f7d1acf25e39f00775e43a8cee085d547d7441f606e95a251f88e1e",
+          "elapsed_seconds": 497.75282445794437,
+          "catchup_seconds": 3.5599982920102775
+        },
+        {
+          "name": "periodic",
+          "sequence": 978,
+          "rows": 960,
+          "data_sha256": "e8d594f07d5be5a0adbc86c43a38586987f500c480dbfbfa38d122efbf8084a7",
+          "elapsed_seconds": 510.2737171659246,
+          "catchup_seconds": 0.3817948750220239
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 992,
+          "rows": 960,
+          "data_sha256": "c18fad2a415c73687c31af0edbe2a1acfc96e7ef2c4e6bcd68a7f68738848601",
+          "elapsed_seconds": 517.6266877499875,
+          "catchup_seconds": 0.6724069999763742
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 1060,
+          "rows": 960,
+          "data_sha256": "249b435258d99dff12e64033cff3a3d9fa7cb561fc71dc509d97ddd9cdb57b1d",
+          "elapsed_seconds": 552.4940865829121,
+          "catchup_seconds": 1.0289085840340704
+        },
+        {
+          "name": "periodic",
+          "sequence": 1097,
+          "rows": 960,
+          "data_sha256": "3ef08a6a7fa2a9411fc729a466fa379ddf1a22ddfc57d09b032fc8b464db9728",
+          "elapsed_seconds": 571.0976417909842,
+          "catchup_seconds": 0.7275727080414072
+        },
+        {
+          "name": "after maintenance",
+          "sequence": 1128,
+          "rows": 960,
+          "data_sha256": "4a164b8b9e84bb59bf5a7d2a165a53a8c75f25e22b0b4ca374d540fe60c55cfd",
+          "elapsed_seconds": 587.6921127910027,
+          "catchup_seconds": 1.4617519999155775
+        },
+        {
+          "name": "final data",
+          "sequence": 1154,
+          "rows": 960,
+          "data_sha256": "4486f363afda9a7135d03e8dc7a3acedbc86ab8c64476a198ee29198ae9fffe4",
+          "elapsed_seconds": 600.4675810409244,
+          "catchup_seconds": 0.34942012501414865
+        }
+      ],
+      "max_memory_bytes": {
+        "destination": 407695360,
+        "pgduck": 771563520
+      },
+      "maintenance": {
+        "profile": "bounded-test",
+        "policy": {
+          "snapshot_seconds": 60,
+          "file_seconds": 120,
+          "interval_seconds": 30
+        },
+        "scope": "Explicit disposable profile; shortened file retention reduces its recovery horizon",
+        "passes": 17,
+        "coordination": "Publication-checkpoint row lock pauses this subscription during bounded vacuum; ingress remains independent",
+        "automatic_vacuum": false,
+        "defaults": {
+          "file_seconds": 864000,
+          "snapshot_seconds": 1800,
+          "autovacuum_seconds": 600
+        },
+        "retention_witness": {
+          "path": "s3://lake-qualification/iceberg/analytics/public/soak_retention_guard/18273/metadata/00001-ad3286d5-a471-434e-a586-d7808557d55b.metadata.json",
+          "orphaned_at": "2026-11-06T17:56:25.886112+00:00"
+        },
+        "defaults_after_session_vacuum": {
+          "file_seconds": 864000,
+          "snapshot_seconds": 1800,
+          "autovacuum_seconds": 600
+        },
+        "last": {
+          "elapsed_seconds": 586.2298333749641,
+          "duration_seconds": 3.7205275000305846,
+          "before": {
+            "queue": {
+              "failed": 0,
+              "records": 3482,
+              "oldest_seconds": 154.141155
+            },
+            "tables": [
+              {
+                "name": "soak_items",
+                "snapshots": 164,
+                "document_bytes": 100726,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_items/18262/metadata/01029-0671c7e3-71d0-4534-a826-18d5f6731ddd.metadata.json",
+                "metadata_log_entries": 164,
+                "oldest_snapshot_seconds": 87.420567
+              },
+              {
+                "name": "soak_progress",
+                "snapshots": 162,
+                "document_bytes": 100424,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_progress/18268/metadata/01013-7e8448a7-117b-4c2a-bfe7-eefac61d45ed.metadata.json",
+                "metadata_log_entries": 162,
+                "oldest_snapshot_seconds": 87.448428
+              }
+            ]
+          },
+          "after": {
+            "queue": {
+              "failed": 0,
+              "records": 3241,
+              "oldest_seconds": 122.517422
+            },
+            "tables": [
+              {
+                "name": "soak_items",
+                "snapshots": 113,
+                "document_bytes": 69705,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_items/18262/metadata/01032-74491ccd-359d-4460-a893-ce9de4e09fb1.metadata.json",
+                "metadata_log_entries": 113,
+                "oldest_snapshot_seconds": 61.992613
+              },
+              {
+                "name": "soak_progress",
+                "snapshots": 108,
+                "document_bytes": 67244,
+                "metadata_location": "s3://lake-qualification/iceberg/analytics/public/soak_progress/18268/metadata/01015-e03b46a7-8d68-4192-9d5f-6c76bbce5d64.metadata.json",
+                "metadata_log_entries": 108,
+                "oldest_snapshot_seconds": 60.391636
+              }
+            ]
+          },
+          "witness": {
+            "records": 0,
+            "age_seconds": null
+          },
+          "witness_exists": false
+        }
+      },
+      "visibility_observations": {
+        "count": 1154,
+        "max_seconds": 21.698441624990664,
+        "buckets": {
+          "1": 113,
+          "2": 207,
+          "5": 569,
+          "10": 232,
+          "30": 33,
+          "60": 0,
+          "over_60": 0
+        }
+      },
+      "container_deaths": {
+        "source": 0,
+        "destination": 1,
+        "pgduck": 0,
+        "storage": 1
+      },
+      "cleanup_returncode": 0,
+      "cleanup_errors": [],
+      "qualifies_24_hour_soak": false,
+      "assertions": 118,
+      "all_assertions_passed": true,
+      "raw_directory": "/private/tmp/lake-maintenance-976f313/.qualification/qualification_20261106_175606_soak",
+      "artifact_sha256": {
+        "compose.log": "c039e7bc7964e35346b2fae1f4c59fbeff55e73a807d8d74bdb096eead1d5767",
+        "compose.yml": "d2e8774b9453ba9fd590b56b80f40174e9e24b931ea4edb712e972aceb69e062",
+        "docker-events.jsonl": "9a41305f5e0352698899a8cdc93b1eef59cb8360648820a239482f9983f384f3",
+        "docker-events.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "independent-references.json": "cb9df19a94164eabcac8ee702486b719a0ae53d3e046132df4a11d39370343be",
+        "maintenance-output.jsonl": "63bea276b4c2682d0fdf80d82deabb9cd559f80fb31b5bf68bf98eda79f32e4b",
+        "maintenance.jsonl": "2f9fac370a81420f86272fc3b6b40fccc1d5b4672e93e2c6a5c81d4f82fa67e0",
+        "observer-source-5304a55d6f11783ad825ba1df8c878adc895df19122b044fafa2f59e04eb6391.py": "5304a55d6f11783ad825ba1df8c878adc895df19122b044fafa2f59e04eb6391",
+        "physical-reference-check-1793988153735197000.json": "76615835eb15fc2a57af1a1cba7c36c153195bf62f4ef3632440d8d1f4a4e66f",
+        "resources.jsonl": "62830ab2c6e5b381e3fa08dbb44d6404885b2571f548c5570803d5682f681b1e",
+        "results.json": "ee3ad60b7c80f619a0015480c846660ed28c46fa3f9b6469e027a82f1cfa4e8b",
+        "workers.jsonl": "a1d65546449654db66039a1c0a800d85cd9ff356129b67ef1b65c3d29cf6752b"
+      },
+      "storage_bytes": {
+        "first": 622592,
+        "last": 104804352,
+        "peak": 129261568,
+        "tail_from_seconds": 420,
+        "tail_min": 96595968,
+        "tail_max": 123858944
+      }
+    }
+  },
+  "excluded_attempts": [
+    {
+      "run": "qualification_20261106_134714",
+      "status": "error",
+      "error": "ERROR:  VACUUM (ICEBERG) does not accept a list of relations\nHINT:  Use VACUUM (ICEBERG) without any relation. The command will vacuum all iceberg tables.",
+      "cleanup_errors": [],
+      "raw_directory": "/private/tmp/lake-maintenance-976f313/.qualification/qualification_20261106_134714_soak",
+      "results_sha256": "8b4376a3b5e0b89822b5c37164247fde21d55adb6889f41aec2270f9a206a1ca",
+      "disposition": "Excluded from accepted comparison; retained failure, no gate relaxed"
+    },
+    {
+      "run": "qualification_20261106_134916",
+      "status": "error",
+      "error": "vacuum reported a failed phase for soak_items",
+      "cleanup_errors": [],
+      "raw_directory": "/private/tmp/lake-maintenance-976f313/.qualification/qualification_20261106_134916_soak",
+      "results_sha256": "242f116bbf0b1b38fee0dbad097c67f23370f6306a41733a652ec35f05a1aabc",
+      "disposition": "Excluded from accepted comparison; retained failure, no gate relaxed"
+    },
+    {
+      "run": "qualification_20261106_135401",
+      "status": "error",
+      "error": "du: cannot access '/data/.minio.sys/tmp/bda7917d-99a6-4a21-a560-ca4cc57c0f04': No such file or directory\ndu: cannot access '/data/.minio.sys/tmp/00b821ca-aaea-42d5-a88a-4e8cd42797e3': No such file or directory",
+      "cleanup_errors": [],
+      "raw_directory": "/private/tmp/lake-maintenance-976f313/.qualification/qualification_20261106_135401_soak",
+      "results_sha256": "840e999d2f71170f1556c6434e9ccc596a75af93a4248f91feaada71ea47d3c9",
+      "disposition": "Excluded from accepted comparison; retained failure, no gate relaxed"
+    },
+    {
+      "run": "qualification_20261106_135809",
+      "status": "error",
+      "error": "psql exited: ERROR:  canceling statement due to lock timeout\n",
+      "cleanup_errors": [],
+      "raw_directory": "/private/tmp/lake-maintenance-976f313/.qualification/qualification_20261106_135809_soak",
+      "results_sha256": "6bb249ef1243d3153cccb331d388a1aff9c30ed561624cf070d393136dbe5c62",
+      "disposition": "Excluded from accepted comparison; retained failure, no gate relaxed"
+    },
+    {
+      "run": "qualification_20261106_141316",
+      "status": "error",
+      "error": "wall clock differs from monotonic soak duration",
+      "cleanup_errors": [],
+      "raw_directory": "/private/tmp/lake-maintenance-976f313/.qualification/qualification_20261106_141316_soak",
+      "results_sha256": "7a14635034d32f480c9846b974a0fcd80920a5b214cb5055b84bb6258599c9b9",
+      "disposition": "Excluded from accepted comparison; retained failure, no gate relaxed"
+    }
+  ],
+  "independent_reference_check": {
+    "status": "passed",
+    "scope": "Independently check current Iceberg references in a live private MinIO fixture.",
+    "source_transactions_at_start": 693,
+    "observer_sha256": "5304a55d6f11783ad825ba1df8c878adc895df19122b044fafa2f59e04eb6391",
+    "tables": [
+      "soak_items",
+      "soak_progress"
+    ],
+    "references": 1929,
+    "reference_sha256": "ad92da739087f228beb29d8c651421a4722a5f76098d2d7f93517efa3b2bba31"
+  },
+  "limitations": [
+    "Single run per profile, 600 seconds; no day-long stability or statistical performance claim",
+    "120-second file retention is disposable-only and reduces physical recovery horizon",
+    "Held-reader preflight is shorter than the retention interval; does not establish safety for readers older than that interval",
+    "Storage excludes MinIO ephemeral staging; initial unmaintained soak included it and is contextual only",
+    "Publication row-lock coordination is a private fixture experiment, not a public maintenance API",
+    "Supplemental observer later gained unique output filenames/error retention; its measured source is retained separately"
+  ]
+}

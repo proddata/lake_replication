@@ -55,6 +55,11 @@ behaviour, then repeat a bounded profile before committing to the full day.
 The runner retains a 4 GiB object-storage budget and cannot be treated as
 ready for a 24-hour endurance claim merely because this smoke profile passed.
 
+The subsequent [paired maintenance investigation](beta5-maintenance-profiles.md)
+separates snapshot expiry from physical deletion retention. Both ten-minute
+profiles pass; the reduced file-retention profile is disposable-only and does
+not change production defaults or satisfy the full-day gate.
+
 ## Reproducibility and controller checks
 
 [`tests/soak/probe.py`](../tests/soak/probe.py) runs this profile; its

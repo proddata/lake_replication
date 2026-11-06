@@ -11,8 +11,13 @@ The [ten-minute packaged soak](docs/beta5-short-soak.md) now passes: 1,166
 transactions, 45 assertions, exact data after all four faults, and complete
 subscription/fixture cleanup. It is not the 24-hour gate. Object storage grows
 to 912.8 MiB despite a bounded live dataset, dominated by retained Iceberg
-metadata JSON. Review retention/maintenance and resource growth before the
-full-day run.
+metadata JSON. The subsequent [maintenance comparison](docs/beta5-maintenance-profiles.md)
+passes both ten-minute profiles with 118 assertions each. Snapshot expiry
+bounds active metadata; shortening physical retention from ten days to a
+disposable 120 seconds reduces final storage from 335.09 to 99.95 MiB. Neither
+profile qualifies the day-long gate. Define recovery/time-travel windows and
+the corresponding storage budget before the full-day run; production defaults
+remain unchanged.
 
 This file is the release control document. Historical `docs/milestone-*.md`
 files remain the engineering evidence journal; new beta work updates the gates

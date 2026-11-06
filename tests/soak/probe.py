@@ -16,6 +16,7 @@ import time
 from urllib.parse import quote
 
 from model import Progress, qualifies_soak, schedule, validate_events
+from maintenance import Maintenance
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('soak_shared', ROOT / 'experiments/admission/compare.py')
@@ -98,6 +99,8 @@ class Runner:
         self.result.update(status='preparing', scope=__doc__, parameters=vars(args), faults=[], checkpoints=[],
                            qualifies_24_hour_soak=False, resource_samples=0, max_memory_bytes={},
                            archive_overlay=False, timing_scope='monotonic; visibility upper bounds include observer polling and faults')
+        self.check, self.compose = q.check, q.compose
+        self.maintenance = Maintenance(self, Client)
 
     def persist(self):
         if self.begin is not None:
@@ -112,10 +115,11 @@ class Runner:
         with (q.RESULTS / name).open('a') as output:
             output.write(json.dumps(data, sort_keys=True) + '\n')
 
-    def sql(self, service, statement, timeout=12):
+    def sql(self, service, statement, timeout=12, result=False):
         database = 'application' if service == 'source' else 'analytics'
-        return q.compose('exec', '-T', service, 'psql', '-XAtq', '-v', 'ON_ERROR_STOP=1', '-U', 'postgres',
-                         '-d', database, input="SET statement_timeout='8s'; " + statement, timeout=timeout).stdout.strip()
+        output = q.compose('exec', '-T', service, 'psql', '-XAtq', '-v', 'ON_ERROR_STOP=1', '-U', 'postgres',
+                         '-d', database, input="SET statement_timeout='8s'; " + statement, timeout=timeout)
+        return output if result else output.stdout.strip()
 
     def wait(self, service, statement, expected, timeout=60):
         deadline = time.monotonic() + timeout
@@ -192,7 +196,7 @@ class Runner:
                 raise ValueError('less than 1 GiB available on fixture filesystem')
             row['services'][service] = resources
         if self.storage_up:
-            stored = int(q.compose('exec', '-T', 'storage', 'du', '-sk', '/data', timeout=12).stdout.split()[0]) * 1024
+            stored = self.object_storage_bytes()
             row['object_storage_bytes'] = stored
             if stored > self.args.max_storage_mib * 1024**2:
                 raise ValueError('fixture object-storage budget exceeded')
@@ -200,6 +204,27 @@ class Runner:
         self.append('resources.jsonl', row)
         self.persist()
         print('SAMPLE', round(now - self.begin), 'seconds;', self.producer.progress.produced, 'source transactions', flush=True)
+
+    def object_storage_bytes(self):
+        races = []
+        for attempt in range(3):
+            result = self.compose('exec', '-T', 'storage', 'du', '-sk',
+                '--exclude=/data/.minio.sys/tmp', '/data', timeout=12, check_result=False)
+            if result.returncode == 0:
+                fields = result.stdout.split()
+                if len(fields) != 2 or fields[1] != '/data':
+                    raise ValueError('invalid storage usage observation')
+                if races:
+                    self.append('storage-observer-retries.jsonl', dict(attempts=attempt+1, errors=races))
+                return int(fields[0]) * 1024
+            lines = result.stderr.strip().splitlines()
+            if result.returncode != 1 or not lines or not all(
+                line.startswith('du: cannot access ') and line.endswith('No such file or directory') for line in lines):
+                raise RuntimeError('storage observation failed: ' + result.stderr)
+            races.append(result.stderr)
+            time.sleep(.02)
+        self.append('storage-observer-retries.jsonl', dict(attempts=3, errors=races))
+        raise RuntimeError('storage directory kept changing during all bounded observations')
 
     def hold(self, seconds, fault):
         deadline = time.monotonic() + seconds
@@ -254,6 +279,8 @@ CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON 
         connection = f'postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe="")}@source:5432/application'
         self.sql('destination', f"CREATE SUBSCRIPTION soak_sub CONNECTION '{connection}' PUBLICATION soak_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
         self.wait('destination', 'SELECT state FROM lake_replication.subscriptions', 'streaming')
+        if self.maintenance.enabled:
+            self.maintenance.configure()
         self.postmaster = self.sql('destination', 'SELECT to_json(pg_postmaster_start_time())').strip('"')
         self.begin, self.wall = time.monotonic(), time.time()
         self.checkpoint('initial snapshot')
@@ -264,11 +291,15 @@ CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON 
         plan = schedule(self.args.duration_seconds)
         self.result['fault_plan'] = list(plan)
         next_sample = next_checkpoint = 0
+        next_maintenance = 30
         while time.monotonic() - self.begin < self.args.duration_seconds:
             elapsed = time.monotonic() - self.begin
             if plan and elapsed >= plan[0][0]:
                 when, name = plan.pop(0)
                 self.fault(name, when)
+            if self.maintenance.enabled and elapsed >= next_maintenance:
+                self.maintenance.run()
+                next_maintenance = time.monotonic() - self.begin + self.maintenance.policy['interval_seconds']
             if elapsed >= next_sample:
                 self.sample()
                 next_sample = time.monotonic() - self.begin + self.args.sample_seconds
@@ -280,6 +311,8 @@ CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON 
         self.producer.thread.join(timeout=20)
         q.check('source producer stops cleanly', not self.producer.thread.is_alive() and not self.producer.error, True)
         self.checkpoint('final data')
+        if self.maintenance.enabled:
+            self.maintenance.final()
         q.check('every scheduled fault completes', not plan and all('completed_seconds' in f for f in self.result['faults']), True)
         q.check('at least one transaction per second offered on average', self.producer.progress.produced >= self.args.duration_seconds, True)
         self.sample()
@@ -341,7 +374,7 @@ CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON 
             collect('release idle-sleep assertion', lambda: stop_process(self.awake))
         if errors:
             self.result['status'] = 'error'
-        self.result['qualifies_24_hour_soak'] = qualifies_soak(self.result['status'], self.args.duration_seconds,
+        self.result['qualifies_24_hour_soak'] = not self.maintenance.enabled and qualifies_soak(self.result['status'], self.args.duration_seconds,
             time.monotonic() - self.begin if self.begin is not None else 0)
         self.persist()
 
@@ -354,6 +387,8 @@ def main():
     parser.add_argument('--catchup-seconds', type=int, default=60)
     parser.add_argument('--max-storage-mib', type=int, default=4096)
     parser.add_argument('--cpuset', default='0-1')
+    parser.add_argument('--maintenance-profile', choices=['none', 'snapshot-only', 'bounded-test'], default='none',
+                        help='Disposable test policies; bounded-test shortens the file-recovery horizon')
     args = parser.parse_args()
     if not 180 <= args.duration_seconds <= 86400 or not 0 < args.interval_seconds <= 1 or not 1 <= args.sample_seconds <= 30 or not 1 <= args.catchup_seconds <= 300 or args.max_storage_mib < 1:
         parser.error('invalid duration, rate, sampling or resource budget')
@@ -363,7 +398,7 @@ def main():
     q.RESULTS.mkdir(parents=True)
     q.PROJECT += '-soak'
     runner = Runner(args)
-    inputs = [Path(__file__), Path(__file__).with_name('model.py'), ROOT / 'experiments/admission/compare.py', ROOT / 'experiments/admission/sample.py', ROOT / 'tests/qualification/probe.py']
+    inputs = [Path(__file__), Path(__file__).with_name('model.py'), Path(__file__).with_name('maintenance.py'), ROOT / 'experiments/admission/compare.py', ROOT / 'experiments/admission/sample.py', ROOT / 'tests/qualification/probe.py']
     runner.result['inputs'] = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
     for path in inputs:
         destination = q.RESULTS / 'sources' / path.relative_to(ROOT)
