@@ -1,5 +1,12 @@
 # Packaged soak runner
 
+For a temporary native Linux host and SSH-independent smoke/two-hour pilot, use
+the [remote-host runbook](../../deploy/soak/README.md). Its launcher checks native
+archive identity and capacity and cannot start a 24-hour run. The optional
+`--observe-maintenance` flag records metadata and deletion-queue state every
+minute without running maintenance or taking the publication lock. The
+`--min-free-mib` flag raises the fixture disk reserve above its 1 GiB default.
+
 Run the short profile against an explicitly selected, checksum-verified native
 archive and the supported pinned pg_lake prerequisite:
 

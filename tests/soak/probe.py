@@ -192,8 +192,9 @@ class Runner:
             self.result['max_memory_bytes'][service] = max(self.result['max_memory_bytes'].get(service, 0), resources['memory_current_bytes'])
             if any(int(line.split()[1]) for line in resources['cgroup']['memory.events'].splitlines() if line.split()[0] in ('oom', 'oom_kill')):
                 raise ValueError(service + ' cgroup reported OOM')
-            if min(value['available_bytes'] for value in resources['filesystems'].values()) < 1024**3:
-                raise ValueError('less than 1 GiB available on fixture filesystem')
+            reserve = getattr(self.args, 'min_free_mib', 1024) * 1024**2
+            if min(value['available_bytes'] for value in resources['filesystems'].values()) < reserve:
+                raise ValueError('fixture filesystem is below its free-space reserve')
             row['services'][service] = resources
         if self.storage_up:
             stored = self.object_storage_bytes()
@@ -225,6 +226,24 @@ class Runner:
             time.sleep(.02)
         self.append('storage-observer-retries.jsonl', dict(attempts=3, errors=races))
         raise RuntimeError('storage directory kept changing during all bounded observations')
+
+    def observe_maintenance(self):
+        # Observe ordinary pg_lake maintenance without running VACUUM or taking
+        # the manual experiment's publication lock.
+        if 'automatic_maintenance_observation' not in self.result:
+            settings = self.maintenance.settings()
+            enabled = self.sql('destination', "SELECT current_setting('pg_lake_iceberg.autovacuum')")
+            options = json.loads(self.sql('destination', """SELECT jsonb_object_agg(c.relname,jsonb_build_object(
+ 'relation',coalesce(to_jsonb(c.reloptions),'[]'::jsonb),
+ 'foreign',coalesce(to_jsonb(f.ftoptions),'[]'::jsonb)))
+FROM pg_class c LEFT JOIN pg_foreign_table f ON f.ftrelid=c.oid
+WHERE c.oid IN ('soak_items'::regclass,'soak_progress'::regclass)"""))
+            self.result['automatic_maintenance_observation'] = dict(
+                settings=settings, autovacuum=enabled, table_options=options,
+                scope='Read-only observation; no maintenance commands or publication locks')
+        self.append('automatic-maintenance.jsonl', dict(
+            elapsed_seconds=time.monotonic()-self.begin, **self.maintenance.stats()))
+        self.persist()
 
     def hold(self, seconds, fault):
         deadline = time.monotonic() + seconds
@@ -292,6 +311,7 @@ CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON 
         self.result['fault_plan'] = list(plan)
         next_sample = next_checkpoint = 0
         next_maintenance = 30
+        next_observation = 0
         while time.monotonic() - self.begin < self.args.duration_seconds:
             elapsed = time.monotonic() - self.begin
             if plan and elapsed >= plan[0][0]:
@@ -300,6 +320,9 @@ CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON 
             if self.maintenance.enabled and elapsed >= next_maintenance:
                 self.maintenance.run()
                 next_maintenance = time.monotonic() - self.begin + self.maintenance.policy['interval_seconds']
+            if self.args.observe_maintenance and elapsed >= next_observation:
+                self.observe_maintenance()
+                next_observation = time.monotonic() - self.begin + 60
             if elapsed >= next_sample:
                 self.sample()
                 next_sample = time.monotonic() - self.begin + self.args.sample_seconds
@@ -311,6 +334,8 @@ CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON 
         self.producer.thread.join(timeout=20)
         q.check('source producer stops cleanly', not self.producer.thread.is_alive() and not self.producer.error, True)
         self.checkpoint('final data')
+        if self.args.observe_maintenance:
+            self.observe_maintenance()
         if self.maintenance.enabled:
             self.maintenance.final()
         q.check('every scheduled fault completes', not plan and all('completed_seconds' in f for f in self.result['faults']), True)
@@ -386,6 +411,9 @@ def main():
     parser.add_argument('--sample-seconds', type=float, default=5)
     parser.add_argument('--catchup-seconds', type=int, default=60)
     parser.add_argument('--max-storage-mib', type=int, default=4096)
+    parser.add_argument('--min-free-mib', type=int, default=1024)
+    parser.add_argument('--observe-maintenance', action='store_true',
+                        help='Read-only metadata/queue observations every minute; does not run maintenance')
     parser.add_argument('--cpuset', default='0-1')
     parser.add_argument('--maintenance-profile', choices=['none', 'snapshot-only', 'bounded-test'], default='none',
                         help='Disposable test policies; bounded-test shortens the file-recovery horizon')
@@ -394,6 +422,8 @@ def main():
         parser.error('invalid duration, rate, sampling or resource budget')
     if not re.fullmatch(r'[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*', args.cpuset):
         parser.error('invalid CPU affinity')
+    if args.min_free_mib < 1024:
+        parser.error('free-space reserve must be at least 1024 MiB')
     q.RESULTS = q.RESULTS.with_name(q.RUN + '_soak')
     q.RESULTS.mkdir(parents=True)
     q.PROJECT += '-soak'
@@ -423,6 +453,9 @@ def main():
                                               '--format', '{{json .}}'], stdout=output, stderr=errors, env=q.ENV)
         q.compose('up', '-d', '--wait', '--wait-timeout', '300', timeout=600)
         runner.execute()
+    except KeyboardInterrupt:
+        runner.result.update(status='error', error='soak interrupted')
+        print('ERROR soak interrupted', flush=True)
     except Exception as error:
         runner.result.update(status='error', error=str(error))
         print('ERROR', error, flush=True)

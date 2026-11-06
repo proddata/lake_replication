@@ -1,0 +1,12 @@
+#cloud-config
+# Disposable Ubuntu 24.04 test host only. No workload starts at boot.
+package_update: true
+packages:
+  - ca-certificates
+  - git
+  - python3
+  - docker.io
+  - docker-compose-v2
+runcmd:
+  - [systemctl, enable, --now, docker]
+  - [install, -d, -m, '0700', /opt/lake-soak]
