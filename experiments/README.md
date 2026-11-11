@@ -1,10 +1,17 @@
-# Experiments
+# Historical experiments
 
-Production lifecycle coverage lives in `tests/lifecycle`. Experiments are not
-part of the installed extension or release package.
+Shared measurement and operational helpers now live in
+[`tests/support`](../tests/support/README.md). Production package qualification
+lives under `tests/admission`, `tests/lifecycle` and `tests/soak`.
 
-The remaining [admission helpers](admission/README.md) support the unresolved
-resource scheduling investigation. Obsolete launcher adapters, prototype image
-builders and lifecycle rehearsals were removed after the base migration.
-Historical reports and evidence remain under `docs/`; their source is preserved
-in [the pre-cleanup Git snapshot](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers).
+Historical admission overlays, alternative extension implementations and their
+build/replay drivers have been removed from the active tree. They are not part
+of the installed extension or release package. Reports and evidence remain
+under `docs/`, with their recorded paths and source hashes unchanged.
+
+To reproduce an old result, use the exact source snapshot, archive and runtime
+identities in that result. The
+[last source before this cleanup](https://github.com/proddata/lake_replication/tree/7602e0402c5e83f4a3aadaf3f8029844e90d4d5a/experiments/admission)
+contains the admission experiment code and its historical command reference.
+Older launcher experiments remain in the
+[earlier archived snapshot](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers).

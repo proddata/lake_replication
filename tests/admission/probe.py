@@ -12,12 +12,12 @@ import tarfile
 from urllib.parse import quote
 
 ROOT=Path(__file__).resolve().parents[2]
-spec=importlib.util.spec_from_file_location('operational_cases',ROOT/'experiments/admission/operational_probe.py')
+spec=importlib.util.spec_from_file_location('operational_cases',ROOT/'tests/support/admission_cases.py')
 o=importlib.util.module_from_spec(spec);spec.loader.exec_module(o)
-q,c,m,s=o.q,o.c,o.m,o.p.s
+q,c,m,s=o.q,o.c,o.m,o.s
 o.ADMIT='lake_replication.admit_bulk()'
-o.p.VIEW='lake_replication.bulk_admission'
-VIEW=o.p.VIEW
+o.VIEW='lake_replication.bulk_admission'
+VIEW=o.VIEW
 if q.VERSION=='0.1.0-beta.5':q.STAGING_ROWS='initial_copy_chunks'
 
 
@@ -125,8 +125,7 @@ def main():
     result['configuration_diagnostic']=args.initial_copy_pause_ms is not None or args.toast_compression is not None
     if result['configuration_diagnostic']:
         result['scope']='Explicit PostgreSQL configuration diagnostic; does not qualify archived defaults. '+__doc__
-    paths=[Path(__file__),Path(__file__).with_name('managed_cases.py'),Path(__file__).with_name('pool_cases.py'),ROOT/'experiments/admission/operational_probe.py',ROOT/'experiments/admission/reserved_probe.py',ROOT/'experiments/admission/admission_measure.py',ROOT/'experiments/admission/compare.py',ROOT/'experiments/admission/sample.py',ROOT/'experiments/admission/scale.py',ROOT/'tests/qualification/probe.py',ROOT/'Cargo.lock',ROOT/'worker/Cargo.toml',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),*[ROOT/'extensions/lake_replication'/name for name in ['lake_replication.c','lake_replication.control','Makefile','build-extension-sql.sh']]]
-    paths.append(ROOT/'experiments/admission/source_workload.py')
+    paths=[Path(__file__),Path(__file__).with_name('managed_cases.py'),Path(__file__).with_name('pool_cases.py'),*sorted((ROOT/'tests/support').glob('*.py')),ROOT/'tests/qualification/probe.py',ROOT/'Cargo.lock',ROOT/'worker/Cargo.toml',*sorted((ROOT/'worker/src').glob('*.rs')),*sorted((ROOT/'migrations').glob('*.sql')),*[ROOT/'extensions/lake_replication'/name for name in ['lake_replication.c','lake_replication.control','Makefile','build-extension-sql.sh']]]
     if 'checkpoint' in args.cases:paths.append(Path(__file__).with_name('checkpoint_cases.py'))
     if 'pipeline' in args.cases:paths.extend(Path(__file__).with_name(name) for name in ['beta5_cases.py','checkpoint_split_operations.py','copy_chunk_bounds.py'])
     paths.extend(getattr(m, 'diagnostic_sources', []))
@@ -143,7 +142,7 @@ def main():
         image='lake-replication-production-admission:'+q.RUN
         q.command(['docker','tag',q.DESTINATION_IMAGE,image])
         result['image_id']=q.command(['docker','image','inspect','--format','{{.Id}}',image]).stdout.strip()
-        text=m.compose_text().replace('      - -c\n      - lake_replication.prototype_instance_id=measurement-owner\n','')
+        text=m.compose_text()
         if result['configuration_diagnostic']:
             anchor='      - lake_replication.log_directory=/worker-logs\n'
             if text.count(anchor)!=1:raise RuntimeError('destination configuration anchor changed')

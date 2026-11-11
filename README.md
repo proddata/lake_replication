@@ -6,11 +6,26 @@
 Logical replication from ordinary PostgreSQL tables into
 [pg_lake](https://github.com/Snowflake-Labs/pg_lake) Iceberg tables.
 
-`lake_replication` runs beside an existing PostgreSQL 18 + pg_lake
-installation. It takes an initial snapshot, consumes logical replication,
-stages source transactions durably, and publishes bounded micro-batches into
-Iceberg tables. A PostgreSQL extension provides familiar
-`CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')` lifecycle commands.
+`lake_replication` consists of a PostgreSQL extension and four worker
+executables, installed on the destination host beside PostgreSQL 18 and pg_lake.
+Together they take an initial snapshot, consume logical replication, stage
+source transactions durably, and publish bounded micro-batches into Iceberg.
+
+| Installed component | Purpose |
+|---|---|
+| `lake_replication` PostgreSQL extension | Provides `CREATE SUBSCRIPTION ... WITH (lake_target = 'iceberg')`, the control schema, durable journal, status views, and worker launcher. |
+| `lake-replication-initial-sync` | Copies a consistent initial snapshot from the source. |
+| `lake-replication-receiver` | Receives logical replication and stages source transactions durably. |
+| `lake-replication-publisher` | Publishes staged transactions to Iceberg in bounded batches. |
+| `lake-replication-supervisor` | Manages worker processes, retries, and recovery for a subscription. |
+
+The extension launches the supervisor, which manages the workers on the
+destination host. PostgreSQL, pg_lake (including its pgduck engine and
+`pg_extension_base`), and S3-compatible object storage are separately installed
+prerequisites. This beta also requires the
+[pg_lake runtime patchset](deploy/pg_lake/README.md), supplied separately from
+the workers. The source uses PostgreSQL's built-in logical replication and
+does not need this extension installed.
 
 > [!WARNING]
 > This project is approaching its first beta and is not production-ready yet.
@@ -74,8 +89,10 @@ revision is compatible. See the complete
 Concurrent-copy latency qualification now uses the pinned
 [pg_lake prerequisite patchset](deploy/pg_lake/README.md). It is supplied
 separately from the workers, with an offline copy in release archives under
-`PG_LAKE_PREREQUISITE/`. Full qualification of this runtime remains required
-before publishing the beta.
+`PG_LAKE_PREREQUISITE/`. Candidate `b0a703a` passes full native qualification
+on both supported architectures with this runtime. Its native ARM64 compatibility
+refresh passes both pinned endpoints. The 24-hour soak and final publication
+gates remain open.
 
 ## Quick start
 

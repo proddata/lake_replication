@@ -66,6 +66,8 @@ not establish a speedup attributable to the fixture correction.
 [Accepted native evidence](evidence/2026-11-06-beta5-full-native-runtime-pass.json)
 retains archive/prerequisite identities, result checksums and both artifact ZIP
 digests, verified against GitHub. The earlier ARM64 failure remains retained.
-The release-candidate compatibility refresh, day-long soak and signed
-publication remain separate gates. The packaged
+The subsequent [compatibility refresh](evidence/2026-11-11-beta5-compatibility-refresh.json)
+passes 57 checks at each exact endpoint on native ARM64 with the accepted
+archive and supported runtime. The day-long soak and signed publication remain
+separate open gates. The packaged
 [soak runner](../tests/soak/README.md) validates its short profile independently.

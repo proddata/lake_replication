@@ -1,0 +1,163 @@
+{
+  "archive_sha256": "c67e8d19361282876fa0db3c2d87a42f6a01bc437e911a3a6cd7afd2677181fc",
+  "artifact_id": 13495475027,
+  "artifact_zip_sha256": "bd6442446bbde96e6971b6d019b77f65f452d470e91757eff4d91bb3ee9046a5",
+  "candidate": "b0a703ab9f65a8f26904b21ed91c87df1944cdbc",
+  "compatibility_log": {
+    "path": ".qualification/release-preparation-b0a703a/compatibility.log",
+    "sha256": "11e4fccf1f4c608328c6192a67eb43000705dd75cd8356c4ed538b3baaec0c72"
+  },
+  "inputs": {
+    "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+    "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+    "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+    "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+    "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+    "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+    "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+    "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+    "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+    "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+    "deploy/qualification/Dockerfile.destination": "bdc3d6b5ee504c8d4e04233f7d762ce34357edbb312944a52c44828a180e1266",
+    "deploy/qualification/Dockerfile.source": "cd298aa84beab8b0e0134d8865963406f71d038bd7664fb4d3da7c4f4a9cb59d",
+    "deploy/qualification/README.md": "35e5accc7a3e658eda8d2ba3fd60acf30d30222699495741d63a1ef96e8def26",
+    "deploy/qualification/compose.yml": "18207f8c70db1f9f32ad16461e2a29c690c838e0abb422e4226700b259515c29",
+    "deploy/qualification/destination-init.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "deploy/qualification/pgduck.sh": "da4a4d222fc3f4ebae99076308674aafd0ede6b4fdeac5444c8fb1bd4a443d81",
+    "deploy/qualification/pgduck.sql": "acdbf1954e14911fb7c27c83b93af87047ba9651739ce98f047544f704daf1c2",
+    "deploy/qualification/source-init.sh": "93ac78ba49a1a874f305398988ff0e452e1ca9d9f2df687eb9bfe807b7657d9d",
+    "tests/install/probe.py": "41853f8175a3a0d9ebf35cb37c525e948539549338f8307b9ad2e74fe465eb7c",
+    "tests/qualification/Dockerfile.storage": "033deb90501718dc5ef25dcf2dc139a637632c160b6d25ea7ef0902ee410938a",
+    "tests/qualification/compatibility.py": "531a34cf760e3e619e6660289fd8bcdefc45e642d593d4aacd2fbef0df31365e",
+    "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38",
+    "tests/qualification/probe.py": "cbe4824157f2a9c5e6a165d15950ab0d0dfa132c4bf61695e9cc469c0566fc04",
+    "tests/qualification/recovery.py": "6729256548ca848e08f0b2f2b7db4c95307d82f2a3af0584d58aa1e325cb9ca5",
+    "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b",
+    "tests/qualification/security.py": "6a4f13e5ec93dd7b1b20c7057934dfe08129fe2c4960f9bb588fede7f35e9645",
+    "tests/qualification/storage.py": "dad5bdc80e63a325281fbb3bfb26aa24bba5a131cfe565201efce69c6425210d",
+    "tests/qualification/storage_preflight.py": "3c08a7a671abe8165902591b2d868fbca0e908fce92e6e5e07c4f1c96d833314",
+    "tests/qualification/test_patchset.py": "e9a8cee7196debba0d3cff05a4491907eb744ccf8b1fcc82a21d3dafd4db2b7b",
+    "tests/qualification/test_prerequisite.py": "0651c03e62b1bef5e5726d3d6c6409e76837f6eeac238334f4994f6201933535",
+    "tests/qualification/test_storage.py": "b01343a614f705d938690dfebdc0497974a0116936770a342efc18d425c03dbc",
+    "tests/qualification/tls.py": "a886260e5923fad9c95fef6a3c4d9006c738bba65be4e055ac9e2a54a02125b9"
+  },
+  "limits": [
+    "Two exact tested revisions, not every intervening commit",
+    "Both endpoint probes are native ARM64; native AMD64 full qualification covers the pinned endpoint separately",
+    "Does not satisfy the 24-hour soak or qualify future release archives",
+    "Uncommitted Dockerfile optimization and concurrent web UI edits are excluded"
+  ],
+  "runner_revision": "f3cc3ac13001d562f6ef34828ed85e4abdeda231",
+  "runs": [
+    {
+      "architecture": "arm64",
+      "archive_sha256": "c67e8d19361282876fa0db3c2d87a42f6a01bc437e911a3a6cd7afd2677181fc",
+      "checks_passed": 57,
+      "path": ".qualification/release-preparation-b0a703a/runner/.qualification/qualification_20261111_192857/results.json",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "prerequisite": {
+        "identity": {
+          "architecture": "arm64",
+          "format": 1,
+          "inputs": {
+            "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+            "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+            "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+          },
+          "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+        },
+        "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+        "runtime": {
+          "identity": {
+            "architecture": "arm64",
+            "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+            "inputs": {
+              "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+              "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+              "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+              "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+              "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+              "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+              "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+              "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+              "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+            },
+            "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+          },
+          "image_id": "sha256:fc5c66b8b62653eca3cb2518bd560fc0187d8cb76b70503dbceeccdfba8a6fde",
+          "installed": {
+            "libraries": {
+              "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+              "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+            },
+            "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+            "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+            "patchset": "lake-replication-manifest-cleanup-v1",
+            "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+            "state": "after",
+            "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+          }
+        }
+      },
+      "sha256": "fac575bf9972d6ecc4a58b5d101f2d0420daf75519b321287b06e58971312a2a",
+      "source_revision": "b0a703ab9f65a8f26904b21ed91c87df1944cdbc",
+      "status": "passed"
+    },
+    {
+      "architecture": "arm64",
+      "archive_sha256": "c67e8d19361282876fa0db3c2d87a42f6a01bc437e911a3a6cd7afd2677181fc",
+      "checks_passed": 57,
+      "path": ".qualification/release-preparation-b0a703a/runner/.qualification/qualification_20261111_192948/results.json",
+      "pg_lake_revision": "f609ecb17891383f021aebb0e249fe2994ed57bb",
+      "prerequisite": {
+        "identity": {
+          "architecture": "arm64",
+          "format": 1,
+          "inputs": {
+            "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+            "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+            "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+          },
+          "pg_lake_revision": "f609ecb17891383f021aebb0e249fe2994ed57bb"
+        },
+        "image_id": "sha256:7ae9c9ae54863ac8d7890c43e1ed368450e2eb27e5abe6336d59a716cb0c668f",
+        "runtime": {
+          "identity": {
+            "architecture": "arm64",
+            "base_image_id": "sha256:7ae9c9ae54863ac8d7890c43e1ed368450e2eb27e5abe6336d59a716cb0c668f",
+            "inputs": {
+              "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+              "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+              "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+              "deploy/pg_lake/README.md": "bda8db8e624564a6e72d142d621e1e419545778f6138cb904c82fcaae698d55a",
+              "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+              "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+              "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+              "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+              "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+            },
+            "revision": "f609ecb17891383f021aebb0e249fe2994ed57bb"
+          },
+          "image_id": "sha256:98efb4f7d5201641272f9793d3a29f6bbb09d3693ead517a9944b9268faf5556",
+          "installed": {
+            "libraries": {
+              "pg_lake_iceberg": "0df7f4ea8534b9a18c8ac660a242965cd06f7a1034b97089b2e0fedbd1bbe93b",
+              "pg_lake_table": "70f7567049c3bb88079b279403b26d19ce892b02e503247f3365928dc25a8011"
+            },
+            "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+            "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+            "patchset": "lake-replication-manifest-cleanup-v1",
+            "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+            "state": "after",
+            "upstream_revision": "f609ecb17891383f021aebb0e249fe2994ed57bb"
+          }
+        }
+      },
+      "sha256": "a26dbaac2468586575c23848fc977e913595cf5584df9b2ecff88d62206bde5f",
+      "source_revision": "b0a703ab9f65a8f26904b21ed91c87df1944cdbc",
+      "status": "passed"
+    }
+  ],
+  "scope": "Accepted beta.5 CI archive compatibility refresh at two exact pg_lake endpoints; native local ARM64, supported runtime, artifact-only fixtures",
+  "status": "passed"
+}

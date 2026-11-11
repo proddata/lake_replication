@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 """Evaluate one matched extended cohort; never equate it with adoption approval."""
-import argparse
-import hashlib
 import itertools
-import json
 import math
 import statistics
-from pathlib import Path
 
 
 def percentile(values, fraction):
@@ -102,23 +98,3 @@ def analyze(evidence, profile):
                 if profile == 'steady' else None,
             'adoption_qualified': False,
             'limits': 'One database/subscription and inserts only. No ownership/upgrade, crash, scale, architecture or soak qualification.'}
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('results', type=Path)
-    parser.add_argument('--profile', choices=('steady', 'catchup'), required=True)
-    parser.add_argument('--output', type=Path)
-    args = parser.parse_args()
-    result = analyze(json.loads(args.results.read_text()), args.profile)
-    result['input_sha256'] = hashlib.sha256(args.results.read_bytes()).hexdigest()
-    result['analyzer_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-    text = json.dumps(result, indent=2, sort_keys=True) + '\n'
-    if args.output:
-        args.output.write_text(text)
-        args.output.with_suffix('.py').write_bytes(Path(__file__).read_bytes())
-    print(text, end='')
-
-
-if __name__ == '__main__':
-    main()

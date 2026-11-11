@@ -134,10 +134,18 @@ uncommitted packaging changes, opt in explicitly with
 
 Pushing a version tag such as `v0.1.0-beta.5` runs the release workflow. The tag must
 match the worker and SQL-extension versions. The workflow builds both bundles,
-generates an SPDX JSON SBOM for each, creates aggregate SHA-256 checksums,
+audits those exact archives with checksum-pinned Syft and Grype, verifies
+provenance, notices and native-dependency SBOM coverage, and rejects high/critical
+vulnerability findings before signing. It publishes each audit's SPDX JSON SBOM
+and creates aggregate SHA-256 checksums,
 keylessly signs every archive, SBOM, and checksum manifest with Sigstore
 Cosign, and publishes them in a GitHub release. All third-party workflow
-actions are pinned to immutable commit SHAs.
+actions are pinned to immutable commit SHAs. Audit evidence is retained as a
+workflow artifact even on failure. Follow the
+[independent verification procedure](https://github.com/proddata/lake_replication/blob/main/docs/release-verification.md) after
+publication; a signed download and native installation are separate release
+checks. The [draft release notes](https://github.com/proddata/lake_replication/blob/main/docs/beta5-release-notes.md) remain
+preparation until every required gate passes.
 
 The bundle and GitHub release both include `COMPATIBILITY.md`. It distinguishes
 the supported beta target from the exact configuration already validated; in

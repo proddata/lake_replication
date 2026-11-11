@@ -152,8 +152,8 @@ poc-down:
 check:
 	python3 -m py_compile deploy/prepare-upstream.py deploy/pg_lake/patchset.py
 	python3 -m unittest discover -s tests/upstream -p 'test_*.py'
-	python3 -m compileall -q experiments/admission
-	python3 -m unittest discover -s experiments/admission -p 'test_*.py'
+	python3 -m compileall -q tests/support
+	python3 -m unittest discover -s tests/support -p 'test_*.py'
 	python3 -m py_compile tests/replication/probe.py
 	python3 -m py_compile tests/performance/probe.py
 	python3 -m py_compile tests/crash/probe.py

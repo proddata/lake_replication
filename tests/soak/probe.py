@@ -19,7 +19,7 @@ from model import Progress, qualifies_soak, schedule, validate_events
 from maintenance import Maintenance
 
 ROOT = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location('soak_shared', ROOT / 'experiments/admission/compare.py')
+spec = importlib.util.spec_from_file_location('soak_shared', ROOT / 'tests/support/compare.py')
 c = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(c)
 q = c.q
@@ -188,7 +188,7 @@ class Runner:
             row.update(metrics=metrics, progress=progress)
         for service in ('destination', 'pgduck'):
             resources = json.loads(q.compose('exec', '-T', '--user', 'postgres', service, 'python3',
-                '-c', (ROOT / 'experiments/admission/sample.py').read_text(), '', timeout=15).stdout)
+                '-c', (ROOT / 'tests/support/sample.py').read_text(), '', timeout=15).stdout)
             self.result['max_memory_bytes'][service] = max(self.result['max_memory_bytes'].get(service, 0), resources['memory_current_bytes'])
             if any(int(line.split()[1]) for line in resources['cgroup']['memory.events'].splitlines() if line.split()[0] in ('oom', 'oom_kill')):
                 raise ValueError(service + ' cgroup reported OOM')
@@ -428,7 +428,7 @@ def main():
     q.RESULTS.mkdir(parents=True)
     q.PROJECT += '-soak'
     runner = Runner(args)
-    inputs = [Path(__file__), Path(__file__).with_name('model.py'), Path(__file__).with_name('maintenance.py'), ROOT / 'experiments/admission/compare.py', ROOT / 'experiments/admission/sample.py', ROOT / 'tests/qualification/probe.py']
+    inputs = [Path(__file__), Path(__file__).with_name('model.py'), Path(__file__).with_name('maintenance.py'), ROOT / 'tests/support/compare.py', ROOT / 'tests/support/sample.py', ROOT / 'tests/qualification/probe.py']
     runner.result['inputs'] = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
     for path in inputs:
         destination = q.RESULTS / 'sources' / path.relative_to(ROOT)

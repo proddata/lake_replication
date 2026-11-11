@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared multi-database restart and worker-budget cases for admission experiments."""
+"""Shared multi-database restart and worker-budget cases for admission qualification."""
 import importlib.util
 import json
 import time

@@ -95,7 +95,7 @@ def compose_text():
     text = q.COMPOSE_FILE.read_text().replace('  destination:\n', '  destination:\n    init: true\n')
     text = text.replace('shared_preload_libraries=pg_extension_base,lake_replication', 'shared_preload_libraries=pg_extension_base')
     text = text.replace('      - -c\n      - lake_replication.database_name=analytics\n', '')
-    text = text.replace('      - max_worker_processes=24\n', '      - max_worker_processes=64\n      - -c\n      - track_commit_timestamp=on\n      - -c\n      - lake_replication.prototype_instance_id=measurement-owner\n')
+    text = text.replace('      - max_worker_processes=24\n', '      - max_worker_processes=64\n      - -c\n      - track_commit_timestamp=on\n')
     text = text.replace('      - wal_level=logical\n', '      - track_commit_timestamp=on\n      - -c\n      - wal_level=logical\n')
     text = text.replace('max_replication_slots=8', 'max_replication_slots=32').replace('max_wal_senders=8', 'max_wal_senders=32')
     engine = "printf 'SET threads=1;\\n' > /tmp/measurement-pgduck.sql; cat /qualification/pgduck.sql >> /tmp/measurement-pgduck.sql; exec pgduck_server --unix_socket_directory /var/run/pgduck --port 5332 --memory_limit 2GB --cache_dir /tmp/pgduck-cache --init_file_path /tmp/measurement-pgduck.sql"
@@ -108,7 +108,7 @@ def fairness(args, variant, image, text, directory):
     q.COMPOSE_FILE.write_text(text)
     q.ENV['QUALIFICATION_DESTINATION_IMAGE'] = image
     bulk_copies = getattr(args, 'bulk_copies', 1)
-    admission_view = getattr(args, 'admission_view', 'lake_replication.prototype_writer_admission')
+    admission_view = getattr(args, 'admission_view', 'lake_replication.bulk_admission')
     copy_names = ['fair_copy' if i == 0 else f'fair_copy_{i}' for i in range(bulk_copies)]
     result = dict(streams=[], variant=variant, image=image, copy_rows=args.copy_rows, bulk_copies=bulk_copies,
         stream_transactions=args.stream_transactions, stream_rows_per_transaction=20,

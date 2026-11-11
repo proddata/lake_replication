@@ -6,7 +6,7 @@ from pathlib import Path
 import statistics
 import unittest
 
-spec=importlib.util.spec_from_file_location('pair_extension',Path(__file__).with_name('pair_extension.py'))
+spec=importlib.util.spec_from_file_location('resampling',Path(__file__).with_name('resampling.py'))
 p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
 
 
