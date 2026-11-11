@@ -50,8 +50,17 @@ coverage of every native dependency, and fails on high/critical vulnerabilities.
 Both audit tools have pinned versions and binary SHA256s. Evidence is uploaded
 independently from the replication fixtures.
 
-Fresh CI archives and full native requalification of the patched runtime remain
-pending. The successful full qualification of `14dc705` is the pre-patch baseline;
-it must not be treated as qualification of the new worker bytes. The security
-gate remains partial until both clean CI archive audits pass and Dependabot has
-confirmed the pinned update. The 24-hour frozen-candidate soak remains separate.
+The subsequent candidate `b0a703a` passes both clean CI archive security audits in
+[run 42201527552](https://github.com/proddata/lake_replication/actions/runs/42201527552)
+and all 662 native qualification checks per architecture in
+[run 42201838803](https://github.com/proddata/lake_replication/actions/runs/42201838803).
+The accepted [native evidence](evidence/2026-11-06-beta5-full-native-runtime-pass.json)
+identifies the exact archives and supported runtime. The older `14dc705` result
+remains the pre-security-patch baseline. The release gate records zero open
+dependency findings at its last refresh; this is not a live vulnerability check.
+
+Publication now audits the newly built release archives with the same pinned
+tools and policy before signing or uploading them. Published SPDX SBOMs are
+copied from that successful audit, and audit evidence is retained even on failure.
+Signatures and independent verification of the downloaded release assets remain
+outstanding, so G6 is still partial. The 24-hour frozen-candidate soak is separate.

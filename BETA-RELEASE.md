@@ -4,8 +4,10 @@ Target: `v0.1.0-beta.5` development candidate
 
 Status: **not releasable yet**. Candidate `b0a703a` passes full native runtime
 qualification on ARM64 and AMD64, including latency, security audits and
-recovery. The candidate compatibility refresh, 24-hour soak and first signed
-prerelease still need evidence. A short soak validates its runner separately.
+recovery. Its compatibility refresh now passes 57 artifact-only checks at each
+exact pg_lake endpoint on native ARM64 with the supported runtime. The 24-hour
+soak and first signed prerelease still need evidence. A short soak validates its
+runner separately.
 
 The [ten-minute packaged soak](docs/beta5-short-soak.md) now passes: 1,166
 transactions, 45 assertions, exact data after all four faults, and complete
@@ -35,9 +37,9 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 | G1. Installable artifacts | PASS | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Candidate `b0a703a` passes full native artifact-only qualification on both architectures with verified archive, source and supported prerequisite identities. See [current evidence](docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json). |
 | G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | Both native architectures pass all 119 fresh lifecycle checks from the candidate CI archives, including restore, interrupted copy, management and uninstall. The supported pg_lake runtime is separately built and verified. |
 | G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Candidate `b0a703a` passes 662 checks per architecture. Valid four-copy completion is 124.46 s ARM64 / 119.80 s AMD64; streaming p95 is 0.903–1.064 s / 0.618–0.870 s, with no OOM or unexpected PostgreSQL crash. The short-run harness validation and 24-hour RC soak are separate evidence; the day-long gate remains open. |
-| G4. Compatibility range | PARTIAL | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | The patched local beta.5 ARM64 archive passes 57 artifact-only checks at each exact pg_lake endpoint 8180647d4535 and f609ecb17891, using the committed original build recipe. These are two tested points, not every intervening commit. Clean patched archive/native qualification remains pending. See [local evidence](docs/evidence/2026-11-01-beta5-local-release-gates.json). |
+| G4. Compatibility range | PASS | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | Accepted candidate `b0a703a` from CI run 42201527552 passes 57 artifact-only checks at each exact pg_lake endpoint 8180647d4535 and f609ecb17891 on native ARM64 with the supported patchset and frozen committed recipe. Native AMD64 full qualification separately covers the pinned endpoint. These are two tested points, not every intervening commit. See [refresh evidence](docs/evidence/2026-11-11-beta5-compatibility-refresh.json) and the [compatibility contract](deploy/install/COMPATIBILITY.md). Recheck for changed release archives. |
 | G5. Operations and observability | PASS | Operators can detect unhealthy subscriptions, lag, retries, and last failure without reading ad-hoc files | Local beta.5 lifecycle and admission checks verify documented metrics, failures, fencing, live counters and cleanup. The operations guide now covers split checkpoints, chunk staging, initial-copy session admission and pacing. See [current qualification](docs/checkpoint-chunk-migration-results.md). |
-| G6. Supply-chain and security review | PARTIAL | Published files have checksums, SBOMs, signatures, vulnerability results, and an approved runtime license inventory with no unresolved high-severity finding | rustls is patched to 0.23.46. The bundle includes checked dependency and Rust runtime/toolchain notices. Local Syft/Grype audit covers all 42 native dependencies within a 55-package SBOM and finds zero vulnerabilities; a pre-patch control finds all four rustls advisories. CI now audits both exported archives with pinned tools and a high/critical severity gate. Both architecture archive audits pass at 820f402 (zero matches); refreshed dependency alerts have zero open findings. See [security review](docs/dependency-security-review.md). |
+| G6. Supply-chain and security review | PARTIAL | Published files have checksums, SBOMs, signatures, vulnerability results, and an approved runtime license inventory with no unresolved high-severity finding | Candidate `b0a703a` passes both CI archive audits with rustls 0.23.46 and checked dependency/toolchain notices. Publication now applies the same pinned Syft/Grype audit and high/critical gate to the exact newly built assets before signing; published SPDX SBOMs come from that audit. This workflow change still needs execution on the release commit. Published signatures and independent download verification remain outstanding. See [security review](docs/dependency-security-review.md) and [verification procedure](docs/release-verification.md). |
 | G7. Upgrade and rollback | PASS | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | Candidate `b0a703a` passes all 30 coordinated physical recovery/rollback checks, production admission with beta.2 upgrade, and 47 beta.1 package-handoff checks on both native architectures. No SQL downgrade is supplied. See [procedure](docs/upgrade-and-rollback.md) and [native evidence](docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json). |
 | G8. Operator documentation | PASS | A new operator can install, configure, verify, monitor, troubleshoot, upgrade, and remove the beta from published documentation alone | The README covers evaluation, install, configuration, verification, and lifecycle; the operations guide covers monitoring, alerts, logs, and first response; the shipped bundle includes backup/upgrade/rollback and conservative uninstall procedures. |
 | G9. Signed prerelease publication | PARTIAL | GitHub prerelease `v0.1.0-beta.5` is published and independently verified from downloaded assets on a non-build machine | Worker, primary extension, and artifact versions now match `0.1.0-beta.5`, and prerelease tags create GitHub prereleases. Publish, then verify checksums, Sigstore identities, SBOMs, and installation from downloaded assets. |
@@ -50,7 +52,13 @@ Both pass 662 checks, including the corrected receiver interruption fixture and
 the unchanged copy/streaming limits. The earlier failures below remain retained
 as historical evidence; they do not describe the current native result.
 
-The current patched candidate at `820f402` **fails native streaming latency on
+## Historical candidate investigations
+
+The following entries retain the findings and pending actions recorded for
+earlier candidates. The current gate table and accepted `b0a703a` results above
+determine present release status.
+
+The earlier patched candidate at `820f402` **fails native streaming latency on
 both architectures** in [run 41289535953](https://github.com/proddata/lake_replication/actions/runs/41289535953).
 The measurements are valid; correctness, copy completion, TLS, and physical
 recovery pass. The subsequent beta.1 handoff is skipped. The earlier pre-patch
@@ -114,8 +122,9 @@ Compatibility and recovery work uses explicit archive identities throughout.
 now passes on ARM64 and AMD64 at `14dc705`, with 614 checks per architecture.
 That pre-patch run resolves the AMD64 cold-build, receiver and disk-cleanup
 checks for its archive. Later work adds two-revision local compatibility,
-patched dependency audits and native coordinated recovery. The current latency
-failure, 24-hour soak and signed publication remain open.
+patched dependency audits and native coordinated recovery. That candidate's
+latency failure remains retained; the current candidate's corrected native pass
+is recorded above. The 24-hour soak and signed publication remain open.
 
 
 The [prospective native 40 ms pacing trial](docs/staging-pacing-prototype.md#prospective-native-result)
@@ -180,11 +189,14 @@ intentional non-goal for this beta.
 
 ## Execution order
 
-1. The [local investigation](docs/local-copy-contention-investigation.md) and [shared-budget prototype](docs/shared-staging-budget-prototype.md) are retained. Shared accounting and cancellation pass; a static 16 MiB/s limit helps two-CPU profiles but fails valid one-CPU lag checks. The [streaming-only controls](docs/streaming-only-capacity-baseline.md) pass on two CPUs but vary on one CPU. The [visibility diagnostic](docs/pressure-visibility-prototype.md) shows queue-only feedback misses receiver backlog. The [staging-gate prototype](docs/staging-gate-prototype.md), combined with the bounded receiver, passes repeated shared-two-CPU runs and one single-CPU sensitivity run without changing the timing gates. Its final 32-check lifecycle suite covers disconnected waiters and permit holders. The beta.4 implementation now provides same-backend admission, disconnect cleanup and a journal byte/count contract. Local archive lifecycle, admission, older upgrade and constrained performance checks pass, with the earlier source scheduling miss retained. Use short native probes before full qualification. The interrupted-run engine OOM remains open. Keep the failed native gate; the AMD64 Docker/receiver hang remains unresolved.
-2. Qualify both native CI-built packages with all admission, lifecycle and upgrade lanes.
-3. Close G4 compatibility, G6 supply-chain review and the G7 physical/object-store recovery drill.
-4. Run the G3 24-hour release-candidate soak from the packaged build.
-5. Qualify the final release commit, then publish and independently verify G9; retain final evidence here.
+The 24-hour run is deferred at the user's request. No endurance run is started
+by the release-preparation work below, and G3 remains partial.
+
+1. Keep the accepted `b0a703a` native and compatibility evidence tied to its exact archives. The earlier investigations and failed trials above remain historical evidence; the corrected full native run resolves their release-qualification follow-up for this candidate.
+2. Validate the publication audit workflow on the final committed source. Refresh archive security evidence and qualification whenever release inputs change. The uncommitted demo Dockerfile build experiment is excluded from accepted evidence and needs separate validation before inclusion.
+3. Finalize the [draft beta.5 release notes](docs/beta5-release-notes.md) and the [independent verification procedure](docs/release-verification.md). Signed publication and G6/G9 closure wait until all prerequisites pass.
+4. Before resuming endurance work, define snapshot/time-travel, longest-reader and backup/restore windows, storage capacity and a supported maintenance procedure. Validate the policy without treating disposable short-retention experiments as production evidence.
+5. When authorized to resume, run the G3 24-hour release-candidate soak from the packaged build. Qualify the final release commit, publish and independently verify the downloaded release assets, then retain the final evidence here.
 
 The scope is frozen to these gates. New feature work is deferred unless it
 closes a gate or fixes a release-blocking defect.

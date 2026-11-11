@@ -11,6 +11,9 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      SYFT_CHECK_FOR_APP_UPDATE: 'false'
+      GRYPE_CHECK_FOR_APP_UPDATE: 'false'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -25,18 +28,36 @@ jobs:
           REVISION: ${{ github.sha }}
         run: |
           VERSION="${VERSION#v}" ./deploy/install/build-release.sh dist/release
-      - name: Install Syft
-        id: syft
-        uses: anchore/sbom-action/download-syft@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
-      - name: Generate SPDX SBOMs
+      - name: Install checksum-pinned audit tools
         env:
-          SYFT: ${{ steps.syft.outputs.cmd }}
+          SYFT_SHA256: bb65249542db5fedeeb4d3f9b018b75e7264dbfbbb10486f044581a92f90490d
+          GRYPE_SHA256: 64e07133d3486115de647a66581461dccf5c732748a0a3119077395565f15519
+        run: |
+          mkdir -p "$RUNNER_TEMP/lake-audit-tools"
+          cd "$RUNNER_TEMP/lake-audit-tools"
+          curl --fail --location --retry 3 https://github.com/anchore/syft/releases/download/v1.55.0/syft_1.55.0_linux_amd64.tar.gz -o syft.tar.gz
+          curl --fail --location --retry 3 https://github.com/anchore/grype/releases/download/v0.121.0/grype_0.121.0_linux_amd64.tar.gz -o grype.tar.gz
+          echo "$SYFT_SHA256  syft.tar.gz" | sha256sum -c -
+          echo "$GRYPE_SHA256  grype.tar.gz" | sha256sum -c -
+          tar -xzf syft.tar.gz syft
+          tar -xzf grype.tar.gz grype
+          echo "$RUNNER_TEMP/lake-audit-tools" >> "$GITHUB_PATH"
+      - name: Audit exact publication archives
+        run: python3 tests/qualification/security.py --expected-revision "$GITHUB_SHA" --output .qualification/release-security dist/release/*.tar.gz
+      - name: Upload publication audit evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: release-security-evidence
+          path: .qualification/release-security/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Stage audited SPDX SBOMs and checksums
         run: |
           for archive in dist/release/*.tar.gz; do
-            unpacked=$(mktemp -d)
-            tar -xzf "$archive" -C "$unpacked"
-            "$SYFT" "dir:$unpacked" -o "spdx-json=${archive%.tar.gz}.spdx.json"
-            rm -rf "$unpacked"
+            name=$(basename "$archive" .tar.gz)
+            cp ".qualification/release-security/$name/sbom.spdx.json" "dist/release/$name.spdx.json"
           done
           cp deploy/install/COMPATIBILITY.md dist/release/COMPATIBILITY.md
           sha256sum dist/release/*.tar.gz dist/release/*.spdx.json dist/release/COMPATIBILITY.md \

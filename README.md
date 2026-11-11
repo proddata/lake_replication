@@ -74,8 +74,10 @@ revision is compatible. See the complete
 Concurrent-copy latency qualification now uses the pinned
 [pg_lake prerequisite patchset](deploy/pg_lake/README.md). It is supplied
 separately from the workers, with an offline copy in release archives under
-`PG_LAKE_PREREQUISITE/`. Full qualification of this runtime remains required
-before publishing the beta.
+`PG_LAKE_PREREQUISITE/`. Candidate `b0a703a` passes full native qualification
+on both supported architectures with this runtime. Its native ARM64 compatibility
+refresh passes both pinned endpoints. The 24-hour soak and final publication
+gates remain open.
 
 ## Quick start
 

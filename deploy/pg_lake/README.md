@@ -9,15 +9,21 @@ GUCs, timers or lake_replication worker changes.
 The unguarded patch passes native ARM64 and AMD64 correctness, managed-worker,
 pipeline and four-copy fairness checks in
 [run 42104428685](https://github.com/proddata/lake_replication/actions/runs/42104428685).
-Full qualification of the supported runtime build and the RC soak are still
-required. Earlier failed trials remain in the
+The subsequent full supported-runtime suite passes all 662 checks per
+architecture at `b0a703a`; see the
+[accepted native evidence](https://github.com/proddata/lake_replication/blob/main/docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json).
+The accepted archive also passes the native ARM64
+[two-endpoint compatibility refresh](https://github.com/proddata/lake_replication/blob/main/docs/evidence/2026-11-11-beta5-compatibility-refresh.json).
+The RC soak and final release gates remain required.
+Earlier failed trials remain in the
 [investigation](../../docs/beta5-commit-internals.md).
 
 The patchset manifest pins the patch checksum and all three source files before
 and after patching. The accepted revisions are `8180647d4535` and `f609ecb17891`;
-the relevant original files match exactly at these two commits. Native patch
-verification currently covers `8180647d4535`. Compatibility qualification at
-the second endpoint must be repeated with this patchset.
+the relevant original files match exactly at these two commits. Both endpoints
+pass 57 artifact-only checks each on native ARM64 using the accepted `b0a703a`
+CI archive and this patchset. Full native ARM64 and AMD64 qualification covers
+`8180647d4535`; the second endpoint has not had the full AMD64 suite.
 
 ## Build the prerequisite image
 
