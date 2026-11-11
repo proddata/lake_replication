@@ -1,6 +1,7 @@
 use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::managed::ManagedClient;
+use lake_replication_worker::sql::sql_literal;
 use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -929,10 +930,6 @@ fn single_value<'a>(
         .and_then(|row| row.first())
         .and_then(Option::as_deref)
         .ok_or_else(|| format!("{operation} returned no value").into())
-}
-
-fn sql_literal(value: &str) -> String {
-    format!("'{}'", value.replace('\'', "''"))
 }
 
 fn quote_identifier(value: &str) -> String {

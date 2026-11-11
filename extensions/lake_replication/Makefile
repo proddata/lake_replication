@@ -94,3 +94,5 @@ else ifeq ($(MAKECMDGOALS),)
 PGXS := $(shell $(PG_CONFIG) --pgxs)
 include $(PGXS)
 endif
+
+lake_replication.o lake_replication.bc: secure_log.h

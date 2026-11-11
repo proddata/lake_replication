@@ -114,7 +114,7 @@
  * password for it necessarily ends up stored in source_connections.
  *
  * Worker stdout/stderr go to lake_replication.log_directory
- * (default /tmp), one file per subscription; SUSET so an
+ * (default a private directory under DataDir), one file per subscription; SUSET so an
  * unprivileged session cannot redirect a spawned worker's log output
  * before calling CREATE SUBSCRIPTION.
  *
@@ -155,6 +155,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "secure_log.h"
 
 PG_MODULE_MAGIC;
 
@@ -162,7 +163,7 @@ PG_MODULE_MAGIC;
 #define ADMIN_ROLE_NAME "lake_replication_admin"
 
 static ProcessUtility_hook_type prev_ProcessUtility = NULL;
-static char *LogDirectory = "/tmp";
+static char *LogDirectory = "";
 static char *LauncherDatabaseName = NULL;
 static char *LegacyDatabaseName = NULL;
 static int InitialCopyPauseMs = 40;
@@ -292,6 +293,19 @@ LauncherStopSupervisor(int code, Datum arg)
 static char *CredentialFile = NULL;
 static bool AllowLegacyBindingUpgrade = false;
 static int	LauncherNaptimeMs = 1000;
+
+static bool
+check_log_directory(char **newValue, void **extra, GucSource source)
+{
+	(void) extra;
+	(void) source;
+	if (*newValue != NULL && (*newValue)[0] != '\0' && (*newValue)[0] != '/')
+	{
+		GUC_check_errdetail("lake_replication.log_directory must be an absolute path or empty");
+		return false;
+	}
+	return true;
+}
 
 static bool
 check_credential_file(char **newValue, void **extra, GucSource source)
@@ -598,6 +612,7 @@ lake_replication_worker_main(Datum main_arg)
 	char	   *supervisorPath;
 	char	   *supervisorArgv[2];
 	char	   *supervisorLog;
+	char	   *logDirectory;
 	int			logFd;
 	int			fd;
 
@@ -688,8 +703,23 @@ lake_replication_worker_main(Datum main_arg)
 	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
 	supervisorArgv[0] = supervisorPath;
 	supervisorArgv[1] = NULL;
-	supervisorLog = psprintf("%s/lake_replication_db%u_%lld_supervisor.log",
-							 LogDirectory, MyDatabaseId, (long long) subscriptionId);
+	logDirectory = LogDirectory[0] == '\0'
+		? psprintf("%s/lake_replication_logs", DataDir) : LogDirectory;
+	if (LogDirectory[0] == '\0' && mkdir(logDirectory, 0700) < 0 && errno != EEXIST)
+	{
+		elog(WARNING, "lake_replication: could not create private log directory: %m");
+		proc_exit(0);
+	}
+	supervisorLog = psprintf("lake_replication_db%u_%lld_supervisor.log",
+							 MyDatabaseId, (long long) subscriptionId);
+	logFd = lake_open_private_log(logDirectory, supervisorLog);
+	if (logFd < 0)
+	{
+		elog(WARNING, "lake_replication: could not safely open worker log in %s: %m; "
+			 "use a PostgreSQL-owned directory with mode 0700 and regular logs with mode 0600",
+			 logDirectory);
+		proc_exit(0);
+	}
 
 	/*
 	 * Fork a child to exec the real supervisor binary into, rather than
@@ -726,6 +756,8 @@ lake_replication_worker_main(Datum main_arg)
         if (LauncherWorkerTerminated)
             proc_exit(0);
         child = fork();
+		if (child != 0)
+			close(logFd);
 
 		if (child < 0)
 		{
@@ -740,16 +772,12 @@ lake_replication_worker_main(Datum main_arg)
 			 * Between fork() and execve() only async-signal-safe calls are
 			 * allowed -- no more SPI, no more elog.
 			 */
+			if (dup2(logFd, STDOUT_FILENO) < 0 || dup2(logFd, STDERR_FILENO) < 0)
+				_exit(127);
+			if (logFd > STDERR_FILENO)
+				close(logFd);
 			for (fd = 3; fd < 256; fd++)
 				close(fd);
-
-			logFd = open(supervisorLog, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (logFd >= 0)
-			{
-				dup2(logFd, STDOUT_FILENO);
-				dup2(logFd, STDERR_FILENO);
-				close(logFd);
-			}
 
 			execve(supervisorPath, supervisorArgv, envp);
 			_exit(127);
@@ -1750,13 +1778,13 @@ void
 _PG_init(void)
 {
 	DefineCustomStringVariable("lake_replication.log_directory",
-							   "Directory spawned worker processes' stdout/stderr are redirected to.",
+							   "Private directory for worker stdout/stderr; empty uses lake_replication_logs under the data directory.",
 							   NULL,
 							   &LogDirectory,
-							   "/tmp",
+							   "",
 							   PGC_SUSET,
 							   0,
-							   NULL, NULL, NULL);
+							   check_log_directory, NULL, NULL);
 
 	/*
 	 * PGC_POSTMASTER: only meaningful to the launcher this same _PG_init

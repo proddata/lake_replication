@@ -1,6 +1,7 @@
 use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::logging::event as log_event;
 use lake_replication_worker::managed::ManagedClient;
+use lake_replication_worker::sql::sql_literal;
 use lake_replication_worker::wire::{TlsConfig, address_is_loopback};
 use std::env;
 
@@ -186,16 +187,12 @@ fn field<'a>(
         .ok_or_else(|| format!("missing {name}").into())
 }
 
-fn sql_literal(value: &str) -> String {
-    format!("'{}'", value.replace('\'', "''"))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn sql_literal_escapes_quotes() {
-        assert_eq!(sql_literal("a'b"), "'a''b'");
+        assert_eq!(sql_literal("a'b"), "E'a''b'");
     }
 }

@@ -150,6 +150,7 @@ poc-stop:
 poc-down:
 	$(POC_COMPOSE) down -v
 check:
+	python3 -m unittest discover -s tests/security -p 'test_*.py'
 	python3 -m py_compile deploy/prepare-upstream.py deploy/pg_lake/patchset.py
 	python3 -m unittest discover -s tests/upstream -p 'test_*.py'
 	python3 -m compileall -q tests/support

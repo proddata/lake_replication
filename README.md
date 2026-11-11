@@ -184,8 +184,11 @@ the file. Launcher-managed workers receive only a file path and subscription ID;
 credential values are not copied into process arguments, worker-launch metadata,
 or structured logs.
 
-Create the log directory with ownership and permissions suitable for the
-PostgreSQL operating-system user, then restart PostgreSQL. In the destination
+Create the configured log directory owned by the PostgreSQL operating-system
+user with mode `0700`; existing log files must be regular files owned by that
+user with mode `0600`. If the setting is omitted, the extension creates a private
+`lake_replication_logs` directory under PostgreSQL's data directory.
+Then restart PostgreSQL. In the destination
 database, install the extensions; no session preload or database-name setting is needed:
 
 ```sql
@@ -400,7 +403,7 @@ and volumes with `make poc-down`.
 ## Development
 
 Requirements for repository checks are Docker with Compose, Rust 1.85, Python
-3, and Make.
+3, Make, and a C compiler for the log-file security checks.
 
 Upstream source is pinned as a Git submodule at `vendor/pg_lake`. Initialize
 it once after cloning:
