@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-import performance_probe as probe
+import performance_analysis as probe
 
 
 def copies(variants=probe.VARIANTS):

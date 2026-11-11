@@ -5,7 +5,7 @@ import threading
 import time
 import unittest
 
-spec=importlib.util.spec_from_file_location('source_workload',Path(__file__).resolve().parents[2]/'experiments/admission/source_workload.py')
+spec=importlib.util.spec_from_file_location('source_workload',Path(__file__).resolve().parents[2]/'tests/support/source_workload.py')
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 

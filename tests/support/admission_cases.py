@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Qualify bulk-only cancellation, schema contention and rebuild rollback."""
-import argparse
+"""Shared production admission cases for schema contention and recovery."""
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 import hashlib
@@ -8,18 +7,17 @@ import importlib.util
 import json
 from pathlib import Path
 import re
-import shutil
-import tempfile
 import time
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location('reserved_probe', Path(__file__).with_name('reserved_probe.py'))
-p = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(p)
-q, c, m = p.q, p.c, p.m
+spec = importlib.util.spec_from_file_location('admission_measure', Path(__file__).with_name('admission_measure.py'))
+m = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(m)
+q, c, s = m.q, m.c, m.s
 CLIENTS = []
-ADMIT = 'lake_replication.experiment_admit_engine(true)'
+ADMIT = 'lake_replication.admit_bulk()'
+VIEW = 'lake_replication.bulk_admission'
 
 
 def sql(statement):
@@ -101,7 +99,7 @@ def schema_case(result):
     owner.query('ROLLBACK')
     q.check('actual DDL relation-lock timeout propagates', blocked.returncode!=0 and 'lock timeout' in blocked.stderr, True)
     q.check('actual DDL contention does not durably pause metadata', schema_state(subscription), 'streaming:true')
-    q.check('failed DDL releases the admission permit', sql(f'SELECT count(*) FROM {p.VIEW}'), '0')
+    q.check('failed DDL releases the admission permit', sql(f'SELECT count(*) FROM {VIEW}'), '0')
     q.check('DDL retry succeeds after conflicting reader leaves', sql(f'SELECT lake_replication.reconcile_relation_schema({subscription},100,{version})'), 'ready')
 
     # Deliberately invert a control-row/permit order to test abort semantics.
@@ -115,7 +113,7 @@ def schema_case(result):
     monitor = client()
     with ThreadPoolExecutor(max_workers=2) as pool:
         pending = pool.submit(schema.query, f'SELECT lake_replication.reconcile_relation_schema({subscription},100,{version})')
-        wait(lambda: monitor.query(f"SELECT count(*) FROM {p.VIEW} WHERE pid={schema_pid} AND admission_state='waiting_for_writer'")[0]=='1')
+        wait(lambda: monitor.query(f"SELECT count(*) FROM {VIEW} WHERE pid={schema_pid} AND admission_state='waiting_for_writer'")[0]=='1')
         control = pool.submit(owner.query, f'SELECT 1 FROM lake_replication.relations WHERE subscription_id={subscription} AND schema_version={version} FOR UPDATE')
         try:
             response = pending.result(timeout=15)
@@ -149,7 +147,7 @@ def rebuild_case(result):
     monitor = client()
     with ThreadPoolExecutor(max_workers=1) as pool:
         queued = pool.submit(rebuild.query, promote)
-        wait(lambda: monitor.query(f"SELECT count(*) FROM {p.VIEW} WHERE pid={rebuild_pid} AND admission_state='waiting_for_writer'")[0]=='1')
+        wait(lambda: monitor.query(f"SELECT count(*) FROM {VIEW} WHERE pid={rebuild_pid} AND admission_state='waiting_for_writer'")[0]=='1')
         sql(f'SELECT pg_cancel_backend({rebuild_pid})')
         try:
             queued.result(timeout=10)
@@ -166,9 +164,9 @@ def rebuild_case(result):
         schema_job = pool.submit(schema.query, f'SELECT lake_replication.reconcile_relation_schema({schema_sub},100,{version})')
         # Observe the schema waiter before submitting an explicit transaction
         # which will deliberately retain its permit for rollback inspection.
-        wait(lambda: monitor.query(f"SELECT count(*) FROM {p.VIEW} WHERE admission_state='waiting_for_writer'")[0]=='1')
+        wait(lambda: monitor.query(f"SELECT count(*) FROM {VIEW} WHERE admission_state='waiting_for_writer'")[0]=='1')
         rebuild_job = pool.submit(rebuild.query, 'BEGIN; '+promote)
-        wait(lambda: monitor.query(f"SELECT count(*) FROM {p.VIEW} WHERE admission_state='waiting_for_writer'")[0]=='2')
+        wait(lambda: monitor.query(f"SELECT count(*) FROM {VIEW} WHERE admission_state='waiting_for_writer'")[0]=='2')
         owner.query('COMMIT')
         q.check('concurrent independent schema operation completes', schema_job.result(timeout=20), ['ready'])
         q.check('concurrent rebuild performs one real rename group', rebuild_job.result(timeout=20), ['1'])
@@ -191,7 +189,7 @@ def cancel_case(result, rows):
     sql(f"CREATE SUBSCRIPTION cancel_sub CONNECTION '{connection}' PUBLICATION cancel_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     monitor = client()
     def executing_write():
-        records = json.loads(monitor.query(f"SELECT coalesce(json_agg(t),'[]') FROM (SELECT a.pid,extract(epoch FROM a.query_start) AS began,a.wait_event_type,a.wait_event FROM pg_stat_activity a JOIN {p.VIEW} v USING(pid) WHERE (a.query LIKE 'SELECT lake_replication.finish_initial_sync_group(%' OR (a.application_name LIKE 'lake_replication_worker/%' AND a.query LIKE 'BEGIN;%SELECT lake_replication.finish_initial_sync_group(%')) AND a.state='active' AND a.wait_event_type='Extension' AND v.admission_state='admitted')t")[0])
+        records = json.loads(monitor.query(f"SELECT coalesce(json_agg(t),'[]') FROM (SELECT a.pid,extract(epoch FROM a.query_start) AS began,a.wait_event_type,a.wait_event FROM pg_stat_activity a JOIN {VIEW} v USING(pid) WHERE (a.query LIKE 'SELECT lake_replication.finish_initial_sync_group(%' OR (a.application_name LIKE 'lake_replication_worker/%' AND a.query LIKE 'BEGIN;%SELECT lake_replication.finish_initial_sync_group(%')) AND a.state='active' AND a.wait_event_type='Extension' AND v.admission_state='admitted')t")[0])
         if not records:
             return None
         logs = q.compose('logs','--no-color','--timestamps','pgduck')
@@ -208,8 +206,8 @@ def cancel_case(result, rows):
     q.check('copy cancellation observes a real engine write request', bool(victim), True)
     canceled = sql(f"SELECT pg_cancel_backend({victim}); UPDATE lake_replication.worker_launch_config SET desired_state='stopped' WHERE subscription_id=(SELECT subscription_id FROM lake_replication.subscriptions WHERE subscription_name='cancel_sub')")
     q.check('active copy backend accepts cancellation', 't' in canceled.splitlines(), True)
-    q.check('canceled subscription wrapper drains', q.wait_for('destination','analytics',p.s.WRAPPERS,'0',timeout=30), '0')
-    q.check('cancellation releases its bulk permit', sql(f"SELECT count(*) FROM {p.VIEW}"), '0')
+    q.check('canceled subscription wrapper drains', q.wait_for('destination','analytics',s.WRAPPERS,'0',timeout=30), '0')
+    q.check('cancellation releases its bulk permit', sql(f"SELECT count(*) FROM {VIEW}"), '0')
     q.check('canceled copy preserves all zero checkpoints', sql("SELECT (received_lsn='0/0' AND staged_lsn='0/0' AND published_lsn='0/0' AND acknowledged_lsn='0/0')::text FROM lake_replication.checkpoints"), 'true')
     q.check('canceled copy publishes no partial Iceberg rows', sql('SELECT count(*) FROM cancel_items'), '0')
     q.check('canceled native source slot remains inactive', q.wait_for('source','application',"SELECT active::text FROM pg_replication_slots WHERE slot_name='cancel_sub'",'false'), 'false')
@@ -221,76 +219,3 @@ def cancel_case(result, rows):
     q.check('copy cancellation preserves the PostgreSQL postmaster', sql('SELECT pg_postmaster_start_time()'), original_start)
     sql('DROP SUBSCRIPTION cancel_sub')
     q.check('recovered subscription drops its source slot', q.sql('source','application',"SELECT count(*) FROM pg_replication_slots WHERE slot_name='cancel_sub'"), '0')
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--cases', nargs='+', choices=('schema','rebuild','cancel'), default=['schema','rebuild','cancel'])
-    parser.add_argument('--rows', type=int, default=2000000)
-    args = parser.parse_args()
-    if q.VERSION != '0.1.0-beta.2':
-        parser.error('historical beta.2 overlay: run with VERSION=0.1.0-beta.2; use tests/admission/probe.py for production packages')
-    if args.rows < 500000:
-        parser.error('use at least 500000 rows to observe real engine publication')
-    q.RESULTS = ROOT/'.qualification'/(q.RUN+'_bulk_operations')
-    root = q.RESULTS
-    root.mkdir(parents=True)
-    q.PROJECT += '-bulk-operations'
-    q.SOURCE_IMAGE += '-bulk-operations'
-    q.DESTINATION_IMAGE += '-bulk-operations'
-    q.ENV.update(QUALIFICATION_SOURCE_IMAGE=q.SOURCE_IMAGE, QUALIFICATION_DESTINATION_IMAGE=q.DESTINATION_IMAGE)
-    result = dict(status='running',scope=__doc__,parameters=vars(args),cases=[],production_changed=False)
-    inputs = [*Path(__file__).parent.glob('*'),ROOT/'tests/qualification/probe.py',ROOT/'extensions/lake_replication/lake_replication.c',*sorted((ROOT/'migrations').glob('*.sql'))]
-    result['inputs'] = {str(x.relative_to(ROOT)): hashlib.sha256(x.read_bytes()).hexdigest() for x in inputs if x.is_file()}
-    for name in result['inputs']:
-        target=root/'sources'/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(ROOT/name,target)
-    try:
-        archive=q.archive_path();q.verify_archive(archive)
-        with tempfile.TemporaryDirectory(prefix='lake-bulk-operations-') as directory:
-            q.build_images(archive,Path(directory))
-        image='lake-replication-bulk-operations:'+q.RUN
-        build=q.command(['docker','build','--build-arg',f'QUAL_IMAGE={q.DESTINATION_IMAGE}','--build-arg','RESERVED=1','--build-arg','BULK_ONLY=1','-t',image,'-f',str(Path(__file__).with_name('Dockerfile.reserved')),str(ROOT)],timeout=600)
-        (root/'build.log').write_text(build.stdout+build.stderr)
-        result['image_id']=q.command(['docker','image','inspect','--format','{{.Id}}',image]).stdout.strip()
-        q.ENV['QUALIFICATION_DESTINATION_IMAGE']=image
-        text=m.compose_text().replace('      - -c\n      - lake_replication.prototype_instance_id=measurement-owner\n','').replace('exec pgduck_server ','exec pgduck_server --debug ')
-        for case in args.cases:
-            directory=root/case;directory.mkdir();q.COMPOSE_FILE=directory/'compose.yml';q.COMPOSE_FILE.write_text(text)
-            observed=dict(case=case,status='running')
-            print('CASE',case,flush=True)
-            try:
-                q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
-                if case=='cancel':cancel_case(observed,args.rows)
-                elif case=='schema':schema_case(observed)
-                else:rebuild_case(observed)
-                observed['status']='passed'
-            except AssertionError as error:
-                observed.update(status='finding',error=str(error))
-            except Exception as error:
-                observed.update(status='error',error=str(error),error_type=type(error).__name__)
-            finally:
-                for connection in CLIENTS:connection.close()
-                CLIENTS.clear()
-                logs=q.compose('logs','--no-color',check_result=False)
-                (directory/'compose.log').write_text(logs.stdout+logs.stderr)
-                workers=q.compose('exec','-T','destination','sh','-ec',"find /worker-logs -type f -name '*.log' -exec cat {} +",check_result=False)
-                (directory/'workers.jsonl').write_text(workers.stdout)
-                cleanup=q.compose('down','-v','--remove-orphans',check_result=False,timeout=300)
-                observed['cleanup_returncode']=cleanup.returncode
-                if cleanup.returncode:observed['status']='error'
-                result['cases'].append(observed)
-                result['checks']=q.EVIDENCE['checks']
-                s=p.s;s.write_json(directory/'results.json',observed);s.write_json(root/'results.json',result)
-                print('RESULT',case,observed['status'],observed.get('error',''),flush=True)
-        result['status']='passed' if all(x['status']=='passed' for x in result['cases']) else 'completed_with_findings'
-    except Exception as error:
-        result.update(status='error',error=str(error));print('ERROR:',error,flush=True)
-    finally:
-        result['archive_provenance']=q.EVIDENCE
-        p.s.write_json(root/'results.json',result)
-        print('Evidence:',root,flush=True)
-    return 0 if result['status']=='passed' else 1
-
-
-if __name__=='__main__':
-    raise SystemExit(main())

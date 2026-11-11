@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-"""Shared workload, visibility measurement and resource sampling helpers for admission experiments."""
-import argparse
+"""Shared workload, visibility measurement and resource sampling helpers for replication qualification."""
 import importlib.util
 import json
 import queue
-import statistics
 import subprocess
 import threading
 import time
 from pathlib import Path
-from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('qualification', ROOT / 'tests/qualification/probe.py')
@@ -77,15 +74,6 @@ class Psql:
 def resources(service, launcher_pids=''):
     return json.loads(q.compose('exec', '-T', '--user', 'postgres', service, 'python3',
                                '-c', Path(__file__).with_name('sample.py').read_text(), launcher_pids).stdout)
-
-
-def snapshot(client):
-    wal, started = client.query("SELECT pg_current_wal_insert_lsn(), pg_postmaster_start_time()")[0].split('|')
-    launcher_pids = client.query("SELECT coalesce(string_agg(w.pid::text,','),'') FROM extension_base.list_base_workers() w JOIN pg_extension e ON e.oid=w.extension_id WHERE e.extname='lake_replication'")[0]
-    high, low = wal.split('/')
-    return {'wal_bytes': (int(high, 16) << 32) + int(low, 16),
-            'postmaster_start': started,
-            'destination': resources('destination', launcher_pids), 'pgduck': resources('pgduck')}
 
 
 def percentile(values, fraction):
@@ -236,116 +224,3 @@ def workload(args, source, destination, first_transaction):
         'observer_poll_ms': args.poll_ms,
         'observer_kind': args.observer,
     }
-
-
-def run_case(args, variant, repetition, image, compose_text, directory):
-    q.COMPOSE_FILE = directory / 'compose.yml'
-    if variant == 'base':
-        if not args.base_preload:
-            compose_text = compose_text.replace(
-                'shared_preload_libraries=pg_extension_base,lake_replication',
-                'shared_preload_libraries=pg_extension_base')
-        compose_text = compose_text.replace('      - -c\n      - lake_replication.database_name=analytics\n', '')
-    q.COMPOSE_FILE.write_text(compose_text)
-    q.ENV['QUALIFICATION_DESTINATION_IMAGE'] = image
-    source = destination = None
-    try:
-        q.compose('up', '-d', '--wait', '--wait-timeout', '300', timeout=600)
-        source = Psql('source', 'application')
-        destination = Psql('destination', 'analytics')
-        source.query('CREATE TABLE public.benchmark_items(id bigint PRIMARY KEY,tx integer NOT NULL,payload text NOT NULL); '
-                     'CREATE PUBLICATION benchmark_pub FOR TABLE public.benchmark_items; '
-                     'GRANT SELECT ON public.benchmark_items TO lake_source')
-        connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
-        destination.query(f"CREATE SUBSCRIPTION benchmark_sub CONNECTION '{connection}' PUBLICATION benchmark_pub "
-                          "WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
-        if q.wait_for('destination', 'analytics',
-                      "SELECT state FROM lake_replication.subscriptions WHERE subscription_name='benchmark_sub'",
-                      'streaming', timeout=90) != 'streaming':
-            raise AssertionError('initial copy did not complete')
-        # Warm both the worker path and observer before measuring.
-        warmup_args = argparse.Namespace(**vars(args))
-        warmup_args.transactions = args.warmup_transactions or args.transactions
-        warmup = workload(warmup_args, source, destination, 1)
-        idle_before = snapshot(destination)
-        time.sleep(args.idle_seconds)
-        idle_after = snapshot(destination)
-        idle_elapsed = (idle_after['destination']['monotonic_seconds'] -
-                        idle_before['destination']['monotonic_seconds'])
-        loaded_before = snapshot(destination)
-        measured = workload(args, source, destination, warmup_args.transactions + 1)
-        loaded_after = snapshot(destination)
-        expected = (warmup_args.transactions + args.transactions) * args.rows_per_transaction
-        total_transactions = warmup_args.transactions + args.transactions
-        counts = destination.query(
-            'SELECT count(*),count(DISTINCT id),bool_and(('
-            f'tx BETWEEN 1 AND {total_transactions} AND id > tx::bigint*{args.rows_per_transaction} '
-            f'AND id <= (tx::bigint+1)*{args.rows_per_transaction} '
-            f"AND payload=repeat('x',{args.payload_bytes})) IS TRUE) FROM public.benchmark_items")[0]
-        if counts != f'{expected}|{expected}|t':
-            raise AssertionError(f'row correctness: expected {expected}, got {counts}')
-        if loaded_before['postmaster_start'] != loaded_after['postmaster_start']:
-            raise AssertionError('postmaster restarted during measurement')
-        return {'variant': variant, 'poll_ms': args.poll_ms, 'repetition': repetition, 'image': image,
-                'warmup': warmup, 'idle_before': idle_before, 'idle_after': idle_after,
-                'idle_elapsed_seconds': idle_elapsed, 'loaded_before': loaded_before,
-                'loaded_after': loaded_after, 'workload': measured, 'verified_rows': expected,
-                'verified_ids_markers_and_payload': True}
-    finally:
-        # Evidence failures must never skip process/container cleanup.
-        cleanup_errors = []
-        try:
-            if destination:
-                (directory / 'worker.jsonl').write_text(q.worker_logs())
-            logs = q.compose('logs', '--no-color', check_result=False)
-            (directory / 'compose.log').write_text(logs.stdout + logs.stderr)
-        except Exception as error:
-            cleanup_errors.append(str(error))
-        for client in (source, destination):
-            try:
-                if client:
-                    client.close()
-            except Exception as error:
-                cleanup_errors.append(str(error))
-        try:
-            q.compose('down', '-v', '--remove-orphans', timeout=300)
-        except Exception as error:
-            cleanup_errors.append(str(error))
-        if cleanup_errors:
-            raise RuntimeError('fixture cleanup/evidence: ' + '; '.join(cleanup_errors))
-
-
-def summarize(cases):
-    result = {}
-    groups = sorted({(case['variant'], case['workload']['observer_kind'], case['workload']['observer_poll_ms']) for case in cases})
-    for variant, observer, poll_ms in groups:
-        selected = [case for case in cases if case['variant'] == variant
-                    and case['workload']['observer_kind'] == observer
-                    and case['workload']['observer_poll_ms'] == poll_ms]
-        def distribution(values):
-            return {'median': statistics.median(values), 'min': min(values), 'max': max(values)}
-        idle_cpu = [(case['idle_after']['destination']['cpu_usage_usec'] -
-                     case['idle_before']['destination']['cpu_usage_usec']) /
-                    case['idle_elapsed_seconds'] / 10000 for case in selected]
-        wrapper_switches = []
-        for case in selected:
-            before = {p['pid']: p for p in case['idle_before']['destination']['processes'] if p['kind'] == 'wrapper'}
-            for process in case['idle_after']['destination']['processes']:
-                prior = before.get(process['pid'])
-                if prior and prior['start_ticks'] == process['start_ticks']:
-                    wrapper_switches.append((process['voluntary_switches'] - prior['voluntary_switches']) /
-                                            case['idle_elapsed_seconds'])
-        result[f'{variant}/{observer}/poll-{poll_ms:g}ms'] = {
-            'repetitions': len(selected),
-            'rows_per_second_until_observed': distribution([c['workload']['rows_per_second_until_observed'] for c in selected]),
-            'publication_rows_per_second': distribution([c['workload']['publication_rows_per_second'] for c in selected]),
-            'p95_observed_commit_lag_ms': distribution([c['workload']['observed_commit_lag_ms']['p95'] for c in selected]),
-            'p95_observed_commit_lag_lower_bound_ms': distribution([c['workload']['p95_observation_lag_bounds_ms']['lower'] for c in selected]),
-            'p95_publication_commit_lag_ms': distribution([c['workload']['publication_commit_lag_ms']['p95'] for c in selected]),
-            'throughput_lower_bound': distribution([c['workload']['rows_per_second_until_observed_bounds']['lower'] for c in selected]),
-            'throughput_upper_bound': distribution([c['workload']['rows_per_second_until_observed_bounds']['upper'] for c in selected]),
-            'observer_query_total_seconds': distribution([c['workload']['observer_query_total_seconds'] for c in selected]),
-            'destination_idle_cpu_percent_of_one_core': distribution(idle_cpu),
-            'wrapper_idle_voluntary_switches_per_second': distribution(wrapper_switches) if wrapper_switches else None,
-        }
-    return result
