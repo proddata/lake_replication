@@ -189,9 +189,10 @@ intentional non-goal for this beta.
 
 ## Open security follow-up
 
-Worker login configuration, minimum grants, and per-subscription credential
-isolation remain open in the [security TODOs](docs/security-todos.md).
-These are outstanding privilege-hardening tasks, not completed qualification.
+Worker login configuration, minimum grants, per-subscription credential
+isolation, journal/staging data access, retention, and resource-limit
+qualification remain open in the [security TODOs](docs/security-todos.md).
+These are outstanding hardening and review tasks, not completed qualification.
 
 ## Execution order
 
