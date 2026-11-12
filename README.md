@@ -455,6 +455,8 @@ and [historical evidence](docs/) before running individual lab targets.
 - [Operations, metrics, logs, and alerts](docs/operations.md)
 - [Local demo](deploy/poc/README.md)
 - [Feasibility and correctness report](docs/feasibility.md)
+- [Update performance investigation](docs/update-performance-investigation.md)
+- [Packaged update-key filter](docs/update-key-filter-integration.md)
 - [Dependency and license inventory](docs/dependencies.md)
 - [Beta feature boundaries](docs/feature-gaps.md)
 - [Why native PostgreSQL apply cannot target Iceberg](docs/native-subscription-spike.md)

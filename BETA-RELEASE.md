@@ -187,6 +187,21 @@ security, data-loss, or PostgreSQL-stability defects. Deferred features must be
 listed explicitly in the release notes; REST-catalog destinations remain an
 intentional non-goal for this beta.
 
+## Update performance follow-up
+
+The [packaged update-key filter](docs/update-key-filter-integration.md) adds
+typed membership pushdown for supported single, non-null identities while
+keeping the 500-row/4-MiB limits. Local ARM64 validation passes 94 type,
+rollback and upgrade checks and 12 controlled throughput trials. These results
+also pass 32 native/correctness checks with supervisor crash recovery and about
+4.3x faster update-burst completion than the historical controls. They do not
+qualify final release archives. An active-subscription DROP left a source
+slot behind in the historical-control pass; that failure remains retained.
+The subsequent [cleanup retry fix](docs/source-slot-cleanup-results.md) passes
+30 packaged active-DROP/busy-slot checks against a failing pre-fix control.
+Final-commit native qualification and the deferred
+24-hour soak remain open.
+
 ## Local security qualification refresh
 
 Clean candidate `30866e2` builds both architecture archives and passes 104 local

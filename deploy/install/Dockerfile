@@ -56,6 +56,7 @@ COPY deploy/install/install.sh deploy/install/uninstall.sh \
 COPY docs/upgrade-and-rollback.md UPGRADE.md
 COPY migrations/0029_source_tls_policy.sql DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
 RUN sed -i 's@MODULE_PATHNAME@$libdir/lake_replication@g' DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
+COPY migrations/0030_update_key_filter.sql DEVELOPMENT_UPDATES/0030_update_key_filter.sql
 COPY deploy/pg_lake ./PG_LAKE_PREREQUISITE/
 COPY LICENSE ./
 COPY --from=worker-builder /src/Cargo.lock ./Cargo.lock

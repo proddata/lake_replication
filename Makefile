@@ -133,6 +133,9 @@ qualification-test:
 	python3 tests/qualification/probe.py
 compatibility-test:
 	python3 tests/qualification/compatibility.py
+.PHONY: update-filter-test
+update-filter-test:
+	python3 tests/performance/update_filter_probe.py --cpuset 0-1
 lab-logs:
 	$(COMPOSE) logs --no-color --tail 200
 lab-stop:
@@ -158,6 +161,9 @@ check:
 	python3 -m unittest discover -s tests/support -p 'test_*.py'
 	python3 -m py_compile tests/replication/probe.py
 	python3 -m py_compile tests/performance/probe.py
+	python3 -m py_compile tests/performance/update_compare.py
+	python3 -m py_compile tests/performance/update_filter_probe.py
+	python3 -m unittest discover -s tests/performance -p 'test_*.py'
 	python3 -m py_compile tests/crash/probe.py
 	python3 -m py_compile tests/journal/probe.py
 	python3 -m py_compile tests/transport/probe.py
@@ -189,6 +195,7 @@ check:
 	python3 -m py_compile tests/extension/probe.py
 	python3 -m py_compile tests/install/probe.py
 	python3 -m py_compile tests/qualification/probe.py tests/qualification/runtime.py tests/qualification/storage.py tests/qualification/storage_preflight.py tests/qualification/prerequisite.py
+	python3 -m py_compile tests/qualification/slot_cleanup.py
 	python3 -m unittest discover -s tests/qualification -p 'test_*.py'
 	python3 -m py_compile tests/soak/probe.py tests/soak/model.py tests/soak/maintenance.py tests/soak/observe_references.py deploy/soak/run.py
 	python3 -m unittest discover -s tests/soak -p 'test_*.py'

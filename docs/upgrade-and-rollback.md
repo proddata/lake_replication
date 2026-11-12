@@ -6,6 +6,23 @@ a production-like destination.
 
 ## Before upgrading
 
+The update-key filter is migration `0030_update_key_filter.sql`. Fresh beta.5
+installs and the beta.4-to-beta.5 upgrade include it. It replaces the existing
+update function without changing its signature or the 500-row/4-MiB run limits.
+
+For an earlier, unpublished beta.5 development database, `ALTER EXTENSION UPDATE`
+does not rerun same-version SQL. After taking the coordinated backup and
+stopping subscriptions as described below, apply the matching archive's refresh
+from its unpacked directory:
+
+```sh
+psql -X -v ON_ERROR_STOP=1 --dbname analytics \
+  --file DEVELOPMENT_UPDATES/0030_update_key_filter.sql
+```
+
+The refresh is transactional and preserves the function's existing grants and
+extension membership. Replacing binaries alone does not install this SQL change.
+
 The source TLS policy change adds migration `0029_source_tls_policy.sql` and
 requires matching extension SQL, shared library, and workers. The beta.4-to-beta.5
 upgrade includes it. For an earlier beta.5 development database, stop the
