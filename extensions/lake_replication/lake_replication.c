@@ -1303,7 +1303,9 @@ drop_source_slot(int64 subscriptionId)
 		Oid			argtypes[2] = {TEXTOID, TEXTOID};
 		Datum		values[2];
 		MemoryContext oldContext = CurrentMemoryContext;
-		bool		dropped = false;
+		/* PG_TRY uses setjmp: preserve the success flag across a failed
+		 * dblink call's longjmp instead of allowing an optimized stale value. */
+		volatile bool dropped = false;
 		int			attempt;
 
 		initStringInfo(&buf);
