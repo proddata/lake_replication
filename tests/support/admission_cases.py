@@ -184,7 +184,7 @@ def rebuild_case(result):
 
 def cancel_case(result, rows):
     q.sql('source','application', f"CREATE TABLE cancel_items(id bigint PRIMARY KEY,payload text); INSERT INTO cancel_items SELECT n,repeat('x',128) FROM generate_series(1,{rows}) n; CREATE PUBLICATION cancel_pub FOR TABLE cancel_items; GRANT SELECT ON cancel_items TO lake_source")
-    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     original_start = sql('SELECT pg_postmaster_start_time()')
     sql(f"CREATE SUBSCRIPTION cancel_sub CONNECTION '{connection}' PUBLICATION cancel_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     monitor = client()

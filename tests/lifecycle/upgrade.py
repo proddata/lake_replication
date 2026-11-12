@@ -21,7 +21,7 @@ def contents(expected):
 
 def upgrade_case(new_image):
     q.sql('source', 'application', "CREATE TABLE public.upgrade_items(id bigint PRIMARY KEY,note text NOT NULL); INSERT INTO public.upgrade_items VALUES(1,'one'); CREATE PUBLICATION prototype_upgrade_pub FOR TABLE public.upgrade_items; GRANT SELECT ON public.upgrade_items TO lake_source")
-    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     q.sql('destination', 'analytics', f"CREATE SUBSCRIPTION prototype_upgrade_sub CONNECTION '{connection}' PUBLICATION prototype_upgrade_pub WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     contents('one')
     q.check('packaged release starts through its static launcher', q.sql('destination', 'analytics', "SELECT count(*) FROM pg_stat_activity WHERE backend_type='lake_replication launcher'"), '1')

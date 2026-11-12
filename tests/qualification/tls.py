@@ -54,10 +54,18 @@ done
 """)
     q.sql('source', 'application', "CREATE TABLE tls_items(id bigint PRIMARY KEY,note text NOT NULL); INSERT INTO tls_items VALUES(1,'initial'); CREATE PUBLICATION tls_pub FOR TABLE tls_items; GRANT SELECT ON tls_items TO lake_source")
     connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe='')}@source:5432/application?sslmode=verify-full&sslrootcert=%2Fcerts%2Fca.crt"
+    source_ip = q.compose('exec', '-T', 'source', 'hostname', '-i').stdout.strip().split()[0]
     for row, setting, error in [(2, 'bad_ca', 'UnknownIssuer'), (3, 'bad_name', 'wrong.example')]:
         sub = 'tls_' + setting
+        bad_connection = connection.replace('ca.crt', 'untrusted-ca.crt') if setting == 'bad_ca' else connection + f'&host=wrong.example&hostaddr={source_ip}'
+        refusal = q.sql_result('destination', 'analytics',
+            f"CREATE SUBSCRIPTION {sub} CONNECTION '{bad_connection}' PUBLICATION tls_pub WITH(lake_target='iceberg')", check_result=False)
+        q.check(setting + ' native discovery rejects invalid certificate', refusal.returncode != 0, True)
         sql(f'CREATE SCHEMA {sub}')
-        sql(f"CREATE SUBSCRIPTION {sub} CONNECTION '{connection}' PUBLICATION tls_pub WITH(lake_target='iceberg',lake_target_schema='{sub}',lake_credential_file='/credentials/tls_{setting}.env')")
+        # Corrupt the stored trust before commit to independently exercise the
+        # worker check. Ordinary CREATE/ALTER already refuse this connection.
+        sql(f"BEGIN; CREATE SUBSCRIPTION {sub} CONNECTION '{connection}' PUBLICATION tls_pub WITH(lake_target='iceberg',lake_target_schema='{sub}',lake_credential_file='/credentials/tls_{setting}.env'); "
+            f"UPDATE lake_replication.source_connections SET conninfo='{bad_connection}' WHERE subscription_id=(SELECT subscription_id FROM lake_replication.subscriptions WHERE subscription_name='{sub}'); COMMIT")
         diagnostic = f"SELECT coalesce(bool_or(ss.last_error LIKE '%initial sync exited%'),false)::text FROM lake_replication.service_status ss JOIN lake_replication.subscriptions s USING(subscription_id) WHERE s.subscription_name='{sub}'"
         q.check(setting + ' failed child is visible in service status', q.wait_for('destination', 'analytics', diagnostic, 'true'), 'true')
         # Initial-sync certificate details live in its structured child log;
@@ -78,7 +86,7 @@ done
             time.sleep(.2)
         q.check(setting + ' archive worker rejects invalid certificate', matched, True)
         q.check(setting + ' rejection cannot advance checkpoint', sql(f"SELECT (received_lsn='0/0' AND staged_lsn='0/0' AND published_lsn='0/0')::text FROM lake_replication.checkpoints JOIN lake_replication.subscriptions USING(subscription_id) WHERE subscription_name='{sub}'"), 'true')
-        sql(f"ALTER SUBSCRIPTION {sub} SET(lake_credential_file='/credentials/tls_good.env')")
+        sql(f"ALTER SUBSCRIPTION {sub} CONNECTION '{connection}'")
         query = f'SELECT count(*)::text FROM {sub}.tls_items'
         q.check(setting + ' corrected trust permits native snapshot', q.wait_for('destination', 'analytics', query, str(row - 1)), str(row - 1))
         q.sql('source', 'application', f"INSERT INTO tls_items VALUES({row},'live-tls')")

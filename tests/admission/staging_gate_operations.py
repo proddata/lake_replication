@@ -57,7 +57,7 @@ def native(gate,c):
     q=gate.q
     def src(text):return q.sql('source','application',text)
     def dst(database,text):return q.sql('destination',database,text)
-    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     src('CREATE TABLE gate_src(id bigint PRIMARY KEY); INSERT INTO gate_src SELECT generate_series(1,10); CREATE PUBLICATION gate_pub FOR TABLE gate_src; GRANT SELECT ON gate_src TO lake_source')
     def setup(database):
         dst('analytics','CREATE DATABASE '+database)

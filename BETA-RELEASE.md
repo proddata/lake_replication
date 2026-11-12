@@ -187,6 +187,12 @@ security, data-loss, or PostgreSQL-stability defects. Deferred features must be
 listed explicitly in the release notes; REST-catalog destinations remain an
 intentional non-goal for this beta.
 
+## Open security follow-up
+
+Worker login configuration, minimum grants, and per-subscription credential
+isolation remain open in the [security TODOs](docs/security-todos.md).
+These are outstanding privilege-hardening tasks, not completed qualification.
+
 ## Execution order
 
 The 24-hour run is deferred at the user's request. No endurance run is started

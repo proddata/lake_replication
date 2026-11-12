@@ -137,6 +137,7 @@
 #include "executor/spi.h"
 #include "catalog/pg_type_d.h"
 #include "utils/builtins.h"
+#include "utils/array.h"
 #include "utils/acl.h"
 #include "utils/guc.h"
 #include "utils/hsearch.h"
@@ -156,6 +157,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "secure_log.h"
+#include "source_tls.h"
 
 PG_MODULE_MAGIC;
 
@@ -477,6 +479,83 @@ lake_subscription_id(const char *subname)
  * Must be called with SPI already connected. Raises an error if the
  * source is unreachable or the dblink extension cannot be created.
  */
+static char *
+secure_source_conninfo(const char *conninfo)
+{
+	LakeSourceTls policy;
+	const char *error = lake_source_tls_policy(conninfo, &policy);
+	PQconninfoOption *option;
+	StringInfoData secured;
+
+	if (error != NULL)
+	{
+		PQconninfoFree(policy.options);
+		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+						errmsg("lake_replication: %s", error)));
+	}
+	/* Explicit trailing values override libpq environment/service defaults.
+	 * GSS encryption must not bypass certificate/hostname verification. */
+	initStringInfo(&secured);
+	/* Serialize parsed options so URI and keyword inputs behave identically. */
+	for (option = policy.options; option->keyword != NULL; option++)
+	{
+		const char *value;
+
+		if (option->val == NULL || strcmp(option->keyword, "sslmode") == 0 ||
+			strcmp(option->keyword, "gssencmode") == 0)
+			continue;
+		appendStringInfo(&secured, "%s='", option->keyword);
+		for (value = option->val; *value != '\0'; value++)
+		{
+			if (*value == '\'' || *value == '\\')
+				appendStringInfoChar(&secured, '\\');
+			appendStringInfoChar(&secured, *value);
+		}
+		appendStringInfoString(&secured, "' ");
+	}
+	appendStringInfo(&secured, "sslmode=%s gssencmode=disable", policy.mode);
+	PQconninfoFree(policy.options);
+	return secured.data;
+}
+
+PG_FUNCTION_INFO_V1(lake_replication_source_tls_settings);
+Datum
+lake_replication_source_tls_settings(PG_FUNCTION_ARGS)
+{
+	Oid argtypes[1] = {INT8OID};
+	Datum args[1] = {PG_GETARG_DATUM(0)};
+	Datum values[3];
+	char *stored;
+	char *conninfo;
+	LakeSourceTls policy;
+	const char *error;
+
+	SPI_connect();
+	if (SPI_execute_with_args(
+		"SELECT conninfo FROM lake_replication.source_connections WHERE subscription_id=$1",
+		1, argtypes, args, NULL, true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+		ereport(ERROR, (errmsg("lake_replication: source TLS policy is unavailable")));
+	stored = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
+	if (stored == NULL)
+		ereport(ERROR, (errmsg("lake_replication: source TLS policy is unavailable")));
+	conninfo = SPI_palloc(strlen(stored) + 1);
+	strcpy(conninfo, stored);
+	SPI_finish();
+	error = lake_source_tls_policy(conninfo, &policy);
+	pfree(conninfo);
+	if (error != NULL)
+	{
+		PQconninfoFree(policy.options);
+		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+						errmsg("lake_replication: %s", error)));
+	}
+	values[0] = CStringGetTextDatum(policy.mode);
+	values[1] = CStringGetTextDatum(policy.root == NULL ? "" : policy.root);
+	values[2] = CStringGetTextDatum(policy.host);
+	PQconninfoFree(policy.options);
+	PG_RETURN_ARRAYTYPE_P(construct_array(values, 3, TEXTOID, -1, false, 'i'));
+}
+
 static void
 discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 						 char **outDatabaseOid, char **outTimeline,
@@ -485,7 +564,7 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 {
 	StringInfoData buf;
 	Oid argtypes[1] = {TEXTOID};
-	Datum values[1] = {CStringGetTextDatum(conninfo)};
+	Datum values[1] = {CStringGetTextDatum(secure_source_conninfo(conninfo))};
 	char	   *host;
 	char	   *port;
 
@@ -1138,7 +1217,7 @@ record_source_connection(int64 subscriptionId, const char *conninfo,
 	}
 	PQconninfoFree(options);
 	values[0] = Int64GetDatum(subscriptionId);
-	values[1] = CStringGetTextDatum(conninfo);
+	values[1] = CStringGetTextDatum(secure_source_conninfo(conninfo));
 	values[2] = CStringGetTextDatum(sourceUser);
 	values[3] = password == NULL ? (Datum) 0 : CStringGetTextDatum(password);
 	if (password == NULL)
@@ -1229,7 +1308,6 @@ drop_source_slot(int64 subscriptionId)
 
 		initStringInfo(&buf);
 		appendStringInfoString(&buf, "SELECT dblink_exec($1, $2)");
-		values[0] = CStringGetTextDatum(conninfo);
 		values[1] = CStringGetTextDatum(innerQuery);
 
 		/*
@@ -1253,6 +1331,8 @@ drop_source_slot(int64 subscriptionId)
 			BeginInternalSubTransaction("lake_replication_drop_slot");
 			PG_TRY();
 			{
+				/* Revalidate legacy stored connections too; never downgrade cleanup. */
+				values[0] = CStringGetTextDatum(secure_source_conninfo(conninfo));
 				SPI_execute_with_args(buf.data, 2, argtypes, values, NULL,
 								  false, 0);
 				ReleaseCurrentSubTransaction();

@@ -242,7 +242,7 @@ def finalize_evidence(native_bulk):
 
 def native():
     q.sql('source','application',"CREATE TABLE native_items(id bigint PRIMARY KEY,note text); INSERT INTO native_items VALUES(1,'initial'); CREATE PUBLICATION native_pub FOR TABLE native_items; GRANT SELECT ON native_items TO lake_source")
-    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     sql(f"CREATE SUBSCRIPTION native_filtered CONNECTION '{connection}' PUBLICATION native_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     check('native subscription completes initial copy',q.wait_for('destination','analytics',"SELECT state FROM lake_replication.subscriptions WHERE subscription_name='native_filtered'",'streaming'),'streaming')
     check('native idle receiver connects',q.wait_for('source','application',"SELECT active::text FROM pg_replication_slots WHERE slot_name='native_filtered'",'true'),'true')

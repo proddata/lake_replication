@@ -56,7 +56,7 @@ def scale_case(databases, subscriptions, budget, image, text, directory):
             q.sql('destination', db, 'CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION dblink; CREATE EXTENSION lake_replication')
         owners(names, 1)
         result['empty_inventory'] = inventory()
-        connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe='')}@source:5432/application"
+        connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe='')}@source:5432/application?sslmode=disable"
         started = time.monotonic()
         for i in range(subscriptions):
             q.sql('source', 'application', f'CREATE TABLE scale_items_{i}(id bigint PRIMARY KEY,note text); '

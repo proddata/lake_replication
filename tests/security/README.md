@@ -25,3 +25,17 @@ conversion of the simple-query client to the extended parameterized protocol.
 
 Launcher log configuration and upgrade permissions are documented in
 [the operations guide](../../docs/operations.md#structured-worker-logs).
+
+Run the native TLS regression using a cached PostgreSQL 18/pg_lake destination
+image with its compiler, OpenSSL, and `gosu` installed:
+
+```sh
+python3 tests/security/probe_tls.py --image YOUR_CACHED_DESTINATION_IMAGE
+```
+
+It builds and installs the current extension inside a disposable container,
+creates a short-lived test CA and TLS/plaintext servers, and checks discovery,
+managed worker policy, access restrictions, URI input, and source slot cleanup.
+Bad CAs, wrong hostnames, and plaintext servers must be refused. The worker
+integration check also verifies that an environment override cannot disable the
+stored policy. No object storage or Iceberg publication is needed for this probe.

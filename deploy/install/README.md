@@ -42,7 +42,7 @@ cannot read them. Grant `lake_replication_worker` only to the login used by
 workers. The extension installer, superusers, backups, and SQL statement logs
 remain trusted; stronger at-rest secrecy requires a key outside the database.
 
-For destination authentication or source TLS settings, optionally set
+For destination authentication, optionally set
 `lake_replication.credential_file` to an absolute path owned by the
 PostgreSQL operating-system user with mode `0600`, or select an absolute path
 per subscription with `WITH (lake_credential_file = '/path/to/file')`.
@@ -51,6 +51,13 @@ entries are the source/destination user, password, TLS mode, root certificate,
 and optional TLS server name variables documented in the main README. Symlinks,
 group/other permissions, duplicate keys, unknown keys, and files larger than
 64 KiB are rejected before a network connection is attempted.
+
+Managed source TLS mode, CA path, and verification hostname come from the
+subscription's `CONNECTION` string and override file/environment source TLS
+settings. Remote sources default to `verify-full` and require an explicit
+absolute `sslrootcert` file path. Only `verify-full` and explicit `disable` are
+accepted; use the latter only in disposable plaintext labs. Loopback sources
+default to `disable`. Discovery, managed workers, and cleanup share this policy.
 
 Rotate a source password using `ALTER SUBSCRIPTION name CONNECTION '...'`,
 preferably while the subscription is disabled. After atomically rotating a

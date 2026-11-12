@@ -6,6 +6,22 @@ a production-like destination.
 
 ## Before upgrading
 
+The source TLS policy change adds migration `0029_source_tls_policy.sql` and
+requires matching extension SQL, shared library, and workers. The beta.4-to-beta.5
+upgrade includes it; an existing beta.5 development database must also receive
+that migration with `MODULE_PATHNAME` expanded to `$libdir/lake_replication`
+while subscriptions are stopped. Replacing binaries alone fails closed because
+the new workers require `source_tls_settings(bigint)`.
+
+Before enabling a subscription, replace legacy remote `CONNECTION` strings that
+lack an explicit absolute `sslrootcert` path using `ALTER SUBSCRIPTION ...
+CONNECTION`. Managed source TLS settings now come exclusively from `CONNECTION`;
+credential-file and environment source TLS overrides no longer apply. Explicit
+`sslmode=disable` is retained for disposable plaintext labs. Cleanup revalidates
+legacy stored connections and leaves the source slot behind if it cannot
+authenticate the source securely; remove such slots through a separately
+verified source session after checking their ownership and use.
+
 Keep the previous archive and its checksum. Record the installed versions:
 
 ```sql

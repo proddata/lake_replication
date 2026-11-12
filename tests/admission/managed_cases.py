@@ -9,7 +9,7 @@ def run(q,c):
     denied=q.sql_result('destination','analytics','SET ROLE pg_read_all_data; SELECT lake_replication.admit_staging()',check_result=False)
     q.check('read-only role cannot acquire staging permit',denied.returncode!=0,True)
     q.sql('source','application','CREATE TABLE managed_src(id bigint PRIMARY KEY); CREATE PUBLICATION managed_pub FOR TABLE managed_src; GRANT SELECT ON managed_src TO lake_source')
-    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     sql('CREATE DATABASE managed_test');sql('CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION dblink; CREATE EXTENSION lake_replication','managed_test')
     sql(f"CREATE SUBSCRIPTION managed_sub CONNECTION '{connection}' PUBLICATION managed_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')",'managed_test')
     q.check('managed fixture starts streaming',q.wait_for('destination','managed_test',"SELECT state FROM lake_replication.subscriptions",'streaming'),'streaming')
