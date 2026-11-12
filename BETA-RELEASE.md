@@ -187,6 +187,16 @@ security, data-loss, or PostgreSQL-stability defects. Deferred features must be
 listed explicitly in the release notes; REST-catalog destinations remain an
 intentional non-goal for this beta.
 
+## Local security qualification refresh
+
+Clean candidate `30866e2` builds both architecture archives and passes 104 local
+ARM64 archive checks covering replication/recovery, TLS/SCRAM, and an actual
+same-version beta.5 package handoff. The refresh also fixes a source-slot cleanup
+retry failure found during qualification. See the [scope, fixes and remaining
+gates](docs/security-qualification-refresh.md) and [exact evidence](docs/evidence/2026-11-12-security-qualification-refresh.json).
+Native AMD64 runtime qualification, refreshed remote CI/security audits and the
+deferred soak remain outstanding; these results do not close the release gates.
+
 ## Open security follow-up
 
 Worker login configuration, minimum grants, per-subscription credential
