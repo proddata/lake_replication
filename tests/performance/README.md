@@ -1,5 +1,59 @@
 # Basic replication performance probe
 
+For the current controlled update investigation, use
+[`update_compare.py`](update_compare.py). It installs a selected native archive
+in disposable qualification fixtures and compares the installed update function
+against the historical control or a fixture-only candidate, depending on the
+archive. See the [original investigation](../../docs/update-performance-investigation.md)
+and [packaged integration results](../../docs/update-key-filter-integration.md).
+
+```sh
+QUALIFICATION_ARCHIVE=/absolute/path/to/native-archive.tar.gz \
+  python3 tests/performance/update_compare.py
+
+# Separate executed-plan diagnostic; these warmed timings are not pooled above.
+QUALIFICATION_ARCHIVE=/absolute/path/to/native-archive.tar.gz \
+  python3 tests/performance/update_compare.py --updates 500 --run-sizes 500 \
+    --repetitions 1 --analyze
+
+# Native workers, small source transactions and supervisor recovery.
+QUALIFICATION_ARCHIVE=/absolute/path/to/native-archive.tar.gz \
+  python3 tests/performance/update_compare.py --updates 200 --pipeline
+```
+
+Keep the adjacent archive checksum file. Use a frozen checkout for measurement,
+with the intended committed pg_lake build recipe and supported runtime patchset.
+The defaults use one million rows, ten seed files, 10,000 updated keys, 128-byte
+payloads, three trials per configuration, and CPU affinity `2-3`. Adjust the
+affinity for the available native Docker host. Resource caps apply only to the
+private fixtures; other host workloads can still affect results. Each SQL trial
+starts from a freshly seeded table, and every trial verifies all final rows.
+Against historical archives, the fixture-only candidate targets a non-null
+`bigint` identity named `id`. The probe changes only its disposable fixtures;
+it does not install changes into an existing deployment.
+
+Archives containing migration `0030_update_key_filter.sql` are detected
+automatically: the benchmark compares their installed generalized filter with
+the preserved historical function in a private fixture schema. Use
+`--installed-filter` to require such an archive explicitly. The generalized
+fast path supports arbitrary single, non-null integer, text/varchar, UUID and
+boolean key names; other scalar, nullable and composite identities retain the
+original path. The SQL run-size default remains 500 rows.
+Native pipeline teardown explicitly disables each subscription and waits for
+its source slot to become inactive before dropping it. It does not validate
+dropping a running subscription.
+The separate [`slot_cleanup.py`](../qualification/slot_cleanup.py) regression
+covers active DROP and forces a busy-slot error before verifying retry cleanup.
+
+Run the packaged type, quoted-identifier, duplicate-match, rollback, beta.4
+upgrade and same-version development-refresh checks with:
+
+```sh
+QUALIFICATION_ARCHIVE=/absolute/path/to/native-archive.tar.gz make update-filter-test
+```
+
+## Historical development-lab probe
+
 Start the development lab, then run `make performance-test`. The probe builds
 release worker binaries, creates a temporary destination database, replicates
 1,000 inserts and 200 updates by default, checks destination counts, and drops

@@ -542,7 +542,7 @@ def verify_upgrade_contract():
 def exercise_replication():
     connection = (
         f"postgres://lake_source:{quote(SOURCE_PASSWORD, safe='')}"
-        "@source:5432/application"
+        "@source:5432/application?sslmode=disable"
     )
     for option_name, option in (
         ("enabled", "enabled = false"),
@@ -802,7 +802,7 @@ CREATE SUBSCRIPTION orders_to_lake
     )
     rotated_connection = (
         f"postgresql://lake_source:{quote(ROTATED_SOURCE_PASSWORD, safe='')}"
-        "@source:5432/application"
+        "@source:5432/application?sslmode=disable"
     )
     sql(
         "destination", "analytics",

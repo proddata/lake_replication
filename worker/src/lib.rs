@@ -7,5 +7,6 @@ pub mod journal;
 pub mod logging;
 pub mod managed;
 pub mod pgoutput;
+pub mod sql;
 mod trace;
 pub mod wire;

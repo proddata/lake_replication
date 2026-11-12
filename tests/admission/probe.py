@@ -77,7 +77,7 @@ def upgrade(result,new_image,old_archive):
     q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
     q.check('starts unchanged previous SQL',o.sql("SELECT extversion FROM pg_extension WHERE extname='lake_replication'"),old_version)
     q.sql('source','application',"CREATE TABLE admission_upgrade(id bigint PRIMARY KEY); INSERT INTO admission_upgrade VALUES(1); CREATE PUBLICATION admission_upgrade_pub FOR TABLE admission_upgrade; GRANT SELECT ON admission_upgrade TO lake_source")
-    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     o.sql(f"CREATE SUBSCRIPTION admission_upgrade_sub CONNECTION '{connection}' PUBLICATION admission_upgrade_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     q.check('previous native copy completes',q.wait_for('destination','analytics',"SELECT state FROM lake_replication.subscriptions WHERE subscription_name='admission_upgrade_sub'",'streaming'),'streaming')
     o.sql('ALTER SUBSCRIPTION admission_upgrade_sub DISABLE')

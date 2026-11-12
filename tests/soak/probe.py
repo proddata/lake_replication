@@ -295,7 +295,7 @@ WHERE c.oid IN ('soak_items'::regclass,'soak_progress'::regclass)"""))
 INSERT INTO soak_items SELECT n,0,'seed-'||n FROM generate_series(0,127)n;
 CREATE TABLE soak_progress(id integer PRIMARY KEY,seq bigint NOT NULL); INSERT INTO soak_progress VALUES(1,0);
 CREATE PUBLICATION soak_pub FOR TABLE soak_items,soak_progress; GRANT SELECT ON soak_items,soak_progress TO lake_source""")
-        connection = f'postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe="")}@source:5432/application'
+        connection = f'postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe="")}@source:5432/application?sslmode=disable'
         self.sql('destination', f"CREATE SUBSCRIPTION soak_sub CONNECTION '{connection}' PUBLICATION soak_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
         self.wait('destination', 'SELECT state FROM lake_replication.subscriptions', 'streaming')
         if self.maintenance.enabled:

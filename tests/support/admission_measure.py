@@ -134,7 +134,7 @@ def fairness(args, variant, image, text, directory):
         for db in names[1:] + copy_names:
             q.sql('destination', 'analytics', f'CREATE DATABASE {db}')
             q.sql('destination', db, 'CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION dblink; CREATE EXTENSION lake_replication')
-        connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+        connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
         source = c.Psql('source', 'application')
         clients.append(source)
         def seed_big():

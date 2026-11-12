@@ -32,7 +32,7 @@ def main():
             q.build_images(archive,Path(temp))
         q.compose('up','-d','--wait','--wait-timeout','300',timeout=600)
         q.sql('source','application',"CREATE TABLE fault_items(id bigint PRIMARY KEY,note text); INSERT INTO fault_items VALUES(1,'initial'); CREATE PUBLICATION fault_pub FOR TABLE fault_items; GRANT SELECT ON fault_items TO lake_source")
-        connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+        connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
         sql(f"CREATE SUBSCRIPTION fault_sub CONNECTION '{connection}' PUBLICATION fault_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
         q.check('fault fixture completes initial copy',q.wait_for('destination','analytics','SELECT count(*) FROM fault_items','1'),'1')
         original_start=sql('SELECT pg_postmaster_start_time()')

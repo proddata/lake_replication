@@ -236,6 +236,19 @@ Every Rust worker writes one JSON object per line. Informational events go to
 stdout; warnings and errors go to stderr. The subscription launcher redirects
 both streams to its configured `lake_replication.log_directory`.
 
+The default (an empty setting) creates `lake_replication_logs` under PostgreSQL's
+data directory with mode `0700`. An explicit path must be absolute and already
+exist. The directory must belong to the PostgreSQL OS user and grant no group
+or other permissions. Logs are created with mode `0600`. Symlink directories,
+symlink logs, hardlinked logs, nonregular files, and logs owned by another user
+or granting group/other access are rejected. An unsafe log path prevents the
+worker from starting and produces a warning in the PostgreSQL server log.
+
+When upgrading an installation with an explicit log directory, stop the
+subscriptions and ensure the directory has mode `0700` and its existing regular
+log files have mode `0600`, all owned by the PostgreSQL OS user, before restarting.
+The launcher refuses unsafe existing files rather than changing their permissions.
+
 Each record has stable common fields:
 
 ```json

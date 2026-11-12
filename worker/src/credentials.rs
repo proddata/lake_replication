@@ -25,6 +25,7 @@ const ALLOWED_KEYS: &[&str] = &[
 #[derive(Default)]
 pub struct Settings {
     file_values: HashMap<String, String>,
+    managed_values: HashMap<String, String>,
 }
 
 impl Settings {
@@ -56,14 +57,17 @@ impl Settings {
             destination_tls,
         )?;
         let rows = destination.simple_query(&format!(
-            "SELECT source_user, source_password FROM lake_replication.source_credentials({subscription_id})"
+            "SELECT source_user, source_password, tls[1], tls[2], tls[3] \
+             FROM lake_replication.source_credentials({subscription_id}) \
+             CROSS JOIN (SELECT lake_replication.source_tls_settings({subscription_id}) AS tls) AS policy"
         ))?;
         let row = rows
             .first()
             .ok_or("subscription source credentials are unavailable")?;
-        if rows.len() != 1 || row.len() != 2 {
+        if rows.len() != 1 || row.len() != 5 {
             return Err("subscription source credentials have an invalid shape".into());
         }
+        self.apply_source_tls_policy(&row[2..])?;
         // Rows created before migration 0019 have no parsed source auth yet.
         // Keep their existing file-based credentials until CONNECTION is reset.
         let Some(user) = row[0].as_deref().filter(|value| !value.is_empty()) else {
@@ -74,6 +78,29 @@ impl Settings {
         if let Some(password) = &row[1] {
             self.file_values
                 .insert("LAKE_SOURCE_PASSWORD".to_owned(), password.to_owned());
+        }
+        Ok(())
+    }
+
+    fn apply_source_tls_policy(
+        &mut self,
+        values: &[Option<String>],
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let [Some(mode), Some(root), Some(host)] = values else {
+            return Err("subscription source TLS policy has an invalid shape".into());
+        };
+        if !matches!(mode.as_str(), "disable" | "verify-full")
+            || host.is_empty()
+            || (mode == "verify-full" && !Path::new(root).is_absolute())
+        {
+            return Err("subscription source TLS policy is invalid".into());
+        }
+        for (key, value) in [
+            ("LAKE_SOURCE_TLS_MODE", mode),
+            ("LAKE_SOURCE_TLS_ROOT_CERT", root),
+            ("LAKE_SOURCE_TLS_SERVER_NAME", host),
+        ] {
+            self.managed_values.insert(key.to_owned(), value.clone());
         }
         Ok(())
     }
@@ -160,13 +187,18 @@ impl Settings {
                 .into());
             }
         }
-        Ok(Self { file_values })
+        Ok(Self {
+            file_values,
+            managed_values: HashMap::new(),
+        })
     }
 
     pub fn optional(&self, name: &str) -> Option<String> {
-        env::var(name)
-            .ok()
-            .or_else(|| self.file_values.get(name).cloned())
+        self.managed_values.get(name).cloned().or_else(|| {
+            env::var(name)
+                .ok()
+                .or_else(|| self.file_values.get(name).cloned())
+        })
     }
 
     pub fn value(&self, name: &str, default: &str) -> String {
@@ -189,6 +221,56 @@ mod tests {
     use std::time::{SystemTime, UNIX_EPOCH};
 
     static NEXT_FILE_ID: AtomicU64 = AtomicU64::new(0);
+
+    #[test]
+    fn managed_tls_policy_overrides_conflicting_file_settings() {
+        let mut settings = Settings::default();
+        settings
+            .file_values
+            .insert("LAKE_SOURCE_TLS_MODE".into(), "disable".into());
+        settings
+            .file_values
+            .insert("LAKE_SOURCE_TLS_ROOT_CERT".into(), "/wrong-ca".into());
+        settings
+            .apply_source_tls_policy(&[
+                Some("verify-full".into()),
+                Some("/trusted-ca".into()),
+                Some("source.example".into()),
+            ])
+            .unwrap();
+        assert_eq!(settings.value("LAKE_SOURCE_TLS_MODE", ""), "verify-full");
+        assert_eq!(
+            settings.value("LAKE_SOURCE_TLS_ROOT_CERT", ""),
+            "/trusted-ca"
+        );
+        assert_eq!(
+            settings.value("LAKE_SOURCE_TLS_SERVER_NAME", ""),
+            "source.example"
+        );
+    }
+
+    #[test]
+    fn rejects_incomplete_or_downgraded_managed_tls_policy() {
+        for policy in [
+            vec![
+                Some("prefer".into()),
+                Some("/ca".into()),
+                Some("host".into()),
+            ],
+            vec![
+                Some("verify-full".into()),
+                Some("relative-ca".into()),
+                Some("host".into()),
+            ],
+            vec![Some("verify-full".into()), None, Some("host".into())],
+        ] {
+            assert!(
+                Settings::default()
+                    .apply_source_tls_policy(&policy)
+                    .is_err()
+            );
+        }
+    }
 
     fn credential_file(mode: u32, contents: &str) -> std::path::PathBuf {
         let path = env::temp_dir().join(format!(

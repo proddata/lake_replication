@@ -42,7 +42,7 @@ cannot read them. Grant `lake_replication_worker` only to the login used by
 workers. The extension installer, superusers, backups, and SQL statement logs
 remain trusted; stronger at-rest secrecy requires a key outside the database.
 
-For destination authentication or source TLS settings, optionally set
+For destination authentication, optionally set
 `lake_replication.credential_file` to an absolute path owned by the
 PostgreSQL operating-system user with mode `0600`, or select an absolute path
 per subscription with `WITH (lake_credential_file = '/path/to/file')`.
@@ -51,6 +51,13 @@ entries are the source/destination user, password, TLS mode, root certificate,
 and optional TLS server name variables documented in the main README. Symlinks,
 group/other permissions, duplicate keys, unknown keys, and files larger than
 64 KiB are rejected before a network connection is attempted.
+
+Managed source TLS mode, CA path, and verification hostname come from the
+subscription's `CONNECTION` string and override file/environment source TLS
+settings. Remote sources default to `verify-full` and require an explicit
+absolute `sslrootcert` file path. Only `verify-full` and explicit `disable` are
+accepted; use the latter only in disposable plaintext labs. Loopback sources
+default to `disable`. Discovery, managed workers, and cleanup share this policy.
 
 Rotate a source password using `ALTER SUBSCRIPTION name CONNECTION '...'`,
 preferably while the subscription is disabled. After atomically rotating a
@@ -119,6 +126,27 @@ objects should also be deleted. Reinstalling the same archive restores the
 program files.
 
 ## Release artifacts
+
+For an earlier beta.5 development database, the source TLS policy refresh is
+shipped as `DEVELOPMENT_UPDATES/0029_source_tls_policy.sql`. Follow `UPGRADE.md`
+to stop subscriptions, back up, and replace binaries with PostgreSQL stopped;
+then apply that script before enabling subscriptions. Same-version
+`ALTER EXTENSION UPDATE` does not install the new helper. The refresh refuses
+enabled subscriptions and records the helper as an extension member.
+
+The beta.5 update-key filter is included in fresh installation and the
+beta.4-to-beta.5 SQL upgrade. For an earlier unpublished beta.5 development
+database, stop subscriptions and follow the coordinated backup procedure in
+`UPGRADE.md`, then run the matching unpacked archive's transactional refresh:
+
+```sh
+psql -X -v ON_ERROR_STOP=1 --dbname analytics \
+  --file DEVELOPMENT_UPDATES/0030_update_key_filter.sql
+```
+
+Same-version `ALTER EXTENSION UPDATE` does not rerun changed SQL; installing
+new binaries alone does not enable this optimization. The refresh preserves
+the existing function signature, privileges and extension membership.
 
 Build both supported Linux architectures with Docker Buildx and QEMU:
 

@@ -187,6 +187,38 @@ security, data-loss, or PostgreSQL-stability defects. Deferred features must be
 listed explicitly in the release notes; REST-catalog destinations remain an
 intentional non-goal for this beta.
 
+## Update performance follow-up
+
+The [packaged update-key filter](docs/update-key-filter-integration.md) adds
+typed membership pushdown for supported single, non-null identities while
+keeping the 500-row/4-MiB limits. Local ARM64 validation passes 94 type,
+rollback and upgrade checks and 12 controlled throughput trials. These results
+also pass 32 native/correctness checks with supervisor crash recovery and about
+4.3x faster update-burst completion than the historical controls. They do not
+qualify final release archives. An active-subscription DROP left a source
+slot behind in the historical-control pass; that failure remains retained.
+The subsequent [cleanup retry fix](docs/source-slot-cleanup-results.md) passes
+30 packaged active-DROP/busy-slot checks against a failing pre-fix control.
+Final-commit native qualification and the deferred
+24-hour soak remain open.
+
+## Local security qualification refresh
+
+Clean candidate `30866e2` builds both architecture archives and passes 104 local
+ARM64 archive checks covering replication/recovery, TLS/SCRAM, and an actual
+same-version beta.5 package handoff. The refresh also fixes a source-slot cleanup
+retry failure found during qualification. See the [scope, fixes and remaining
+gates](docs/security-qualification-refresh.md) and [exact evidence](docs/evidence/2026-11-12-security-qualification-refresh.json).
+Native AMD64 runtime qualification, refreshed remote CI/security audits and the
+deferred soak remain outstanding; these results do not close the release gates.
+
+## Open security follow-up
+
+Worker login configuration, minimum grants, per-subscription credential
+isolation, journal/staging data access, retention, and resource-limit
+qualification remain open in the [security TODOs](docs/security-todos.md).
+These are outstanding hardening and review tasks, not completed qualification.
+
 ## Execution order
 
 The 24-hour run is deferred at the user's request. No endurance run is started

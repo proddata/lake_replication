@@ -8,7 +8,7 @@ def run(q,c,rows):
     q.sql('destination','analytics',f'CREATE DATABASE {database}')
     q.sql('destination',database,'CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION dblink; CREATE EXTENSION lake_replication')
     def sql(statement):return q.sql('destination',database,statement)
-    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     cases=[('narrow',5001,'128'),('wide',220,'65536'),('oversized',3,'CASE WHEN n=1 THEN 9437184 ELSE 32 END')]
     evidence=[]
     try:

@@ -74,7 +74,7 @@ def cancellation(budget,c):
     owner=c.Psql('destination','analytics')
     try:
         owner.query('BEGIN; SELECT 1 FROM staging_budget.credit FOR UPDATE')
-        connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+        connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
         sql(f"CREATE SUBSCRIPTION budget_cancel_sub CONNECTION '{connection}' PUBLICATION budget_cancel_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')",'budget_cancel')
         query="SELECT count(*) FROM pg_stat_activity WHERE application_name='diagnostic_staging_budget' AND wait_event_type='Lock'"
         q.check('native copy reaches the shared budget',q.wait_for('destination','analytics',query,'1',timeout=30),'1')

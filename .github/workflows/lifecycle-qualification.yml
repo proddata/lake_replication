@@ -344,6 +344,12 @@ jobs:
       - name: Receiver regressions with unchanged archived SQL and binaries
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: python3 tests/streaming/empty_filtered.py --archive-only --native-bulk
+      - name: Packaged update-key types, rollback and upgrade paths
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
+        run: python3 tests/performance/update_filter_probe.py --cpuset 0-1
+      - name: Active subscription DROP and busy source-slot retry
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
+        run: python3 tests/qualification/slot_cleanup.py
       - name: Check out the preserved beta.2 source
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

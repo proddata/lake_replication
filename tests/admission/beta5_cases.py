@@ -139,7 +139,7 @@ def leases(q,c):
         r=q.sql_result('destination',other,'SET ROLE pg_read_all_data; SELECT lake_replication.admit_initial_copy()',check_result=False)
         q.check('read-only role cannot occupy initial-copy capacity',r.returncode!=0 and 'permission denied' in r.stderr,True)
         q.sql('source','application','CREATE TABLE lease_src(id bigint PRIMARY KEY); INSERT INTO lease_src VALUES(1),(2),(3); CREATE PUBLICATION lease_pub FOR TABLE lease_src; GRANT SELECT ON lease_src TO lake_source')
-        connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+        connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
         q.sql('destination',native,f"CREATE SUBSCRIPTION lease_sub CONNECTION '{connection}' PUBLICATION lease_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
         waiting="SELECT count(*) FROM lake_replication.initial_copy_admission WHERE database_name='lease_native' AND admission_state='waiting_for_initial_copy'"
         q.check('native initial copy waits before source snapshot admission',q.wait_for('destination','analytics',waiting,'1'),'1')

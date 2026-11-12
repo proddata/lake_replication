@@ -110,7 +110,7 @@ def start_restored(identity, checkpoint):
 
 def exercise(snapshot):
     q.sql('source', 'application', "CREATE TABLE recovery_items(id bigint PRIMARY KEY,note text NOT NULL); INSERT INTO recovery_items VALUES(1,'one'),(2,'two'); CREATE PUBLICATION recovery_pub FOR TABLE recovery_items; GRANT SELECT ON recovery_items TO lake_source")
-    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe='')}@source:5432/application"
+    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD, safe='')}@source:5432/application?sslmode=disable"
     sql(f"CREATE SUBSCRIPTION recovery_sub CONNECTION '{connection}' PUBLICATION recovery_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     q.check('recovery fixture publishes initial snapshot', q.wait_for('destination', 'analytics', "SELECT string_agg(id||':'||note,',' ORDER BY id) FROM recovery_items", '1:one,2:two'), '1:one,2:two')
     identity = sql("SELECT (SELECT system_identifier FROM pg_control_system())||':'||(SELECT oid FROM pg_database WHERE datname=current_database())")

@@ -1,5 +1,6 @@
 use lake_replication_worker::credentials::Settings;
 use lake_replication_worker::logging::event as log_event;
+use lake_replication_worker::sql::sql_literal;
 use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::env;
 use std::io::{self, Write};
@@ -1169,10 +1170,6 @@ fn field<'a>(
     row.get(index)
         .and_then(Option::as_deref)
         .ok_or_else(|| format!("missing {name}").into())
-}
-
-fn sql_literal(value: &str) -> String {
-    format!("'{}'", value.replace('\'', "''"))
 }
 
 fn binary_name(name: &str) -> String {

@@ -114,7 +114,7 @@
  * password for it necessarily ends up stored in source_connections.
  *
  * Worker stdout/stderr go to lake_replication.log_directory
- * (default /tmp), one file per subscription; SUSET so an
+ * (default a private directory under DataDir), one file per subscription; SUSET so an
  * unprivileged session cannot redirect a spawned worker's log output
  * before calling CREATE SUBSCRIPTION.
  *
@@ -137,6 +137,7 @@
 #include "executor/spi.h"
 #include "catalog/pg_type_d.h"
 #include "utils/builtins.h"
+#include "utils/array.h"
 #include "utils/acl.h"
 #include "utils/guc.h"
 #include "utils/hsearch.h"
@@ -155,6 +156,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "secure_log.h"
+#include "source_tls.h"
 
 PG_MODULE_MAGIC;
 
@@ -162,7 +165,7 @@ PG_MODULE_MAGIC;
 #define ADMIN_ROLE_NAME "lake_replication_admin"
 
 static ProcessUtility_hook_type prev_ProcessUtility = NULL;
-static char *LogDirectory = "/tmp";
+static char *LogDirectory = "";
 static char *LauncherDatabaseName = NULL;
 static char *LegacyDatabaseName = NULL;
 static int InitialCopyPauseMs = 40;
@@ -292,6 +295,19 @@ LauncherStopSupervisor(int code, Datum arg)
 static char *CredentialFile = NULL;
 static bool AllowLegacyBindingUpgrade = false;
 static int	LauncherNaptimeMs = 1000;
+
+static bool
+check_log_directory(char **newValue, void **extra, GucSource source)
+{
+	(void) extra;
+	(void) source;
+	if (*newValue != NULL && (*newValue)[0] != '\0' && (*newValue)[0] != '/')
+	{
+		GUC_check_errdetail("lake_replication.log_directory must be an absolute path or empty");
+		return false;
+	}
+	return true;
+}
 
 static bool
 check_credential_file(char **newValue, void **extra, GucSource source)
@@ -463,6 +479,83 @@ lake_subscription_id(const char *subname)
  * Must be called with SPI already connected. Raises an error if the
  * source is unreachable or the dblink extension cannot be created.
  */
+static char *
+secure_source_conninfo(const char *conninfo)
+{
+	LakeSourceTls policy;
+	const char *error = lake_source_tls_policy(conninfo, &policy);
+	PQconninfoOption *option;
+	StringInfoData secured;
+
+	if (error != NULL)
+	{
+		PQconninfoFree(policy.options);
+		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+						errmsg("lake_replication: %s", error)));
+	}
+	/* Explicit trailing values override libpq environment/service defaults.
+	 * GSS encryption must not bypass certificate/hostname verification. */
+	initStringInfo(&secured);
+	/* Serialize parsed options so URI and keyword inputs behave identically. */
+	for (option = policy.options; option->keyword != NULL; option++)
+	{
+		const char *value;
+
+		if (option->val == NULL || strcmp(option->keyword, "sslmode") == 0 ||
+			strcmp(option->keyword, "gssencmode") == 0)
+			continue;
+		appendStringInfo(&secured, "%s='", option->keyword);
+		for (value = option->val; *value != '\0'; value++)
+		{
+			if (*value == '\'' || *value == '\\')
+				appendStringInfoChar(&secured, '\\');
+			appendStringInfoChar(&secured, *value);
+		}
+		appendStringInfoString(&secured, "' ");
+	}
+	appendStringInfo(&secured, "sslmode=%s gssencmode=disable", policy.mode);
+	PQconninfoFree(policy.options);
+	return secured.data;
+}
+
+PG_FUNCTION_INFO_V1(lake_replication_source_tls_settings);
+Datum
+lake_replication_source_tls_settings(PG_FUNCTION_ARGS)
+{
+	Oid argtypes[1] = {INT8OID};
+	Datum args[1] = {PG_GETARG_DATUM(0)};
+	Datum values[3];
+	char *stored;
+	char *conninfo;
+	LakeSourceTls policy;
+	const char *error;
+
+	SPI_connect();
+	if (SPI_execute_with_args(
+		"SELECT conninfo FROM lake_replication.source_connections WHERE subscription_id=$1",
+		1, argtypes, args, NULL, true, 1) != SPI_OK_SELECT || SPI_processed != 1)
+		ereport(ERROR, (errmsg("lake_replication: source TLS policy is unavailable")));
+	stored = SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1);
+	if (stored == NULL)
+		ereport(ERROR, (errmsg("lake_replication: source TLS policy is unavailable")));
+	conninfo = SPI_palloc(strlen(stored) + 1);
+	strcpy(conninfo, stored);
+	SPI_finish();
+	error = lake_source_tls_policy(conninfo, &policy);
+	pfree(conninfo);
+	if (error != NULL)
+	{
+		PQconninfoFree(policy.options);
+		ereport(ERROR, (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+						errmsg("lake_replication: %s", error)));
+	}
+	values[0] = CStringGetTextDatum(policy.mode);
+	values[1] = CStringGetTextDatum(policy.root == NULL ? "" : policy.root);
+	values[2] = CStringGetTextDatum(policy.host);
+	PQconninfoFree(policy.options);
+	PG_RETURN_ARRAYTYPE_P(construct_array(values, 3, TEXTOID, -1, false, 'i'));
+}
+
 static void
 discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 						 char **outDatabaseOid, char **outTimeline,
@@ -471,7 +564,7 @@ discover_source_identity(const char *conninfo, char **outSystemIdentifier,
 {
 	StringInfoData buf;
 	Oid argtypes[1] = {TEXTOID};
-	Datum values[1] = {CStringGetTextDatum(conninfo)};
+	Datum values[1] = {CStringGetTextDatum(secure_source_conninfo(conninfo))};
 	char	   *host;
 	char	   *port;
 
@@ -598,6 +691,7 @@ lake_replication_worker_main(Datum main_arg)
 	char	   *supervisorPath;
 	char	   *supervisorArgv[2];
 	char	   *supervisorLog;
+	char	   *logDirectory;
 	int			logFd;
 	int			fd;
 
@@ -688,8 +782,23 @@ lake_replication_worker_main(Datum main_arg)
 	supervisorPath = pstrdup(WORKER_BIN_DIR "/lake-replication-supervisor");
 	supervisorArgv[0] = supervisorPath;
 	supervisorArgv[1] = NULL;
-	supervisorLog = psprintf("%s/lake_replication_db%u_%lld_supervisor.log",
-							 LogDirectory, MyDatabaseId, (long long) subscriptionId);
+	logDirectory = LogDirectory[0] == '\0'
+		? psprintf("%s/lake_replication_logs", DataDir) : LogDirectory;
+	if (LogDirectory[0] == '\0' && mkdir(logDirectory, 0700) < 0 && errno != EEXIST)
+	{
+		elog(WARNING, "lake_replication: could not create private log directory: %m");
+		proc_exit(0);
+	}
+	supervisorLog = psprintf("lake_replication_db%u_%lld_supervisor.log",
+							 MyDatabaseId, (long long) subscriptionId);
+	logFd = lake_open_private_log(logDirectory, supervisorLog);
+	if (logFd < 0)
+	{
+		elog(WARNING, "lake_replication: could not safely open worker log in %s: %m; "
+			 "use a PostgreSQL-owned directory with mode 0700 and regular logs with mode 0600",
+			 logDirectory);
+		proc_exit(0);
+	}
 
 	/*
 	 * Fork a child to exec the real supervisor binary into, rather than
@@ -726,6 +835,8 @@ lake_replication_worker_main(Datum main_arg)
         if (LauncherWorkerTerminated)
             proc_exit(0);
         child = fork();
+		if (child != 0)
+			close(logFd);
 
 		if (child < 0)
 		{
@@ -740,16 +851,12 @@ lake_replication_worker_main(Datum main_arg)
 			 * Between fork() and execve() only async-signal-safe calls are
 			 * allowed -- no more SPI, no more elog.
 			 */
+			if (dup2(logFd, STDOUT_FILENO) < 0 || dup2(logFd, STDERR_FILENO) < 0)
+				_exit(127);
+			if (logFd > STDERR_FILENO)
+				close(logFd);
 			for (fd = 3; fd < 256; fd++)
 				close(fd);
-
-			logFd = open(supervisorLog, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (logFd >= 0)
-			{
-				dup2(logFd, STDOUT_FILENO);
-				dup2(logFd, STDERR_FILENO);
-				close(logFd);
-			}
 
 			execve(supervisorPath, supervisorArgv, envp);
 			_exit(127);
@@ -1110,7 +1217,7 @@ record_source_connection(int64 subscriptionId, const char *conninfo,
 	}
 	PQconninfoFree(options);
 	values[0] = Int64GetDatum(subscriptionId);
-	values[1] = CStringGetTextDatum(conninfo);
+	values[1] = CStringGetTextDatum(secure_source_conninfo(conninfo));
 	values[2] = CStringGetTextDatum(sourceUser);
 	values[3] = password == NULL ? (Datum) 0 : CStringGetTextDatum(password);
 	if (password == NULL)
@@ -1196,12 +1303,13 @@ drop_source_slot(int64 subscriptionId)
 		Oid			argtypes[2] = {TEXTOID, TEXTOID};
 		Datum		values[2];
 		MemoryContext oldContext = CurrentMemoryContext;
-		bool		dropped = false;
+		/* PG_TRY uses setjmp: preserve the success flag across a failed
+		 * dblink call's longjmp instead of allowing an optimized stale value. */
+		volatile bool dropped = false;
 		int			attempt;
 
 		initStringInfo(&buf);
 		appendStringInfoString(&buf, "SELECT dblink_exec($1, $2)");
-		values[0] = CStringGetTextDatum(conninfo);
 		values[1] = CStringGetTextDatum(innerQuery);
 
 		/*
@@ -1225,6 +1333,8 @@ drop_source_slot(int64 subscriptionId)
 			BeginInternalSubTransaction("lake_replication_drop_slot");
 			PG_TRY();
 			{
+				/* Revalidate legacy stored connections too; never downgrade cleanup. */
+				values[0] = CStringGetTextDatum(secure_source_conninfo(conninfo));
 				SPI_execute_with_args(buf.data, 2, argtypes, values, NULL,
 								  false, 0);
 				ReleaseCurrentSubTransaction();
@@ -1750,13 +1860,13 @@ void
 _PG_init(void)
 {
 	DefineCustomStringVariable("lake_replication.log_directory",
-							   "Directory spawned worker processes' stdout/stderr are redirected to.",
+							   "Private directory for worker stdout/stderr; empty uses lake_replication_logs under the data directory.",
 							   NULL,
 							   &LogDirectory,
-							   "/tmp",
+							   "",
 							   PGC_SUSET,
 							   0,
-							   NULL, NULL, NULL);
+							   check_log_directory, NULL, NULL);
 
 	/*
 	 * PGC_POSTMASTER: only meaningful to the launcher this same _PG_init

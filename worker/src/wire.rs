@@ -214,6 +214,9 @@ impl Client {
         parameter(&mut body, "user", user);
         parameter(&mut body, "database", database);
         parameter(&mut body, "application_name", application_name);
+        // Do not inherit role/database defaults for SQL parsing or encoding.
+        parameter(&mut body, "client_encoding", "UTF8");
+        parameter(&mut body, "options", "-c standard_conforming_strings=on");
         if replication {
             parameter(&mut body, "replication", "database");
         }
@@ -392,7 +395,9 @@ impl Client {
             }
             match tag {
                 b'D' => rows.push(data_row(&body)?),
-                b'T' | b'C' | b'I' | b'N' => {}
+                // SET of a reported session setting (including
+                // standard_conforming_strings) emits ParameterStatus.
+                b'T' | b'C' | b'I' | b'N' | b'S' => {}
                 b'E' => server_error = Some(Error::Server(error_message(&body))),
                 b'Z' => return Ok(rows),
                 other => {

@@ -14,7 +14,7 @@ def run(receiver,c):
     src('CREATE TABLE receiver_ops_src(id bigint PRIMARY KEY); CREATE PUBLICATION receiver_ops_pub FOR TABLE receiver_ops_src; GRANT SELECT ON receiver_ops_src TO lake_source')
     q.sql('destination','analytics','CREATE DATABASE receiver_ops')
     dst('CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION dblink; CREATE EXTENSION lake_replication')
-    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection=f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     owner=source=None
     try:
         dst(f"CREATE SUBSCRIPTION receiver_ops_sub CONNECTION '{connection}' PUBLICATION receiver_ops_pub WITH(lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")

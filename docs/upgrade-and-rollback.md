@@ -6,6 +6,50 @@ a production-like destination.
 
 ## Before upgrading
 
+The update-key filter is migration `0030_update_key_filter.sql`. Fresh beta.5
+installs and the beta.4-to-beta.5 upgrade include it. It replaces the existing
+update function without changing its signature or the 500-row/4-MiB run limits.
+
+For an earlier, unpublished beta.5 development database, `ALTER EXTENSION UPDATE`
+does not rerun same-version SQL. After taking the coordinated backup and
+stopping subscriptions as described below, apply the matching archive's refresh
+from its unpacked directory:
+
+```sh
+psql -X -v ON_ERROR_STOP=1 --dbname analytics \
+  --file DEVELOPMENT_UPDATES/0030_update_key_filter.sql
+```
+
+The refresh is transactional and preserves the function's existing grants and
+extension membership. Replacing binaries alone does not install this SQL change.
+
+The source TLS policy change adds migration `0029_source_tls_policy.sql` and
+requires matching extension SQL, shared library, and workers. The beta.4-to-beta.5
+upgrade includes it. For an earlier beta.5 development database, stop the
+subscriptions, take the coordinated backup, and replace the matching binaries
+with PostgreSQL stopped as described below. Before enabling subscriptions, run
+the unpacked new archive's refresh as the extension installer:
+
+```sh
+psql -X -v ON_ERROR_STOP=1 --dbname analytics \
+  --file DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
+```
+
+The packaged script has its library path expanded, refuses enabled
+subscriptions, and transactionally adds the restricted helper to the existing
+extension. Same-version `ALTER EXTENSION UPDATE` does not apply this SQL change.
+Replacing binaries alone fails closed because the new workers require
+`source_tls_settings(bigint)`.
+
+Before enabling a subscription, replace legacy remote `CONNECTION` strings that
+lack an explicit absolute `sslrootcert` path using `ALTER SUBSCRIPTION ...
+CONNECTION`. Managed source TLS settings now come exclusively from `CONNECTION`;
+credential-file and environment source TLS overrides no longer apply. Explicit
+`sslmode=disable` is retained for disposable plaintext labs. Cleanup revalidates
+legacy stored connections and leaves the source slot behind if it cannot
+authenticate the source securely; remove such slots through a separately
+verified source session after checking their ownership and use.
+
 Keep the previous archive and its checksum. Record the installed versions:
 
 ```sql

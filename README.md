@@ -165,27 +165,30 @@ lake_replication.log_directory = '/var/log/postgresql/lake_replication'
 The exact existing preload list depends on the pg_lake installation; preserve
 all of its entries when adding `pg_extension_base`.
 
-If the destination worker or TLS setup needs a file, create it as a regular,
+If the destination worker needs a credential file, create it as a regular,
 non-symlink file readable only by the PostgreSQL operating-system user (`0600`):
 
 ```text
-LAKE_SOURCE_TLS_MODE=verify-full
-LAKE_SOURCE_TLS_ROOT_CERT=/etc/ssl/certs/source-ca.pem
 LAKE_DESTINATION_USER=lake_worker
 LAKE_DESTINATION_PASSWORD=replace-me-too
 LAKE_DESTINATION_TLS_MODE=disable
 ```
 
 The source user and password for a launcher-managed subscription come from its
-`CONNECTION` string. A file can still provide source TLS settings and a fallback
+`CONNECTION` string. Managed workers also obtain their source TLS mode, CA path,
+and verification hostname from that string; file or environment source TLS
+settings cannot override it. A file can still provide a fallback
 password for legacy subscriptions without a password in `CONNECTION`.
 Environment variables explicitly set for a manually launched worker override
 the file. Launcher-managed workers receive only a file path and subscription ID;
 credential values are not copied into process arguments, worker-launch metadata,
 or structured logs.
 
-Create the log directory with ownership and permissions suitable for the
-PostgreSQL operating-system user, then restart PostgreSQL. In the destination
+Create the configured log directory owned by the PostgreSQL operating-system
+user with mode `0700`; existing log files must be regular files owned by that
+user with mode `0600`. If the setting is omitted, the extension creates a private
+`lake_replication_logs` directory under PostgreSQL's data directory.
+Then restart PostgreSQL. In the destination
 database, install the extensions; no session preload or database-name setting is needed:
 
 ```sql
@@ -258,6 +261,22 @@ DDL through a trusted SQL session and consider statement
 logging and SQL client history: the original command can contain the password.
 PostgreSQL does not accept `$1` bind parameters in this DDL. This extension
 passes the secret as a parameter in its own internal SQL calls.
+
+For a remote source, include an absolute CA file path on the destination host:
+
+```text
+host=source.example port=5432 dbname=application user=lake_source password=replace-me sslmode=verify-full sslrootcert=/etc/ssl/certs/source-ca.pem
+```
+
+Discovery, managed workers, and source slot cleanup use this same policy.
+Remote connections default to `verify-full`, which requires an explicit
+`sslrootcert` path; loopback hosts default to `disable`. Only `verify-full` and
+explicit `disable` are accepted. Use `sslmode=disable` only for a disposable
+plaintext lab. Service files, implicit hosts, Unix sockets, and multiple libpq
+hosts are rejected; provide one explicit TCP host. The original hostname is
+preserved for certificate verification even when workers connect to its
+discovered IP address. Standalone workers without managed credential loading
+continue to use `LAKE_SOURCE_TLS_*` settings.
 
 To rotate the source password, disable the subscription and wait for `stopped`,
 change the source password, replace the connection string, then enable it:
@@ -400,7 +419,7 @@ and volumes with `make poc-down`.
 ## Development
 
 Requirements for repository checks are Docker with Compose, Rust 1.85, Python
-3, and Make.
+3, Make, and a C compiler for the log-file security checks.
 
 Upstream source is pinned as a Git submodule at `vendor/pg_lake`. Initialize
 it once after cloning:
@@ -436,6 +455,8 @@ and [historical evidence](docs/) before running individual lab targets.
 - [Operations, metrics, logs, and alerts](docs/operations.md)
 - [Local demo](deploy/poc/README.md)
 - [Feasibility and correctness report](docs/feasibility.md)
+- [Update performance investigation](docs/update-performance-investigation.md)
+- [Packaged update-key filter](docs/update-key-filter-integration.md)
 - [Dependency and license inventory](docs/dependencies.md)
 - [Beta feature boundaries](docs/feature-gaps.md)
 - [Why native PostgreSQL apply cannot target Iceberg](docs/native-subscription-spike.md)

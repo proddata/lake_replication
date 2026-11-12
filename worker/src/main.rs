@@ -5,6 +5,7 @@ use lake_replication_worker::managed::ManagedClient;
 use lake_replication_worker::pgoutput::{
     self, Cell, IdentityKind, IdentityTuple, Message, Relation, TupleFormat,
 };
+use lake_replication_worker::sql::sql_literal;
 use lake_replication_worker::wire::{Client, Error as WireError, TlsConfig, address_is_loopback};
 use std::collections::HashMap;
 use std::env;
@@ -884,10 +885,6 @@ fn json_string(value: &str) -> String {
     output
 }
 
-fn sql_literal(value: &str) -> String {
-    format!("'{}'", value.replace('\'', "''"))
-}
-
 fn quote_identifier(value: &str) -> String {
     format!("\"{}\"", value.replace('\"', "\"\""))
 }
@@ -924,7 +921,7 @@ mod tests {
     #[test]
     fn escaping_is_valid_for_json_and_sql() {
         assert_eq!(json_string("a\"b\\c\n"), "\"a\\\"b\\\\c\\n\"");
-        assert_eq!(sql_literal("O'Reilly"), "'O''Reilly'");
+        assert_eq!(sql_literal("O'Reilly"), "E'O''Reilly'");
         assert_eq!(quote_identifier("a\"b"), "\"a\"\"b\"");
     }
 }

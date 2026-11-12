@@ -1,0 +1,492 @@
+{
+  "archive": {
+    "name": "lake_replication-0.1.0-beta.5.tar.gz",
+    "origin": "Locally built from frozen committed source; not a CI artifact",
+    "sha256": "b302cc2417915a5badb1337803e66695ddf06f68ab6253ac98926834ac2c4a4b"
+  },
+  "build_console": {
+    "path": ".qualification/update-performance/build.log",
+    "sha256": "d16b2ab028fafeb8431e476fb73a4f7daaeb4c463b86fec96d59f0388248dd98"
+  },
+  "build_inputs": {
+    "path": ".qualification/update-performance/inputs.json",
+    "sha256": "f0e3630529a4235ae7cba6d20887b5b26d7eb28a15737b5318fe44cccb7b4b7e"
+  },
+  "controller_validation": {
+    "final_harness_sha256": "3477ae29350f568deb53b16c2e92c4d1bbaa9dc501f9ff66348891dfd2c5c24a",
+    "make_check": "passed",
+    "make_check_log": {
+      "path": ".qualification/update-performance/make-check.log",
+      "sha256": "f54eb0d76d0b1551722c1e082cfffe98faa55edd6ee5da9cb23735d074df3f6b"
+    },
+    "scope": "Later controller hardening is separately regression-tested; original measured sources are retained in each cohort",
+    "smoke_result": {
+      "path": ".qualification/update-performance/final-runner/.qualification/qualification_20261111_204139_update_compare/results.json",
+      "sha256": "f5ab586573e475e863fefae9ba03b66c06f277ac3646c214be1b7118d0a1bb7a"
+    },
+    "unit_tests_passed": 6
+  },
+  "destination_comparison": {
+    "cleanup_returncode": 0,
+    "console": {
+      "path": ".qualification/update-performance/comparison.log",
+      "sha256": "a5f130452c86972e6376e2504f2a26aa7896c496fa9d81b9c34bb70b3934b5da"
+    },
+    "measured_harness_sha256": "592b4ccec8ad3a0fc30f2b347a089a5887736b04ad8698871e49d84ec5641ff4",
+    "observed_oom": false,
+    "parameters": {
+      "cpuset": "2-3",
+      "file_rows": 100000,
+      "patterns": [
+        "clustered",
+        "random"
+      ],
+      "payload_bytes": 128,
+      "repetitions": 3,
+      "rows": 1000000,
+      "run_sizes": [
+        500,
+        2000,
+        5000
+      ],
+      "seed": 20261111,
+      "updates": 10000,
+      "variants": [
+        "baseline",
+        "key_filter"
+      ]
+    },
+    "phase_vs_monotonic_gap_seconds": {
+      "max": 0.03253112496811767,
+      "min": 0.002369749991573404
+    },
+    "result": {
+      "path": ".qualification/update-performance/runner/.qualification/qualification_20261111_202155_update_compare/results.json",
+      "sha256": "e924dda1f71df44a4539344fab33c0acf58854642e2b0d8c1df3011a315f5363"
+    },
+    "seed_compressed_bytes": {
+      "max": 44687841,
+      "min": 44686649
+    },
+    "summary": [
+      {
+        "median_client_commit_seconds": 0.041416874970309436,
+        "median_rows_per_second": 346.4221214435311,
+        "median_statement_seconds": 28.804529000000002,
+        "pattern": "clustered",
+        "run_size": 500,
+        "trials": 3,
+        "variant": "baseline"
+      },
+      {
+        "median_client_commit_seconds": 0.042134666931815445,
+        "median_rows_per_second": 1461.4934298058072,
+        "median_statement_seconds": 6.793209,
+        "pattern": "clustered",
+        "run_size": 2000,
+        "trials": 3,
+        "variant": "baseline"
+      },
+      {
+        "median_client_commit_seconds": 0.05238637502770871,
+        "median_rows_per_second": 3261.5158852885334,
+        "median_statement_seconds": 3.01117,
+        "pattern": "clustered",
+        "run_size": 5000,
+        "trials": 3,
+        "variant": "baseline"
+      },
+      {
+        "median_client_commit_seconds": 0.04226708400528878,
+        "median_rows_per_second": 10990.63995927252,
+        "median_statement_seconds": 0.866912,
+        "pattern": "clustered",
+        "run_size": 500,
+        "trials": 3,
+        "variant": "key_filter"
+      },
+      {
+        "median_client_commit_seconds": 0.056215958087705076,
+        "median_rows_per_second": 26061.710697939554,
+        "median_statement_seconds": 0.30872,
+        "pattern": "clustered",
+        "run_size": 2000,
+        "trials": 3,
+        "variant": "key_filter"
+      },
+      {
+        "median_client_commit_seconds": 0.03738991590216756,
+        "median_rows_per_second": 45086.560622643025,
+        "median_statement_seconds": 0.174049,
+        "pattern": "clustered",
+        "run_size": 5000,
+        "trials": 3,
+        "variant": "key_filter"
+      },
+      {
+        "median_client_commit_seconds": 0.04453424992971122,
+        "median_rows_per_second": 311.6176833353459,
+        "median_statement_seconds": 32.023792,
+        "pattern": "random",
+        "run_size": 500,
+        "trials": 3,
+        "variant": "baseline"
+      },
+      {
+        "median_client_commit_seconds": 0.03948512498755008,
+        "median_rows_per_second": 1337.5968564414006,
+        "median_statement_seconds": 7.425728,
+        "pattern": "random",
+        "run_size": 2000,
+        "trials": 3,
+        "variant": "baseline"
+      },
+      {
+        "median_client_commit_seconds": 0.042854500003159046,
+        "median_rows_per_second": 3313.6200092898457,
+        "median_statement_seconds": 2.976709,
+        "pattern": "random",
+        "run_size": 5000,
+        "trials": 3,
+        "variant": "baseline"
+      },
+      {
+        "median_client_commit_seconds": 0.03617241699248552,
+        "median_rows_per_second": 2582.3226714294797,
+        "median_statement_seconds": 3.823827,
+        "pattern": "random",
+        "run_size": 500,
+        "trials": 3,
+        "variant": "key_filter"
+      },
+      {
+        "median_client_commit_seconds": 0.033946124953217804,
+        "median_rows_per_second": 10108.667753685995,
+        "median_statement_seconds": 0.952332,
+        "pattern": "random",
+        "run_size": 2000,
+        "trials": 3,
+        "variant": "key_filter"
+      },
+      {
+        "median_client_commit_seconds": 0.04186341702006757,
+        "median_rows_per_second": 20823.843297307965,
+        "median_statement_seconds": 0.43748299999999996,
+        "pattern": "random",
+        "run_size": 5000,
+        "trials": 3,
+        "variant": "key_filter"
+      }
+    ],
+    "trials": 36,
+    "unexpected_destination_restart": false,
+    "unique_commit_records": 36
+  },
+  "execution_profiles": {
+    "cleanup_returncode": 0,
+    "console": {
+      "path": ".qualification/update-performance/profile.log",
+      "sha256": "4b9d3e1e9749878b38888dc3913d9fac678a09f7ca0a3c87a18167e96de01cba"
+    },
+    "measured_harness_sha256": "43550cb34e39f95d048dab0a7001ff22cefb15c059df23daea0bd12a6a90d059",
+    "observations": [
+      {
+        "analyzed_plan": {
+          "path": ".qualification/update-performance/profile-runner/.qualification/qualification_20261111_203121_update_compare/001_clustered_baseline_500/analyzed-plan.json",
+          "sha256": "4355910171b4ca9f043650c8b5e61e274369e574e62e38c6cc0eaf8e5150d0bf"
+        },
+        "destination_sort": {
+          "Actual Loops": 1,
+          "Actual Rows": 501.0,
+          "Actual Total Time": 1403.337,
+          "Node Type": "Sort",
+          "Plan Rows": 1000,
+          "Sort Method": "external sort",
+          "Sort Space Type": "Disk",
+          "Sort Space Used": 193800,
+          "Temp Read Blocks": 48456,
+          "Temp Written Blocks": 72716
+        },
+        "foreign_scan": {
+          "Actual Loops": 1,
+          "Actual Rows": 1000000.0,
+          "Actual Total Time": 982.841,
+          "Data Files Scanned": "10",
+          "Node Type": "Foreign Scan",
+          "Plan Rows": 1000,
+          "Relation Name": "update_target",
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "pattern": "clustered",
+        "variant": "baseline"
+      },
+      {
+        "analyzed_plan": {
+          "path": ".qualification/update-performance/profile-runner/.qualification/qualification_20261111_203121_update_compare/002_clustered_key_filter_500/analyzed-plan.json",
+          "sha256": "f25cc537f08c1bc018715b0c6c3ff554f7dd40c0aa4b3b487be764b0b633c969"
+        },
+        "destination_sort": {
+          "Actual Loops": 1,
+          "Actual Rows": 500.0,
+          "Actual Total Time": 10.71,
+          "Node Type": "Sort",
+          "Plan Rows": 1000,
+          "Sort Method": "quicksort",
+          "Sort Space Type": "Memory",
+          "Sort Space Used": 122,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "foreign_scan": {
+          "Actual Loops": 1,
+          "Actual Rows": 500.0,
+          "Actual Total Time": 10.658,
+          "Data Files Scanned": "10",
+          "Node Type": "Foreign Scan",
+          "Plan Rows": 1000,
+          "Relation Name": "update_target",
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "pattern": "clustered",
+        "variant": "key_filter"
+      },
+      {
+        "analyzed_plan": {
+          "path": ".qualification/update-performance/profile-runner/.qualification/qualification_20261111_203121_update_compare/003_random_baseline_500/analyzed-plan.json",
+          "sha256": "23596359dbe13fc7131baf535229e8dacea184b5e566c638f85ee7a12d549356"
+        },
+        "destination_sort": {
+          "Actual Loops": 1,
+          "Actual Rows": 995918.0,
+          "Actual Total Time": 1371.363,
+          "Node Type": "Sort",
+          "Plan Rows": 1000,
+          "Sort Method": "external sort",
+          "Sort Space Type": "Disk",
+          "Sort Space Used": 193800,
+          "Temp Read Blocks": 72562,
+          "Temp Written Blocks": 72716
+        },
+        "foreign_scan": {
+          "Actual Loops": 1,
+          "Actual Rows": 1000000.0,
+          "Actual Total Time": 991.639,
+          "Data Files Scanned": "10",
+          "Node Type": "Foreign Scan",
+          "Plan Rows": 1000,
+          "Relation Name": "update_target",
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "pattern": "random",
+        "variant": "baseline"
+      },
+      {
+        "analyzed_plan": {
+          "path": ".qualification/update-performance/profile-runner/.qualification/qualification_20261111_203121_update_compare/004_random_key_filter_500/analyzed-plan.json",
+          "sha256": "f750477a8f17d303002122aa8e0aed823ee0cc67b3c4e7998ac6ffd3a6d37510"
+        },
+        "destination_sort": {
+          "Actual Loops": 1,
+          "Actual Rows": 500.0,
+          "Actual Total Time": 45.361,
+          "Node Type": "Sort",
+          "Plan Rows": 1000,
+          "Sort Method": "quicksort",
+          "Sort Space Type": "Memory",
+          "Sort Space Used": 122,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "foreign_scan": {
+          "Actual Loops": 1,
+          "Actual Rows": 500.0,
+          "Actual Total Time": 45.301,
+          "Data Files Scanned": "10",
+          "Node Type": "Foreign Scan",
+          "Plan Rows": 1000,
+          "Relation Name": "update_target",
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "pattern": "random",
+        "variant": "key_filter"
+      }
+    ],
+    "parameters": {
+      "analyze": true,
+      "cpuset": "2-3",
+      "file_rows": 100000,
+      "patterns": [
+        "clustered",
+        "random"
+      ],
+      "payload_bytes": 128,
+      "pipeline": false,
+      "repetitions": 1,
+      "rows": 1000000,
+      "run_sizes": [
+        500
+      ],
+      "seed": 20261111,
+      "updates": 500,
+      "variants": [
+        "baseline",
+        "key_filter"
+      ]
+    },
+    "result": {
+      "path": ".qualification/update-performance/profile-runner/.qualification/qualification_20261111_203121_update_compare/results.json",
+      "sha256": "66b5e1ed5d2789981fb6092ace2fc09f64874336b1caf56ea66074ed3486bc63"
+    }
+  },
+  "limitations": [
+    "Single local native ARM64 Docker host; separate demo containers remained running; no exclusive hardware claim",
+    "Three destination trials per cell are descriptive medians, not statistical release performance qualification",
+    "Destination comparison excludes WAL receipt, journal staging and process startup; profiles run separately with warmed caches",
+    "Native follow-up is one baseline/filter/baseline bracket of a 200-update burst; not sustained capacity or p95 latency",
+    "Narrow candidate supports non-null bigint identity named id and falls back for other shapes; no production migration or batch default change",
+    "The 24-hour soak and full native release gates remain separate"
+  ],
+  "native_pipeline": {
+    "cases": [
+      {
+        "catchup_after_source_seconds": 42.5545039169956,
+        "data_updates_per_second": 4.690545345727715,
+        "end_to_end_seconds": 42.63896524999291,
+        "number": 1,
+        "source_transactions": 201,
+        "source_write_seconds": 0.08446133299730718,
+        "status": "passed",
+        "updated_data_rows": 200,
+        "variant": "baseline"
+      },
+      {
+        "catchup_after_source_seconds": 7.373027541907504,
+        "crash_and_resumed_write_seconds": 2.0852073749992996,
+        "data_updates_per_second": 26.594692266608675,
+        "end_to_end_seconds": 7.520297584007494,
+        "number": 2,
+        "source_transactions": 201,
+        "source_write_seconds": 0.14727004209998995,
+        "status": "passed",
+        "supervisor_crash_recovery_verified": true,
+        "updated_data_rows": 200,
+        "variant": "key_filter"
+      },
+      {
+        "catchup_after_source_seconds": 38.612263583927415,
+        "data_updates_per_second": 5.16759131109583,
+        "end_to_end_seconds": 38.70275104197208,
+        "number": 3,
+        "source_transactions": 201,
+        "source_write_seconds": 0.09048745804466307,
+        "status": "passed",
+        "updated_data_rows": 200,
+        "variant": "baseline"
+      }
+    ],
+    "checks_passed": 26,
+    "cleanup_returncode": 0,
+    "console": {
+      "path": ".qualification/update-performance/pipeline.log",
+      "sha256": "b90e6c97a56e4f872fb4281fb23c4a73a806291ad775d11c02c63007be571a80"
+    },
+    "measured_harness_sha256": "75440fc854ab0232604a27e27a95c377684bdcf440fc8805ee504d12c7769b02",
+    "parameters": {
+      "analyze": false,
+      "cpuset": "2-3",
+      "file_rows": 100000,
+      "patterns": [
+        "clustered",
+        "random"
+      ],
+      "payload_bytes": 128,
+      "pipeline": true,
+      "repetitions": 3,
+      "rows": 1000000,
+      "run_sizes": [
+        500,
+        2000,
+        5000
+      ],
+      "seed": 20261111,
+      "updates": 200,
+      "variants": [
+        "baseline",
+        "key_filter"
+      ]
+    },
+    "result": {
+      "path": ".qualification/update-performance/pipeline-runner/.qualification/qualification_20261111_203256_update_compare/results.json",
+      "sha256": "9e859794be6c892a8c77e220dce009a94f4ade676581ed051785c444b59ad452"
+    }
+  },
+  "prerequisite": {
+    "identity": {
+      "architecture": "arm64",
+      "format": 1,
+      "inputs": {
+        "deploy/poc/Dockerfile": "b188b89f79152428b86d333e5e2cc15a27290129b4c99f39eade91ff816d848d",
+        "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+        "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+      },
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+    },
+    "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+    "runtime": {
+      "identity": {
+        "architecture": "arm64",
+        "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+        "inputs": {
+          "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+          "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+          "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+          "deploy/pg_lake/README.md": "bddbc77d8c2e5a31f34a513e22f3777a8a5ec152b86dbaf39a7d057debb7e7b0",
+          "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+          "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+          "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+          "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+        },
+        "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+      },
+      "image_id": "sha256:24c43a3d1c2a1ec926248f313f0f4946aa58feb4d3c2ae75c8400934278f40f6",
+      "installed": {
+        "libraries": {
+          "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+          "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+        },
+        "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+        "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+        "patchset": "lake-replication-manifest-cleanup-v1",
+        "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+        "state": "after",
+        "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+      }
+    }
+  },
+  "scope": "Local ARM64 update application and native-worker investigation; fixture-only key-filter SQL; no production defaults changed",
+  "source_revision": "bd985d81620491a10fb3cf247f940597f407597e",
+  "status": "passed",
+  "storage_fixtures": {
+    "storage": {
+      "architecture": "arm64",
+      "image": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+      "image_id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+      "origin": "pinned_source_build",
+      "recipe_sha256": "033deb90501718dc5ef25dcf2dc139a637632c160b6d25ea7ef0902ee410938a",
+      "source_revision": "0d7408fc9969caf07de6a8c3a84f9fbb10a6739e"
+    },
+    "storage-init": {
+      "architecture": "arm64",
+      "image": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+      "image_id": "sha256:ff0c9bd37f9eb808ba395ae78196da90c343978e83986da37345432a290a6481",
+      "origin": "pinned_source_build",
+      "recipe_sha256": "033deb90501718dc5ef25dcf2dc139a637632c160b6d25ea7ef0902ee410938a",
+      "source_revision": "b00526b153a31b36767991a4f5ce2cced435ee8e"
+    }
+  }
+}

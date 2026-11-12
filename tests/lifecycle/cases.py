@@ -70,7 +70,7 @@ def wait_note(database, expected):
 
 def live_lifecycle():
     q.sql("source", "application", "CREATE TABLE public.lifecycle_items(id bigint PRIMARY KEY,note text NOT NULL); INSERT INTO public.lifecycle_items VALUES(1,'one'); CREATE PUBLICATION lifecycle_pub FOR TABLE public.lifecycle_items; GRANT SELECT ON public.lifecycle_items TO lake_source")
-    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     for database, subscription in (("analytics", "lifecycle_a"), ("lifecycle_second", "lifecycle_b")):
         q.sql("destination", database, f"CREATE SUBSCRIPTION {subscription} CONNECTION '{connection}' PUBLICATION lifecycle_pub WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
         wait_note(database, "one")
@@ -124,7 +124,7 @@ def template_and_failed_drop():
 
 def active_extension_drop():
     install_database("lifecycle_drop")
-    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     q.sql("destination", "lifecycle_drop", f"CREATE SUBSCRIPTION lifecycle_drop_sub CONNECTION '{connection}' PUBLICATION lifecycle_pub WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     wait_note("lifecycle_drop", "one,two,three")
     child = q.sql("destination", "lifecycle_drop", "SELECT supervisor_pid FROM lake_replication.service_status")
@@ -150,7 +150,7 @@ def active_extension_drop():
 
 
 def cloned_configuration():
-    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     q.sql("destination", "lifecycle_template", f"CREATE SUBSCRIPTION lifecycle_seed CONNECTION '{connection}' PUBLICATION lifecycle_pub WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env'); ALTER SUBSCRIPTION lifecycle_seed DISABLE")
     q.sql("destination", "analytics", "CREATE DATABASE lifecycle_config_clone TEMPLATE lifecycle_template")
     await_worker("lifecycle_config_clone")
@@ -190,7 +190,7 @@ def worker_churn():
         raise AssertionError("launcher did not report its handle memory context")
 
     q.sql("source", "application", "CREATE TABLE public.lifecycle_churn(id bigint PRIMARY KEY); CREATE PUBLICATION lifecycle_churn_pub FOR TABLE public.lifecycle_churn; GRANT SELECT ON public.lifecycle_churn TO lake_source")
-    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application"
+    connection = f"postgresql://lake_source:{quote(q.SOURCE_PASSWORD,safe='')}@source:5432/application?sslmode=disable"
     q.sql("destination", "analytics", f"CREATE SUBSCRIPTION lifecycle_churn_sub CONNECTION '{connection}' PUBLICATION lifecycle_churn_pub WITH (lake_target='iceberg',lake_credential_file='/credentials/destination-only.env')")
     try:
         q.check("churn subscription finishes its initial copy", q.wait_for("destination", "analytics", "SELECT state FROM lake_replication.subscriptions WHERE subscription_name='lifecycle_churn_sub'", "streaming"), "streaming")
