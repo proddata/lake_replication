@@ -39,3 +39,18 @@ managed worker policy, access restrictions, URI input, and source slot cleanup.
 Bad CAs, wrong hostnames, and plaintext servers must be refused. The worker
 integration check also verifies that an environment override cannot disable the
 stored policy. No object storage or Iceberg publication is needed for this probe.
+
+For the same-version beta.5 upgrade, build the new release archive and set
+`QUALIFICATION_ARCHIVE` to it, then run:
+
+```sh
+python3 tests/security/archive_tls_upgrade.py --old-archive /path/to/pre-policy-beta5.tar.gz
+```
+
+This uses the actual old and new archives with private PostgreSQL and object
+storage volumes. It drains the old subscription, replaces the installed image
+with the server stopped, and applies only the refresh script extracted from
+the new archive. Checks cover refusal while enabled, transactional rollback,
+helper privileges and extension membership, preserved checkpoints and initial
+copy, replay and streaming after handoff/restart, source-slot cleanup, and
+removal of the refreshed helper with the extension.

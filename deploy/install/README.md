@@ -127,6 +127,13 @@ program files.
 
 ## Release artifacts
 
+For an earlier beta.5 development database, the source TLS policy refresh is
+shipped as `DEVELOPMENT_UPDATES/0029_source_tls_policy.sql`. Follow `UPGRADE.md`
+to stop subscriptions, back up, and replace binaries with PostgreSQL stopped;
+then apply that script before enabling subscriptions. Same-version
+`ALTER EXTENSION UPDATE` does not install the new helper. The refresh refuses
+enabled subscriptions and records the helper as an extension member.
+
 Build both supported Linux architectures with Docker Buildx and QEMU:
 
 ```sh

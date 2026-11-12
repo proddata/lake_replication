@@ -8,10 +8,21 @@ a production-like destination.
 
 The source TLS policy change adds migration `0029_source_tls_policy.sql` and
 requires matching extension SQL, shared library, and workers. The beta.4-to-beta.5
-upgrade includes it; an existing beta.5 development database must also receive
-that migration with `MODULE_PATHNAME` expanded to `$libdir/lake_replication`
-while subscriptions are stopped. Replacing binaries alone fails closed because
-the new workers require `source_tls_settings(bigint)`.
+upgrade includes it. For an earlier beta.5 development database, stop the
+subscriptions, take the coordinated backup, and replace the matching binaries
+with PostgreSQL stopped as described below. Before enabling subscriptions, run
+the unpacked new archive's refresh as the extension installer:
+
+```sh
+psql -X -v ON_ERROR_STOP=1 --dbname analytics \
+  --file DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
+```
+
+The packaged script has its library path expanded, refuses enabled
+subscriptions, and transactionally adds the restricted helper to the existing
+extension. Same-version `ALTER EXTENSION UPDATE` does not apply this SQL change.
+Replacing binaries alone fails closed because the new workers require
+`source_tls_settings(bigint)`.
 
 Before enabling a subscription, replace legacy remote `CONNECTION` strings that
 lack an explicit absolute `sslrootcert` path using `ALTER SUBSCRIPTION ...
