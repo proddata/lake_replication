@@ -1,0 +1,387 @@
+{
+  "project": "lake-push-probe-20261113-190901-1fa0dba5",
+  "checks": [
+    {
+      "name": "source is PostgreSQL 18",
+      "actual": 18,
+      "expected": 18,
+      "passed": true
+    },
+    {
+      "name": "source has no lake_replication installation requirement",
+      "actual": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "name": "runtime uses the pinned pg_lake revision",
+      "actual": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "expected": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "passed": true
+    },
+    {
+      "name": "runtime uses the expected patchset",
+      "actual": "lake-replication-manifest-cleanup-v1",
+      "expected": "lake-replication-manifest-cleanup-v1",
+      "passed": true
+    },
+    {
+      "name": "runtime patch matches repository inputs",
+      "actual": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+      "expected": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+      "passed": true
+    },
+    {
+      "name": "pg_lake_iceberg installed library matches runtime marker",
+      "actual": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+      "expected": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+      "passed": true
+    },
+    {
+      "name": "pg_lake_table installed library matches runtime marker",
+      "actual": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+      "expected": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+      "passed": true
+    },
+    {
+      "name": "new stream is empty",
+      "actual": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "commit accepts a two-table batch",
+      "actual": "t",
+      "expected": "t",
+      "passed": true
+    },
+    {
+      "name": "logs manifest receipt and checkpoint commit together",
+      "actual": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "expected": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "rollback leaves no batch or checkpoint",
+      "actual": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "expected": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "error after appends fails the transaction",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "transaction error rolls back every artifact",
+      "actual": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "expected": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "terminate only the fixture writer",
+      "actual": "t",
+      "expected": "t",
+      "passed": true
+    },
+    {
+      "name": "terminated writer reports failure",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "backend death before commit exposes nothing",
+      "actual": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "expected": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "postcommit session loss reports failure",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "reconnect resolves committed batch by durable identity",
+      "actual": "2",
+      "expected": "2",
+      "passed": true
+    },
+    {
+      "name": "identical retry does not append",
+      "actual": "f",
+      "expected": "f",
+      "passed": true
+    },
+    {
+      "name": "lost-session replay leaves exactly one live batch",
+      "actual": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "expected": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "passed": true
+    },
+    {
+      "name": "same identity with different payload fails closed",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "new identity cannot move frontier backwards",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "rejected replays leave capture state unchanged",
+      "actual": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "expected": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "passed": true
+    },
+    {
+      "name": "manifests have contiguous sequence despite source LSN gaps",
+      "actual": "1,2",
+      "expected": "1,2",
+      "passed": true
+    },
+    {
+      "name": "manifest counts and payload digests match both logs",
+      "actual": "t",
+      "expected": "t",
+      "passed": true
+    },
+    {
+      "name": "concurrent identical retries append once",
+      "actual": [
+        "f",
+        "t"
+      ],
+      "expected": [
+        "f",
+        "t"
+      ],
+      "passed": true
+    },
+    {
+      "name": "concurrent retry keeps all artifact counts aligned",
+      "actual": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "expected": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "passed": true
+    }
+  ],
+  "scope": "synthetic source SQL; no decoder or importer",
+  "unqualified": [
+    "upload/catalog crash boundaries",
+    "concurrent consistent log reads",
+    "source decoding and slot advancement",
+    "logical integration/recovery baseline"
+  ],
+  "source_commit": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+  "worktree_status": [
+    " M .github/workflows/lifecycle-qualification.yml",
+    " M BETA-RELEASE.md",
+    " M Makefile",
+    " M README.md",
+    " M deploy/install/Dockerfile",
+    " M deploy/install/README.md",
+    " M deploy/poc/Dockerfile",
+    " M deploy/poc/README.md",
+    " M deploy/poc/webui/Dockerfile",
+    " M deploy/poc/webui/package.json",
+    " M deploy/poc/webui/public/index.html",
+    " M deploy/poc/webui/server.js",
+    " M docs/operations.md",
+    " M docs/security-todos.md",
+    " M docs/upgrade-and-rollback.md",
+    " M extensions/lake_replication/lake_replication.c",
+    " M tests/security/README.md",
+    " M worker/src/credentials.rs",
+    " M worker/src/initial_sync.rs",
+    " M worker/src/main.rs",
+    " M worker/src/publisher.rs",
+    " M worker/src/supervisor.rs",
+    "?? SNOWFLAKE-STYLE-TODO.md",
+    "?? deploy/install/worker-grants.sql",
+    "?? deploy/poc/webui/IMPLEMENTATION.md",
+    "?? deploy/poc/webui/dashboard.js",
+    "?? deploy/poc/webui/dashboard.test.js",
+    "?? deploy/poc/webui/playground.js",
+    "?? deploy/poc/webui/playground.test.js",
+    "?? deploy/poc/webui/public/app.js",
+    "?? deploy/poc/webui/public/styles.css",
+    "?? deploy/poc/webui/simulator.js",
+    "?? deploy/poc/webui/simulator.test.js",
+    "?? deploy/push/",
+    "?? docs/beta5-d5e05d2-native-qualification.md",
+    "?? docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json",
+    "?? docs/evidence/2026-11-13-worker-login-requirement.json",
+    "?? docs/push-replication.md",
+    "?? docs/worker-login-requirement.md",
+    "?? docs/worker-runtime-grants.md",
+    "?? tests/push_capture/",
+    "?? tests/security/worker_grants_probe.py",
+    "?? tests/security/worker_identity_probe.py",
+    "?? worker/tests/worker_identity.rs"
+  ],
+  "tracked_worktree_diff_sha256": "5f03838d7b732ed085b5c7be3a2338632ef6fde81678e812e386d8963449582d",
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "files_sha256": {
+    "tests/push_capture/README.md": "28f9b5de40b31c29b6d8034a24aee754451bfc41900ee5af3b9e6d5c4799e67b",
+    "tests/push_capture/fixture.sql": "43035290a6784d23d07e7091cbaab5295f77c782b156bae9682f23f4028ecacd",
+    "tests/push_capture/probe.py": "acd37b0234ce7048c2ba100511fa12bf26688a602978fb9e2fa9331b52de427c",
+    "deploy/push/compose.yml": "30fdfa114c0413a58aae920ff85d5f46e6dc74d3538b837cfec15fea87f06ade",
+    "deploy/push/init/10-capture.sql": "85906bfe4dcc46bd230a2e76da7dfb747b16a27c298761d20349652c0daa06cd",
+    "deploy/push/pgduck.sql": "9a9f507ae758f91fb40a91b7f1031b5d243c1cf187a7cd667419a35d6a73826b"
+  },
+  "images": {
+    "PUSH_PG_LAKE_IMAGE": {
+      "reference": "pg-lake-runtime:arm64-b6794e8209f18b90cf80",
+      "id": "sha256:24c43a3d1c2a1ec926248f313f0f4946aa58feb4d3c2ae75c8400934278f40f6",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_STORAGE_IMAGE": {
+      "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+      "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_STORAGE_INIT_IMAGE": {
+      "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+      "id": "sha256:ff0c9bd37f9eb808ba395ae78196da90c343978e83986da37345432a290a6481",
+      "architecture": "arm64",
+      "digests": []
+    }
+  },
+  "source": {
+    "version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit",
+    "wal_level": "logical",
+    "extensions": {
+      "pg_map": "3.6",
+      "pg_lake": "3.6",
+      "plpgsql": "1.0",
+      "btree_gist": "1.8",
+      "pg_lake_copy": "3.6",
+      "pg_lake_table": "3.6",
+      "pg_lake_engine": "3.6",
+      "pg_lake_iceberg": "3.6",
+      "pg_extension_base": "3.6"
+    },
+    "database_oid": "16384",
+    "object_prefix": "s3://lake-push/iceberg",
+    "system_identifier": "7707735195730960424",
+    "server_version_num": "180006"
+  },
+  "runtime_patchset": {
+    "patchset": "lake-replication-manifest-cleanup-v1",
+    "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+    "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+    "state": "after",
+    "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+    "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+    "libraries": {
+      "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+      "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+    }
+  },
+  "precommit_termination_stderr": "FATAL:  57P01: terminating connection due to administrator command\nLOCATION:  ProcessInterrupts, postgres.c:3354\nserver closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.\nconnection to server was lost\n",
+  "status": "passed",
+  "cleanup_returncode": 0
+}

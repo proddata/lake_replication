@@ -49,7 +49,9 @@ RUN --mount=type=cache,id=lake-poc-vcpkg,target=/root/.cache/vcpkg \
     '-DBUILD_EXTENSIONS=tpch;json;icu' -DBUILD_UNITTESTS=OFF -DBUILD_SHELL=OFF \
     -DVCPKG_MANIFEST_DIR=/opt/pg_lake/duckdb_pglake -DVCPKG_BUILD=1 \
     -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake
-RUN cmake --build duckdb_pglake/build/release -j${BUILD_JOBS} \
+# The installed runtime is the shared library with statically linked extensions.
+# Building ALL also compiles duplicate loadable-extension artifacts we do not install.
+RUN cmake --build duckdb_pglake/build/release --target duckdb -j${BUILD_JOBS} \
     && cp duckdb_pglake/build/release/src/libduckdb.so duckdb_pglake/libduckdb.so \
     && make -C duckdb_pglake install
 RUN apt-get update \

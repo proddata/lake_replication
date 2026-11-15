@@ -1,0 +1,518 @@
+{
+  "project": "lake-push-probe-20261114-084552-a73e9da7",
+  "checks": [
+    {
+      "name": "logical baseline produces the complete workload",
+      "actual": "240",
+      "expected": "240",
+      "passed": true
+    },
+    {
+      "name": "pull and push produce identical rows a",
+      "actual": "t",
+      "expected": "t",
+      "passed": true
+    },
+    {
+      "name": "pull and push produce identical rows b",
+      "actual": "t",
+      "expected": "t",
+      "passed": true
+    },
+    {
+      "name": "measured maintenance keeps the source log complete",
+      "actual": "12",
+      "expected": "12",
+      "passed": true
+    },
+    {
+      "name": "private logs use the pinned Snappy Parquet writer",
+      "actual": [
+        "SNAPPY"
+      ],
+      "expected": [
+        "SNAPPY"
+      ],
+      "passed": true
+    },
+    {
+      "name": "qualified approximate file target is recorded",
+      "actual": 512,
+      "expected": 512,
+      "passed": true
+    }
+  ],
+  "scope": "logical-pull versus source-push source-impact experiment",
+  "unqualified": [
+    "long-duration source benchmark",
+    "tail latency under sustained load",
+    "multi-run statistics",
+    "production sizing",
+    "production request billing and trace completeness"
+  ],
+  "source_commit": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+  "worktree_status": [
+    " M .github/workflows/lifecycle-qualification.yml",
+    " M .gitignore",
+    " M BETA-RELEASE.md",
+    " M Cargo.lock",
+    " M Makefile",
+    " M README.md",
+    " M deploy/install/Dockerfile",
+    " M deploy/install/README.md",
+    " M deploy/poc/Dockerfile",
+    " M deploy/poc/README.md",
+    " M deploy/poc/webui/Dockerfile",
+    " M deploy/poc/webui/package.json",
+    " M deploy/poc/webui/public/index.html",
+    " M deploy/poc/webui/server.js",
+    " M docs/operations.md",
+    " M docs/security-todos.md",
+    " M docs/upgrade-and-rollback.md",
+    " M extensions/lake_replication/lake_replication.c",
+    " M tests/security/README.md",
+    " M worker/Cargo.toml",
+    " M worker/src/credentials.rs",
+    " M worker/src/initial_sync.rs",
+    " M worker/src/journal.rs",
+    " M worker/src/lib.rs",
+    " M worker/src/main.rs",
+    " M worker/src/pgoutput.rs",
+    " M worker/src/publisher.rs",
+    " M worker/src/supervisor.rs",
+    "?? SNOWFLAKE-STYLE-TODO.md",
+    "?? deploy/install/worker-grants.sql",
+    "?? deploy/poc/webui/IMPLEMENTATION.md",
+    "?? deploy/poc/webui/dashboard.js",
+    "?? deploy/poc/webui/dashboard.test.js",
+    "?? deploy/poc/webui/playground.js",
+    "?? deploy/poc/webui/playground.test.js",
+    "?? deploy/poc/webui/public/app.js",
+    "?? deploy/poc/webui/public/styles.css",
+    "?? deploy/poc/webui/simulator.js",
+    "?? deploy/poc/webui/simulator.test.js",
+    "?? deploy/push/",
+    "?? docs/beta5-d5e05d2-native-qualification.md",
+    "?? docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json",
+    "?? docs/evidence/2026-11-13-push-capture-crash-boundaries.json",
+    "?? docs/evidence/2026-11-13-push-capture-sql-feasibility.json",
+    "?? docs/evidence/2026-11-13-push-logical-baseline-faults.json",
+    "?? docs/evidence/2026-11-13-push-logical-baseline.json",
+    "?? docs/evidence/2026-11-13-push-logical-refactor-faults.json",
+    "?? docs/evidence/2026-11-13-push-logical-refactor.json",
+    "?? docs/evidence/2026-11-13-push-native-crash-reconciliation.json",
+    "?? docs/evidence/2026-11-13-push-native-lifecycle.json",
+    "?? docs/evidence/2026-11-13-push-native-live.json",
+    "?? docs/evidence/2026-11-13-push-paused-snapshot.json",
+    "?? docs/evidence/2026-11-13-push-synthetic-importer.json",
+    "?? docs/evidence/2026-11-13-worker-login-requirement.json",
+    "?? docs/evidence/2026-11-13-worker-runtime-grants.json",
+    "?? docs/evidence/2026-11-14-push-concurrent-source-impact.json",
+    "?? docs/evidence/2026-11-14-push-credential-rotation.json",
+    "?? docs/evidence/2026-11-14-push-disk-full.json",
+    "?? docs/evidence/2026-11-14-push-grouped-crashes.json",
+    "?? docs/evidence/2026-11-14-push-grouped-publication.json",
+    "?? docs/evidence/2026-11-14-push-maintenance.json",
+    "?? docs/evidence/2026-11-14-push-managed-mode.json",
+    "?? docs/evidence/2026-11-14-push-native-chunks.json",
+    "?? docs/evidence/2026-11-14-push-native-crash-reconciliation.json",
+    "?? docs/evidence/2026-11-14-push-native-lifecycle.json",
+    "?? docs/evidence/2026-11-14-push-native-live.json",
+    "?? docs/evidence/2026-11-14-push-native-mutations.json",
+    "?? docs/evidence/2026-11-14-push-native-scalars.json",
+    "?? docs/evidence/2026-11-14-push-native-spill.json",
+    "?? docs/evidence/2026-11-14-push-online-snapshot-crashes.json",
+    "?? docs/evidence/2026-11-14-push-online-snapshot.json",
+    "?? docs/evidence/2026-11-14-push-outages.json",
+    "?? docs/evidence/2026-11-14-push-packaging.json",
+    "?? docs/evidence/2026-11-14-push-paused-snapshot-crashes.json",
+    "?? docs/evidence/2026-11-14-push-paused-snapshot.json",
+    "?? docs/evidence/2026-11-14-push-pgoutput-reference.json",
+    "?? docs/evidence/2026-11-14-push-publisher-crash-recovery.json",
+    "?? docs/evidence/2026-11-14-push-retention.json",
+    "?? docs/evidence/2026-11-14-push-snapshot-limits.json",
+    "?? docs/evidence/2026-11-14-push-source-impact.json",
+    "?? docs/evidence/2026-11-14-push-source-roles.json",
+    "?? docs/evidence/2026-11-14-push-storage-credentials.json",
+    "?? docs/evidence/2026-11-14-push-synthetic-importer.json",
+    "?? docs/evidence/2026-11-14-push-toast-keys.json",
+    "?? docs/evidence/2026-11-14-push-upload-budget.json",
+    "?? docs/push-protocol.md",
+    "?? docs/push-replication.md",
+    "?? docs/worker-login-requirement.md",
+    "?? docs/worker-runtime-grants.md",
+    "?? extensions/lake_replication_capture/",
+    "?? extensions/lake_replication_push/",
+    "?? tests/push_capture/",
+    "?? tests/push_replication/",
+    "?? tests/security/worker_grants_probe.py",
+    "?? tests/security/worker_identity_probe.py",
+    "?? worker/src/capture.rs",
+    "?? worker/src/events.rs",
+    "?? worker/src/log_importer.rs",
+    "?? worker/src/push_import.rs",
+    "?? worker/src/push_protocol.rs",
+    "?? worker/src/staging.rs",
+    "?? worker/tests/worker_identity.rs"
+  ],
+  "tracked_worktree_diff_sha256": "7916b2d09be23d1d5f8979132088a70eca3735d5ab7fcc59c6134299fc5db8a4",
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "files_sha256": {
+    "tests/push_capture/README.md": "97626d3ae9624bb08c497a67a0962fb5ac289ade040968554d3874aa769fc351",
+    "tests/push_capture/benchmark.py": "9404a8f1b056b2e107c8fa88e2ee637ab5b4fd016a6dfc347ce87c73378c879f",
+    "tests/push_capture/chunks.py": "f792bd193c53b7b7aa67b6f45a401eefe7d255ea77930fd57f9719cdd29d9651",
+    "tests/push_capture/credentials.py": "57502dc3a0ceba92330927f10e036db541e9fcae21a3b30e67586451938db099",
+    "tests/push_capture/disk_full.py": "f830a069ffeda5da504ccf3145be009665643d33aaf1a846b91bad1339b4e000",
+    "tests/push_capture/faults.py": "9b01027efe48432011ea7baca986e4d38b3304606fb4430fa53c01a056225455",
+    "tests/push_capture/fixture.sql": "43035290a6784d23d07e7091cbaab5295f77c782b156bae9682f23f4028ecacd",
+    "tests/push_capture/grouped.py": "33a1c31ba6fa80b5c13d254c7d4b7535c77d5cd8b867abe204dbe08f10c6c4ee",
+    "tests/push_capture/grouped_faults.py": "5fa30947674e48cde4f019939ec7142c846f1fb2b189134377dec4e26ae1ee5b",
+    "tests/push_capture/lifecycle.py": "0130c10e0024b5bf90cf8369c225506ecdd3b74788d937ad8830baad3dff005d",
+    "tests/push_capture/live.py": "c2139d8d8bcfeefc7cd86a2c182a04604002d2368f7f7de30626f560238ec2a4",
+    "tests/push_capture/maintenance.py": "7b36313dc66271995bff33ed00e84eb76b8cdec9b7853d7c9ed527c08c7352e2",
+    "tests/push_capture/managed.py": "e494975bf66eb6247420079146707ee80faaf6302878f7ffb32224afcb02daee",
+    "tests/push_capture/mutations.py": "37361f9554871e4df6769149d736db5cfbb872a7d9733c44f5e6096d368e2cd6",
+    "tests/push_capture/native_faults.py": "083d63daf79052bc5e6cc6460b5a12eb20d008ccbd083bc9745b25715fa58ed5",
+    "tests/push_capture/object_trace.py": "0cdf7224cf6acf77503b80b205bf6abd6169629b68c308dcaca1b598b5680da7",
+    "tests/push_capture/online_snapshot.py": "44069b599c13b5990c339a9b53b2c0f4846478488f06e87854440bdc3bd12d1c",
+    "tests/push_capture/outages.py": "bc71d48f976cf329e51a22de0e127eac3e0098c80a34bc3e65ecf7c9965f3e5c",
+    "tests/push_capture/packaging.py": "ae22340271700c39284eccef37b2db2517049b53eba7335452cb733639c62135",
+    "tests/push_capture/probe.py": "49a22196718233e1f83cd6125e48f237b757cd8940709a151cfe1f781cfa4c3a",
+    "tests/push_capture/publisher_faults.py": "b895ce7efd770745fb9a80db62c13737c93d865dc8d6b29e034e27694014a005",
+    "tests/push_capture/reference.py": "31242293597f097dd0f6f65419791d3db9a79e8f5a7e409e01286cdddef73d25",
+    "tests/push_capture/retention.py": "4175552fd56db971dc7a2751796aa3745cff0a18165b170a1b9856ac526dda74",
+    "tests/push_capture/roles.py": "68995d1da3d0336f476ae915a0659bf35dba52325159943c5ca3a7b3526d5979",
+    "tests/push_capture/scalars.py": "e6dbe51f3a4438c2c995c81894267a54e3aa0fca96129b64c440a1cb6233372f",
+    "tests/push_capture/session.py": "bea74a61d5f055043609f55becfb72807bad41cd9440bb5d4d9a6df00c2d1b7c",
+    "tests/push_capture/snapshot.py": "ec9be0172bf3a05897c1a0fdd62ab43ef4ac2324c95565180020d777dd4ad911",
+    "tests/push_capture/snapshot_faults.py": "064256e12d7bd0bd8cc84f6e1d110eb0c7f407ff7654d645418bb07c988eb3f4",
+    "tests/push_capture/snapshot_limits.py": "e1b86c2bfe2e13d4d77d6e9b4ad5cc5b230a6b9ed88c7fe3a3a160ee6b87f589",
+    "tests/push_capture/spill.py": "b9ddfcf9cf967c2b8661ffa577bfc2c4371c3d49e4a0f3be581988adb4a67adb",
+    "tests/push_capture/storage_credentials.py": "9acb4cb50c1df91f43e0c4ce124453cbfb02dc5b89f8551396be505d90826b6c",
+    "tests/push_capture/toast_keys.py": "bd758bcfe15b4d8037e0a2384d738dc07b0e262f47ff6119ae66f7c44ba93e5e",
+    "tests/push_capture/upload_budget.py": "39c0cb947efed88f0d154311fb7763d13f9673eb39943ff16414c79fef9ef474",
+    "deploy/push/Dockerfile.capture": "e4ecd83bb47dd0d2c6e3ca88983b1f583e817095b978ee6f7e0919cfe36d38e2",
+    "deploy/push/Dockerfile.faults": "c1fc926248f1012401a328b93e6abaadf665204ba092eca1c5b8926c3fabfe52",
+    "deploy/push/Dockerfile.importer": "13a5876f1260afd7d7b7e1409a5457594e834414b8839ab23af7911ade29f9e7",
+    "deploy/push/build-bundles.py": "e6520255e42f5a7231e148f3393a40ac832be02806117ccd21becd045068a777",
+    "deploy/push/compose.yml": "05c27cff6887a1f28e7a3b50ffa6b78ccc479bd1f4053cb5f1efb71fd9745e45",
+    "deploy/push/destination-init/10-destination.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "deploy/push/destination-pgduck.sql": "2a732dcfb44076be809869c908483586471de878b9de47321b54cedcb2ae1436",
+    "deploy/push/importer.compose.yml": "dc7447cfa615a0c6748daf869f44c5dbe1478608a6eb5547a6706085c100dc7a",
+    "deploy/push/init/10-capture.sql": "85906bfe4dcc46bd230a2e76da7dfb747b16a27c298761d20349652c0daa06cd",
+    "deploy/push/install-optional.sh": "b5b182f8532f39e91280e07f59f311008dc622fa569540ea0d66bce4bea5dbdb",
+    "deploy/push/pgduck.sql": "48807b9f4c54a0964cc040613fadd74dd2a0d4b1d2c2c7f7b4a837fe596e8e67",
+    "deploy/push/policies/destination.json": "9e356ff9f2185b82ff81677c590e40ffe3f2450cce4a8d4aa0dc5636bfd644d8",
+    "deploy/push/policies/source.json": "0875a6db295b1ad86c680f4caef40b3792c61e78bd04b705b9046e8d8bb190d5",
+    "deploy/push/source-grants.sql": "4d86f4a77a68c1029692de39aa920d738c84d23d718f8cc5df5d57be87e32786",
+    "deploy/push/spill-disk.compose.yml": "6343bc443f8eeef0b67c61dddb2248dd26dacfbc5e64d5b817634b64d26dbdc3",
+    "tests/push_replication/model.py": "977ccdf4183232e8e5fb286cd53e0f37f808902820bd227d0e4e406a19180972",
+    "tests/push_replication/probe.py": "77f7abee49e17c6dc69d73e99593e7ee9dc8d403419f2b3b991eb4f3bf6f8354",
+    "worker/src/capture.rs": "730ed6e48d293bd89c97ebf68d764f099a1cb4ef35d21bb7fcc330e65add73f6",
+    "worker/src/credentials.rs": "b2daded2d9c76f7db003396b155d10c9a5620b4ff47ab6f4e5223d23b7b09791",
+    "worker/src/events.rs": "80a5e24e646a026a95e31cb1568acdab5c722c6f451f3f077a9f2ccf61345a36",
+    "worker/src/initial_sync.rs": "42b8197a5da2b846499c8647b52a94659e23152cbdc2a8641bcd13227f187e34",
+    "worker/src/journal.rs": "87c7c6d99deb0d07d5b88e9ca0a14be046eed32bfdca8d98b8435d6d41822254",
+    "worker/src/lib.rs": "24a8dcb9dcb7a0bc02d0db5477a978d65f8bc1ea79e509a6a4bd886383dfc567",
+    "worker/src/log_importer.rs": "ad28df77e2a6086dd85281c9cc1f0b4ba4d81be9e18aeb6ba5d3e768d75be10a",
+    "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+    "worker/src/main.rs": "95c9637d89982741915b4e6157563ae50dff1debcc08e8ed64b58cf0cd16ecab",
+    "worker/src/managed.rs": "9c0ae649d025eda13c3ee52bef5eb3eb4ea4097b033da1a3a02de105af72c39c",
+    "worker/src/pgoutput.rs": "825f3b01c0062e14619533abefe4761966e91b16aa4eaf05d39fe6f79d38c5a7",
+    "worker/src/publisher.rs": "c25fff2439255f4c35016775be536de111a1598e70b1270cab9e62bd2dc80460",
+    "worker/src/push_import.rs": "0be1c40f44a8ad1e0177e758991aa698477237b92a563b22dd7e450255625519",
+    "worker/src/push_protocol.rs": "f8c29bdc10b365b5a533e45cb1e10e583b5ff035399f0d99519464647256b54c",
+    "worker/src/sql.rs": "a9efd2a27fc98d9dd37f3d664c649ea0425603af26c4815aef517b5861bdb0c6",
+    "worker/src/staging.rs": "a6dc5a8fc2c1f2453281f59f31ccaec4b9175ccd10174057bbe3fdea97bda4b4",
+    "worker/src/supervisor.rs": "b435c8fed45dd2ae7c9c5e1e0a7ccfefc46b484b6cdeedc33c559e4148b96749",
+    "worker/src/trace.rs": "3b0207cefb2182ebce06e9c7876247df06b457fdcf34b24a0597bdaad1a972a8",
+    "worker/src/wire.rs": "55d632603880435761cad10968412cb7c51a279f822133d60f15ec07341a7985",
+    "extensions/lake_replication_push/Makefile": "770a67c4603bc7d9cca3cc7944669540957fddc36aee4dc3eca23657ef602ba5",
+    "extensions/lake_replication_push/README.md": "d7c4f88219b61443072b5227ecef84602a3817f24a3a050f8ac65bc77a74b099",
+    "extensions/lake_replication_push/api.sql": "b378303a08ec67c86c84e1282599298b99a8e0999573d673b5f5df380ecdfc0c",
+    "extensions/lake_replication_push/guard.c": "343dd47d76d8c2c8d1c5f2f15cf30c9777960c7d16576c2d87589f3050354088",
+    "extensions/lake_replication_push/lake_replication_push.control": "9830bb6a192f49b4624d5e719aab96bfbde7f7a4e20cbc9aaacb3c976564081c",
+    "extensions/lake_replication_push/schema.sql": "9d7ae1c2403de1d2c7950793756939b7b6240883692785c82787de7ab5cf6414",
+    "extensions/lake_replication_capture/Makefile": "f2ae0c37bbca1f6a51a63bac91d7be997087bdb9f146db95d345d294a804c325",
+    "extensions/lake_replication_capture/README.md": "d11e1b0700c6e4f5454135d3405c0fa3a8f3eb6904b48606c1bc004f54fdda64",
+    "extensions/lake_replication_capture/decode.c": "5ff3c5548442e593b3945c34f7af90784af9a884af537d29b26c0e9ffe789501",
+    "extensions/lake_replication_capture/lake_replication_capture--0.1.0.sql": "e7b1c56fa6d5ed264229a478657859126eb7b08247cc8e22d8128ec5f13ea70b",
+    "extensions/lake_replication_capture/lake_replication_capture.control": "4654be0ca097e2d84ac1655dad56ed0ed83ecb30c8f184e150cae966195983f5",
+    "extensions/lake_replication_capture/launcher.c": "d73214c04fb3879767e3bae859b39f704d9f4898d290a673f874c8f176672038"
+  },
+  "images": {
+    "PUSH_PG_LAKE_IMAGE": {
+      "reference": "lake-push-capture:prototype-v1",
+      "id": "sha256:f2d2af5ef4f19a03d858abe978a31cca5254571f4eb6f2d57a0b94c4ea74693f",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_STORAGE_IMAGE": {
+      "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+      "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_STORAGE_INIT_IMAGE": {
+      "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+      "id": "sha256:ff0c9bd37f9eb808ba395ae78196da90c343978e83986da37345432a290a6481",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_DESTINATION_IMAGE": {
+      "reference": "lake-push-importer:prototype-v1",
+      "id": "sha256:3695850d611814c5f01e4b387d1063e9bf1065fbf0bf85b48cdba5f33dcfd966"
+    }
+  },
+  "workload": {
+    "transactions": 12,
+    "rows_per_table_per_transaction": 20,
+    "text_bytes": 256,
+    "concurrent_drain": false,
+    "transaction_interval_seconds": 0.0,
+    "capture_group": 32,
+    "capture_interval_ms": 0
+  },
+  "methodology": "One local ARM64 run, pull first then push; persistent psql writes; workers drain after writes; CPU from source and source-pgduck cgroup usage including observer overhead; memory snapshots include cache; MinIO xl.meta count is live physical object count, not request count. No production latency/overhead claim. MinIO S3 traces aggregate observed requests by private source/destination prefix, excluding readiness/completion witnesses and retaining no request headers, object paths or bodies. Bucket-wide requests remain separate. This is observed traffic, not a production billing or trace-completeness guarantee.",
+  "measurements": {
+    "logical_pull": {
+      "before": {
+        "source": {
+          "cpu_usec": 1092870,
+          "memory_bytes": 125714432,
+          "container_lifetime_memory_peak_bytes": 132763648,
+          "process_rss_kib_sum": 187748,
+          "process_pss_kib_sum": 40677
+        },
+        "pgduck": {
+          "cpu_usec": 1357488,
+          "memory_bytes": 156491776,
+          "container_lifetime_memory_peak_bytes": 249671680,
+          "process_rss_kib_sum": 126924,
+          "process_pss_kib_sum": 100213
+        },
+        "wal_lsn": "0/1EDF860",
+        "database_bytes": 9623231,
+        "objects": 6
+      },
+      "after": {
+        "source": {
+          "cpu_usec": 1200351,
+          "memory_bytes": 125931520,
+          "container_lifetime_memory_peak_bytes": 132763648,
+          "process_rss_kib_sum": 192824,
+          "process_pss_kib_sum": 41564
+        },
+        "pgduck": {
+          "cpu_usec": 1378754,
+          "memory_bytes": 158519296,
+          "container_lifetime_memory_peak_bytes": 249671680,
+          "process_rss_kib_sum": 126892,
+          "process_pss_kib_sum": 100181
+        },
+        "wal_lsn": "0/1F11D28",
+        "database_bytes": 9836223,
+        "objects": 36
+      },
+      "source_write_seconds": 0.01067049999255687,
+      "end_to_end_seconds": 0.7902745839674026,
+      "application_commit_median_seconds": 0.0007920209900476038,
+      "application_commit_p95_seconds": 0.0010274159722030163,
+      "source_wal_bytes": 206024,
+      "source_database_bytes_delta": 212992,
+      "physical_object_count_delta": 30,
+      "resource_samples": [],
+      "application_commit_p99_seconds": 0.0010274159722030163,
+      "source_and_engine_cpu_seconds": 0.128747,
+      "object_operations": {
+        "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+        "readiness_witness": true,
+        "completion_witness": true,
+        "categories": {
+          "bucket_or_other": {
+            "requests": 2,
+            "api:s3.GetBucketLocation": 2,
+            "status:200": 2,
+            "request_bytes": 186,
+            "response_bytes": 256,
+            "request_duration_ns_sum": 403917
+          },
+          "destination_publish": {
+            "requests": 78,
+            "api:s3.ListObjectsV2": 24,
+            "status:200": 54,
+            "request_bytes": 70577,
+            "response_bytes": 8616,
+            "request_duration_ns_sum": 54084626,
+            "api:s3.HeadObject": 24,
+            "status:404": 24,
+            "api:s3.PutObject": 30
+          }
+        }
+      }
+    },
+    "iceberg_push": {
+      "before": {
+        "source": {
+          "cpu_usec": 1684987,
+          "memory_bytes": 131391488,
+          "container_lifetime_memory_peak_bytes": 138252288,
+          "process_rss_kib_sum": 273768,
+          "process_pss_kib_sum": 100906
+        },
+        "pgduck": {
+          "cpu_usec": 1427690,
+          "memory_bytes": 154451968,
+          "container_lifetime_memory_peak_bytes": 249671680,
+          "process_rss_kib_sum": 126896,
+          "process_pss_kib_sum": 100010
+        },
+        "wal_lsn": "0/1F14A00",
+        "database_bytes": 9672383,
+        "objects": 38
+      },
+      "after": {
+        "source": {
+          "cpu_usec": 2207116,
+          "memory_bytes": 142299136,
+          "container_lifetime_memory_peak_bytes": 144474112,
+          "process_rss_kib_sum": 285052,
+          "process_pss_kib_sum": 105920
+        },
+        "pgduck": {
+          "cpu_usec": 1881635,
+          "memory_bytes": 195133440,
+          "container_lifetime_memory_peak_bytes": 249671680,
+          "process_rss_kib_sum": 164704,
+          "process_pss_kib_sum": 136353
+        },
+        "wal_lsn": "0/1F79660",
+        "database_bytes": 10106559,
+        "objects": 113
+      },
+      "source_write_seconds": 0.00852949998807162,
+      "end_to_end_seconds": 1.4911514589330181,
+      "application_commit_median_seconds": 0.0006232290179468691,
+      "application_commit_p95_seconds": 0.0008175830589607358,
+      "source_wal_bytes": 412768,
+      "source_database_bytes_delta": 434176,
+      "physical_object_count_delta": 75,
+      "resource_samples": [],
+      "application_commit_p99_seconds": 0.0008175830589607358,
+      "source_publication_transactions": 1,
+      "source_and_engine_cpu_seconds": 0.976074,
+      "object_operations": {
+        "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+        "readiness_witness": true,
+        "completion_witness": true,
+        "categories": {
+          "bucket_or_other": {
+            "requests": 2,
+            "api:s3.GetBucketLocation": 2,
+            "status:200": 2,
+            "request_bytes": 186,
+            "response_bytes": 256,
+            "request_duration_ns_sum": 325417
+          },
+          "destination_publish": {
+            "requests": 78,
+            "api:s3.ListObjectsV2": 24,
+            "status:200": 54,
+            "request_bytes": 70587,
+            "response_bytes": 8616,
+            "request_duration_ns_sum": 56824542,
+            "api:s3.HeadObject": 24,
+            "status:404": 24,
+            "api:s3.PutObject": 30
+          },
+          "source_capture": {
+            "requests": 117,
+            "api:s3.ListObjectsV2": 36,
+            "status:200": 81,
+            "request_bytes": 134611,
+            "response_bytes": 13152,
+            "request_duration_ns_sum": 88313610,
+            "api:s3.HeadObject": 36,
+            "status:404": 36,
+            "api:s3.PutObject": 45
+          }
+        }
+      }
+    },
+    "source_maintenance": {
+      "seconds": 0.6543912090128288,
+      "before": {
+        "source": {
+          "cpu_usec": 2449652,
+          "memory_bytes": 116391936,
+          "container_lifetime_memory_peak_bytes": 144474112,
+          "process_rss_kib_sum": 148968,
+          "process_pss_kib_sum": 35378
+        },
+        "pgduck": {
+          "cpu_usec": 1927512,
+          "memory_bytes": 182685696,
+          "container_lifetime_memory_peak_bytes": 249671680,
+          "process_rss_kib_sum": 152968,
+          "process_pss_kib_sum": 124450
+        },
+        "wal_lsn": "0/1F7A8C8",
+        "database_bytes": 10106559,
+        "objects": 113
+      },
+      "after": {
+        "source": {
+          "cpu_usec": 2671831,
+          "memory_bytes": 125042688,
+          "container_lifetime_memory_peak_bytes": 144474112,
+          "process_rss_kib_sum": 148972,
+          "process_pss_kib_sum": 35382
+        },
+        "pgduck": {
+          "cpu_usec": 2051219,
+          "memory_bytes": 195239936,
+          "container_lifetime_memory_peak_bytes": 249671680,
+          "process_rss_kib_sum": 163192,
+          "process_pss_kib_sum": 134674
+        },
+        "wal_lsn": "0/1F92B50",
+        "database_bytes": 10155711,
+        "objects": 134
+      },
+      "source_and_engine_cpu_seconds": 0.345886,
+      "object_operations": {
+        "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+        "readiness_witness": true,
+        "completion_witness": true,
+        "categories": {
+          "bucket_or_other": {
+            "requests": 2,
+            "api:s3.GetBucketLocation": 2,
+            "status:200": 2,
+            "request_bytes": 186,
+            "response_bytes": 256,
+            "request_duration_ns_sum": 336584
+          },
+          "source_capture": {
+            "requests": 21,
+            "api:s3.PutObject": 21,
+            "status:200": 21,
+            "request_bytes": 109126,
+            "response_bytes": 0,
+            "request_duration_ns_sum": 38389040
+          }
+        }
+      }
+    }
+  },
+  "source_file_profile": {
+    "files": 3,
+    "physical_bytes": 25400,
+    "target_file_size_mb": 512,
+    "observed_sample_codecs": [
+      "SNAPPY"
+    ]
+  },
+  "status": "passed",
+  "cleanup_returncode": 0
+}

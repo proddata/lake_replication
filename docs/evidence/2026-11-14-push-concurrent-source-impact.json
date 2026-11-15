@@ -1,0 +1,1074 @@
+{
+  "project": "lake-push-probe-20261114-080351-1e90db79",
+  "checks": [
+    {
+      "name": "logical baseline produces the complete workload",
+      "actual": "1200",
+      "expected": "1200",
+      "passed": true
+    },
+    {
+      "name": "pull and push produce identical rows a",
+      "actual": "t",
+      "expected": "t",
+      "passed": true
+    },
+    {
+      "name": "pull and push produce identical rows b",
+      "actual": "t",
+      "expected": "t",
+      "passed": true
+    },
+    {
+      "name": "measured maintenance keeps the source log complete",
+      "actual": "120",
+      "expected": "120",
+      "passed": true
+    }
+  ],
+  "scope": "logical-pull versus source-push source-impact experiment",
+  "unqualified": [
+    "long-duration source benchmark",
+    "tail latency under sustained load",
+    "object request count",
+    "multi-run statistics",
+    "production sizing"
+  ],
+  "source_commit": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+  "worktree_status": [
+    " M .github/workflows/lifecycle-qualification.yml",
+    " M .gitignore",
+    " M BETA-RELEASE.md",
+    " M Cargo.lock",
+    " M Makefile",
+    " M README.md",
+    " M deploy/install/Dockerfile",
+    " M deploy/install/README.md",
+    " M deploy/poc/Dockerfile",
+    " M deploy/poc/README.md",
+    " M deploy/poc/webui/Dockerfile",
+    " M deploy/poc/webui/package.json",
+    " M deploy/poc/webui/public/index.html",
+    " M deploy/poc/webui/server.js",
+    " M docs/operations.md",
+    " M docs/security-todos.md",
+    " M docs/upgrade-and-rollback.md",
+    " M extensions/lake_replication/lake_replication.c",
+    " M tests/security/README.md",
+    " M worker/Cargo.toml",
+    " M worker/src/credentials.rs",
+    " M worker/src/initial_sync.rs",
+    " M worker/src/journal.rs",
+    " M worker/src/lib.rs",
+    " M worker/src/main.rs",
+    " M worker/src/pgoutput.rs",
+    " M worker/src/publisher.rs",
+    " M worker/src/supervisor.rs",
+    "?? SNOWFLAKE-STYLE-TODO.md",
+    "?? deploy/install/worker-grants.sql",
+    "?? deploy/poc/webui/IMPLEMENTATION.md",
+    "?? deploy/poc/webui/dashboard.js",
+    "?? deploy/poc/webui/dashboard.test.js",
+    "?? deploy/poc/webui/playground.js",
+    "?? deploy/poc/webui/playground.test.js",
+    "?? deploy/poc/webui/public/app.js",
+    "?? deploy/poc/webui/public/styles.css",
+    "?? deploy/poc/webui/simulator.js",
+    "?? deploy/poc/webui/simulator.test.js",
+    "?? deploy/push/",
+    "?? docs/beta5-d5e05d2-native-qualification.md",
+    "?? docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json",
+    "?? docs/evidence/2026-11-13-push-capture-crash-boundaries.json",
+    "?? docs/evidence/2026-11-13-push-capture-sql-feasibility.json",
+    "?? docs/evidence/2026-11-13-push-logical-baseline-faults.json",
+    "?? docs/evidence/2026-11-13-push-logical-baseline.json",
+    "?? docs/evidence/2026-11-13-push-logical-refactor-faults.json",
+    "?? docs/evidence/2026-11-13-push-logical-refactor.json",
+    "?? docs/evidence/2026-11-13-push-native-crash-reconciliation.json",
+    "?? docs/evidence/2026-11-13-push-native-lifecycle.json",
+    "?? docs/evidence/2026-11-13-push-native-live.json",
+    "?? docs/evidence/2026-11-13-push-paused-snapshot.json",
+    "?? docs/evidence/2026-11-13-push-synthetic-importer.json",
+    "?? docs/evidence/2026-11-13-worker-login-requirement.json",
+    "?? docs/evidence/2026-11-13-worker-runtime-grants.json",
+    "?? docs/evidence/2026-11-14-push-credential-rotation.json",
+    "?? docs/evidence/2026-11-14-push-disk-full.json",
+    "?? docs/evidence/2026-11-14-push-maintenance.json",
+    "?? docs/evidence/2026-11-14-push-managed-mode.json",
+    "?? docs/evidence/2026-11-14-push-native-chunks.json",
+    "?? docs/evidence/2026-11-14-push-native-crash-reconciliation.json",
+    "?? docs/evidence/2026-11-14-push-native-lifecycle.json",
+    "?? docs/evidence/2026-11-14-push-native-live.json",
+    "?? docs/evidence/2026-11-14-push-native-mutations.json",
+    "?? docs/evidence/2026-11-14-push-native-scalars.json",
+    "?? docs/evidence/2026-11-14-push-native-spill.json",
+    "?? docs/evidence/2026-11-14-push-online-snapshot.json",
+    "?? docs/evidence/2026-11-14-push-outages.json",
+    "?? docs/evidence/2026-11-14-push-packaging.json",
+    "?? docs/evidence/2026-11-14-push-paused-snapshot.json",
+    "?? docs/evidence/2026-11-14-push-publisher-crash-recovery.json",
+    "?? docs/evidence/2026-11-14-push-retention.json",
+    "?? docs/evidence/2026-11-14-push-snapshot-limits.json",
+    "?? docs/evidence/2026-11-14-push-source-impact.json",
+    "?? docs/evidence/2026-11-14-push-source-roles.json",
+    "?? docs/evidence/2026-11-14-push-storage-credentials.json",
+    "?? docs/evidence/2026-11-14-push-synthetic-importer.json",
+    "?? docs/evidence/2026-11-14-push-toast-keys.json",
+    "?? docs/evidence/2026-11-14-push-upload-budget.json",
+    "?? docs/push-protocol.md",
+    "?? docs/push-replication.md",
+    "?? docs/worker-login-requirement.md",
+    "?? docs/worker-runtime-grants.md",
+    "?? extensions/lake_replication_capture/",
+    "?? extensions/lake_replication_push/",
+    "?? tests/push_capture/",
+    "?? tests/push_replication/",
+    "?? tests/security/worker_grants_probe.py",
+    "?? tests/security/worker_identity_probe.py",
+    "?? worker/src/capture.rs",
+    "?? worker/src/events.rs",
+    "?? worker/src/log_importer.rs",
+    "?? worker/src/push_import.rs",
+    "?? worker/src/push_protocol.rs",
+    "?? worker/src/staging.rs",
+    "?? worker/tests/worker_identity.rs"
+  ],
+  "tracked_worktree_diff_sha256": "daa77b0427016e402bd9a6a77100af62bd0d75159f5c394d49bb19885e98ba98",
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "files_sha256": {
+    "tests/push_capture/README.md": "4c1aaf49f4cc334c1e3eb78a0892e0d69a17e89e290252b1f68e8094586e5f1d",
+    "tests/push_capture/benchmark.py": "45eee955bcabc25cca713da0ff6c495898208e861d95ca9665863bb464f2aa78",
+    "tests/push_capture/chunks.py": "f792bd193c53b7b7aa67b6f45a401eefe7d255ea77930fd57f9719cdd29d9651",
+    "tests/push_capture/credentials.py": "57502dc3a0ceba92330927f10e036db541e9fcae21a3b30e67586451938db099",
+    "tests/push_capture/disk_full.py": "f830a069ffeda5da504ccf3145be009665643d33aaf1a846b91bad1339b4e000",
+    "tests/push_capture/faults.py": "9b01027efe48432011ea7baca986e4d38b3304606fb4430fa53c01a056225455",
+    "tests/push_capture/fixture.sql": "43035290a6784d23d07e7091cbaab5295f77c782b156bae9682f23f4028ecacd",
+    "tests/push_capture/lifecycle.py": "0130c10e0024b5bf90cf8369c225506ecdd3b74788d937ad8830baad3dff005d",
+    "tests/push_capture/live.py": "c2139d8d8bcfeefc7cd86a2c182a04604002d2368f7f7de30626f560238ec2a4",
+    "tests/push_capture/maintenance.py": "7b36313dc66271995bff33ed00e84eb76b8cdec9b7853d7c9ed527c08c7352e2",
+    "tests/push_capture/managed.py": "e494975bf66eb6247420079146707ee80faaf6302878f7ffb32224afcb02daee",
+    "tests/push_capture/mutations.py": "37361f9554871e4df6769149d736db5cfbb872a7d9733c44f5e6096d368e2cd6",
+    "tests/push_capture/native_faults.py": "083d63daf79052bc5e6cc6460b5a12eb20d008ccbd083bc9745b25715fa58ed5",
+    "tests/push_capture/online_snapshot.py": "44069b599c13b5990c339a9b53b2c0f4846478488f06e87854440bdc3bd12d1c",
+    "tests/push_capture/outages.py": "bc71d48f976cf329e51a22de0e127eac3e0098c80a34bc3e65ecf7c9965f3e5c",
+    "tests/push_capture/packaging.py": "1cb552e8786a5cfff142799541832885e39d6cc2777566d015eb7b62df21957f",
+    "tests/push_capture/probe.py": "49a22196718233e1f83cd6125e48f237b757cd8940709a151cfe1f781cfa4c3a",
+    "tests/push_capture/publisher_faults.py": "b895ce7efd770745fb9a80db62c13737c93d865dc8d6b29e034e27694014a005",
+    "tests/push_capture/reference.py": "31242293597f097dd0f6f65419791d3db9a79e8f5a7e409e01286cdddef73d25",
+    "tests/push_capture/retention.py": "4175552fd56db971dc7a2751796aa3745cff0a18165b170a1b9856ac526dda74",
+    "tests/push_capture/roles.py": "68995d1da3d0336f476ae915a0659bf35dba52325159943c5ca3a7b3526d5979",
+    "tests/push_capture/scalars.py": "e6dbe51f3a4438c2c995c81894267a54e3aa0fca96129b64c440a1cb6233372f",
+    "tests/push_capture/session.py": "bea74a61d5f055043609f55becfb72807bad41cd9440bb5d4d9a6df00c2d1b7c",
+    "tests/push_capture/snapshot.py": "ec9be0172bf3a05897c1a0fdd62ab43ef4ac2324c95565180020d777dd4ad911",
+    "tests/push_capture/snapshot_faults.py": "064256e12d7bd0bd8cc84f6e1d110eb0c7f407ff7654d645418bb07c988eb3f4",
+    "tests/push_capture/snapshot_limits.py": "e1b86c2bfe2e13d4d77d6e9b4ad5cc5b230a6b9ed88c7fe3a3a160ee6b87f589",
+    "tests/push_capture/spill.py": "b9ddfcf9cf967c2b8661ffa577bfc2c4371c3d49e4a0f3be581988adb4a67adb",
+    "tests/push_capture/storage_credentials.py": "9acb4cb50c1df91f43e0c4ce124453cbfb02dc5b89f8551396be505d90826b6c",
+    "tests/push_capture/toast_keys.py": "bd758bcfe15b4d8037e0a2384d738dc07b0e262f47ff6119ae66f7c44ba93e5e",
+    "tests/push_capture/upload_budget.py": "39c0cb947efed88f0d154311fb7763d13f9673eb39943ff16414c79fef9ef474",
+    "deploy/push/Dockerfile.capture": "e4ecd83bb47dd0d2c6e3ca88983b1f583e817095b978ee6f7e0919cfe36d38e2",
+    "deploy/push/Dockerfile.faults": "c1fc926248f1012401a328b93e6abaadf665204ba092eca1c5b8926c3fabfe52",
+    "deploy/push/Dockerfile.importer": "13a5876f1260afd7d7b7e1409a5457594e834414b8839ab23af7911ade29f9e7",
+    "deploy/push/build-bundles.py": "5e7955ecc79927a0a5066cee4a4272021c6f4970781c2acd085137db3d63daff",
+    "deploy/push/compose.yml": "05c27cff6887a1f28e7a3b50ffa6b78ccc479bd1f4053cb5f1efb71fd9745e45",
+    "deploy/push/destination-init/10-destination.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
+    "deploy/push/destination-pgduck.sql": "2a732dcfb44076be809869c908483586471de878b9de47321b54cedcb2ae1436",
+    "deploy/push/importer.compose.yml": "dc7447cfa615a0c6748daf869f44c5dbe1478608a6eb5547a6706085c100dc7a",
+    "deploy/push/init/10-capture.sql": "85906bfe4dcc46bd230a2e76da7dfb747b16a27c298761d20349652c0daa06cd",
+    "deploy/push/install-optional.sh": "bf86832df60551b923a37ef81004f6f5fa933eed440c196cba348ef8648aa85c",
+    "deploy/push/pgduck.sql": "48807b9f4c54a0964cc040613fadd74dd2a0d4b1d2c2c7f7b4a837fe596e8e67",
+    "deploy/push/policies/destination.json": "9e356ff9f2185b82ff81677c590e40ffe3f2450cce4a8d4aa0dc5636bfd644d8",
+    "deploy/push/policies/source.json": "0875a6db295b1ad86c680f4caef40b3792c61e78bd04b705b9046e8d8bb190d5",
+    "deploy/push/source-grants.sql": "f417962d40b53bef7fba3415ed1449a759f85d61976823282f27e61f72833034",
+    "deploy/push/spill-disk.compose.yml": "6343bc443f8eeef0b67c61dddb2248dd26dacfbc5e64d5b817634b64d26dbdc3",
+    "tests/push_replication/model.py": "977ccdf4183232e8e5fb286cd53e0f37f808902820bd227d0e4e406a19180972",
+    "tests/push_replication/probe.py": "77f7abee49e17c6dc69d73e99593e7ee9dc8d403419f2b3b991eb4f3bf6f8354",
+    "worker/src/capture.rs": "6ace7797ec23254c20d704606faa46d94c617cd0faf6fb72c2a0a13a7fc69c78",
+    "worker/src/credentials.rs": "b2daded2d9c76f7db003396b155d10c9a5620b4ff47ab6f4e5223d23b7b09791",
+    "worker/src/events.rs": "80a5e24e646a026a95e31cb1568acdab5c722c6f451f3f077a9f2ccf61345a36",
+    "worker/src/initial_sync.rs": "42b8197a5da2b846499c8647b52a94659e23152cbdc2a8641bcd13227f187e34",
+    "worker/src/journal.rs": "87c7c6d99deb0d07d5b88e9ca0a14be046eed32bfdca8d98b8435d6d41822254",
+    "worker/src/lib.rs": "24a8dcb9dcb7a0bc02d0db5477a978d65f8bc1ea79e509a6a4bd886383dfc567",
+    "worker/src/log_importer.rs": "ad28df77e2a6086dd85281c9cc1f0b4ba4d81be9e18aeb6ba5d3e768d75be10a",
+    "worker/src/logging.rs": "9c774f9135b5d1205282579285af9b6972c9ca2b285cfcf36cb61966143130a1",
+    "worker/src/main.rs": "95c9637d89982741915b4e6157563ae50dff1debcc08e8ed64b58cf0cd16ecab",
+    "worker/src/managed.rs": "9c0ae649d025eda13c3ee52bef5eb3eb4ea4097b033da1a3a02de105af72c39c",
+    "worker/src/pgoutput.rs": "825f3b01c0062e14619533abefe4761966e91b16aa4eaf05d39fe6f79d38c5a7",
+    "worker/src/publisher.rs": "c25fff2439255f4c35016775be536de111a1598e70b1270cab9e62bd2dc80460",
+    "worker/src/push_import.rs": "0be1c40f44a8ad1e0177e758991aa698477237b92a563b22dd7e450255625519",
+    "worker/src/push_protocol.rs": "f8c29bdc10b365b5a533e45cb1e10e583b5ff035399f0d99519464647256b54c",
+    "worker/src/sql.rs": "a9efd2a27fc98d9dd37f3d664c649ea0425603af26c4815aef517b5861bdb0c6",
+    "worker/src/staging.rs": "a6dc5a8fc2c1f2453281f59f31ccaec4b9175ccd10174057bbe3fdea97bda4b4",
+    "worker/src/supervisor.rs": "b435c8fed45dd2ae7c9c5e1e0a7ccfefc46b484b6cdeedc33c559e4148b96749",
+    "worker/src/trace.rs": "3b0207cefb2182ebce06e9c7876247df06b457fdcf34b24a0597bdaad1a972a8",
+    "worker/src/wire.rs": "55d632603880435761cad10968412cb7c51a279f822133d60f15ec07341a7985",
+    "extensions/lake_replication_push/Makefile": "770a67c4603bc7d9cca3cc7944669540957fddc36aee4dc3eca23657ef602ba5",
+    "extensions/lake_replication_push/README.md": "12af516029019253ae922d792dcb53f519110ec411ec755a81d66bacf7dc808b",
+    "extensions/lake_replication_push/api.sql": "b378303a08ec67c86c84e1282599298b99a8e0999573d673b5f5df380ecdfc0c",
+    "extensions/lake_replication_push/guard.c": "343dd47d76d8c2c8d1c5f2f15cf30c9777960c7d16576c2d87589f3050354088",
+    "extensions/lake_replication_push/lake_replication_push.control": "9830bb6a192f49b4624d5e719aab96bfbde7f7a4e20cbc9aaacb3c976564081c",
+    "extensions/lake_replication_push/schema.sql": "9d7ae1c2403de1d2c7950793756939b7b6240883692785c82787de7ab5cf6414",
+    "extensions/lake_replication_capture/Makefile": "f2ae0c37bbca1f6a51a63bac91d7be997087bdb9f146db95d345d294a804c325",
+    "extensions/lake_replication_capture/README.md": "2bc823b8420d220b2003c4eb14172f9e23503031426da5f587d1694554d527b7",
+    "extensions/lake_replication_capture/decode.c": "838326a74d4e4568c09f29a18b9c97869c5fea108aa0691fda6a1f4fa84ed559",
+    "extensions/lake_replication_capture/lake_replication_capture--0.1.0.sql": "65f7a4ff187e06578a04e0d5af410dbc253240246d76a053365ae7207f571371",
+    "extensions/lake_replication_capture/lake_replication_capture.control": "4654be0ca097e2d84ac1655dad56ed0ed83ecb30c8f184e150cae966195983f5",
+    "extensions/lake_replication_capture/launcher.c": "d73214c04fb3879767e3bae859b39f704d9f4898d290a673f874c8f176672038"
+  },
+  "images": {
+    "PUSH_PG_LAKE_IMAGE": {
+      "reference": "lake-push-capture:prototype-v1",
+      "id": "sha256:eb3dec327298766d2cfa53b8ffcedd966e39f5633cce9b91b8f814c569c52508",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_STORAGE_IMAGE": {
+      "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+      "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_STORAGE_INIT_IMAGE": {
+      "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+      "id": "sha256:ff0c9bd37f9eb808ba395ae78196da90c343978e83986da37345432a290a6481",
+      "architecture": "arm64",
+      "digests": []
+    },
+    "PUSH_DESTINATION_IMAGE": {
+      "reference": "lake-push-importer:prototype-v1",
+      "id": "sha256:3695850d611814c5f01e4b387d1063e9bf1065fbf0bf85b48cdba5f33dcfd966"
+    }
+  },
+  "workload": {
+    "transactions": 120,
+    "rows_per_table_per_transaction": 10,
+    "text_bytes": 256,
+    "concurrent_drain": true,
+    "transaction_interval_seconds": 0.25
+  },
+  "methodology": "One local ARM64 run, pull first then push; paced persistent psql writes with concurrent capture/import/publication; two-second resource sampling includes observer overhead. RSS sums count shared pages repeatedly; PSS apportions shared pages. Cgroup peak is container lifetime, not interval peak; memory includes cache. Object count is not request count. Timing includes final drain and observation. No production acceptance threshold.",
+  "measurements": {
+    "logical_pull": {
+      "before": {
+        "source": {
+          "cpu_usec": 1057610,
+          "memory_bytes": 127713280,
+          "container_lifetime_memory_peak_bytes": 133926912,
+          "process_rss_kib_sum": 174368,
+          "process_pss_kib_sum": 39424
+        },
+        "pgduck": {
+          "cpu_usec": 1452389,
+          "memory_bytes": 152403968,
+          "container_lifetime_memory_peak_bytes": 256520192,
+          "process_rss_kib_sum": 125016,
+          "process_pss_kib_sum": 98304
+        },
+        "wal_lsn": "0/1ED0550",
+        "objects": 6
+      },
+      "after": {
+        "source": {
+          "cpu_usec": 2014462,
+          "memory_bytes": 129896448,
+          "container_lifetime_memory_peak_bytes": 139915264,
+          "process_rss_kib_sum": 197700,
+          "process_pss_kib_sum": 43812
+        },
+        "pgduck": {
+          "cpu_usec": 2108353,
+          "memory_bytes": 158461952,
+          "container_lifetime_memory_peak_bytes": 256520192,
+          "process_rss_kib_sum": 128868,
+          "process_pss_kib_sum": 102156
+        },
+        "wal_lsn": "0/2013088",
+        "objects": 714
+      },
+      "source_write_seconds": 30.006346249952912,
+      "end_to_end_seconds": 30.472785707912408,
+      "application_commit_median_seconds": 0.0014248954830691218,
+      "application_commit_p95_seconds": 0.003093249979428947,
+      "source_wal_bytes": 1321784,
+      "physical_object_count_delta": 708,
+      "resource_samples": [
+        {
+          "elapsed_seconds": 2.009865375002846,
+          "services": {
+            "source": {
+              "cpu_usec": 1150326,
+              "memory_bytes": 127533056,
+              "container_lifetime_memory_peak_bytes": 133926912,
+              "process_rss_kib_sum": 213736,
+              "process_pss_kib_sum": 41889
+            },
+            "pgduck": {
+              "cpu_usec": 1520486,
+              "memory_bytes": 152084480,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 122748,
+              "process_pss_kib_sum": 95937
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 4.177462749998085,
+          "services": {
+            "source": {
+              "cpu_usec": 1214286,
+              "memory_bytes": 127819776,
+              "container_lifetime_memory_peak_bytes": 133926912,
+              "process_rss_kib_sum": 214232,
+              "process_pss_kib_sum": 41757
+            },
+            "pgduck": {
+              "cpu_usec": 1573066,
+              "memory_bytes": 152117248,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 122748,
+              "process_pss_kib_sum": 95966
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 6.337416124995798,
+          "services": {
+            "source": {
+              "cpu_usec": 1271903,
+              "memory_bytes": 125816832,
+              "container_lifetime_memory_peak_bytes": 133926912,
+              "process_rss_kib_sum": 214412,
+              "process_pss_kib_sum": 41986
+            },
+            "pgduck": {
+              "cpu_usec": 1617357,
+              "memory_bytes": 154480640,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 124800,
+              "process_pss_kib_sum": 98018
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 8.493132957955822,
+          "services": {
+            "source": {
+              "cpu_usec": 1340462,
+              "memory_bytes": 138346496,
+              "container_lifetime_memory_peak_bytes": 138346496,
+              "process_rss_kib_sum": 214524,
+              "process_pss_kib_sum": 41856
+            },
+            "pgduck": {
+              "cpu_usec": 1659337,
+              "memory_bytes": 153841664,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 124804,
+              "process_pss_kib_sum": 98022
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 10.644888707902282,
+          "services": {
+            "source": {
+              "cpu_usec": 1419199,
+              "memory_bytes": 128233472,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 215184,
+              "process_pss_kib_sum": 42870
+            },
+            "pgduck": {
+              "cpu_usec": 1702967,
+              "memory_bytes": 154058752,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 124764,
+              "process_pss_kib_sum": 97953
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 12.80265970795881,
+          "services": {
+            "source": {
+              "cpu_usec": 1485211,
+              "memory_bytes": 128536576,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 215380,
+              "process_pss_kib_sum": 42932
+            },
+            "pgduck": {
+              "cpu_usec": 1748516,
+              "memory_bytes": 154144768,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 124764,
+              "process_pss_kib_sum": 97982
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 14.94656904193107,
+          "services": {
+            "source": {
+              "cpu_usec": 1543301,
+              "memory_bytes": 128462848,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 215492,
+              "process_pss_kib_sum": 42244
+            },
+            "pgduck": {
+              "cpu_usec": 1789090,
+              "memory_bytes": 156348416,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 124764,
+              "process_pss_kib_sum": 97982
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 17.093913166900165,
+          "services": {
+            "source": {
+              "cpu_usec": 1621254,
+              "memory_bytes": 131510272,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 217464,
+              "process_pss_kib_sum": 44671
+            },
+            "pgduck": {
+              "cpu_usec": 1832382,
+              "memory_bytes": 156102656,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 126812,
+              "process_pss_kib_sum": 100023
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 19.24355845793616,
+          "services": {
+            "source": {
+              "cpu_usec": 1679062,
+              "memory_bytes": 131395584,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 217664,
+              "process_pss_kib_sum": 44004
+            },
+            "pgduck": {
+              "cpu_usec": 1873221,
+              "memory_bytes": 156835840,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 126820,
+              "process_pss_kib_sum": 100038
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 21.385773707996123,
+          "services": {
+            "source": {
+              "cpu_usec": 1744357,
+              "memory_bytes": 131547136,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 217776,
+              "process_pss_kib_sum": 44787
+            },
+            "pgduck": {
+              "cpu_usec": 1921785,
+              "memory_bytes": 154415104,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 126820,
+              "process_pss_kib_sum": 100038
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 23.53844933293294,
+          "services": {
+            "source": {
+              "cpu_usec": 1807367,
+              "memory_bytes": 129376256,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 217904,
+              "process_pss_kib_sum": 44854
+            },
+            "pgduck": {
+              "cpu_usec": 1962958,
+              "memory_bytes": 151773184,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 128868,
+              "process_pss_kib_sum": 102057
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 25.69570954190567,
+          "services": {
+            "source": {
+              "cpu_usec": 1875706,
+              "memory_bytes": 125243392,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 218024,
+              "process_pss_kib_sum": 44169
+            },
+            "pgduck": {
+              "cpu_usec": 2006224,
+              "memory_bytes": 158842880,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 128868,
+              "process_pss_kib_sum": 102057
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 27.845522291958332,
+          "services": {
+            "source": {
+              "cpu_usec": 1932557,
+              "memory_bytes": 131829760,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 218136,
+              "process_pss_kib_sum": 44216
+            },
+            "pgduck": {
+              "cpu_usec": 2048025,
+              "memory_bytes": 158048256,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 128868,
+              "process_pss_kib_sum": 102057
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 29.994787374977022,
+          "services": {
+            "source": {
+              "cpu_usec": 1992302,
+              "memory_bytes": 130539520,
+              "container_lifetime_memory_peak_bytes": 139915264,
+              "process_rss_kib_sum": 197700,
+              "process_pss_kib_sum": 42842
+            },
+            "pgduck": {
+              "cpu_usec": 2089842,
+              "memory_bytes": 160698368,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 128868,
+              "process_pss_kib_sum": 102107
+            }
+          }
+        }
+      ],
+      "application_commit_p99_seconds": 0.004053249955177307,
+      "source_and_engine_cpu_seconds": 1.612816
+    },
+    "iceberg_push": {
+      "before": {
+        "source": {
+          "cpu_usec": 2353626,
+          "memory_bytes": 149229568,
+          "container_lifetime_memory_peak_bytes": 149229568,
+          "process_rss_kib_sum": 262792,
+          "process_pss_kib_sum": 101369
+        },
+        "pgduck": {
+          "cpu_usec": 2148526,
+          "memory_bytes": 158146560,
+          "container_lifetime_memory_peak_bytes": 256520192,
+          "process_rss_kib_sum": 128868,
+          "process_pss_kib_sum": 101981
+        },
+        "wal_lsn": "0/2015B40",
+        "objects": 716
+      },
+      "after": {
+        "source": {
+          "cpu_usec": 33692538,
+          "memory_bytes": 160641024,
+          "container_lifetime_memory_peak_bytes": 164790272,
+          "process_rss_kib_sum": 301032,
+          "process_pss_kib_sum": 111550
+        },
+        "pgduck": {
+          "cpu_usec": 30490878,
+          "memory_bytes": 182013952,
+          "container_lifetime_memory_peak_bytes": 256520192,
+          "process_rss_kib_sum": 138944,
+          "process_pss_kib_sum": 110593
+        },
+        "wal_lsn": "0/2503A00",
+        "objects": 2969
+      },
+      "source_write_seconds": 30.00819958304055,
+      "end_to_end_seconds": 49.428796708001755,
+      "application_commit_median_seconds": 0.0012966039939783514,
+      "application_commit_p95_seconds": 0.0021425419254228473,
+      "source_wal_bytes": 5168832,
+      "physical_object_count_delta": 2253,
+      "resource_samples": [
+        {
+          "elapsed_seconds": 2.0008794999448583,
+          "services": {
+            "source": {
+              "cpu_usec": 3477455,
+              "memory_bytes": 144416768,
+              "container_lifetime_memory_peak_bytes": 149491712,
+              "process_rss_kib_sum": 287304,
+              "process_pss_kib_sum": 105364
+            },
+            "pgduck": {
+              "cpu_usec": 2869586,
+              "memory_bytes": 177008640,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 150996,
+              "process_pss_kib_sum": 122633
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 4.151722374954261,
+          "services": {
+            "source": {
+              "cpu_usec": 4958109,
+              "memory_bytes": 146894848,
+              "container_lifetime_memory_peak_bytes": 149491712,
+              "process_rss_kib_sum": 290528,
+              "process_pss_kib_sum": 108153
+            },
+            "pgduck": {
+              "cpu_usec": 3875658,
+              "memory_bytes": 173817856,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 146540,
+              "process_pss_kib_sum": 118189
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 6.311811583000235,
+          "services": {
+            "source": {
+              "cpu_usec": 6534113,
+              "memory_bytes": 144613376,
+              "container_lifetime_memory_peak_bytes": 149491712,
+              "process_rss_kib_sum": 317388,
+              "process_pss_kib_sum": 111555
+            },
+            "pgduck": {
+              "cpu_usec": 5034816,
+              "memory_bytes": 169902080,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 141332,
+              "process_pss_kib_sum": 112951
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 8.471859666984528,
+          "services": {
+            "source": {
+              "cpu_usec": 8021806,
+              "memory_bytes": 147636224,
+              "container_lifetime_memory_peak_bytes": 149491712,
+              "process_rss_kib_sum": 291720,
+              "process_pss_kib_sum": 106943
+            },
+            "pgduck": {
+              "cpu_usec": 6248900,
+              "memory_bytes": 181583872,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 151932,
+              "process_pss_kib_sum": 123545
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 10.627200167044066,
+          "services": {
+            "source": {
+              "cpu_usec": 9452227,
+              "memory_bytes": 149319680,
+              "container_lifetime_memory_peak_bytes": 150036480,
+              "process_rss_kib_sum": 293236,
+              "process_pss_kib_sum": 108567
+            },
+            "pgduck": {
+              "cpu_usec": 7525575,
+              "memory_bytes": 169168896,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 140804,
+              "process_pss_kib_sum": 112453
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 12.78423849993851,
+          "services": {
+            "source": {
+              "cpu_usec": 10861074,
+              "memory_bytes": 149463040,
+              "container_lifetime_memory_peak_bytes": 150036480,
+              "process_rss_kib_sum": 293936,
+              "process_pss_kib_sum": 108750
+            },
+            "pgduck": {
+              "cpu_usec": 8733550,
+              "memory_bytes": 178610176,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 153836,
+              "process_pss_kib_sum": 125485
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 14.939675375004299,
+          "services": {
+            "source": {
+              "cpu_usec": 12242499,
+              "memory_bytes": 150138880,
+              "container_lifetime_memory_peak_bytes": 150147072,
+              "process_rss_kib_sum": 294548,
+              "process_pss_kib_sum": 108591
+            },
+            "pgduck": {
+              "cpu_usec": 9982303,
+              "memory_bytes": 178212864,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 148036,
+              "process_pss_kib_sum": 119685
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 17.096771957934834,
+          "services": {
+            "source": {
+              "cpu_usec": 13575725,
+              "memory_bytes": 151728128,
+              "container_lifetime_memory_peak_bytes": 153415680,
+              "process_rss_kib_sum": 295168,
+              "process_pss_kib_sum": 109187
+            },
+            "pgduck": {
+              "cpu_usec": 11281400,
+              "memory_bytes": 169619456,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 143404,
+              "process_pss_kib_sum": 115006
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 19.24882883299142,
+          "services": {
+            "source": {
+              "cpu_usec": 14946789,
+              "memory_bytes": 152870912,
+              "container_lifetime_memory_peak_bytes": 153415680,
+              "process_rss_kib_sum": 295484,
+              "process_pss_kib_sum": 109013
+            },
+            "pgduck": {
+              "cpu_usec": 12564337,
+              "memory_bytes": 188121088,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 152648,
+              "process_pss_kib_sum": 124288
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 21.3999400830362,
+          "services": {
+            "source": {
+              "cpu_usec": 16306228,
+              "memory_bytes": 157327360,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 323340,
+              "process_pss_kib_sum": 113432
+            },
+            "pgduck": {
+              "cpu_usec": 13881707,
+              "memory_bytes": 180908032,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 146664,
+              "process_pss_kib_sum": 118283
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 23.55385629204102,
+          "services": {
+            "source": {
+              "cpu_usec": 17623932,
+              "memory_bytes": 153243648,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 296228,
+              "process_pss_kib_sum": 108950
+            },
+            "pgduck": {
+              "cpu_usec": 15200378,
+              "memory_bytes": 180658176,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 145808,
+              "process_pss_kib_sum": 117457
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 25.71007416700013,
+          "services": {
+            "source": {
+              "cpu_usec": 18970258,
+              "memory_bytes": 153972736,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 297160,
+              "process_pss_kib_sum": 109367
+            },
+            "pgduck": {
+              "cpu_usec": 16504521,
+              "memory_bytes": 176635904,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 142060,
+              "process_pss_kib_sum": 113709
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 27.875770917045884,
+          "services": {
+            "source": {
+              "cpu_usec": 20303457,
+              "memory_bytes": 152641536,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 297624,
+              "process_pss_kib_sum": 109571
+            },
+            "pgduck": {
+              "cpu_usec": 17845707,
+              "memory_bytes": 181694464,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 148204,
+              "process_pss_kib_sum": 119853
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 30.02809466701001,
+          "services": {
+            "source": {
+              "cpu_usec": 21613281,
+              "memory_bytes": 155512832,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 297912,
+              "process_pss_kib_sum": 109475
+            },
+            "pgduck": {
+              "cpu_usec": 19178669,
+              "memory_bytes": 186339328,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 150344,
+              "process_pss_kib_sum": 121966
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 32.181056792032905,
+          "services": {
+            "source": {
+              "cpu_usec": 22850701,
+              "memory_bytes": 149348352,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 298420,
+              "process_pss_kib_sum": 108621
+            },
+            "pgduck": {
+              "cpu_usec": 20479507,
+              "memory_bytes": 172658688,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 143056,
+              "process_pss_kib_sum": 114705
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 34.35216258303262,
+          "services": {
+            "source": {
+              "cpu_usec": 24166875,
+              "memory_bytes": 156545024,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 298188,
+              "process_pss_kib_sum": 109427
+            },
+            "pgduck": {
+              "cpu_usec": 21806395,
+              "memory_bytes": 183390208,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 146464,
+              "process_pss_kib_sum": 118113
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 36.50280391704291,
+          "services": {
+            "source": {
+              "cpu_usec": 25461904,
+              "memory_bytes": 150347776,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 298320,
+              "process_pss_kib_sum": 108329
+            },
+            "pgduck": {
+              "cpu_usec": 23162528,
+              "memory_bytes": 175132672,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 144552,
+              "process_pss_kib_sum": 116165
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 38.659830083022825,
+          "services": {
+            "source": {
+              "cpu_usec": 26747622,
+              "memory_bytes": 150867968,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 298324,
+              "process_pss_kib_sum": 108330
+            },
+            "pgduck": {
+              "cpu_usec": 24556118,
+              "memory_bytes": 184508416,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 146144,
+              "process_pss_kib_sum": 117793
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 40.82178858295083,
+          "services": {
+            "source": {
+              "cpu_usec": 28024419,
+              "memory_bytes": 158707712,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 298972,
+              "process_pss_kib_sum": 110140
+            },
+            "pgduck": {
+              "cpu_usec": 25919925,
+              "memory_bytes": 178761728,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 146004,
+              "process_pss_kib_sum": 117653
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 42.98277733300347,
+          "services": {
+            "source": {
+              "cpu_usec": 29305793,
+              "memory_bytes": 159375360,
+              "container_lifetime_memory_peak_bytes": 161030144,
+              "process_rss_kib_sum": 299112,
+              "process_pss_kib_sum": 110275
+            },
+            "pgduck": {
+              "cpu_usec": 27311685,
+              "memory_bytes": 173629440,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 142636,
+              "process_pss_kib_sum": 114258
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 45.14210674993228,
+          "services": {
+            "source": {
+              "cpu_usec": 30670473,
+              "memory_bytes": 162541568,
+              "container_lifetime_memory_peak_bytes": 162734080,
+              "process_rss_kib_sum": 300376,
+              "process_pss_kib_sum": 111315
+            },
+            "pgduck": {
+              "cpu_usec": 28695370,
+              "memory_bytes": 169132032,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 134500,
+              "process_pss_kib_sum": 106145
+            }
+          }
+        },
+        {
+          "elapsed_seconds": 47.2978987499373,
+          "services": {
+            "source": {
+              "cpu_usec": 32266323,
+              "memory_bytes": 155525120,
+              "container_lifetime_memory_peak_bytes": 164790272,
+              "process_rss_kib_sum": 300804,
+              "process_pss_kib_sum": 110289
+            },
+            "pgduck": {
+              "cpu_usec": 29884682,
+              "memory_bytes": 186994688,
+              "container_lifetime_memory_peak_bytes": 256520192,
+              "process_rss_kib_sum": 146192,
+              "process_pss_kib_sum": 117841
+            }
+          }
+        }
+      ],
+      "application_commit_p99_seconds": 0.005814041942358017,
+      "source_and_engine_cpu_seconds": 59.681264
+    },
+    "source_maintenance": {
+      "seconds": 1.0116330420132726,
+      "before": {
+        "source": {
+          "cpu_usec": 34463524,
+          "memory_bytes": 138424320,
+          "container_lifetime_memory_peak_bytes": 164790272,
+          "process_rss_kib_sum": 153860,
+          "process_pss_kib_sum": 37728
+        },
+        "pgduck": {
+          "cpu_usec": 30538760,
+          "memory_bytes": 163479552,
+          "container_lifetime_memory_peak_bytes": 256520192,
+          "process_rss_kib_sum": 123240,
+          "process_pss_kib_sum": 94754
+        },
+        "wal_lsn": "0/2504DB0",
+        "objects": 2969
+      },
+      "after": {
+        "source": {
+          "cpu_usec": 34914700,
+          "memory_bytes": 141029376,
+          "container_lifetime_memory_peak_bytes": 164790272,
+          "process_rss_kib_sum": 153860,
+          "process_pss_kib_sum": 37728
+        },
+        "pgduck": {
+          "cpu_usec": 31002596,
+          "memory_bytes": 195252224,
+          "container_lifetime_memory_peak_bytes": 256520192,
+          "process_rss_kib_sum": 152792,
+          "process_pss_kib_sum": 124306
+        },
+        "wal_lsn": "0/25AA1B8",
+        "objects": 3047
+      },
+      "source_and_engine_cpu_seconds": 0.915012
+    }
+  },
+  "status": "passed",
+  "cleanup_returncode": 0
+}

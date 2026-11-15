@@ -6,6 +6,23 @@ a production-like destination.
 
 ## Before upgrading
 
+The explicit-worker-login change requires every launcher-managed subscription
+to select a protected credential file containing a non-empty
+`LAKE_DESTINATION_USER`. Configure it through `lake_replication.credential_file`
+or the subscription's `lake_credential_file` before replacing worker binaries.
+Passwordless local authentication still requires the username; omit the password
+when it is not needed. Missing/blank identities fail before connection or child
+startup. The launcher no longer supplies the legacy `postgres` login. Use the
+stopped-subscription/binary replacement procedure below. No new SQL migration
+is required for this change, and no additional privileges are granted.
+
+For a fresh non-superuser destination login, provision the dedicated schema and
+apply the archive's `WORKER_GRANTS.sql` as the extension installer. After a SQL
+upgrade that changes runtime objects, reapply the matching recipe before
+enabling subscriptions and requalify its permissions. The script is additive;
+it does not remove older excess privileges. Read `WORKER_GRANTS.md` in the
+archive or the [runtime grant guide](https://github.com/proddata/lake_replication/blob/main/docs/worker-runtime-grants.md) for the scope.
+
 The update-key filter is migration `0030_update_key_filter.sql`. Fresh beta.5
 installs and the beta.4-to-beta.5 upgrade include it. It replaces the existing
 update function without changing its signature or the 500-row/4-MiB run limits.

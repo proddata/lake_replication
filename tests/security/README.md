@@ -1,5 +1,39 @@
 # Security regressions
 
+`cargo test --test worker_identity` exercises all four worker binaries with
+private loopback protocol listeners. Missing/blank managed identities, a legacy
+`LAKE_USER` alone, and a blank environment override of a valid file must fail
+before connecting. Positive cases inspect the actual startup username from a
+file and an explicit environment override, including Unicode and quotes.
+
+Run the native packaged launcher regression with:
+
+```sh
+QUALIFICATION_ARCHIVE=/path/to/native-archive.tar.gz \
+  python3 tests/security/worker_identity_probe.py
+```
+
+It checks missing/blank files, absence of the launcher's legacy user variable,
+the configured destination-session login, copy, streaming, disable/enable and
+source-slot cleanup. Its positive login is deliberately privileged; this tests
+identity selection, not minimum grants or per-subscription isolation.
+
+The separate minimum-grants lane uses the packaged `WORKER_GRANTS.sql` with a
+fresh non-superuser login and a dedicated destination schema:
+
+```sh
+QUALIFICATION_ARCHIVE=/path/to/native-archive.tar.gz \
+  python3 tests/security/worker_grants_probe.py
+```
+
+It removes PUBLIC database CONNECT/TEMPORARY privileges, checks that the recipe
+rejects privileged logins/shared schemas, and exercises interrupted copy,
+streaming mutations, nullable-column addition, worker/source/destination
+restarts, password rotation, maintenance and operator cleanup. Negative tests
+cover unrelated existing/future tables, raw secrets, server files, role changes,
+launch settings and subscription management. This is a database-wide trusted
+replication role, not subscription or object-store isolation.
+
 `make check` runs `test_secure_log.py`, compiling and exercising the launcher's
 actual POSIX log opener. It checks private creation and append, unsafe file and
 directory permissions, symlinks, hardlinks, FIFOs, and nonregular files. Foreign

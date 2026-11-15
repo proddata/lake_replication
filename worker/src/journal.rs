@@ -1,39 +1,7 @@
-use crate::pgoutput::{Cell, Commit, Delete, IdentityTuple, Insert, Relation, Truncate, Update};
+use crate::events::Relation;
+pub use crate::events::{Operation, StagedChange, StagedTransaction};
+use crate::pgoutput::{Commit, Delete, Insert, Truncate, Update};
 use std::collections::HashMap;
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct StagedChange {
-    pub relation_id: u32,
-    pub relation: Relation,
-    pub operation: Operation,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Operation {
-    Insert {
-        new_values: Vec<Cell>,
-    },
-    Update {
-        old_tuple: Option<IdentityTuple>,
-        new_values: Vec<Cell>,
-    },
-    Delete {
-        old_tuple: IdentityTuple,
-    },
-    Truncate {
-        options: u8,
-    },
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct StagedTransaction {
-    pub xid: u32,
-    pub begin_lsn: u64,
-    pub commit_lsn: u64,
-    pub end_lsn: u64,
-    pub commit_time_micros: i64,
-    pub changes: Vec<StagedChange>,
-}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AssembleError {
@@ -195,6 +163,7 @@ impl TransactionAssembler {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::events::Cell;
     use crate::pgoutput::{Column, TupleFormat};
 
     fn relation() -> Relation {

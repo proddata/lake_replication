@@ -6,6 +6,11 @@
 Logical replication from ordinary PostgreSQL tables into
 [pg_lake](https://github.com/Snowflake-Labs/pg_lake) Iceberg tables.
 
+The source tables and Iceberg mirrors can live in the **same PostgreSQL
+instance and database**. In that topology, a loopback receiver feeds a local
+journal and publisher directly; no separate destination PostgreSQL or intermediate
+Iceberg change logs are needed. See [single-instance mirroring](docs/local-iceberg.md).
+
 `lake_replication` consists of a PostgreSQL extension and four worker
 executables, installed on the destination host beside PostgreSQL 18 and pg_lake.
 Together they take an initial snapshot, consume logical replication, stage
@@ -96,6 +101,12 @@ gates remain open.
 
 ## Quick start
 
+For **one PostgreSQL instance and database**, follow the
+[single-instance setup](docs/local-iceberg.md#setup). It uses the same receiver,
+journal and publisher, with application heaps and Iceberg mirrors in separate
+schemas. Mirroring is asynchronous and shares the application's CPU, memory,
+WAL and disk capacity; see the [local resource and recovery evidence](docs/local-iceberg.md#qualification-and-limits).
+
 The following walkthrough assumes a source database named `application` and a
 pg_lake-enabled destination database named `analytics`. It is intended for a
 disposable evaluation environment; review the [beta limitations](#beta-limitations)
@@ -158,14 +169,14 @@ It manages one replication launcher in each database containing the extension:
 # postgresql.conf
 shared_preload_libraries = 'pg_extension_base'
 lake_replication.log_directory = '/var/log/postgresql/lake_replication'
-# Optional when workers use local destination authentication:
-# lake_replication.credential_file = '/etc/lake_replication/worker.env'
+lake_replication.credential_file = '/etc/lake_replication/worker.env'
 ```
 
 The exact existing preload list depends on the pg_lake installation; preserve
 all of its entries when adding `pg_extension_base`.
 
-If the destination worker needs a credential file, create it as a regular,
+Managed workers require an explicit destination login. Create its credential
+file as a regular,
 non-symlink file readable only by the PostgreSQL operating-system user (`0600`):
 
 ```text
@@ -173,6 +184,21 @@ LAKE_DESTINATION_USER=lake_worker
 LAKE_DESTINATION_PASSWORD=replace-me-too
 LAKE_DESTINATION_TLS_MODE=disable
 ```
+
+`LAKE_DESTINATION_USER` must be non-empty even when local authentication needs
+no password. The launcher does not supply a default database login. A missing
+or blank identity stops the supervisor before it connects or starts child
+workers. For a passwordless local login, omit `LAKE_DESTINATION_PASSWORD`.
+Set the global path above or select a file per subscription with
+`lake_credential_file`. Manually launched standalone workers retain the legacy
+`LAKE_USER`/`postgres` fallback; launcher-managed workers do not use it.
+The example assumes the destination login already exists with the permissions
+needed by the workers. Selecting a username grants no privileges;
+`lake_replication_worker` alone only permits the protected credential getters.
+The packaged `WORKER_GRANTS.sql` provides a tested non-superuser runtime recipe
+for a fresh login and dedicated destination schema; see the
+[grant guide](docs/worker-runtime-grants.md). Per-subscription and storage
+isolation remain in the [security follow-up](docs/security-todos.md).
 
 The source user and password for a launcher-managed subscription come from its
 `CONNECTION` string. Managed workers also obtain their source TLS mode, CA path,
@@ -438,6 +464,8 @@ revision overrides, direct Docker builds, and the worker integration assessment.
 
 ```sh
 make check                 # formatting and offline/static checks
+cargo test --workspace --all-features # include the optional push prototype
+npm test --prefix deploy/poc/webui    # dashboard and workload controls
 make install-bundle        # native installable archive
 make install-bundle-test   # test the exact exported archive in the lab
 ```
@@ -453,6 +481,12 @@ and [historical evidence](docs/) before running individual lab targets.
 - [Compatibility contract](deploy/install/COMPATIBILITY.md)
 - [Bundle and installer details](deploy/install/README.md)
 - [Operations, metrics, logs, and alerts](docs/operations.md)
+- [Single-instance Iceberg mirroring, tuning, and qualification](docs/local-iceberg.md)
+- [Local mirroring versus remote pull](docs/local-pull-comparison.md)
+- [Publication coalescing windows](docs/local-coalescing-windows.md)
+- [DELETE filtering](docs/local-delete-filter.md)
+- [Wide UPDATE conversion](docs/local-update-conversion.md)
+- [Optional source-push prototype](docs/push-replication.md)
 - [Local demo](deploy/poc/README.md)
 - [Feasibility and correctness report](docs/feasibility.md)
 - [Update performance investigation](docs/update-performance-investigation.md)

@@ -169,6 +169,8 @@ static char *LogDirectory = "";
 static char *LauncherDatabaseName = NULL;
 static char *LegacyDatabaseName = NULL;
 static int InitialCopyPauseMs = 40;
+static int PublishIntervalMs = 0;
+static bool GroupIndependentInserts = false;
 /* Own the Rust process group and reap descendants before retiring a wrapper. */
 static pid_t LauncherSupervisorPid = 0;
 static volatile sig_atomic_t LauncherWorkerTerminated = false;
@@ -620,7 +622,7 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 				 const char *credentialFile, int64 configGeneration,
 				 bool createSlot)
 {
-	char	  **envp = palloc(19 * sizeof(char *));
+	char	  **envp = palloc(18 * sizeof(char *));
 	int			i = 0;
 
 	envp[i++] = psprintf("LAKE_SLOT=%s", slotName);
@@ -637,7 +639,6 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	envp[i++] = psprintf("LAKE_DESTINATION_ADDRESS=%s", destinationAddress);
 	envp[i++] = psprintf("LAKE_SOURCE_DATABASE=%s", sourceDatabase);
 	envp[i++] = psprintf("LAKE_DESTINATION_DATABASE=%s", destinationDatabase);
-	envp[i++] = pstrdup("LAKE_USER=postgres");
 
 	/*
 	 * The supervisor polls stop state independently of receiver lifetime.
@@ -649,7 +650,7 @@ build_worker_env(int64 subscriptionId, const char *slotName,
 	if (credentialFile != NULL && credentialFile[0] != '\0')
 		envp[i++] = psprintf("LAKE_CREDENTIAL_FILE=%s", credentialFile);
 	envp[i++] = NULL;
-	Assert(i <= 19);
+	Assert(i <= 18);
 	return envp;
 }
 
@@ -1893,6 +1894,12 @@ _PG_init(void)
     DefineCustomBoolVariable("lake_replication.allow_legacy_binding_upgrade",
         "Allow explicit adoption of stopped legacy bindings during a verified original-destination upgrade.",
         NULL, &AllowLegacyBindingUpgrade, false, PGC_SUSET, 0, NULL, NULL, NULL);
+    DefineCustomBoolVariable("lake_replication.group_independent_inserts",
+        "Coalesce pure INSERT batches by side-effect-free local Iceberg target; preserve per-table order and atomic publication.",
+        NULL, &GroupIndependentInserts, false, PGC_SUSET, 0, NULL, NULL, NULL);
+    DefineCustomIntVariable("lake_replication.publish_interval_ms",
+        "Optional coalescing delay for pending journal work; captured when a receiver cycle starts.",
+        NULL, &PublishIntervalMs, 0, 0, 60000, PGC_SUSET, 0, NULL, NULL, NULL);
     DefineCustomIntVariable("lake_replication.initial_copy_pause_ms",
         "Post-commit pause per initial-copy chunk; captured when a copy starts.",
         NULL, &InitialCopyPauseMs, 40, 0, 1000, PGC_SUSET, 0, NULL, NULL, NULL);

@@ -1,0 +1,11 @@
+# Disposable qualification budget, not a production sizing recommendation.
+services:
+  postgres:
+    mem_limit: 512m
+    cpus: 1
+  pgduck:
+    mem_limit: 1g
+    cpus: 1
+    command: [--unix_socket_directory, /var/run/pgduck, --port, '5332', --memory_limit, 768MB, --cache_dir, /tmp/pgduck-cache, --init_file_path, /push/pgduck-limits.sql]
+    volumes:
+      - ./pgduck-limits.sql:/push/pgduck-limits.sql:ro

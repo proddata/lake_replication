@@ -1,0 +1,152 @@
+{
+  "scope": "bulk log appends, capture error telemetry, observed source frontier and explicit SIGKILL install rollback",
+  "status": "passed",
+  "normal": {
+    "fixtures": 25,
+    "checks": 377,
+    "evidence": [
+      {
+        "evidence": "2026-11-14-push-native-live.json",
+        "checks": 23,
+        "fixture": "lake-push-probe-20261114-132439-1be6287b"
+      },
+      {
+        "evidence": "2026-11-14-push-native-lifecycle.json",
+        "checks": 26,
+        "fixture": "lake-push-probe-20261114-132505-72e8136b"
+      },
+      {
+        "evidence": "2026-11-14-push-cleanup-leases.json",
+        "checks": 8,
+        "fixture": "lake-push-probe-20261114-132534-ce06ca41"
+      },
+      {
+        "evidence": "2026-11-14-push-storage-locations.json",
+        "checks": 22,
+        "fixture": "lake-push-probe-20261114-132555-caf6d9d8"
+      },
+      {
+        "evidence": "2026-11-14-push-paused-snapshot.json",
+        "checks": 23,
+        "fixture": "lake-push-probe-20261114-132615-33385916"
+      },
+      {
+        "evidence": "2026-11-14-push-online-snapshot.json",
+        "checks": 24,
+        "fixture": "lake-push-probe-20261114-132634-a761b656"
+      },
+      {
+        "evidence": "2026-11-14-push-snapshot-limits.json",
+        "checks": 6,
+        "fixture": "lake-push-probe-20261114-132659-8b4ad223"
+      },
+      {
+        "evidence": "2026-11-14-push-native-scalars.json",
+        "checks": 5,
+        "fixture": "lake-push-probe-20261114-132712-fe949642"
+      },
+      {
+        "evidence": "2026-11-14-push-native-mutations.json",
+        "checks": 13,
+        "fixture": "lake-push-probe-20261114-132729-2cf67352"
+      },
+      {
+        "evidence": "2026-11-14-push-pgoutput-reference.json",
+        "checks": 14,
+        "fixture": "lake-push-probe-20261114-132749-39af2599"
+      },
+      {
+        "evidence": "2026-11-14-push-grouped-publication.json",
+        "checks": 15,
+        "fixture": "lake-push-probe-20261114-132808-bf260c70"
+      },
+      {
+        "evidence": "2026-11-14-push-native-chunks.json",
+        "checks": 4,
+        "fixture": "lake-push-probe-20261114-132834-0a403492"
+      },
+      {
+        "evidence": "2026-11-14-push-toast-keys.json",
+        "checks": 5,
+        "fixture": "lake-push-probe-20261114-132849-9634de00"
+      },
+      {
+        "evidence": "2026-11-14-push-native-spill.json",
+        "checks": 13,
+        "fixture": "lake-push-probe-20261114-133236-b1a11259"
+      },
+      {
+        "evidence": "2026-11-14-push-disk-full.json",
+        "checks": 7,
+        "fixture": "lake-push-probe-20261114-133258-3a164493"
+      },
+      {
+        "evidence": "2026-11-14-push-retention.json",
+        "checks": 19,
+        "fixture": "lake-push-probe-20261114-133319-e6eba342"
+      },
+      {
+        "evidence": "2026-11-14-push-upload-budget.json",
+        "checks": 6,
+        "fixture": "lake-push-probe-20261114-133335-346e252a"
+      },
+      {
+        "evidence": "2026-11-14-push-failure-telemetry.json",
+        "checks": 13,
+        "fixture": "lake-push-probe-20261114-133353-47bb820a"
+      },
+      {
+        "evidence": "2026-11-14-push-source-roles.json",
+        "checks": 20,
+        "fixture": "lake-push-probe-20261114-133408-6033330c"
+      },
+      {
+        "evidence": "2026-11-14-push-maintenance.json",
+        "checks": 14,
+        "fixture": "lake-push-probe-20261114-133427-5daf4a97"
+      },
+      {
+        "evidence": "2026-11-14-push-outages.json",
+        "checks": 8,
+        "fixture": "lake-push-probe-20261114-133445-bd3448a7"
+      },
+      {
+        "evidence": "2026-11-14-push-credential-rotation.json",
+        "checks": 7,
+        "fixture": "lake-push-probe-20261114-133506-2c2b70e6"
+      },
+      {
+        "evidence": "2026-11-14-push-storage-credentials.json",
+        "checks": 11,
+        "fixture": "lake-push-probe-20261114-133522-ac5e73ed"
+      },
+      {
+        "evidence": "2026-11-14-push-managed-mode.json",
+        "checks": 31,
+        "fixture": "lake-push-probe-20261114-133539-f662d52d"
+      },
+      {
+        "evidence": "2026-11-14-push-synthetic-importer.json",
+        "checks": 40,
+        "fixture": "lake-push-probe-20261114-133605-774bbb5f"
+      }
+    ]
+  },
+  "native_source_snapshot_group_checks": 91,
+  "destination_publisher_crash_checks": 21,
+  "packaging_checks": 38,
+  "repository_checks": "make check and cargo test --workspace --all-features passed",
+  "superseded_spill_sample": {
+    "fixture": "lake-push-probe-20261114-132906-812aae10",
+    "reason": "An instantaneous sample caught an active subsequent decoder read spilling again. The probe now confirms slot advancement and checks eventual cleanup between completed decoding contexts; the full affected probe and remaining suite passed."
+  },
+  "remaining_gates": [
+    "ordered source DDL evolution",
+    "larger resumable snapshots",
+    "sustained/cold-cache/production sizing",
+    "interrupted installer preparation/cleanup and power loss",
+    "native AMD64 qualification",
+    "full logical-mode release gates after install/removal",
+    "version upgrades and failover"
+  ]
+}

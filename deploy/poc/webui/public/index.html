@@ -1,200 +1,61 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>lake_replication demo</title>
-<style>
-  :root { color-scheme: light dark; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; padding: 1rem; }
-  h1 { font-size: 1.1rem; margin: 0 0 0.75rem; }
-  .panes { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .pane { flex: 1 1 420px; min-width: 380px; border: 1px solid #8884; border-radius: 8px; padding: 0.75rem; }
-  .pane h2 { font-size: 0.95rem; margin: 0 0 0.5rem; }
-  .pane textarea { width: 100%; box-sizing: border-box; font-family: ui-monospace, monospace; font-size: 0.85rem; height: 90px; }
-  .pane select { width: 100%; margin-bottom: 0.4rem; }
-  .row { display: flex; gap: 0.5rem; align-items: center; margin: 0.4rem 0; }
-  button { cursor: pointer; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.8rem; margin-top: 0.5rem; }
-  th, td { border: 1px solid #8884; padding: 2px 6px; text-align: left; white-space: nowrap; }
-  .error { color: #d33; font-family: ui-monospace, monospace; font-size: 0.8rem; white-space: pre-wrap; }
-  .meta { color: #888; font-size: 0.75rem; }
-  .status { margin-top: 1rem; border: 1px solid #8884; border-radius: 8px; padding: 0.75rem; }
-  .status h2 { font-size: 0.95rem; margin: 0 0 0.5rem; }
-  label.auto { font-size: 0.8rem; color: #888; }
-</style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101f2a"><title>Postgres → Iceberg · Live demo</title>
+<link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
 </head>
 <body>
-<h1>lake_replication -- local demo console</h1>
-<p class="meta">Two independent Postgres connections: <strong>source</strong> (application db, plain heap tables) and
-  <strong>destination</strong> (analytics db, Iceberg via pg_lake). Run SQL on either side and watch replication
-  land on the right.</p>
-
-<div class="panes">
-  <section class="pane" data-target="source">
-    <h2>Source -- application</h2>
-    <select class="presets"></select>
-    <textarea class="sql"></textarea>
-    <div class="row"><button class="run">Run</button><span class="meta result-meta"></span></div>
-    <div class="error"></div>
-    <div class="result"></div>
-  </section>
-
-  <section class="pane" data-target="destination">
-    <h2>Destination -- analytics (Iceberg)</h2>
-    <select class="presets"></select>
-    <textarea class="sql"></textarea>
-    <div class="row">
-      <button class="run">Run</button>
-      <label class="auto"><input type="checkbox" class="autorun"> auto-run every 2s</label>
-      <span class="meta result-meta"></span>
+<header class="topbar"><a class="brand" href="/"><span class="brand-icon" aria-hidden="true">≈</span> lake<span class="brand-light">replication</span></a><span class="environment">LOCAL DEMO</span></header>
+<main>
+  <div class="page-heading"><div><div class="eyebrow">POSTGRESQL → APACHE ICEBERG</div><h1>Make a change. Watch it arrive.</h1></div><div class="refresh-controls"><div class="mode-switch" aria-label="Viewing mode"><button id="demo-mode" aria-pressed="true">Demo</button><button id="inspect-mode" aria-pressed="false">Inspect</button></div><span id="connection" class="badge neutral" role="status">Connecting</span><button id="refresh" class="secondary">↻ Refresh</button><label class="live-toggle"><input id="live" type="checkbox" checked> Live</label></div></div>
+  <div id="dashboard-error" class="error" role="alert"></div>
+  <section class="card overview" aria-labelledby="overview-title">
+    <div class="overview-heading"><h2 id="overview-title">01 <span>Replication overview</span></h2><span id="replication-state" class="badge neutral">Waiting for state</span></div>
+    <div id="pipeline" class="pipeline" aria-label="PostgreSQL 1 changes flow through WAL and the replication worker into PostgreSQL 2 with Iceberg storage">
+      <div class="pipeline-stage source-stage" id="stage-source"><span class="stage-icon" aria-hidden="true">P</span><div><strong>PostgreSQL 1</strong><small>Source · application</small></div></div>
+      <span class="pipeline-link" id="link-wal" aria-hidden="true">→</span>
+      <div class="pipeline-stage" id="stage-wal"><span class="stage-icon" aria-hidden="true">≋</span><div><strong>WAL / CDC</strong><small>Capture the transaction</small></div></div>
+      <span class="pipeline-link" id="link-worker" aria-hidden="true">→</span>
+      <div class="pipeline-stage" id="stage-worker"><span class="stage-icon" aria-hidden="true">↻</span><div><strong>Replication worker</strong><small>lake_replication · apply changes</small></div></div>
+      <span class="pipeline-link" id="link-iceberg" aria-hidden="true">→</span>
+      <div class="pipeline-stage destination-stage" id="stage-iceberg"><span class="stage-icon" aria-hidden="true">◇</span><div><strong>PostgreSQL 2 (Iceberg)</strong><small>Destination · analytics · pg_lake</small></div></div>
     </div>
-    <div class="error"></div>
-    <div class="result"></div>
+    <div class="overview-metrics"><div><span>WAL lag</span><strong id="wal-lag">—</strong><small>Received → published · bytes</small></div><div><span>Query visibility</span><strong id="visibility-latency">—</strong><small>Latest verified change · observed delay</small></div><div><span>Verified changes</span><strong id="verified-total">0</strong><small>This console session</small></div><div><span>Observed throughput</span><strong id="throughput">—</strong><small>Verified changes / second</small></div><div><span>Latest Iceberg commit</span><strong id="latest-commit">—</strong><small id="latest-snapshot">Waiting for a snapshot</small></div></div>
+    <div class="observation-strip"><div class="chart-block"><div><span class="chart-key latency-key"></span>Visibility delay <strong id="chart-latency-label">—</strong></div><svg id="latency-chart" viewBox="0 0 300 36" role="img" aria-label="Observed query visibility delay over recent samples"></svg></div><div class="chart-block"><div><span class="chart-key throughput-key"></span>Verified changes/s <strong id="chart-throughput-label">—</strong></div><svg id="throughput-chart" viewBox="0 0 300 36" role="img" aria-label="Observed throughput over recent samples"></svg></div><p>Visibility is measured from source commit acknowledgement to the first matching Iceberg query. Includes polling; an upper bound, not engine latency.</p></div>
+    <div class="snapshot-section"><div class="snapshot-heading"><h3>Iceberg commits</h3><small>CDC streams transactions; snapshots make them query-visible.</small></div><div id="snapshot-timeline" class="snapshot-timeline"><span class="muted">Waiting for snapshot metadata…</span></div></div>
   </section>
-</div>
-
-<div class="status">
-  <h2>Replication status <span class="meta">(destination control plane, auto-refreshing)</span></h2>
-  <div id="status-body">loading...</div>
-</div>
-
-<script>
-const PRESETS = {
-  source: [
-    ['-- pick a preset --', ''],
-    ['View demo table', 'SELECT * FROM public.orders ORDER BY id;'],
-    ['Insert a new order', "INSERT INTO public.orders (id, customer, item, amount)\nVALUES (floor(random()*1000000)::bigint, 'New Customer', 'demo item', round((random()*500)::numeric, 2)::double precision);"],
-    ['Update an order', "UPDATE public.orders SET amount = amount + 1 WHERE id = 1;"],
-    ['Delete an order', "DELETE FROM public.orders WHERE id = 3;"],
-  ],
-  destination: [
-    ['-- pick a preset --', ''],
-    ['View replicated table', 'SELECT * FROM public.orders ORDER BY id;'],
-    ['Create the demo subscription (starts replication)',
-      "CREATE SUBSCRIPTION orders_sub\n  CONNECTION 'host=127.0.0.1 port=5432 dbname=application user=postgres'\n  PUBLICATION orders_pub\n  WITH (lake_target = 'iceberg');"],
-    ['Drop the demo subscription (stops replication)', 'DROP SUBSCRIPTION orders_sub;'],
-    ['Subscription state', 'SELECT * FROM lake_replication.subscriptions;'],
-    ['Iceberg files for orders', "SELECT * FROM lake_iceberg.files(\n  (SELECT metadata_location FROM iceberg_tables\n    WHERE table_namespace = 'public' AND table_name = 'orders'));"],
-    ['Iceberg metadata for orders', "SELECT lake_iceberg.metadata(\n  (SELECT metadata_location FROM iceberg_tables\n    WHERE table_namespace = 'public' AND table_name = 'orders'));"],
-  ],
-};
-
-function renderResult(pane, data) {
-  const errorEl = pane.querySelector('.error');
-  const resultEl = pane.querySelector('.result');
-  const metaEl = pane.querySelector('.result-meta');
-  errorEl.textContent = '';
-  resultEl.innerHTML = '';
-  metaEl.textContent = '';
-  if (data.error) {
-    errorEl.textContent = data.error;
-    return;
-  }
-  metaEl.textContent = `${data.command || ''} (${data.rowCount ?? 0} row${data.rowCount === 1 ? '' : 's'})`;
-  if (!data.rows || data.rows.length === 0) return;
-  const table = document.createElement('table');
-  const head = document.createElement('tr');
-  data.fields.forEach((f) => {
-    const th = document.createElement('th');
-    th.textContent = f;
-    head.appendChild(th);
-  });
-  table.appendChild(head);
-  data.rows.forEach((row) => {
-    const tr = document.createElement('tr');
-    data.fields.forEach((f) => {
-      const td = document.createElement('td');
-      const value = row[f];
-      td.textContent = value === null ? 'NULL' : typeof value === 'object' ? JSON.stringify(value) : String(value);
-      tr.appendChild(td);
-    });
-    table.appendChild(tr);
-  });
-  resultEl.appendChild(table);
-}
-
-async function runQuery(pane) {
-  const target = pane.dataset.target;
-  const sql = pane.querySelector('.sql').value;
-  if (!sql.trim()) return;
-  try {
-    const response = await fetch('/api/query', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ target, sql }),
-    });
-    const data = await response.json();
-    renderResult(pane, data);
-  } catch (error) {
-    renderResult(pane, { error: String(error) });
-  }
-}
-
-document.querySelectorAll('.pane').forEach((pane) => {
-  const target = pane.dataset.target;
-  const select = pane.querySelector('.presets');
-  const textarea = pane.querySelector('.sql');
-  PRESETS[target].forEach(([label, sql]) => {
-    const option = document.createElement('option');
-    option.textContent = label;
-    option.value = sql;
-    select.appendChild(option);
-  });
-  select.addEventListener('change', () => {
-    if (select.value) textarea.value = select.value;
-  });
-  pane.querySelector('.run').addEventListener('click', () => runQuery(pane));
-  textarea.addEventListener('keydown', (event) => {
-    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') runQuery(pane);
-  });
-
-  const autorun = pane.querySelector('.autorun');
-  if (autorun) {
-    let timer = null;
-    autorun.addEventListener('change', () => {
-      if (autorun.checked) {
-        timer = setInterval(() => runQuery(pane), 2000);
-      } else if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-    });
-  }
-});
-
-async function refreshStatus() {
-  const body = document.getElementById('status-body');
-  try {
-    const response = await fetch('/api/status');
-    const data = await response.json();
-    if (data.error) {
-      body.innerHTML = `<div class="error">${data.error}</div>`;
-      return;
-    }
-    let html = '';
-    if (!data.subscriptions.length) {
-      html += '<p class="meta">No subscriptions yet -- run the "Create the demo subscription" preset on the destination pane.</p>';
-    } else {
-      html += '<table><tr><th>subscription</th><th>state</th><th>supervisor_pid</th><th>service_state</th><th>last_error</th></tr>';
-      data.subscriptions.forEach((s) => {
-        html += `<tr><td>${s.subscription_name}</td><td>${s.state}</td><td>${s.supervisor_pid ?? ''}</td><td>${s.service_state ?? ''}</td><td>${s.last_error ?? ''}</td></tr>`;
-      });
-      html += '</table>';
-    }
-    if (data.relations.length) {
-      html += '<table><tr><th>subscription</th><th>relation</th><th>unflushed inserts</th><th>updates</th><th>deletes</th></tr>';
-      data.relations.forEach((r) => {
-        html += `<tr><td>${r.subname}</td><td>${r.source_relation}</td><td>${r.unflushed_inserts}</td><td>${r.unflushed_updates}</td><td>${r.unflushed_deletes}</td></tr>`;
-      });
-      html += '</table>';
-    }
-    body.innerHTML = html;
-  } catch (error) {
-    body.innerHTML = `<div class="error">${error}</div>`;
-  }
-}
-refreshStatus();
-setInterval(refreshStatus, 3000);
-</script>
+  <section class="playground" aria-labelledby="playground-title">
+    <div class="playground-heading"><h2 id="playground-title">02 <span>Interactive playground</span></h2><span id="comparison-state" class="badge neutral" role="status">Loading records</span></div>
+    <div id="setup-banner" class="setup-banner" hidden><span>Create the demo subscription to connect PostgreSQL to Iceberg.</span><button id="create-subscription">Connect replication →</button></div>
+    <div class="action-bar"><div class="demo-actions"><button id="insert-order" class="insert-action">＋ Insert order</button><button id="update-order" class="secondary" disabled>↻ Update order</button><button id="delete-order" class="delete-action" disabled>− Delete order</button></div><label class="order-picker" for="selected-order">Tracked order<select id="selected-order"><option value="">Loading…</option></select></label><span class="legend"><i class="insert-dot"></i> Insert <i class="update-dot"></i> Update <i class="delete-dot"></i> Delete</span></div>
+    <div id="action-error" class="error" role="alert"></div>
+    <div class="comparison-tables"><article class="card source-table"><div class="table-heading"><div><span class="eyebrow">SOURCE / APPLICATION</span><h3>PostgreSQL 1 <span class="db-type">heap table</span></h3></div><code>public.orders</code></div><div id="source" class="panel-body preview"></div></article><article class="card destination-table"><div class="table-heading"><div><span class="eyebrow">DESTINATION / ANALYTICS</span><h3>PostgreSQL 2 (Iceberg) <span class="db-type lake">pg_lake</span></h3></div><code>public.orders</code></div><div id="destination" class="panel-body preview"></div></article></div>
+    <div class="comparison-note"><span>Same tracked IDs on both sides · up to 30 records · deleted rows remain as context</span><span id="observation-time">Waiting for a sample</span></div>
+    <div class="change-story" aria-live="polite"><div id="change-status">Insert an order, or select a row to update or delete.</div><div id="executed-sql" class="executed-sql" hidden><code id="action-sql"></code><small id="action-parameters"></small></div><div id="change-progress"></div></div>
+    <details class="workload-details"><summary>Continuous workload <span>Start a stream of inserts, updates, and deletes</span></summary>
+  <section class="card simulator-card" aria-labelledby="simulator-heading">
+    <div class="section-heading"><div><span class="eyebrow">GENERATE LIVE TRAFFIC</span><h2 id="simulator-heading">Workload simulator</h2><p>A repeating mix of inserts, updates, and deletes on source orders. Generate a steady mix of real changes on PostgreSQL.</p></div><span id="simulator-state" class="badge neutral" role="status">Idle</span></div>
+    <div class="simulator-body">
+      <div class="simulator-controls"><label for="simulator-rate">Target rate<select id="simulator-rate"><option value="1">1 operation / second</option><option value="2" selected>2 operations / second</option><option value="5">5 operations / second</option><option value="10">10 operations / second</option></select></label><label for="simulator-duration">Run for<select id="simulator-duration"><option value="30">30 seconds</option><option value="60" selected>1 minute</option><option value="120">2 minutes</option><option value="300">5 minutes</option></select></label><button id="simulator-start">Start simulation ↗</button><button id="simulator-stop" class="secondary" disabled>Stop</button></div>
+      <div class="simulator-summary"><span><strong id="simulator-inserts">0</strong> inserts</span><span><strong id="simulator-updates">0</strong> updates</span><span><strong id="simulator-deletes">0</strong> deletes</span><span id="simulator-timing">Ready to start</span></div>
+      <p class="simulator-note">Updates/deletes affect simulator orders only. Shared runs continue until stopped or the timer ends, even if this page closes. Live pauses observation, not writes.</p>
+      <div id="simulator-error" class="error" role="alert"></div>
+      <details id="simulator-activity"><summary>Recent simulated changes</summary><div id="simulator-events" class="panel-body"><div class="empty">Start a simulation to generate live traffic.</div></div></details>
+    </div>
+  </section>
+    </details>
+    <details class="activity-details"><summary>Recent changes <span id="activity-count"></span></summary><div id="change-events" class="panel-body"></div></details>
+  </section>
+  <section id="inspect-panel" class="inspect-panel" hidden aria-labelledby="inspect-title"><div class="playground-heading"><h2 id="inspect-title" tabindex="-1">03 <span>Technical details</span></h2><span class="muted">Same live data · deeper inspection</span></div>
+    <details open><summary>Worker health & WAL checkpoints <span>lake_replication</span></summary><div id="subscriptions" class="panel-body"></div></details>
+    <details><summary>Source replication slots <span>PostgreSQL</span></summary><div id="slots" class="panel-body"></div></details>
+    <details id="batch-details"><summary>Batch journal & publication durations <span>lake_replication</span></summary><div id="batches" class="panel-body"></div><p class="detail-note">Batch publication duration is measured in the journal. Batch-to-snapshot IDs and exact per-snapshot CDC change counts are not recorded; no mapping is inferred from timestamps.</p></details>
+    <details><summary>Unflushed changes <span>lake_replication</span></summary><div id="relations" class="panel-body"></div></details>
+    <details><summary>Iceberg metadata & snapshots <span>pg_lake</span></summary><div id="iceberg" class="panel-body"></div><div id="snapshot" class="panel-body"></div><div id="snapshots" class="panel-body"></div></details>
+    <details><summary>Source & destination SQL consoles <span>⌘ / Ctrl + Enter to run</span></summary><div class="panes">      <section class="card pane" data-target="source"><div class="section-heading"><h3>Source console</h3><span class="section-note">⌘ / Ctrl + Enter to run</span></div><div class="editor-body"><label for="source-presets">Query preset</label><select id="source-presets" class="presets"></select><label class="sr-only" for="source-sql">Source SQL</label><textarea id="source-sql" class="sql" spellcheck="false"></textarea><div class="actions"><button class="run">Run query <span>↗</span></button><span class="result-meta"></span></div><div class="error" role="alert"></div><div class="result"></div></div></section>      <section class="card pane" data-target="destination"><div class="section-heading"><h3>Destination console</h3><span class="section-note">⌘ / Ctrl + Enter to run</span></div><div class="editor-body"><label for="destination-presets">Query preset</label><select id="destination-presets" class="presets"></select><label class="sr-only" for="destination-sql">Destination SQL</label><textarea id="destination-sql" class="sql" spellcheck="false"></textarea><div class="actions"><button class="run">Run query <span>↗</span></button><span class="result-meta"></span></div><div class="error" role="alert"></div><div class="result"></div></div></section></div></details>
+  </section>
+  <footer>lake_replication <span>Local demo · SQL and actions run against real databases</span></footer>
+</main>
 </body>
 </html>

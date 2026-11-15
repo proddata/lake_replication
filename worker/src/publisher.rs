@@ -6,7 +6,11 @@ use lake_replication_worker::wire::{TlsConfig, address_is_loopback};
 use std::env;
 
 fn main() {
-    if let Err(error) = run() {
+    main_with_function("lake_replication.publish_insert_batch");
+}
+
+pub fn main_with_function(publish_function: &str) {
+    if let Err(error) = run(publish_function) {
         log_event(
             "publisher",
             "ERROR",
@@ -18,7 +22,7 @@ fn main() {
     }
 }
 
-fn run() -> Result<(), Box<dyn std::error::Error>> {
+fn run(publish_function: &str) -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
     let mut destination = ManagedClient::connect(
         config.destination_address.as_str(),
@@ -66,7 +70,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             config.subscription_id, first_lsn, last_lsn
         );
         let result = destination.simple_query_named("publish_batch", &format!(
-            "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM lake_replication.publish_insert_batch({}, {}, {}::pg_lsn, {}::pg_lsn)",
+            "SELECT batch_id::text, published_lsn::text, inserted_rows::text FROM {publish_function}({}, {}, {}::pg_lsn, {}::pg_lsn)",
             config.subscription_id,
             sql_literal(&batch_key),
             sql_literal(first_lsn),
@@ -91,6 +95,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 ("inserted_rows", inserted_rows.to_owned()),
                 ("planned_rows", planned_rows.to_owned()),
                 ("bytes", byte_count.to_owned()),
+                ("flush_reason", config.flush_reason.clone()),
             ],
         );
         published_batches += 1;
@@ -110,6 +115,7 @@ struct Config {
     max_rows: i64,
     max_bytes: i64,
     max_batches: u64,
+    flush_reason: String,
     lab_crash_point: Option<String>,
 }
 
@@ -120,8 +126,7 @@ impl Config {
         let config = Self {
             destination_tls: tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?,
             destination_address,
-            destination_user: settings
-                .value("LAKE_DESTINATION_USER", &value("LAKE_USER", "postgres")),
+            destination_user: settings.destination_user()?,
             destination_password: settings.optional("LAKE_DESTINATION_PASSWORD"),
             destination_database: value("LAKE_DESTINATION_DATABASE", "analytics"),
             config_generation: value("LAKE_CONFIG_GENERATION", "0").parse()?,
@@ -130,6 +135,7 @@ impl Config {
             max_rows: value("LAKE_BATCH_MAX_ROWS", "100000").parse()?,
             max_bytes: value("LAKE_BATCH_MAX_BYTES", "67108864").parse()?,
             max_batches: value("LAKE_MAX_BATCHES", "1").parse()?,
+            flush_reason: value("LAKE_PUBLICATION_FLUSH_REASON", "manual"),
             lab_crash_point: env::var("LAKE_LAB_CRASH_POINT").ok(),
         };
         if config.max_transactions <= 0

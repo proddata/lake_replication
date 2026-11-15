@@ -9,3 +9,5 @@ extensions/lake_replication/lake_replication--*.sql
 dist/
 .cargo-linux-build/
 .DS_Store
+
+extensions/lake_replication_push/lake_replication_push--*.sql

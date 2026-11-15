@@ -205,6 +205,24 @@ impl Settings {
         self.optional(name).unwrap_or_else(|| default.to_owned())
     }
 
+    /// Managed workers must never inherit the standalone CLI's legacy login.
+    /// The launcher supplies a credential-file path, not credential values.
+    pub fn destination_user(&self) -> Result<String, Box<dyn std::error::Error>> {
+        if env::var("LAKE_LOAD_SOURCE_CREDENTIALS").as_deref() == Ok("1") {
+            return self
+                .optional("LAKE_DESTINATION_USER")
+                .filter(|user| !user.trim().is_empty())
+                .ok_or_else(|| {
+                    "managed workers require a non-empty LAKE_DESTINATION_USER in their credential file"
+                        .into()
+                });
+        }
+        Ok(self.value(
+            "LAKE_DESTINATION_USER",
+            &env::var("LAKE_USER").unwrap_or_else(|_| "postgres".to_owned()),
+        ))
+    }
+
     pub fn required(&self, name: &str) -> Result<String, Box<dyn std::error::Error>> {
         self.optional(name)
             .ok_or_else(|| format!("required connection setting {name} is not set").into())

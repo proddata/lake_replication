@@ -1,0 +1,7 @@
+# Fault probe only: never mount the real data directory or host disk here.
+services:
+  source:
+    # Needed only to bind the fault filesystem over a stopped disposable slot.
+    cap_add: [SYS_ADMIN]
+    tmpfs:
+      - /capture-spill-test:size=16m,mode=1777

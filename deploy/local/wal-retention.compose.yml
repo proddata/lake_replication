@@ -1,0 +1,17 @@
+# Test-only retention limit; use exclusively with disposable qualification data.
+services:
+  postgres:
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_worker_processes=24
+      - -c
+      - max_slot_wal_keep_size=1MB
+      - -c
+      - shared_preload_libraries=pg_extension_base
+      - -c
+      - pg_lake_engine.host=host=/var/run/pgduck port=5332
+      - -c
+      - pg_lake_iceberg.default_location_prefix=s3://lake-push/iceberg

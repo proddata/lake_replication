@@ -168,6 +168,7 @@ dependencies = [
  "postgres-protocol",
  "rustls",
  "rustls-pemfile",
+ "sha2",
 ]
 
 [[package]]

@@ -42,7 +42,7 @@ cannot read them. Grant `lake_replication_worker` only to the login used by
 workers. The extension installer, superusers, backups, and SQL statement logs
 remain trusted; stronger at-rest secrecy requires a key outside the database.
 
-For destination authentication, optionally set
+For launcher-managed destination authentication, set
 `lake_replication.credential_file` to an absolute path owned by the
 PostgreSQL operating-system user with mode `0600`, or select an absolute path
 per subscription with `WITH (lake_credential_file = '/path/to/file')`.
@@ -51,6 +51,26 @@ entries are the source/destination user, password, TLS mode, root certificate,
 and optional TLS server name variables documented in the main README. Symlinks,
 group/other permissions, duplicate keys, unknown keys, and files larger than
 64 KiB are rejected before a network connection is attempted.
+
+The file must contain a non-empty `LAKE_DESTINATION_USER`, even for passwordless
+local authentication. Missing or blank identities stop managed workers before
+database connection or child startup; the launcher no longer supplies
+`LAKE_USER=postgres`. This selects a login without granting it privileges.
+For a fresh non-superuser runtime login and dedicated destination schema, apply
+the shipped `WORKER_GRANTS.sql` as the extension installer:
+
+```sh
+psql -X -v ON_ERROR_STOP=1 --dbname analytics \
+  -v worker_login=lake_worker -v destination_schema=replicated_data \
+  --file WORKER_GRANTS.sql
+```
+
+Create the login/schema first. The recipe grants named runtime objects and
+pg_lake write capabilities without administrator membership. Worker-created
+destination tables are owned by that login for schema evolution. The profile is
+trusted across replication subscriptions and storage; per-subscription and
+object-store isolation remain separate. Standalone CLI workers retain their
+legacy login fallback. See the shipped `WORKER_GRANTS.md` for setup and scope.
 
 Managed source TLS mode, CA path, and verification hostname come from the
 subscription's `CONNECTION` string and override file/environment source TLS

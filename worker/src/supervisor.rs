@@ -34,14 +34,39 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         .parent()
         .ok_or("supervisor executable has no parent directory")?
         .to_owned();
-    let receiver = executable_directory.join(binary_name("lake-replication-receiver"));
-    let publisher = executable_directory.join(binary_name("lake-replication-publisher"));
     let initial_sync = executable_directory.join(binary_name("lake-replication-initial-sync"));
+    let mut destination = config.connect()?;
+    let push_transport = push_subscription(&mut destination, config.subscription_id)?;
+    if push_transport && !cfg!(feature = "push-prototype") {
+        return Err("iceberg_push requires the optional push-prototype worker build".into());
+    }
+    let receiver = executable_directory.join(binary_name(if push_transport {
+        "lake-replication-log-importer"
+    } else {
+        "lake-replication-receiver"
+    }));
+    let schema_push = if push_transport {
+        let rows = destination.simple_query(&format!(
+            "SELECT schema_enabled FROM lake_replication.push_bindings WHERE subscription_id={}",
+            config.subscription_id
+        ))?;
+        rows.first()
+            .and_then(|row| row.first())
+            .and_then(Option::as_deref)
+            == Some("t")
+    } else {
+        false
+    };
+    let publisher = executable_directory.join(binary_name(if schema_push {
+        "lake-replication-push-publisher"
+    } else {
+        "lake-replication-publisher"
+    }));
     require_binary(&receiver)?;
     require_binary(&publisher)?;
-    require_binary(&initial_sync)?;
-
-    let mut destination = config.connect()?;
+    if !push_transport {
+        require_binary(&initial_sync)?;
+    }
     acquire_supervisor_lock(&mut destination, config.subscription_id)?;
     control_query(
         &mut destination,
@@ -69,8 +94,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             );
             return Ok(());
         }
-        let initial_sync_pending =
-            subscription_state != "streaming" && initial_copy_pending(&mut destination, &config)?;
+        let initial_sync_pending = !push_transport
+            && subscription_state != "streaming"
+            && initial_copy_pending(&mut destination, &config)?;
         if subscription_state != "streaming" && !initial_sync_pending {
             report_cycle(&mut destination, &config, "paused", 0, 0)?;
             thread::sleep(config.poll_interval);
@@ -92,6 +118,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 &mut destination,
                 &mut consecutive_failures,
                 &mut slot_contention,
+                push_transport,
             )
         };
         if cycle.is_err()
@@ -750,6 +777,29 @@ fn run_initial_sync(
     }
 }
 
+fn push_subscription(
+    destination: &mut Client,
+    subscription: i64,
+) -> Result<bool, Box<dyn std::error::Error>> {
+    let rows = destination
+        .simple_query("SELECT to_regclass('lake_replication.push_bindings') IS NOT NULL")?;
+    if rows
+        .first()
+        .and_then(|row| row.first())
+        .and_then(Option::as_deref)
+        != Some("t")
+    {
+        return Ok(false);
+    }
+    let rows = destination.simple_query(&format!(
+        "SELECT EXISTS(SELECT FROM lake_replication.push_bindings WHERE subscription_id={subscription})"))?;
+    Ok(rows
+        .first()
+        .and_then(|row| row.first())
+        .and_then(Option::as_deref)
+        == Some("t"))
+}
+
 fn run_cycle(
     config: &Config,
     receiver: &Path,
@@ -757,9 +807,41 @@ fn run_cycle(
     destination: &mut Client,
     consecutive_failures: &mut u32,
     busy: &mut SlotContention,
+    push_transport: bool,
 ) -> Result<(i64, i64), CycleError> {
     let trace_publication = env::var("LAKE_TRACE_TRANSACTIONS").as_deref() == Ok("1");
-    let source_address = source_preflight(destination, config, busy)?;
+    // Older servers do not define this opt-in GUC; preserve immediate draining.
+    let rows = destination
+        .simple_query(
+            "SELECT coalesce(current_setting('lake_replication.publish_interval_ms',true),'0')",
+        )
+        .map_err(|error| {
+            CycleError::Retry(format!("could not read publication interval: {error}"))
+        })?;
+    let milliseconds = cycle_field(
+        rows.first()
+            .ok_or_else(|| CycleError::Fatal("publication interval is missing".into()))?,
+        0,
+        "publication interval",
+    )?
+    .parse::<u64>()
+    .map_err(|_| CycleError::Fatal("invalid publication interval".into()))?;
+    if milliseconds > 60000 {
+        return Err(CycleError::Fatal(
+            "publication interval exceeds 60000 milliseconds".into(),
+        ));
+    }
+    let publication_interval = Duration::from_millis(milliseconds);
+
+    let source_address = if push_transport {
+        config
+            .source_addresses
+            .first()
+            .ok_or_else(|| CycleError::Fatal("push source address missing".into()))?
+            .clone()
+    } else {
+        source_preflight(destination, config, busy)?
+    };
     // Inherit child logs rather than buffering an unbounded streamed transaction.
     let mut command = Command::new(receiver);
     command
@@ -770,6 +852,9 @@ fn run_cycle(
         )
         .env("LAKE_RECEIVER_PERSISTENT", "1")
         .env("LAKE_MAX_TRANSACTIONS", "64");
+    if push_transport {
+        command.env("LAKE_PUSH_MAX_BATCHES", "64");
+    }
     let mut child = MonitoredChild(
         command
             .spawn()
@@ -779,6 +864,7 @@ fn run_cycle(
     report_cycle(destination, config, "running", 1, 0)
         .map_err(|error| CycleError::Retry(error.to_string()))?;
     let mut published = 0;
+    let mut pending_since: Option<Instant> = None;
     let mut heartbeat = Instant::now();
     loop {
         let status = child
@@ -812,20 +898,79 @@ fn run_cycle(
         }
         if let Some(status) = status {
             if !status.success() {
-                return Err(CycleError::Retry(format!(
-                    "receiver exited with {status}; see child log"
-                )));
+                let message = format!("receiver exited with {status}; see child log");
+                return Err(if push_transport {
+                    CycleError::Fatal(message)
+                } else {
+                    CycleError::Retry(message)
+                });
             }
         }
         // Drain durable work even while decoding an unrelated/uncommitted
         // source transaction. A persistent receiver must not starve publication.
-        if has_pending_transactions(destination, config)
-            .map_err(|error| CycleError::Fatal(error.to_string()))?
-        {
+        let pending = has_pending_transactions(destination, config)
+            .map_err(|error| CycleError::Fatal(error.to_string()))?;
+        if !pending {
+            pending_since = None;
+        }
+        // Coalescing must not leave the bounded receiver waiting on a full
+        // journal for the entire delay. Drain early under count/byte pressure.
+        let journal_pressure = pending
+            && !publication_interval.is_zero()
+            && journal_under_pressure(destination, config)
+                .map_err(|error| CycleError::Fatal(error.to_string()))?;
+        let publish_ready = pending
+            && (
+                // A one-shot receiver must drain before this cycle returns.
+                status.is_some()
+                    || journal_pressure
+                    || pending_since.get_or_insert_with(Instant::now).elapsed()
+                        >= publication_interval
+            );
+        if publish_ready {
+            let flush_reason = if status.is_some() {
+                "receiver_exit"
+            } else if journal_pressure {
+                "journal_pressure"
+            } else if publication_interval.is_zero() {
+                "immediate"
+            } else {
+                "interval"
+            };
+            // A draining child cannot apply this supervisor's next window or
+            // check journal pressure/stop state between its own batches. Return
+            // after one batch while coalescing a live stream; the next loop
+            // applies the same policy to arrivals during publication. Immediate
+            // mode and receiver-exit draining retain their existing budget.
+            let max_batches = if !publication_interval.is_zero() && status.is_none() {
+                1
+            } else {
+                config.publisher_max_batches
+            };
+            log_event(
+                "supervisor",
+                "INFO",
+                "publication_flush",
+                "Publishing durable work under the configured coalescing policy",
+                &[
+                    ("subscription_id", config.subscription_id.to_string()),
+                    ("reason", flush_reason.to_owned()),
+                    ("publish_interval_ms", milliseconds.to_string()),
+                    ("max_batches", max_batches.to_string()),
+                    (
+                        "pending_elapsed_ms",
+                        pending_since
+                            .map(|started| started.elapsed().as_millis())
+                            .unwrap_or(0)
+                            .to_string(),
+                    ),
+                ],
+            );
             let mut command = Command::new(publisher);
             command
                 .env_remove("LAKE_SOURCE_PASSWORD")
-                .env("LAKE_MAX_BATCHES", config.publisher_max_batches.to_string());
+                .env("LAKE_MAX_BATCHES", max_batches.to_string())
+                .env("LAKE_PUBLICATION_FLUSH_REASON", flush_reason);
             let output = if trace_publication {
                 let started_unix_ms = SystemTime::now()
                     .duration_since(UNIX_EPOCH)
@@ -864,6 +1009,7 @@ fn run_cycle(
             .map_err(|error| CycleError::Retry(format!("could not start publisher: {error}")))?;
             ensure_success("publisher", &output).map_err(CycleError::Retry)?;
             published += 1;
+            pending_since = None;
         }
         if status.is_some() {
             return Ok((0, published));
@@ -950,6 +1096,29 @@ fn has_pending_transactions(
     )? == "true")
 }
 
+fn journal_under_pressure(
+    destination: &mut Client,
+    config: &Config,
+) -> Result<bool, Box<dyn std::error::Error>> {
+    let rows = control_query(
+        destination,
+        config,
+        &format!(
+            "SELECT (count(t.transaction_id)>=p.max_transactions OR \
+         coalesce(sum(t.journal_payload_bytes),0)*4>=p.max_payload_bytes::numeric*3)::text \
+         FROM lake_replication.journal_limits p LEFT JOIN lake_replication.transactions t \
+         ON t.subscription_id=p.subscription_id AND t.state<>'published' \
+         WHERE p.subscription_id={} GROUP BY p.max_transactions,p.max_payload_bytes",
+            config.subscription_id
+        ),
+    )?;
+    Ok(field(
+        rows.first().ok_or("journal limits disappeared")?,
+        0,
+        "journal pressure",
+    )? == "true")
+}
+
 fn report_cycle(
     destination: &mut Client,
     config: &Config,
@@ -1031,7 +1200,7 @@ impl Config {
         let legacy_user = value("LAKE_USER", "postgres");
         let source_addresses = source_addresses()?;
         let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
-        let destination_user = settings.value("LAKE_DESTINATION_USER", &legacy_user);
+        let destination_user = settings.destination_user()?;
         let destination_password = settings.optional("LAKE_DESTINATION_PASSWORD");
         let destination_tls = tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?;
         let destination_database = value("LAKE_DESTINATION_DATABASE", "analytics");
