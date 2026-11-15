@@ -101,6 +101,12 @@ gates remain open.
 
 ## Quick start
 
+For **one PostgreSQL instance and database**, follow the
+[single-instance setup](docs/local-iceberg.md#setup). It uses the same receiver,
+journal and publisher, with application heaps and Iceberg mirrors in separate
+schemas. Mirroring is asynchronous and shares the application's CPU, memory,
+WAL and disk capacity; see the [local resource and recovery evidence](docs/local-iceberg.md#qualification-and-limits).
+
 The following walkthrough assumes a source database named `application` and a
 pg_lake-enabled destination database named `analytics`. It is intended for a
 disposable evaluation environment; review the [beta limitations](#beta-limitations)
@@ -458,6 +464,8 @@ revision overrides, direct Docker builds, and the worker integration assessment.
 
 ```sh
 make check                 # formatting and offline/static checks
+cargo test --workspace --all-features # include the optional push prototype
+npm test --prefix deploy/poc/webui    # dashboard and workload controls
 make install-bundle        # native installable archive
 make install-bundle-test   # test the exact exported archive in the lab
 ```
@@ -473,6 +481,12 @@ and [historical evidence](docs/) before running individual lab targets.
 - [Compatibility contract](deploy/install/COMPATIBILITY.md)
 - [Bundle and installer details](deploy/install/README.md)
 - [Operations, metrics, logs, and alerts](docs/operations.md)
+- [Single-instance Iceberg mirroring, tuning, and qualification](docs/local-iceberg.md)
+- [Local mirroring versus remote pull](docs/local-pull-comparison.md)
+- [Publication coalescing windows](docs/local-coalescing-windows.md)
+- [DELETE filtering](docs/local-delete-filter.md)
+- [Wide UPDATE conversion](docs/local-update-conversion.md)
+- [Optional source-push prototype](docs/push-replication.md)
 - [Local demo](deploy/poc/README.md)
 - [Feasibility and correctness report](docs/feasibility.md)
 - [Update performance investigation](docs/update-performance-investigation.md)

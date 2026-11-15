@@ -24,6 +24,10 @@ jobs:
           rustup default 1.85
       - name: Check
         run: make check
+      - name: Test optional push prototype
+        run: cargo test --workspace --all-features
+      - name: Test demo dashboard and workload controls
+        run: npm test --prefix deploy/poc/webui
 
   bundle-amd64:
     name: bundle (amd64)
