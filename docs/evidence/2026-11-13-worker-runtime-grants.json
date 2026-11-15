@@ -1,0 +1,146 @@
+{
+  "archive": {
+    "changes_since_first_54_check_archive": [
+      "lake_replication-0.1.0-beta.5/README.md",
+      "lake_replication-0.1.0-beta.5/SHA256SUMS",
+      "lake_replication-0.1.0-beta.5/UPGRADE.md",
+      "lake_replication-0.1.0-beta.5/WORKER_GRANTS.md"
+    ],
+    "manifest_verified": true,
+    "path": ".qualification/worker-grants/archive/lake_replication-0.1.0-beta.5.tar.gz",
+    "sha256": "720a28151c9f55a7abf50977a21bfc66725f24faafd74409af3d1d01d53c2d02",
+    "source_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d-worker-grants-dirty"
+  },
+  "base_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+  "capabilities": [
+    "fresh INHERIT non-superuser login; no administrator membership",
+    "named grants; no blanket/default application-table grants",
+    "dedicated destination schema; worker owns created targets",
+    "CONNECT and TEMPORARY explicitly granted on target database",
+    "pg_lake lake_read_write and protected credential getter membership"
+  ],
+  "denial_checks": [
+    "recipe rejects superuser login",
+    "recipe rejects shared public destination schema",
+    "recipe rejects a missing worker parameter",
+    "recipe rejects a missing schema parameter",
+    "recipe rejects administrator membership",
+    "recipe rejects inherited broad data access",
+    "recipe rejects NOINHERIT login",
+    "unrelated application reads denied",
+    "unrelated application writes denied",
+    "unrelated DDL denied",
+    "unrelated table removal denied",
+    "unrelated schema creation denied",
+    "database schema creation denied",
+    "raw source credential reads denied",
+    "password catalog reads denied",
+    "server file reads denied",
+    "role creation denied",
+    "superuser impersonation denied",
+    "administrator grant denied",
+    "server configuration denied",
+    "launch configuration mutation denied",
+    "source identity replacement denied",
+    "source registration denied",
+    "cleanup metadata reads denied",
+    "maintenance policy replacement denied",
+    "native subscription pause denied",
+    "native subscription removal denied",
+    "native subscription creation denied"
+  ],
+  "excluded_attempts": [
+    {
+      "path": ".qualification/qualification_20261113_185430_worker_identity_e669e99d",
+      "reason": "Exploratory grant set lacked source timeline UPDATE; no result accepted."
+    },
+    {
+      "path": ".qualification/worker-grants/runner/.qualification/qualification_20261113_190203_worker_grants_552f9e24",
+      "reason": "psql quit returned success for invalid input; changed validation to raise SQL errors."
+    },
+    {
+      "path": ".qualification/worker-grants/runner/.qualification/qualification_20261113_190348_worker_grants_aad1073d",
+      "reason": "With PUBLIC TEMPORARY revoked, Iceberg UPDATE tracking failed; final recipe explicitly grants TEMPORARY."
+    }
+  ],
+  "limits": [
+    "Local ARM64 only; final-commit AMD64/ARM64 CI still required.",
+    "Control-plane privileges and credential getter access span subscriptions.",
+    "pg_lake engine/storage capabilities are trusted; no object-store isolation claim.",
+    "Recipe is additive and does not revoke prior ACLs or alter global PUBLIC defaults.",
+    "Source replication login permissions are separate.",
+    "No 24-hour soak or release publication."
+  ],
+  "native_runs": [
+    {
+      "archive_sha256": "81542f4545c21b0f82d5a7ccc98d47b58654696bdb8d22f5ac372a1c5e8d0146",
+      "checks": 54,
+      "cleanup_returncode": 0,
+      "inputs": {
+        "tests/qualification/probe.py": "4372be467090992c833a0026ed2589c403f9d0fef33fac25f575fd35e124e9b5",
+        "tests/security/worker_grants_probe.py": "7677496d3cdae80104c6195671acaa18ea0a7bed1c4c470d4094cf0ed4e70ffa"
+      },
+      "path": ".qualification/worker-grants/runner/.qualification/qualification_20261113_190645_worker_grants_b824dde3/results.json",
+      "project": "lake-replication-qualification-20261113-190645-grants-b824dde3",
+      "recipe_sha256": "248bfff15ef0b5941f1289d0b2dd3e10d9afc17cbb208da265d7bda79bf80789",
+      "sha256": "73a9e043ebe57ad21b15a26a41331fd02740f230d798669ba3c6e6ca64d5275b",
+      "status": "passed"
+    },
+    {
+      "archive_sha256": "720a28151c9f55a7abf50977a21bfc66725f24faafd74409af3d1d01d53c2d02",
+      "checks": 61,
+      "cleanup_returncode": 0,
+      "inputs": {
+        "tests/qualification/probe.py": "4372be467090992c833a0026ed2589c403f9d0fef33fac25f575fd35e124e9b5",
+        "tests/security/worker_grants_probe.py": "62dae5ebf4da734438a98d661adfa7be9c7f0753eea2a595f9ac604cd5846c7b"
+      },
+      "path": ".qualification/worker-grants/runner/.qualification/qualification_20261113_191012_worker_grants_70a3071c/results.json",
+      "project": "lake-replication-qualification-20261113-191012-grants-70a3071c",
+      "recipe_sha256": "248bfff15ef0b5941f1289d0b2dd3e10d9afc17cbb208da265d7bda79bf80789",
+      "sha256": "2ae7ab24c71fab0a467bca5e28add613efa02e0005b439611283ef854becde71",
+      "status": "passed"
+    }
+  ],
+  "object_store_isolation_qualified": false,
+  "recipe_sha256": "248bfff15ef0b5941f1289d0b2dd3e10d9afc17cbb208da265d7bda79bf80789",
+  "release_qualified": false,
+  "remaining_fixture_resources": {
+    "container": 0,
+    "network": 0,
+    "volume": 0
+  },
+  "repository_checks": {
+    "command": "make check",
+    "log": ".qualification/worker-grants/make-check-final.log",
+    "sha256": "ff9d7d5ccae6b896607d8eb4af92f52bce23a4bba8714765e3ad07ccb60c99e5",
+    "status": "passed"
+  },
+  "runtime_inputs_match_current": {
+    "extensions/lake_replication/lake_replication.c": "de79f5c1bc6a99290b8d4a055f1d32e0bd31aef4d13495fbdc6c586fe985d82b",
+    "worker/src/credentials.rs": "b2daded2d9c76f7db003396b155d10c9a5620b4ff47ab6f4e5223d23b7b09791",
+    "worker/src/initial_sync.rs": "42b8197a5da2b846499c8647b52a94659e23152cbdc2a8641bcd13227f187e34",
+    "worker/src/main.rs": "4c90ae3d07766107c75a04e46c856f1c9523ea334df5f748c37fb83d71252639",
+    "worker/src/publisher.rs": "c25fff2439255f4c35016775be536de111a1598e70b1270cab9e62bd2dc80460",
+    "worker/src/supervisor.rs": "cfe648e7b85cdd2b0ada50b6f632c4ea96c74b88c62ce2ed61d6198023b53f81"
+  },
+  "source_inputs": {
+    "base_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+    "excluded": "Concurrent demo changes excluded; explicit worker-login code included",
+    "overlays": {
+      "deploy/install/Dockerfile": "b168b381b0a193c8f0963cb3f3b9fd9e9c7353e6857b0184fd8f6d2746c64007",
+      "deploy/install/README.md": "d6bf1f8d8b5ece3b8d0485238a3308c2da53e87b23fc2251fd03a592818f22e9",
+      "deploy/install/worker-grants.sql": "248bfff15ef0b5941f1289d0b2dd3e10d9afc17cbb208da265d7bda79bf80789",
+      "docs/upgrade-and-rollback.md": "167dd9753963c2a6558cdfc9c8bbcc57ab53b3ca50664073ee36915469b03803",
+      "docs/worker-runtime-grants.md": "f75615a019e272b2776cf5cd10ca9596c87dd8f7e04555de3aac150c072a0159",
+      "extensions/lake_replication/lake_replication.c": "de79f5c1bc6a99290b8d4a055f1d32e0bd31aef4d13495fbdc6c586fe985d82b",
+      "tests/security/worker_grants_probe.py": "7677496d3cdae80104c6195671acaa18ea0a7bed1c4c470d4094cf0ed4e70ffa",
+      "worker/src/credentials.rs": "b2daded2d9c76f7db003396b155d10c9a5620b4ff47ab6f4e5223d23b7b09791",
+      "worker/src/initial_sync.rs": "42b8197a5da2b846499c8647b52a94659e23152cbdc2a8641bcd13227f187e34",
+      "worker/src/main.rs": "4c90ae3d07766107c75a04e46c856f1c9523ea334df5f748c37fb83d71252639",
+      "worker/src/publisher.rs": "c25fff2439255f4c35016775be536de111a1598e70b1270cab9e62bd2dc80460",
+      "worker/src/supervisor.rs": "cfe648e7b85cdd2b0ada50b6f632c4ea96c74b88c62ce2ed61d6198023b53f81"
+    }
+  },
+  "status": "local_runtime_grants_passed",
+  "subscription_isolation_qualified": false
+}

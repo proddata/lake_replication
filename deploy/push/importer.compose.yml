@@ -1,0 +1,58 @@
+services:
+  destination:
+    image: ${PUSH_DESTINATION_IMAGE:?select the prototype importer image}
+    environment:
+      POSTGRES_DB: analytics
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGDATA: /var/lib/postgresql/18/data
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_extension_base
+      - -c
+      - max_worker_processes=24
+      - -c
+      - pg_lake_engine.host=host=/var/run/pgduck port=5332
+      - -c
+      - pg_lake_iceberg.default_location_prefix=s3://lake-push/destination
+    volumes:
+      - destination-data:/var/lib/postgresql/18/data
+      - destination-socket:/var/run/pgduck
+      - ./destination-init:/docker-entrypoint-initdb.d:ro
+    depends_on:
+      destination-pgduck:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD-SHELL, "psql -XAt -U postgres -d analytics -c \"SELECT count(*) FROM pg_extension WHERE extname='lake_replication'\" | grep -qx 1"]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+    shm_size: 256mb
+  destination-pgduck:
+    image: ${PUSH_DESTINATION_IMAGE:?select the prototype importer image}
+    user: postgres
+    entrypoint: [pgduck_server]
+    command: [--unix_socket_directory, /var/run/pgduck, --port, '5332', --memory_limit, 1GB, --cache_dir, /tmp/pgduck-cache, --init_file_path, /push/pgduck.sql]
+    volumes:
+      - destination-data:/var/lib/postgresql/18/data
+      - destination-socket:/var/run/pgduck
+      - ./destination-pgduck.sql:/push/pgduck.sql:ro
+    depends_on:
+      destination-permissions:
+        condition: service_completed_successfully
+      storage-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, psql, -h, /var/run/pgduck, -p, '5332', -U, postgres, -d, postgres, -c, SELECT 1]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+  destination-permissions:
+    image: ${PUSH_DESTINATION_IMAGE:?select the prototype importer image}
+    user: root
+    entrypoint: [chown, postgres:postgres, /var/run/pgduck]
+    volumes:
+      - destination-socket:/var/run/pgduck
+volumes:
+  destination-data:
+  destination-socket:

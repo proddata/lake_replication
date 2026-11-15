@@ -1,0 +1,11 @@
+# Fault fixture only: WAL lives in a private, bounded, volatile filesystem.
+# Never use this override with real application data or for power-loss tests.
+services:
+  postgres:
+    environment:
+      POSTGRES_INITDB_WALDIR: /wal-budget
+    entrypoint: [/bin/bash, /wal-disk-entrypoint.sh]
+    volumes:
+      - ./wal-disk-entrypoint.sh:/wal-disk-entrypoint.sh:ro
+    tmpfs:
+      - /wal-budget:rw,size=128m,mode=0700

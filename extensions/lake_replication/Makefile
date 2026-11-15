@@ -1,6 +1,6 @@
 EXTENSION = lake_replication
 MODULE_big = lake_replication
-OBJS = lake_replication.o
+OBJS = lake_replication.o insert_grouping.o
 BASELINE_VERSION = 0.1.0
 PREVIOUS_VERSION = 0.1.0-beta.1
 FROZEN_VERSION = 0.1.0-beta.2
@@ -8,7 +8,7 @@ EXTVERSION = 0.1.0-beta.5
 ADMISSION_VERSION = 0.1.0-beta.4
 BULK_VERSION = 0.1.0-beta.3
 ALL_MIGRATIONS = $(sort $(wildcard ../../migrations/[0-9][0-9][0-9][0-9]_*.sql))
-PIPELINE_MIGRATIONS = ../../migrations/0026_split_checkpoints.sql ../../migrations/0027_chunk_staging.sql ../../migrations/0028_initial_copy_leases.sql ../../migrations/0029_source_tls_policy.sql ../../migrations/0030_update_key_filter.sql
+PIPELINE_MIGRATIONS = ../../migrations/0026_split_checkpoints.sql ../../migrations/0027_chunk_staging.sql ../../migrations/0028_initial_copy_leases.sql ../../migrations/0029_source_tls_policy.sql ../../migrations/0030_update_key_filter.sql ../../migrations/0031_jsonb_wire_values.sql ../../migrations/0032_independent_insert_groups.sql ../../migrations/0033_delete_key_filter.sql ../../migrations/0034_update_row_conversion.sql
 ADMISSION_MIGRATIONS = $(filter-out $(PIPELINE_MIGRATIONS),$(ALL_MIGRATIONS))
 ADMISSION_MIGRATION = ../../migrations/0025_staging_and_journal_admission.sql
 BULK_MIGRATIONS = $(filter-out $(ADMISSION_MIGRATION),$(ADMISSION_MIGRATIONS))

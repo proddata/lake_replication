@@ -1,0 +1,24 @@
+ARG BASE_IMAGE
+FROM rust:1.85-bookworm@sha256:e51d0265072d2d9d5d320f6a44dde6b9ef13653b035098febd68cce8fa7c0bc4 AS importer
+WORKDIR /src
+COPY Cargo.toml Cargo.lock ./
+COPY worker ./worker
+RUN cargo build --release --locked --features push-prototype --bin lake-replication-log-importer --bin lake-replication-supervisor --bin lake-replication-push-publisher
+
+# Select a qualified archive-installed destination image. The prototype is not
+# added to normal installation archives and carries no automatic worker launch.
+COPY deploy/install/third-party-licenses.py /tools/third-party-licenses.py
+RUN python3 /tools/third-party-licenses.py /third-party-licenses
+
+FROM ${BASE_IMAGE}
+ARG PUSH_BUILD_INPUT_SHA256=unknown
+LABEL io.proddata.push.input-sha256=$PUSH_BUILD_INPUT_SHA256
+USER root
+COPY --from=importer /src/target/release/lake-replication-log-importer /usr/local/bin/
+COPY --from=importer /src/target/release/lake-replication-supervisor /usr/local/bin/
+COPY --from=importer /src/target/release/lake-replication-push-publisher /usr/local/bin/
+COPY extensions/lake_replication_push /push-extension
+RUN make -C /push-extension -j2 install with_llvm=no
+COPY --from=importer /third-party-licenses /usr/local/share/lake-push-third-party-licenses
+
+LABEL io.proddata.push.test-only="synthetic-importer-v1"

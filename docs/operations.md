@@ -4,6 +4,24 @@ This guide defines the beta monitoring contract for `lake_replication`.
 Run all queries against the pg_lake destination database containing the
 `lake_replication` extension.
 
+## Worker login configuration
+
+Launcher-managed subscriptions require a protected credential file with a
+non-empty `LAKE_DESTINATION_USER`, including for passwordless authentication.
+Select the absolute path globally with `lake_replication.credential_file` or
+per subscription with `lake_credential_file`. A missing/blank identity stops
+the supervisor before destination connection or child startup. Check its
+structured `process_failed` event in the private worker logs, correct the file,
+then disable/enable the subscription or reapply its `lake_credential_file`
+setting to reload it. The launcher no longer supplies `LAKE_USER=postgres`.
+
+Selecting a login grants no privileges. Use the shipped `WORKER_GRANTS.sql`
+and [runtime grant guide](worker-runtime-grants.md) for a fresh non-superuser
+login and dedicated schema. Per-subscription credential isolation remains open;
+`lake_replication_worker` is currently trusted across subscriptions for the
+protected credential getters. Standalone CLI workers retain their legacy
+username fallback.
+
 ## Subscription status
 
 `lake_replication.subscription_status` is the primary operator interface. It

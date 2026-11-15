@@ -732,7 +732,7 @@ impl Config {
         let legacy_user = value("LAKE_USER", "postgres");
         let source_address = value("LAKE_SOURCE_ADDRESS", "127.0.0.1:55434");
         let destination_address = value("LAKE_DESTINATION_ADDRESS", "127.0.0.1:55434");
-        let destination_user = settings.value("LAKE_DESTINATION_USER", &legacy_user);
+        let destination_user = settings.destination_user()?;
         let destination_password = settings.optional("LAKE_DESTINATION_PASSWORD");
         let destination_tls = tls_config(&settings, "LAKE_DESTINATION", &[&destination_address])?;
         let destination_database = value("LAKE_DESTINATION_DATABASE", "analytics");

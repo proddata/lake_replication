@@ -350,6 +350,12 @@ jobs:
       - name: Active subscription DROP and busy source-slot retry
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         run: python3 tests/qualification/slot_cleanup.py
+      - name: Explicit launcher-managed worker identity
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
+        run: python3 tests/security/worker_identity_probe.py
+      - name: Non-superuser runtime grants and access denials
+        if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
+        run: python3 tests/security/worker_grants_probe.py
       - name: Check out the preserved beta.2 source
         if: ${{ !inputs.fairness_diagnostic && !inputs.native_probe }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

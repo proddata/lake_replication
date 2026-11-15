@@ -5,19 +5,23 @@ hardening work. They document outstanding work; they do not indicate that
 worker privilege isolation or the additional data-protection boundaries below
 have been implemented or qualified.
 
-- [ ] **Require an explicit destination worker login.** Remove the implicit
-  `postgres` fallback for launcher-managed subscriptions and reject missing
-  worker identity configuration before starting workers. Document how existing
-  installations configure a dedicated login. Workers currently default to
-  `postgres`, so their effective database privileges depend on that account and
-  the deployment's authentication configuration.
+- [x] **Require an explicit destination worker login.** Launcher-managed
+  workers require a non-empty `LAKE_DESTINATION_USER`; the launcher no longer
+  supplies `LAKE_USER=postgres`. Missing/blank identities fail before destination
+  connection or child startup. Standalone CLI fallback is unchanged. The
+  [implementation and local evidence](worker-login-requirement.md) include
+  operator migration instructions. This does not establish minimum grants or
+  per-subscription isolation, and final-commit native qualification is pending.
 
-- [ ] **Define and qualify minimum worker grants.** Provide a documented grant
-  recipe covering the control schema, journal, destination schema, and Iceberg
-  tables without requiring a superuser account. Exercise initial copy,
-  publication, recovery, schema changes, credential rotation, and cleanup using
-  that login. Add negative checks proving it cannot access unrelated tables or
-  perform unrelated administrative operations.
+- [x] **Define and locally qualify non-superuser runtime grants.** The packaged
+  `WORKER_GRANTS.sql` names control, journal, sequence and admission privileges
+  and scopes destination CREATE to a dedicated schema. Its 61-check native
+  ARM64 regression covers copy, publication, recovery, nullable-column changes,
+  credential rotation, maintenance and cleanup without superuser/admin role
+  membership, plus explicit unrelated-table and administrative denials. See the
+  [profile and limits](worker-runtime-grants.md). Final-commit native AMD64/ARM64
+  qualification remains pending; these trusted data-plane grants do not
+  establish per-subscription or object-store isolation.
 
 - [ ] **Scope credential access to assigned subscriptions.** Associate worker
   logins with the subscriptions they may operate and enforce that binding in

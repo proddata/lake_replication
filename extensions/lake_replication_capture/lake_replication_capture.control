@@ -1,0 +1,5 @@
+comment = 'Optional bounded source logical capture into private pg_lake Iceberg logs'
+default_version = '0.1.0'
+module_pathname = '$libdir/lake_replication_capture'
+relocatable = false
+requires = 'pg_lake,pg_extension_base,plpgsql'

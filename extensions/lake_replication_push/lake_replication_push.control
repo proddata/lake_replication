@@ -1,0 +1,5 @@
+comment = 'Optional bounded source-push transport for lake_replication (prototype)'
+default_version = '0.1.0'
+module_pathname = '$libdir/lake_replication_push'
+relocatable = false
+requires = 'lake_replication'

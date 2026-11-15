@@ -1,0 +1,14 @@
+# Fault fixture only: shared PostgreSQL/engine data on a bounded volatile volume.
+# Never use this override with real application data or for power-loss tests.
+services:
+  postgres:
+    entrypoint: [/bin/bash, /wal-disk-entrypoint.sh]
+    volumes:
+      - ./wal-disk-entrypoint.sh:/wal-disk-entrypoint.sh:ro
+volumes:
+  source-data:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=512m

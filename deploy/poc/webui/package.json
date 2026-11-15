@@ -2,10 +2,11 @@
   "name": "lake-replication-poc-webui",
   "version": "1.0.0",
   "private": true,
-  "description": "Minimal two-pane SQL console for demoing lake_replication locally.",
+  "description": "Live replication dashboard and SQL console for demoing lake_replication locally.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test dashboard.test.js simulator.test.js playground.test.js"
   },
   "dependencies": {
     "express": "^4.19.2",

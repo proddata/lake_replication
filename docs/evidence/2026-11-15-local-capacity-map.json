@@ -1,0 +1,1887 @@
+{
+  "scope": "bounded local transaction-rate and transaction-size map",
+  "status": "passed",
+  "cases": [
+    {
+      "workload": {
+        "name": "4 transactions per second, 100 rows per table",
+        "transactions": 40,
+        "rows": 100,
+        "interval": 0.25
+      },
+      "runs": [
+        {
+          "mode": "application_only",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-091711-ed0b678d/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 2780523,
+                "memory_bytes": 325533696,
+                "process_rss_kib_sum": 181224,
+                "process_pss_kib_sum": 47008
+              },
+              "pgduck": {
+                "cpu_usec": 3303915,
+                "memory_bytes": 236589056,
+                "process_rss_kib_sum": 112968,
+                "process_pss_kib_sum": 107011
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 3362460,
+                "memory_bytes": 334004224,
+                "process_rss_kib_sum": 192004,
+                "process_pss_kib_sum": 50250
+              },
+              "pgduck": {
+                "cpu_usec": 3586178,
+                "memory_bytes": 242237440,
+                "process_rss_kib_sum": 117072,
+                "process_pss_kib_sum": 111115
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.302413917030208,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 2880650,
+                    "memory_bytes": 329551872,
+                    "process_rss_kib_sum": 187268,
+                    "process_pss_kib_sum": 48273
+                  },
+                  "pgduck": {
+                    "cpu_usec": 3363941,
+                    "memory_bytes": 247803904,
+                    "process_rss_kib_sum": 115016,
+                    "process_pss_kib_sum": 109059
+                  }
+                },
+                "published_application_commits": 10,
+                "observed_application_commits": 10
+              },
+              {
+                "elapsed_seconds": 4.5767052919836715,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3001958,
+                    "memory_bytes": 328396800,
+                    "process_rss_kib_sum": 188728,
+                    "process_pss_kib_sum": 48837
+                  },
+                  "pgduck": {
+                    "cpu_usec": 3442786,
+                    "memory_bytes": 242405376,
+                    "process_rss_kib_sum": 117112,
+                    "process_pss_kib_sum": 111155
+                  }
+                },
+                "published_application_commits": 19,
+                "observed_application_commits": 19
+              },
+              {
+                "elapsed_seconds": 6.883463584003039,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3123067,
+                    "memory_bytes": 332152832,
+                    "process_rss_kib_sum": 190008,
+                    "process_pss_kib_sum": 49413
+                  },
+                  "pgduck": {
+                    "cpu_usec": 3504748,
+                    "memory_bytes": 240320512,
+                    "process_rss_kib_sum": 117104,
+                    "process_pss_kib_sum": 111149
+                  }
+                },
+                "published_application_commits": 28,
+                "observed_application_commits": 28
+              },
+              {
+                "elapsed_seconds": 9.147970083984546,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3267119,
+                    "memory_bytes": 333385728,
+                    "process_rss_kib_sum": 191364,
+                    "process_pss_kib_sum": 49998
+                  },
+                  "pgduck": {
+                    "cpu_usec": 3564947,
+                    "memory_bytes": 242589696,
+                    "process_rss_kib_sum": 117072,
+                    "process_pss_kib_sum": 111115
+                  }
+                },
+                "published_application_commits": 37,
+                "observed_application_commits": 37
+              }
+            ],
+            "application_commits": 40,
+            "application_commit_median_seconds": 0.006972895993385464,
+            "application_commit_p95_seconds": 0.008450457942672074,
+            "application_commit_p99_seconds": 0.008507207967340946,
+            "write_phase_seconds": 10.00467304198537,
+            "end_to_end_seconds": 10.139993124990724,
+            "cpu_seconds": {
+              "postgres": 0.581937,
+              "pgduck": 0.282263
+            },
+            "total_database_and_engine_cpu_seconds": 0.8642000000000001,
+            "database_bytes_delta": 2686976,
+            "wal_bytes": 3195896,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 332875
+                }
+              }
+            },
+            "application_transactions_per_second": 3.9981316562907114,
+            "publication_transactions_per_second": 3.944775850135164,
+            "post_write_drain_seconds": 0.1353200830053538,
+            "maximum_observed_backlog_transactions": 0,
+            "sampled_peak_pss_kib": {
+              "postgres": 50250,
+              "pgduck": 111155
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        },
+        {
+          "mode": "local_mirror",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-091737-fc4eb4fd/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 4298057,
+                "memory_bytes": 148639744,
+                "process_rss_kib_sum": 296936,
+                "process_pss_kib_sum": 62134
+              },
+              "pgduck": {
+                "cpu_usec": 1340801,
+                "memory_bytes": 149188608,
+                "process_rss_kib_sum": 119336,
+                "process_pss_kib_sum": 113098
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 6198294,
+                "memory_bytes": 169078784,
+                "process_rss_kib_sum": 331520,
+                "process_pss_kib_sum": 73189
+              },
+              "pgduck": {
+                "cpu_usec": 2673489,
+                "memory_bytes": 167247872,
+                "process_rss_kib_sum": 139588,
+                "process_pss_kib_sum": 133238
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.273398375022225,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 4595455,
+                    "memory_bytes": 159510528,
+                    "process_rss_kib_sum": 318340,
+                    "process_pss_kib_sum": 68434
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1533826,
+                    "memory_bytes": 193953792,
+                    "process_rss_kib_sum": 165464,
+                    "process_pss_kib_sum": 159114
+                  }
+                },
+                "published_application_commits": 6,
+                "observed_application_commits": 10
+              },
+              {
+                "elapsed_seconds": 4.53380420897156,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 5008790,
+                    "memory_bytes": 162213888,
+                    "process_rss_kib_sum": 323736,
+                    "process_pss_kib_sum": 69877
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1840035,
+                    "memory_bytes": 196149248,
+                    "process_rss_kib_sum": 165288,
+                    "process_pss_kib_sum": 158938
+                  }
+                },
+                "published_application_commits": 18,
+                "observed_application_commits": 19
+              },
+              {
+                "elapsed_seconds": 6.811590958968736,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 5420209,
+                    "memory_bytes": 165003264,
+                    "process_rss_kib_sum": 327112,
+                    "process_pss_kib_sum": 71229
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2110788,
+                    "memory_bytes": 180948992,
+                    "process_rss_kib_sum": 147800,
+                    "process_pss_kib_sum": 141450
+                  }
+                },
+                "published_application_commits": 24,
+                "observed_application_commits": 28
+              },
+              {
+                "elapsed_seconds": 9.076629334012978,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 5937670,
+                    "memory_bytes": 168718336,
+                    "process_rss_kib_sum": 371736,
+                    "process_pss_kib_sum": 80676
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2566508,
+                    "memory_bytes": 173662208,
+                    "process_rss_kib_sum": 141748,
+                    "process_pss_kib_sum": 135399
+                  }
+                },
+                "published_application_commits": 36,
+                "observed_application_commits": 37
+              }
+            ],
+            "application_commits": 40,
+            "application_commit_median_seconds": 0.0029078959487378597,
+            "application_commit_p95_seconds": 0.005408541997894645,
+            "application_commit_p99_seconds": 0.007512207957915962,
+            "write_phase_seconds": 10.007908875006251,
+            "end_to_end_seconds": 10.401975749991834,
+            "cpu_seconds": {
+              "postgres": 1.900237,
+              "pgduck": 1.332688
+            },
+            "total_database_and_engine_cpu_seconds": 3.232925,
+            "database_bytes_delta": 6610944,
+            "wal_bytes": 7576520,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 685167
+                },
+                "local_mirror": {
+                  "requests": 318,
+                  "api:s3.ListObjectsV2": 80,
+                  "status:200": 238,
+                  "request_bytes": 618868,
+                  "response_bytes": 28480,
+                  "kind:discovery_or_other:requests": 160,
+                  "kind:discovery_or_other:request_bytes": 13440,
+                  "kind:discovery_or_other:response_bytes": 28480,
+                  "request_duration_ns_sum": 460654579,
+                  "api:s3.HeadObject": 80,
+                  "status:404": 80,
+                  "api:s3.PutObject": 158,
+                  "kind:data_parquet:requests": 80,
+                  "kind:data_parquet:request_bytes": 155694,
+                  "kind:data_parquet:response_bytes": 0,
+                  "kind:metadata_avro:requests": 52,
+                  "kind:metadata_avro:request_bytes": 323620,
+                  "kind:metadata_avro:response_bytes": 0,
+                  "kind:metadata_json:requests": 26,
+                  "kind:metadata_json:request_bytes": 126114,
+                  "kind:metadata_json:response_bytes": 0
+                }
+              }
+            },
+            "application_transactions_per_second": 3.9968389500324077,
+            "publication_transactions_per_second": 3.845423308166374,
+            "post_write_drain_seconds": 0.3940668749855831,
+            "maximum_observed_backlog_transactions": 4,
+            "observed_publication_latency_upper_bound_seconds": {
+              "median": 1.534887375542894,
+              "p95": 2.8209809589898214,
+              "maximum": 3.070522458991036,
+              "sample_interval_seconds": 2
+            },
+            "sampled_peak_pss_kib": {
+              "postgres": 80676,
+              "pgduck": 159114
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        }
+      ],
+      "status": "passed"
+    },
+    {
+      "workload": {
+        "name": "40 transactions per second, 10 rows per table",
+        "transactions": 400,
+        "rows": 10,
+        "interval": 0.025
+      },
+      "runs": [
+        {
+          "mode": "local_mirror",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-091808-7bfdeef2/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 3217044,
+                "memory_bytes": 140935168,
+                "process_rss_kib_sum": 296616,
+                "process_pss_kib_sum": 61954
+              },
+              "pgduck": {
+                "cpu_usec": 6552640,
+                "memory_bytes": 158081024,
+                "process_rss_kib_sum": 127124,
+                "process_pss_kib_sum": 120885
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 10151541,
+                "memory_bytes": 167133184,
+                "process_rss_kib_sum": 331200,
+                "process_pss_kib_sum": 72474
+              },
+              "pgduck": {
+                "cpu_usec": 12902803,
+                "memory_bytes": 197926912,
+                "process_rss_kib_sum": 153420,
+                "process_pss_kib_sum": 147068
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.2342430830467492,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 4058057,
+                    "memory_bytes": 144584704,
+                    "process_rss_kib_sum": 277704,
+                    "process_pss_kib_sum": 64258
+                  },
+                  "pgduck": {
+                    "cpu_usec": 7445418,
+                    "memory_bytes": 184578048,
+                    "process_rss_kib_sum": 154384,
+                    "process_pss_kib_sum": 148068
+                  }
+                },
+                "published_application_commits": 64,
+                "observed_application_commits": 90
+              },
+              {
+                "elapsed_seconds": 4.4732117500388995,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 4926847,
+                    "memory_bytes": 141180928,
+                    "process_rss_kib_sum": 245160,
+                    "process_pss_kib_sum": 57936
+                  },
+                  "pgduck": {
+                    "cpu_usec": 8309633,
+                    "memory_bytes": 183549952,
+                    "process_rss_kib_sum": 151272,
+                    "process_pss_kib_sum": 144614
+                  }
+                },
+                "published_application_commits": 120,
+                "observed_application_commits": 179
+              },
+              {
+                "elapsed_seconds": 6.6999502499820665,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 5838246,
+                    "memory_bytes": 161136640,
+                    "process_rss_kib_sum": 364252,
+                    "process_pss_kib_sum": 77046
+                  },
+                  "pgduck": {
+                    "cpu_usec": 9185935,
+                    "memory_bytes": 191418368,
+                    "process_rss_kib_sum": 156844,
+                    "process_pss_kib_sum": 150422
+                  }
+                },
+                "published_application_commits": 184,
+                "observed_application_commits": 268
+              },
+              {
+                "elapsed_seconds": 8.934275833074935,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 6767238,
+                    "memory_bytes": 151175168,
+                    "process_rss_kib_sum": 327288,
+                    "process_pss_kib_sum": 67007
+                  },
+                  "pgduck": {
+                    "cpu_usec": 10032454,
+                    "memory_bytes": 188784640,
+                    "process_rss_kib_sum": 150656,
+                    "process_pss_kib_sum": 144304
+                  }
+                },
+                "published_application_commits": 240,
+                "observed_application_commits": 358
+              },
+              {
+                "elapsed_seconds": 11.160069750039838,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 7762438,
+                    "memory_bytes": 163086336,
+                    "process_rss_kib_sum": 370564,
+                    "process_pss_kib_sum": 79142
+                  },
+                  "pgduck": {
+                    "cpu_usec": 11003845,
+                    "memory_bytes": 193286144,
+                    "process_rss_kib_sum": 154828,
+                    "process_pss_kib_sum": 148476
+                  }
+                },
+                "published_application_commits": 296,
+                "observed_application_commits": 400
+              },
+              {
+                "elapsed_seconds": 13.415267750038765,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 8786415,
+                    "memory_bytes": 165990400,
+                    "process_rss_kib_sum": 367836,
+                    "process_pss_kib_sum": 78226
+                  },
+                  "pgduck": {
+                    "cpu_usec": 11844044,
+                    "memory_bytes": 197763072,
+                    "process_rss_kib_sum": 154720,
+                    "process_pss_kib_sum": 148300
+                  }
+                },
+                "published_application_commits": 344,
+                "observed_application_commits": 400
+              },
+              {
+                "elapsed_seconds": 15.680090375011787,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 9878310,
+                    "memory_bytes": 161558528,
+                    "process_rss_kib_sum": 370340,
+                    "process_pss_kib_sum": 78801
+                  },
+                  "pgduck": {
+                    "cpu_usec": 12762700,
+                    "memory_bytes": 200171520,
+                    "process_rss_kib_sum": 155724,
+                    "process_pss_kib_sum": 149301
+                  }
+                },
+                "published_application_commits": 392,
+                "observed_application_commits": 400
+              }
+            ],
+            "application_commits": 400,
+            "application_commit_median_seconds": 0.0009101045434363186,
+            "application_commit_p95_seconds": 0.001471000025048852,
+            "application_commit_p99_seconds": 0.0021436249371618032,
+            "write_phase_seconds": 10.000296917045489,
+            "end_to_end_seconds": 16.003054750035517,
+            "cpu_seconds": {
+              "postgres": 6.934497,
+              "pgduck": 6.350163
+            },
+            "total_database_and_engine_cpu_seconds": 13.28466,
+            "database_bytes_delta": 8273920,
+            "wal_bytes": 11903136,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 341376
+                },
+                "local_mirror": {
+                  "requests": 2718,
+                  "api:s3.ListObjectsV2": 800,
+                  "status:200": 1918,
+                  "request_bytes": 4532053,
+                  "response_bytes": 284800,
+                  "kind:discovery_or_other:requests": 1600,
+                  "kind:discovery_or_other:request_bytes": 134400,
+                  "kind:discovery_or_other:response_bytes": 284800,
+                  "request_duration_ns_sum": 2013562428,
+                  "api:s3.HeadObject": 800,
+                  "status:404": 800,
+                  "api:s3.PutObject": 1118,
+                  "kind:data_parquet:requests": 800,
+                  "kind:data_parquet:request_bytes": 1253032,
+                  "kind:data_parquet:response_bytes": 0,
+                  "kind:metadata_avro:requests": 212,
+                  "kind:metadata_avro:request_bytes": 1425282,
+                  "kind:metadata_avro:response_bytes": 0,
+                  "kind:metadata_json:requests": 106,
+                  "kind:metadata_json:request_bytes": 1719339,
+                  "kind:metadata_json:response_bytes": 0
+                }
+              }
+            },
+            "application_transactions_per_second": 39.99881236708089,
+            "publication_transactions_per_second": 24.995227864174634,
+            "post_write_drain_seconds": 6.002757832990028,
+            "maximum_observed_backlog_transactions": 118,
+            "observed_publication_latency_upper_bound_seconds": {
+              "median": 3.52269079152029,
+              "p95": 6.575025417027064,
+              "maximum": 7.072072874987498,
+              "sample_interval_seconds": 2
+            },
+            "sampled_peak_pss_kib": {
+              "postgres": 79142,
+              "pgduck": 150422
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        },
+        {
+          "mode": "application_only",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-091844-04757390/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 2790038,
+                "memory_bytes": 125063168,
+                "process_rss_kib_sum": 180984,
+                "process_pss_kib_sum": 46781
+              },
+              "pgduck": {
+                "cpu_usec": 2256374,
+                "memory_bytes": 171696128,
+                "process_rss_kib_sum": 142200,
+                "process_pss_kib_sum": 136239
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 3801210,
+                "memory_bytes": 131350528,
+                "process_rss_kib_sum": 192056,
+                "process_pss_kib_sum": 50173
+              },
+              "pgduck": {
+                "cpu_usec": 2556055,
+                "memory_bytes": 178110464,
+                "process_rss_kib_sum": 148348,
+                "process_pss_kib_sum": 142387
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.3295042499667034,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 2991490,
+                    "memory_bytes": 126947328,
+                    "process_rss_kib_sum": 187416,
+                    "process_pss_kib_sum": 48164
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2319892,
+                    "memory_bytes": 173809664,
+                    "process_rss_kib_sum": 144252,
+                    "process_pss_kib_sum": 138291
+                  }
+                },
+                "published_application_commits": 93,
+                "observed_application_commits": 94
+              },
+              {
+                "elapsed_seconds": 4.631613750010729,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3207235,
+                    "memory_bytes": 127967232,
+                    "process_rss_kib_sum": 188764,
+                    "process_pss_kib_sum": 48743
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2407568,
+                    "memory_bytes": 177627136,
+                    "process_rss_kib_sum": 146328,
+                    "process_pss_kib_sum": 140367
+                  }
+                },
+                "published_application_commits": 185,
+                "observed_application_commits": 186
+              },
+              {
+                "elapsed_seconds": 6.948284542071633,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3410464,
+                    "memory_bytes": 129138688,
+                    "process_rss_kib_sum": 190124,
+                    "process_pss_kib_sum": 49337
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2470383,
+                    "memory_bytes": 175849472,
+                    "process_rss_kib_sum": 146328,
+                    "process_pss_kib_sum": 140337
+                  }
+                },
+                "published_application_commits": 278,
+                "observed_application_commits": 278
+              },
+              {
+                "elapsed_seconds": 9.251818874967285,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3666989,
+                    "memory_bytes": 123498496,
+                    "process_rss_kib_sum": 191504,
+                    "process_pss_kib_sum": 49933
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2533856,
+                    "memory_bytes": 177938432,
+                    "process_rss_kib_sum": 148348,
+                    "process_pss_kib_sum": 142387
+                  }
+                },
+                "published_application_commits": 370,
+                "observed_application_commits": 370
+              }
+            ],
+            "application_commits": 400,
+            "application_commit_median_seconds": 0.00347295799292624,
+            "application_commit_p95_seconds": 0.005058208014816046,
+            "application_commit_p99_seconds": 0.005603583063930273,
+            "write_phase_seconds": 10.009881958016194,
+            "end_to_end_seconds": 10.15813195798546,
+            "cpu_seconds": {
+              "postgres": 1.011172,
+              "pgduck": 0.299681
+            },
+            "total_database_and_engine_cpu_seconds": 1.3108529999999998,
+            "database_bytes_delta": 2686976,
+            "wal_bytes": 3213368,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 441583
+                }
+              }
+            },
+            "application_transactions_per_second": 39.96051119061087,
+            "publication_transactions_per_second": 39.37731874860653,
+            "post_write_drain_seconds": 0.14824999996926636,
+            "maximum_observed_backlog_transactions": 1,
+            "sampled_peak_pss_kib": {
+              "postgres": 50173,
+              "pgduck": 142387
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        }
+      ],
+      "status": "passed"
+    },
+    {
+      "workload": {
+        "name": "100 transactions per second, 4 rows per table",
+        "transactions": 1000,
+        "rows": 4,
+        "interval": 0.01
+      },
+      "runs": [
+        {
+          "mode": "application_only",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-091909-6eadfa86/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 2841379,
+                "memory_bytes": 125136896,
+                "process_rss_kib_sum": 180988,
+                "process_pss_kib_sum": 46870
+              },
+              "pgduck": {
+                "cpu_usec": 1290013,
+                "memory_bytes": 134860800,
+                "process_rss_kib_sum": 106652,
+                "process_pss_kib_sum": 100705
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 4292520,
+                "memory_bytes": 131141632,
+                "process_rss_kib_sum": 192048,
+                "process_pss_kib_sum": 50253
+              },
+              "pgduck": {
+                "cpu_usec": 1559263,
+                "memory_bytes": 141234176,
+                "process_rss_kib_sum": 112812,
+                "process_pss_kib_sum": 106865
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.300957457977347,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3132834,
+                    "memory_bytes": 128851968,
+                    "process_rss_kib_sum": 187472,
+                    "process_pss_kib_sum": 48246
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1349043,
+                    "memory_bytes": 135274496,
+                    "process_rss_kib_sum": 106656,
+                    "process_pss_kib_sum": 100709
+                  }
+                },
+                "published_application_commits": 229,
+                "observed_application_commits": 230
+              },
+              {
+                "elapsed_seconds": 4.597127957968041,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3455279,
+                    "memory_bytes": 121393152,
+                    "process_rss_kib_sum": 188820,
+                    "process_pss_kib_sum": 48825
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1421284,
+                    "memory_bytes": 137359360,
+                    "process_rss_kib_sum": 108740,
+                    "process_pss_kib_sum": 102793
+                  }
+                },
+                "published_application_commits": 459,
+                "observed_application_commits": 460
+              },
+              {
+                "elapsed_seconds": 6.8797160419635475,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3762905,
+                    "memory_bytes": 127393792,
+                    "process_rss_kib_sum": 190116,
+                    "process_pss_kib_sum": 49418
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1480017,
+                    "memory_bytes": 137457664,
+                    "process_rss_kib_sum": 110784,
+                    "process_pss_kib_sum": 104837
+                  }
+                },
+                "published_application_commits": 687,
+                "observed_application_commits": 688
+              },
+              {
+                "elapsed_seconds": 9.144108666921966,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 4110474,
+                    "memory_bytes": 124035072,
+                    "process_rss_kib_sum": 191536,
+                    "process_pss_kib_sum": 49998
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1537147,
+                    "memory_bytes": 141348864,
+                    "process_rss_kib_sum": 112812,
+                    "process_pss_kib_sum": 106865
+                  }
+                },
+                "published_application_commits": 914,
+                "observed_application_commits": 915
+              }
+            ],
+            "application_commits": 1000,
+            "application_commit_median_seconds": 0.0029072919860482216,
+            "application_commit_p95_seconds": 0.004364541964605451,
+            "application_commit_p99_seconds": 0.005075167049653828,
+            "write_phase_seconds": 10.000938832992688,
+            "end_to_end_seconds": 10.130975542007945,
+            "cpu_seconds": {
+              "postgres": 1.451141,
+              "pgduck": 0.26925
+            },
+            "total_database_and_engine_cpu_seconds": 1.720391,
+            "database_bytes_delta": 2686976,
+            "wal_bytes": 3242240,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 425125
+                }
+              }
+            },
+            "application_transactions_per_second": 99.99061255139777,
+            "publication_transactions_per_second": 98.70717739407368,
+            "post_write_drain_seconds": 0.13003670901525766,
+            "maximum_observed_backlog_transactions": 1,
+            "sampled_peak_pss_kib": {
+              "postgres": 50253,
+              "pgduck": 106865
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        },
+        {
+          "mode": "local_mirror",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-091937-f9ebf88c/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 3087816,
+                "memory_bytes": 140247040,
+                "process_rss_kib_sum": 296988,
+                "process_pss_kib_sum": 62093
+              },
+              "pgduck": {
+                "cpu_usec": 6335753,
+                "memory_bytes": 151334912,
+                "process_rss_kib_sum": 124344,
+                "process_pss_kib_sum": 118105
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 23529494,
+                "memory_bytes": 190103552,
+                "process_rss_kib_sum": 337136,
+                "process_pss_kib_sum": 75837
+              },
+              "pgduck": {
+                "cpu_usec": 23902043,
+                "memory_bytes": 220954624,
+                "process_rss_kib_sum": 153280,
+                "process_pss_kib_sum": 147041
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.235207417048514,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3900055,
+                    "memory_bytes": 137912320,
+                    "process_rss_kib_sum": 278220,
+                    "process_pss_kib_sum": 64347
+                  },
+                  "pgduck": {
+                    "cpu_usec": 7192267,
+                    "memory_bytes": 192266240,
+                    "process_rss_kib_sum": 162572,
+                    "process_pss_kib_sum": 156475
+                  }
+                },
+                "published_application_commits": 64,
+                "observed_application_commits": 224
+              },
+              {
+                "elapsed_seconds": 4.487817459041253,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 4809905,
+                    "memory_bytes": 139190272,
+                    "process_rss_kib_sum": 281612,
+                    "process_pss_kib_sum": 65746
+                  },
+                  "pgduck": {
+                    "cpu_usec": 8063473,
+                    "memory_bytes": 196472832,
+                    "process_rss_kib_sum": 164796,
+                    "process_pss_kib_sum": 158233
+                  }
+                },
+                "published_application_commits": 128,
+                "observed_application_commits": 449
+              },
+              {
+                "elapsed_seconds": 6.7394995839567855,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 5726551,
+                    "memory_bytes": 143994880,
+                    "process_rss_kib_sum": 278508,
+                    "process_pss_kib_sum": 63633
+                  },
+                  "pgduck": {
+                    "cpu_usec": 8935305,
+                    "memory_bytes": 189435904,
+                    "process_rss_kib_sum": 155672,
+                    "process_pss_kib_sum": 149466
+                  }
+                },
+                "published_application_commits": 184,
+                "observed_application_commits": 674
+              },
+              {
+                "elapsed_seconds": 8.973524917033501,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 6690396,
+                    "memory_bytes": 160362496,
+                    "process_rss_kib_sum": 364580,
+                    "process_pss_kib_sum": 76911
+                  },
+                  "pgduck": {
+                    "cpu_usec": 9842272,
+                    "memory_bytes": 187592704,
+                    "process_rss_kib_sum": 150732,
+                    "process_pss_kib_sum": 144423
+                  }
+                },
+                "published_application_commits": 248,
+                "observed_application_commits": 898
+              },
+              {
+                "elapsed_seconds": 11.195744666969404,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 7724763,
+                    "memory_bytes": 157425664,
+                    "process_rss_kib_sum": 367164,
+                    "process_pss_kib_sum": 76519
+                  },
+                  "pgduck": {
+                    "cpu_usec": 10740198,
+                    "memory_bytes": 203100160,
+                    "process_rss_kib_sum": 165328,
+                    "process_pss_kib_sum": 159019
+                  }
+                },
+                "published_application_commits": 296,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 13.424682792043313,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 8778603,
+                    "memory_bytes": 165896192,
+                    "process_rss_kib_sum": 368996,
+                    "process_pss_kib_sum": 79504
+                  },
+                  "pgduck": {
+                    "cpu_usec": 11598897,
+                    "memory_bytes": 193536000,
+                    "process_rss_kib_sum": 156152,
+                    "process_pss_kib_sum": 149913
+                  }
+                },
+                "published_application_commits": 352,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 15.640832792036235,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 9833932,
+                    "memory_bytes": 167718912,
+                    "process_rss_kib_sum": 370088,
+                    "process_pss_kib_sum": 79975
+                  },
+                  "pgduck": {
+                    "cpu_usec": 12449462,
+                    "memory_bytes": 204746752,
+                    "process_rss_kib_sum": 163376,
+                    "process_pss_kib_sum": 157138
+                  }
+                },
+                "published_application_commits": 400,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 17.878216375014745,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 10964138,
+                    "memory_bytes": 171143168,
+                    "process_rss_kib_sum": 371620,
+                    "process_pss_kib_sum": 79639
+                  },
+                  "pgduck": {
+                    "cpu_usec": 13351816,
+                    "memory_bytes": 194109440,
+                    "process_rss_kib_sum": 155024,
+                    "process_pss_kib_sum": 148711
+                  }
+                },
+                "published_application_commits": 448,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 20.123579459032044,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 12095390,
+                    "memory_bytes": 171884544,
+                    "process_rss_kib_sum": 332680,
+                    "process_pss_kib_sum": 72432
+                  },
+                  "pgduck": {
+                    "cpu_usec": 14320089,
+                    "memory_bytes": 198705152,
+                    "process_rss_kib_sum": 155592,
+                    "process_pss_kib_sum": 149387
+                  }
+                },
+                "published_application_commits": 504,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 22.378733917023055,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 13223738,
+                    "memory_bytes": 169033728,
+                    "process_rss_kib_sum": 364376,
+                    "process_pss_kib_sum": 77067
+                  },
+                  "pgduck": {
+                    "cpu_usec": 15289876,
+                    "memory_bytes": 205283328,
+                    "process_rss_kib_sum": 157936,
+                    "process_pss_kib_sum": 151627
+                  }
+                },
+                "published_application_commits": 552,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 24.600907583953813,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 14385719,
+                    "memory_bytes": 166408192,
+                    "process_rss_kib_sum": 333008,
+                    "process_pss_kib_sum": 73097
+                  },
+                  "pgduck": {
+                    "cpu_usec": 16258288,
+                    "memory_bytes": 201687040,
+                    "process_rss_kib_sum": 153016,
+                    "process_pss_kib_sum": 146703
+                  }
+                },
+                "published_application_commits": 600,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 26.858581249951385,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 15517269,
+                    "memory_bytes": 166981632,
+                    "process_rss_kib_sum": 333512,
+                    "process_pss_kib_sum": 73234
+                  },
+                  "pgduck": {
+                    "cpu_usec": 17268924,
+                    "memory_bytes": 211402752,
+                    "process_rss_kib_sum": 166228,
+                    "process_pss_kib_sum": 159916
+                  }
+                },
+                "published_application_commits": 648,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 29.076072750031017,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 16703111,
+                    "memory_bytes": 168509440,
+                    "process_rss_kib_sum": 334824,
+                    "process_pss_kib_sum": 73560
+                  },
+                  "pgduck": {
+                    "cpu_usec": 18374880,
+                    "memory_bytes": 206827520,
+                    "process_rss_kib_sum": 151312,
+                    "process_pss_kib_sum": 145214
+                  }
+                },
+                "published_application_commits": 696,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 31.326599625055678,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 17812525,
+                    "memory_bytes": 168665088,
+                    "process_rss_kib_sum": 378496,
+                    "process_pss_kib_sum": 83028
+                  },
+                  "pgduck": {
+                    "cpu_usec": 19459518,
+                    "memory_bytes": 223961088,
+                    "process_rss_kib_sum": 167824,
+                    "process_pss_kib_sum": 161120
+                  }
+                },
+                "published_application_commits": 736,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 33.56206341704819,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 19029519,
+                    "memory_bytes": 170205184,
+                    "process_rss_kib_sum": 335536,
+                    "process_pss_kib_sum": 73971
+                  },
+                  "pgduck": {
+                    "cpu_usec": 20431857,
+                    "memory_bytes": 214777856,
+                    "process_rss_kib_sum": 157160,
+                    "process_pss_kib_sum": 150921
+                  }
+                },
+                "published_application_commits": 784,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 35.787754417047836,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 20166369,
+                    "memory_bytes": 160890880,
+                    "process_rss_kib_sum": 256316,
+                    "process_pss_kib_sum": 64452
+                  },
+                  "pgduck": {
+                    "cpu_usec": 21396187,
+                    "memory_bytes": 226078720,
+                    "process_rss_kib_sum": 166236,
+                    "process_pss_kib_sum": 160138
+                  }
+                },
+                "published_application_commits": 832,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 38.0179594589863,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 21367458,
+                    "memory_bytes": 191537152,
+                    "process_rss_kib_sum": 339544,
+                    "process_pss_kib_sum": 72639
+                  },
+                  "pgduck": {
+                    "cpu_usec": 22280144,
+                    "memory_bytes": 234778624,
+                    "process_rss_kib_sum": 172452,
+                    "process_pss_kib_sum": 166213
+                  }
+                },
+                "published_application_commits": 888,
+                "observed_application_commits": 1000
+              },
+              {
+                "elapsed_seconds": 40.2721791670192,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 22448932,
+                    "memory_bytes": 199041024,
+                    "process_rss_kib_sum": 377904,
+                    "process_pss_kib_sum": 83192
+                  },
+                  "pgduck": {
+                    "cpu_usec": 23139581,
+                    "memory_bytes": 255696896,
+                    "process_rss_kib_sum": 189576,
+                    "process_pss_kib_sum": 183267
+                  }
+                },
+                "published_application_commits": 944,
+                "observed_application_commits": 1000
+              }
+            ],
+            "application_commits": 1000,
+            "application_commit_median_seconds": 0.0008076250087469816,
+            "application_commit_p95_seconds": 0.001390916993841529,
+            "application_commit_p99_seconds": 0.0023176249815151095,
+            "write_phase_seconds": 10.004628292052075,
+            "end_to_end_seconds": 42.233586583985016,
+            "cpu_seconds": {
+              "postgres": 20.441678,
+              "pgduck": 17.56629
+            },
+            "total_database_and_engine_cpu_seconds": 38.007968,
+            "database_bytes_delta": 11395072,
+            "wal_bytes": 20110272,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 358416
+                },
+                "local_mirror": {
+                  "requests": 6752,
+                  "api:s3.ListObjectsV2": 2000,
+                  "status:200": 4752,
+                  "request_bytes": 16104255,
+                  "response_bytes": 712000,
+                  "kind:discovery_or_other:requests": 4000,
+                  "kind:discovery_or_other:request_bytes": 336000,
+                  "kind:discovery_or_other:response_bytes": 712000,
+                  "request_duration_ns_sum": 4969335490,
+                  "api:s3.HeadObject": 2000,
+                  "status:404": 2000,
+                  "api:s3.PutObject": 2752,
+                  "kind:data_parquet:requests": 2000,
+                  "kind:data_parquet:request_bytes": 3008164,
+                  "kind:data_parquet:response_bytes": 0,
+                  "kind:metadata_avro:requests": 502,
+                  "kind:metadata_avro:request_bytes": 3589027,
+                  "kind:metadata_avro:response_bytes": 0,
+                  "kind:metadata_json:requests": 250,
+                  "kind:metadata_json:request_bytes": 9171064,
+                  "kind:metadata_json:response_bytes": 0
+                }
+              }
+            },
+            "application_transactions_per_second": 99.95373849065685,
+            "publication_transactions_per_second": 23.67783749579062,
+            "post_write_drain_seconds": 32.22895829193294,
+            "maximum_observed_backlog_transactions": 704,
+            "observed_publication_latency_upper_bound_seconds": {
+              "median": 15.605329104524571,
+              "p95": 32.28902779193595,
+              "maximum": 32.79143966699485,
+              "sample_interval_seconds": 2
+            },
+            "sampled_peak_pss_kib": {
+              "postgres": 83192,
+              "pgduck": 183267
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        }
+      ],
+      "status": "passed"
+    },
+    {
+      "workload": {
+        "name": "4 transactions per second, 1000 rows per table",
+        "transactions": 40,
+        "rows": 1000,
+        "interval": 0.25
+      },
+      "runs": [
+        {
+          "mode": "local_mirror",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-092039-16d3a54a/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 3157793,
+                "memory_bytes": 140427264,
+                "process_rss_kib_sum": 297088,
+                "process_pss_kib_sum": 62075
+              },
+              "pgduck": {
+                "cpu_usec": 1373212,
+                "memory_bytes": 156749824,
+                "process_rss_kib_sum": 127212,
+                "process_pss_kib_sum": 120972
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 6999948,
+                "memory_bytes": 350584832,
+                "process_rss_kib_sum": 399384,
+                "process_pss_kib_sum": 139305
+              },
+              "pgduck": {
+                "cpu_usec": 2864211,
+                "memory_bytes": 176435200,
+                "process_rss_kib_sum": 148568,
+                "process_pss_kib_sum": 142216
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.264028458041139,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3864482,
+                    "memory_bytes": 185282560,
+                    "process_rss_kib_sum": 350952,
+                    "process_pss_kib_sum": 94681
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1569168,
+                    "memory_bytes": 210161664,
+                    "process_rss_kib_sum": 182396,
+                    "process_pss_kib_sum": 176045
+                  }
+                },
+                "published_application_commits": 6,
+                "observed_application_commits": 9
+              },
+              {
+                "elapsed_seconds": 4.511426417040639,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 4666502,
+                    "memory_bytes": 242380800,
+                    "process_rss_kib_sum": 409660,
+                    "process_pss_kib_sum": 119145
+                  },
+                  "pgduck": {
+                    "cpu_usec": 1896149,
+                    "memory_bytes": 193519616,
+                    "process_rss_kib_sum": 162920,
+                    "process_pss_kib_sum": 156492
+                  }
+                },
+                "published_application_commits": 18,
+                "observed_application_commits": 19
+              },
+              {
+                "elapsed_seconds": 6.764917667023838,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 5491234,
+                    "memory_bytes": 276475904,
+                    "process_rss_kib_sum": 379256,
+                    "process_pss_kib_sum": 120470
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2171745,
+                    "memory_bytes": 180813824,
+                    "process_rss_kib_sum": 153040,
+                    "process_pss_kib_sum": 146688
+                  }
+                },
+                "published_application_commits": 24,
+                "observed_application_commits": 28
+              },
+              {
+                "elapsed_seconds": 8.998719042050652,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 6334030,
+                    "memory_bytes": 333324288,
+                    "process_rss_kib_sum": 438416,
+                    "process_pss_kib_sum": 145365
+                  },
+                  "pgduck": {
+                    "cpu_usec": 2561407,
+                    "memory_bytes": 191426560,
+                    "process_rss_kib_sum": 162520,
+                    "process_pss_kib_sum": 156097
+                  }
+                },
+                "published_application_commits": 35,
+                "observed_application_commits": 36
+              }
+            ],
+            "application_commits": 40,
+            "application_commit_median_seconds": 0.010346958530135453,
+            "application_commit_p95_seconds": 0.014902915921993554,
+            "application_commit_p99_seconds": 0.015129458042792976,
+            "write_phase_seconds": 10.010054958052933,
+            "end_to_end_seconds": 10.82939929200802,
+            "cpu_seconds": {
+              "postgres": 3.842155,
+              "pgduck": 1.490999
+            },
+            "total_database_and_engine_cpu_seconds": 5.333154,
+            "database_bytes_delta": 59908096,
+            "wal_bytes": 70144704,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 310875
+                },
+                "local_mirror": {
+                  "requests": 564,
+                  "api:s3.ListObjectsV2": 160,
+                  "status:200": 404,
+                  "request_bytes": 1090752,
+                  "response_bytes": 56960,
+                  "kind:discovery_or_other:requests": 320,
+                  "kind:discovery_or_other:request_bytes": 26880,
+                  "kind:discovery_or_other:response_bytes": 56960,
+                  "request_duration_ns_sum": 391019924,
+                  "api:s3.HeadObject": 160,
+                  "status:404": 160,
+                  "api:s3.PutObject": 244,
+                  "kind:data_parquet:requests": 160,
+                  "kind:data_parquet:request_bytes": 567974,
+                  "kind:data_parquet:response_bytes": 0,
+                  "kind:metadata_json:requests": 28,
+                  "kind:metadata_json:request_bytes": 143770,
+                  "kind:metadata_json:response_bytes": 0,
+                  "kind:metadata_avro:requests": 56,
+                  "kind:metadata_avro:request_bytes": 352128,
+                  "kind:metadata_avro:response_bytes": 0
+                }
+              }
+            },
+            "application_transactions_per_second": 3.9959820568038564,
+            "publication_transactions_per_second": 3.693649012417482,
+            "post_write_drain_seconds": 0.8193443339550868,
+            "maximum_observed_backlog_transactions": 4,
+            "observed_publication_latency_upper_bound_seconds": {
+              "median": 1.6562023960286751,
+              "p95": 2.739683459047228,
+              "maximum": 3.0054389589931816,
+              "sample_interval_seconds": 2
+            },
+            "sampled_peak_pss_kib": {
+              "postgres": 145365,
+              "pgduck": 176045
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        },
+        {
+          "mode": "application_only",
+          "passed": true,
+          "evidence": ".qualification/lake-push-probe-20261115-092110-c2144f0c/results.json",
+          "measurement": {
+            "status": "passed",
+            "before": {
+              "postgres": {
+                "cpu_usec": 2837096,
+                "memory_bytes": 125616128,
+                "process_rss_kib_sum": 181052,
+                "process_pss_kib_sum": 46886
+              },
+              "pgduck": {
+                "cpu_usec": 6314036,
+                "memory_bytes": 142422016,
+                "process_rss_kib_sum": 111176,
+                "process_pss_kib_sum": 105222
+              }
+            },
+            "after": {
+              "postgres": {
+                "cpu_usec": 3645203,
+                "memory_bytes": 196386816,
+                "process_rss_kib_sum": 216236,
+                "process_pss_kib_sum": 73175
+              },
+              "pgduck": {
+                "cpu_usec": 6593361,
+                "memory_bytes": 146726912,
+                "process_rss_kib_sum": 115276,
+                "process_pss_kib_sum": 109318
+              }
+            },
+            "samples": [
+              {
+                "elapsed_seconds": 2.3033169580157846,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 2993094,
+                    "memory_bytes": 138006528,
+                    "process_rss_kib_sum": 195792,
+                    "process_pss_kib_sum": 53436
+                  },
+                  "pgduck": {
+                    "cpu_usec": 6376023,
+                    "memory_bytes": 142979072,
+                    "process_rss_kib_sum": 111176,
+                    "process_pss_kib_sum": 105218
+                  }
+                },
+                "published_application_commits": 10,
+                "observed_application_commits": 10
+              },
+              {
+                "elapsed_seconds": 4.57085033308249,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3169303,
+                    "memory_bytes": 149786624,
+                    "process_rss_kib_sum": 201912,
+                    "process_pss_kib_sum": 59172
+                  },
+                  "pgduck": {
+                    "cpu_usec": 6452358,
+                    "memory_bytes": 142417920,
+                    "process_rss_kib_sum": 111200,
+                    "process_pss_kib_sum": 105242
+                  }
+                },
+                "published_application_commits": 19,
+                "observed_application_commits": 19
+              },
+              {
+                "elapsed_seconds": 6.874616958084516,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3337228,
+                    "memory_bytes": 172306432,
+                    "process_rss_kib_sum": 207712,
+                    "process_pss_kib_sum": 64883
+                  },
+                  "pgduck": {
+                    "cpu_usec": 6514543,
+                    "memory_bytes": 144781312,
+                    "process_rss_kib_sum": 113248,
+                    "process_pss_kib_sum": 107292
+                  }
+                },
+                "published_application_commits": 28,
+                "observed_application_commits": 28
+              },
+              {
+                "elapsed_seconds": 9.135191166074947,
+                "services": {
+                  "postgres": {
+                    "cpu_usec": 3532183,
+                    "memory_bytes": 190857216,
+                    "process_rss_kib_sum": 213552,
+                    "process_pss_kib_sum": 70631
+                  },
+                  "pgduck": {
+                    "cpu_usec": 6572733,
+                    "memory_bytes": 147161088,
+                    "process_rss_kib_sum": 115276,
+                    "process_pss_kib_sum": 109318
+                  }
+                },
+                "published_application_commits": 37,
+                "observed_application_commits": 37
+              }
+            ],
+            "application_commits": 40,
+            "application_commit_median_seconds": 0.014134604076389223,
+            "application_commit_p95_seconds": 0.016829750034958124,
+            "application_commit_p99_seconds": 0.01689950004220009,
+            "write_phase_seconds": 10.01011237502098,
+            "end_to_end_seconds": 10.14373420807533,
+            "cpu_seconds": {
+              "postgres": 0.808107,
+              "pgduck": 0.279325
+            },
+            "total_database_and_engine_cpu_seconds": 1.087432,
+            "database_bytes_delta": 26148864,
+            "wal_bytes": 31653912,
+            "object_operations": {
+              "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+              "readiness_witness": true,
+              "completion_witness": true,
+              "categories": {
+                "bucket_or_other": {
+                  "requests": 2,
+                  "api:s3.GetBucketLocation": 2,
+                  "status:200": 2,
+                  "request_bytes": 186,
+                  "response_bytes": 256,
+                  "kind:discovery_or_other:requests": 2,
+                  "kind:discovery_or_other:request_bytes": 186,
+                  "kind:discovery_or_other:response_bytes": 256,
+                  "request_duration_ns_sum": 422417
+                }
+              }
+            },
+            "application_transactions_per_second": 3.995959136264558,
+            "publication_transactions_per_second": 3.943320988059445,
+            "post_write_drain_seconds": 0.13362183305434883,
+            "maximum_observed_backlog_transactions": 0,
+            "sampled_peak_pss_kib": {
+              "postgres": 73175,
+              "pgduck": 109318
+            }
+          },
+          "images": {
+            "PUSH_PG_LAKE_IMAGE": {
+              "reference": "lake-local-iceberg:qualification-v3",
+              "id": "sha256:6e046c8620449a1c25197081d0fc4408500f2d9f328cdaceaca4797f4b5bbef2",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_IMAGE": {
+              "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+              "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+              "architecture": "arm64",
+              "digests": []
+            },
+            "PUSH_STORAGE_INIT_IMAGE": {
+              "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+              "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+              "architecture": "arm64",
+              "digests": []
+            }
+          },
+          "error": null
+        }
+      ],
+      "status": "passed"
+    }
+  ],
+  "methodology": "Fresh private baseline and mirror volumes per case; order alternates. One-second publication coalescing. One persistent serial application writer. Requested rate is offered load, not guaranteed achieved throughput. Each write phase targets ten seconds; publication may drain afterward for at most ninety seconds. Resource and backlog observations include observer cost and sampling delay. Cases are sequential; no competing qualification jobs. No cold-cache isolation, capacity maximum, production sizing or confidence interval is established. Failed points are retained and do not stop the remaining cases.",
+  "files_sha256": {
+    "tests/local_iceberg/capacity.py": "60a4f44beffd9b02d2326cb26b3e564c7e4ed619e48ae16b8ca138d8fdf25dc6",
+    "tests/local_iceberg/benchmark.py": "02e99153795c52b194363be028ea38f2ea131bd9e66be949e028dcdfd36a74e0"
+  },
+  "failed_cases": 0
+}

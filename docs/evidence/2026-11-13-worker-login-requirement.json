@@ -1,0 +1,117 @@
+{
+  "archive": {
+    "path": ".qualification/worker-identity/archive/lake_replication-0.1.0-beta.5.tar.gz",
+    "sha256": "c8e0eca87c4bee129640d907b0d8f8a84e20e89b785327ba40d5053553525b9c",
+    "source_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d-explicit-worker-login-dirty"
+  },
+  "base_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+  "build_inputs": {
+    "base_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+    "excluded": "Concurrent demo changes excluded",
+    "overlays": {
+      "README.md": "5d860dd4775c3c5704835641e33c6cdd974a9a7fbdae0ee26da3ea031a35fa0e",
+      "deploy/install/README.md": "aec5163bd1b1a2655d854caf80ef38214c1a417e88b426c022e7b238449346bd",
+      "docs/upgrade-and-rollback.md": "108f5b76f29a625c73135f41e398a8d2e83b45cc611e9515f5b7a366d90b39d2",
+      "extensions/lake_replication/lake_replication.c": "de79f5c1bc6a99290b8d4a055f1d32e0bd31aef4d13495fbdc6c586fe985d82b",
+      "tests/security/worker_identity_probe.py": "17c5e40c9b014917b0b39786376fa280c980999fb93bdbbf313da19bf49dafe2",
+      "worker/src/credentials.rs": "b2daded2d9c76f7db003396b155d10c9a5620b4ff47ab6f4e5223d23b7b09791",
+      "worker/src/initial_sync.rs": "42b8197a5da2b846499c8647b52a94659e23152cbdc2a8641bcd13227f187e34",
+      "worker/src/main.rs": "4c90ae3d07766107c75a04e46c856f1c9523ea334df5f748c37fb83d71252639",
+      "worker/src/publisher.rs": "c25fff2439255f4c35016775be536de111a1598e70b1270cab9e62bd2dc80460",
+      "worker/src/supervisor.rs": "cfe648e7b85cdd2b0ada50b6f632c4ea96c74b88c62ce2ed61d6198023b53f81",
+      "worker/tests/worker_identity.rs": "3f8041bc282b95b3154ff79ebdfccbaf45434fd588466bd51f68cc96cbb079c0"
+    }
+  },
+  "excluded_attempts": [
+    {
+      "path": ".qualification/worker-identity/runner/.qualification/qualification_20261113_183211_worker_identity",
+      "reason": "Harness environment inspection used root without ptrace permission; corrected to PostgreSQL OS user."
+    },
+    {
+      "path": ".qualification/worker-identity/runner/.qualification/qualification_20261113_183354",
+      "reason": "Concurrent harnesses collided on second-resolution Docker project/image names; no product result accepted."
+    },
+    {
+      "path": ".qualification/worker-identity/runner/.qualification/qualification_20261113_183354_worker_identity",
+      "reason": "Same project-name collision; final probe adds unique project and image suffixes."
+    }
+  ],
+  "limits": [
+    "Native packaged tests run on ARM64 only; final-commit amd64/arm64 CI remains required.",
+    "Positive native login is deliberately SUPERUSER; no minimum-grants claim.",
+    "Standalone CLI legacy login fallback retained.",
+    "No subscription ACL or retention/resource policy changes.",
+    "No 24-hour soak, signed publication or release verification."
+  ],
+  "minimum_grants_qualified": false,
+  "native_identity": {
+    "archive_sha256": "c8e0eca87c4bee129640d907b0d8f8a84e20e89b785327ba40d5053553525b9c",
+    "checks": 19,
+    "cleanup_returncode": 0,
+    "error": null,
+    "inputs": {
+      "tests/qualification/probe.py": "4372be467090992c833a0026ed2589c403f9d0fef33fac25f575fd35e124e9b5",
+      "tests/security/worker_identity_probe.py": "7994cc7cfa5e750e0d0fd58916af678a59e0052b1648b3da8a3c669865cd15e3"
+    },
+    "path": ".qualification/worker-identity/runner/.qualification/qualification_20261113_183459_worker_identity_1664106e/results.json",
+    "source_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d-explicit-worker-login-dirty",
+    "status": "passed"
+  },
+  "packaged_replication": {
+    "archive_sha256": "c8e0eca87c4bee129640d907b0d8f8a84e20e89b785327ba40d5053553525b9c",
+    "checks": 57,
+    "cleanup_returncode": null,
+    "error": null,
+    "inputs": null,
+    "path": ".qualification/worker-identity/runner/.qualification/qualification_20261113_183517/results.json",
+    "remaining_resources": {
+      "container": 0,
+      "network": 0,
+      "volume": 0
+    },
+    "source_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d-explicit-worker-login-dirty",
+    "status": "passed"
+  },
+  "pre_change_control": {
+    "archive_sha256": "a4d2751842a9d65f134ea6b1b2ce9c7082e7b3a10e448b63859ff1e18aae5c00",
+    "checks": 3,
+    "cleanup_returncode": 0,
+    "error": "identity_missing reports missing explicit identity: expected True, got False",
+    "inputs": {
+      "tests/qualification/probe.py": "4372be467090992c833a0026ed2589c403f9d0fef33fac25f575fd35e124e9b5",
+      "tests/security/worker_identity_probe.py": "7994cc7cfa5e750e0d0fd58916af678a59e0052b1648b3da8a3c669865cd15e3"
+    },
+    "path": ".qualification/worker-identity/runner/.qualification/qualification_20261113_183517_worker_identity_5bb2b2c0/results.json",
+    "source_log_sha256": "288dc77008cc133b46d24c54459138a98edc8b5979c0236a3d2981453459ad1f",
+    "source_revision": "30866e27f7df5c93d7a36d7c7be59771eed5949c-update-key-filter-dirty",
+    "source_started_replication_for_missing_identity": true,
+    "status": "error"
+  },
+  "release_qualified": false,
+  "repository_checks": {
+    "command": "make check",
+    "log": ".qualification/worker-identity/make-check-final.log",
+    "log_sha256": "6eeba053480a41f9f7e565eeee3c931df10b7c067f5abd0bea74ce7516e2c1e4",
+    "status": "passed"
+  },
+  "runtime_inputs_match_current": {
+    "extensions/lake_replication/lake_replication.c": "de79f5c1bc6a99290b8d4a055f1d32e0bd31aef4d13495fbdc6c586fe985d82b",
+    "worker/src/credentials.rs": "b2daded2d9c76f7db003396b155d10c9a5620b4ff47ab6f4e5223d23b7b09791",
+    "worker/src/initial_sync.rs": "42b8197a5da2b846499c8647b52a94659e23152cbdc2a8641bcd13227f187e34",
+    "worker/src/main.rs": "4c90ae3d07766107c75a04e46c856f1c9523ea334df5f748c37fb83d71252639",
+    "worker/src/publisher.rs": "c25fff2439255f4c35016775be536de111a1598e70b1270cab9e62bd2dc80460",
+    "worker/src/supervisor.rs": "cfe648e7b85cdd2b0ada50b6f632c4ea96c74b88c62ce2ed61d6198023b53f81"
+  },
+  "status": "local_validation_passed",
+  "subscription_isolation_qualified": false,
+  "worker_protocol_tests": {
+    "architecture": "arm64",
+    "cases": 32,
+    "command": "cargo test --test worker_identity",
+    "evidence": "Included in make check below",
+    "platform": "Darwin",
+    "source_sha256": "f052080f20a27e2d3b7f111789a803da2a156b96ed3181dba2b4fa99d83554c9",
+    "status": "passed",
+    "tests": 2
+  }
+}

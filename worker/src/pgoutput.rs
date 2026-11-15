@@ -1,5 +1,6 @@
 //! Decoder for the insert-only subset of PostgreSQL's `pgoutput` protocol.
 
+pub use crate::events::{Cell, Column, IdentityKind, IdentityTuple, Relation, TupleFormat};
 use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -33,23 +34,6 @@ pub struct Commit {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Relation {
-    pub id: u32,
-    pub namespace: String,
-    pub name: String,
-    pub replica_identity: u8,
-    pub columns: Vec<Column>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Column {
-    pub flags: u8,
-    pub name: String,
-    pub type_oid: u32,
-    pub type_modifier: i32,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Insert {
     pub relation_id: u32,
     pub values: Vec<Cell>,
@@ -66,18 +50,6 @@ pub struct Update {
 pub struct Delete {
     pub relation_id: u32,
     pub old_tuple: IdentityTuple,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct IdentityTuple {
-    pub kind: IdentityKind,
-    pub values: Vec<Cell>,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum IdentityKind {
-    Key,
-    Full,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -104,19 +76,6 @@ pub struct StreamAbort {
     pub subxid: u32,
     pub abort_lsn: Option<u64>,
     pub abort_time_micros: Option<i64>,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum TupleFormat {
-    Text,
-    Binary,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Cell {
-    Null,
-    UnchangedToast,
-    Value { format: TupleFormat, bytes: Vec<u8> },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

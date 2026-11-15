@@ -11,7 +11,7 @@ PG_LAKE_REV ?= $(shell git -C vendor/pg_lake rev-parse HEAD)
 
 .PHONY: upstream-source
 
-.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop performance-test failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test empty-filtered-test receiver-progress-test admission-test lifecycle-test lifecycle-upgrade-test lifecycle-fault-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-logs poc-stop poc-down check
+.PHONY: lab-build lab-up lab-test lab-crash-test lab-logs lab-stop performance-test failover-up failover-test failover-stop patroni-up patroni-test patroni-stop slot-loss-up slot-loss-test slot-loss-stop scram-test tls-test journal-install journal-test journal-maintenance-test transport-test publisher-test mutations-test streaming-test empty-filtered-test receiver-progress-test admission-test lifecycle-test lifecycle-upgrade-test lifecycle-fault-test toast-test initial-sync-test multi-table-test auto-schema-test schema-evolution-test rebuild-test supervisor-test source-continuity-test source-endpoints-test iceberg-maintenance-test native-subscription-spike-test postgres-integration-test lake-replication-extension lake-replication-extension-test install-bundle install-bundles install-bundle-test qualification-test compatibility-test poc-build poc-up poc-ui poc-logs poc-stop poc-down check
 upstream-source:
 	python3 deploy/prepare-upstream.py $(PG_LAKE_REV)
 
@@ -146,6 +146,9 @@ poc-build: upstream-source
 poc-up: upstream-source
 	PG_LAKE_REV=$(PG_LAKE_REV) $(POC_COMPOSE) up -d --wait --wait-timeout 180
 	@echo "Demo console: http://127.0.0.1:8080"
+poc-ui:
+	$(POC_COMPOSE) up -d --build --no-deps webui
+	@echo "Demo console: http://127.0.0.1:8080"
 poc-logs:
 	$(POC_COMPOSE) logs --no-color --tail 200 -f
 poc-stop:
@@ -155,6 +158,8 @@ poc-down:
 check:
 	python3 -m unittest discover -s tests/security -p 'test_*.py'
 	python3 -m py_compile tests/security/probe_sql.py tests/security/probe_tls.py tests/security/archive_tls_upgrade.py
+	python3 -m py_compile tests/security/worker_identity_probe.py
+	python3 -m py_compile tests/security/worker_grants_probe.py
 	python3 -m py_compile deploy/prepare-upstream.py deploy/pg_lake/patchset.py
 	python3 -m unittest discover -s tests/upstream -p 'test_*.py'
 	python3 -m compileall -q tests/support
@@ -168,6 +173,7 @@ check:
 	python3 -m py_compile tests/journal/probe.py
 	python3 -m py_compile tests/transport/probe.py
 	python3 -m py_compile tests/publisher/probe.py
+	python3 -m py_compile deploy/push/build-bundles.py tests/push_capture/*.py tests/push_replication/*.py tests/local_iceberg/*.py
 	python3 -m py_compile tests/mutations/probe.py
 	rustfmt --edition 2024 --check tests/admission/staging_budget.rs tests/admission/receiver_progress.rs tests/admission/cycle_timing.rs
 	python3 -m py_compile tests/admission/probe.py tests/admission/copy_configuration_compare.py tests/admission/sql_profile_probe.py tests/admission/checkpoint_sql_profile.py tests/admission/query_trace_results.py tests/admission/commit_profile_overlay.py tests/admission/commit_profile_results.py tests/admission/manifest_cleanup_probe.py tests/admission/manifest_cleanup_compare.py tests/admission/manifest_patch_verify.py tests/admission/manifest_count_probe.py tests/admission/managed_cases.py tests/admission/pool_cases.py tests/admission/contention.py tests/admission/staging_budget.py tests/admission/budget_operations.py tests/admission/budget_results.py tests/admission/pressure.py tests/admission/receiver_progress.py tests/admission/receiver_operations.py tests/admission/receiver_results.py tests/admission/cycle_results.py tests/admission/staging_gate.py tests/admission/staging_gate_operations.py tests/admission/staging_gate_results.py
@@ -202,6 +208,14 @@ check:
 	python3 -m py_compile tests/qualification/compatibility.py tests/qualification/recovery.py tests/qualification/tls.py tests/qualification/security.py deploy/install/third-party-licenses.py
 	$(MAKE) -C extensions/lake_replication generate
 	python3 -m unittest discover -s tests/admission -p 'test_*.py'
+	! grep -q '0032_independent_insert_groups.sql' extensions/lake_replication/lake_replication--0.1.0-beta.4.sql
+	grep -q '0032_independent_insert_groups.sql' extensions/lake_replication/lake_replication--0.1.0-beta.5.sql
+	! grep -q '0033_delete_key_filter.sql' extensions/lake_replication/lake_replication--0.1.0-beta.4.sql
+	grep -q '0033_delete_key_filter.sql' extensions/lake_replication/lake_replication--0.1.0-beta.5.sql
+	! grep -q '0034_update_row_conversion.sql' extensions/lake_replication/lake_replication--0.1.0-beta.4.sql
+	grep -q '0034_update_row_conversion.sql' extensions/lake_replication/lake_replication--0.1.0-beta.5.sql
+	! grep -q '0031_jsonb_wire_values.sql' extensions/lake_replication/lake_replication--0.1.0-beta.4.sql
+	grep -q '0031_jsonb_wire_values.sql' extensions/lake_replication/lake_replication--0.1.0-beta.5.sql
 	! grep -q '0016_observability.sql' extensions/lake_replication/lake_replication--0.1.0.sql
 	! grep -q '0017_common_parameterized_types.sql' extensions/lake_replication/lake_replication--0.1.0.sql
 	! grep -q '0018_postgres_integration.sql' extensions/lake_replication/lake_replication--0.1.0.sql
@@ -231,3 +245,109 @@ check:
 	TLS_LAB_ADMIN_PASSWORD=check TLS_LAB_SOURCE_PASSWORD=check $(TLS_COMPOSE) config --quiet
 	$(POC_COMPOSE) config --quiet
 	QUALIFICATION_SOURCE_IMAGE=check QUALIFICATION_DESTINATION_IMAGE=check QUALIFICATION_STORAGE_IMAGE=check QUALIFICATION_STORAGE_INIT_IMAGE=check QUAL_ADMIN_PASSWORD=check QUAL_SOURCE_PASSWORD=check QUAL_ROTATED_SOURCE_PASSWORD=check-rotated $(QUALIFICATION_COMPOSE) config --quiet
+	bash -n deploy/local/wal-disk-entrypoint.sh
+	PUSH_PG_LAKE_IMAGE=check PUSH_STORAGE_IMAGE=check PUSH_STORAGE_INIT_IMAGE=check docker compose -f deploy/local/compose.yml config --quiet
+	@set -e; for overlay in limits wal-retention wal-disk pgdata-disk remote-pull; do PUSH_PG_LAKE_IMAGE=check PUSH_STORAGE_IMAGE=check PUSH_STORAGE_INIT_IMAGE=check docker compose -f deploy/local/compose.yml -f deploy/local/$$overlay.compose.yml config --quiet; done
+
+# Opt-in private push prototypes; these never build/pull images implicitly.
+.PHONY: push-prototype-test push-native-fault-test push-publisher-fault-test push-benchmark
+PUSH_PROBES ?= live ddl_snapshots schema_history schema_descriptors schema_native schema_audit schema_destination_history schema_destination_admission schema_destination_publish schema_live schema_managed schema_mutations schema_empty_snapshot lifecycle lease_cleanup locations snapshot online_snapshot snapshot_limits scalars mutations reference grouped progress chunks toast_keys spill disk_full retention upload_budget telemetry roles maintenance outages credentials storage_credentials managed
+push-prototype-test:
+	@set -e; for probe in $(PUSH_PROBES); do python3 tests/push_capture/$$probe.py; done
+	python3 tests/push_replication/probe.py
+PUSH_NATIVE_PROBES ?= native_faults snapshot_faults grouped_faults progress_faults schema_capture_faults
+push-native-fault-test:
+	@set -e; for probe in $(PUSH_NATIVE_PROBES); do python3 tests/push_capture/$$probe.py; done
+push-publisher-fault-test:
+	python3 tests/push_capture/publisher_faults.py
+	python3 tests/push_capture/schema_publisher_faults.py
+.PHONY: push-logical-compatibility-test
+push-logical-compatibility-test:
+	python3 tests/push_capture/logical_compatibility.py
+
+push-benchmark:
+	python3 tests/push_capture/benchmark.py
+
+.PHONY: push-schema-feasibility-test
+push-schema-feasibility-test:
+	python3 tests/push_capture/schema_feasibility.py
+
+.PHONY: push-build-bundles push-package-test
+push-build-bundles:
+	python3 deploy/push/build-bundles.py
+push-package-test:
+	python3 tests/push_capture/packaging.py
+
+.PHONY: local-iceberg-test
+local-iceberg-test:
+	python3 tests/local_iceberg/probe.py
+
+.PHONY: local-iceberg-fault-test
+local-iceberg-fault-test:
+	python3 tests/local_iceberg/faults.py
+
+.PHONY: local-iceberg-recovery-test local-iceberg-contention-test local-iceberg-benchmark
+local-iceberg-recovery-test:
+	python3 tests/local_iceberg/recovery.py
+local-iceberg-contention-test:
+	python3 tests/local_iceberg/contention.py
+local-iceberg-benchmark:
+	python3 tests/local_iceberg/benchmark.py
+
+.PHONY: local-iceberg-outage-test local-iceberg-coalescing-test
+local-iceberg-outage-test:
+	python3 tests/local_iceberg/outages.py
+local-iceberg-coalescing-test:
+	python3 tests/local_iceberg/coalescing.py
+
+.PHONY: local-iceberg-logical-regression-test
+local-iceberg-logical-regression-test:
+	python3 tests/local_iceberg/logical_regressions.py
+
+.PHONY: local-iceberg-maintenance-test
+local-iceberg-maintenance-test:
+	python3 tests/local_iceberg/maintenance.py
+
+.PHONY: local-iceberg-types-test local-iceberg-resource-budget-test local-iceberg-suite
+local-iceberg-types-test:
+	python3 tests/local_iceberg/scalar_types.py
+local-iceberg-resource-budget-test:
+	python3 tests/local_iceberg/resource_budget.py
+local-iceberg-suite:
+	@set -e; for probe in probe recovery contention outages maintenance scalar_types coalescing coalescing_followup resource_budget insert_groups wal_retention delete_filter; do python3 tests/local_iceberg/$$probe.py; done
+
+.PHONY: local-iceberg-insert-groups-test local-iceberg-capacity local-iceberg-wal-retention-test local-iceberg-wal-disk-test local-iceberg-pgdata-disk-test
+local-iceberg-insert-groups-test:
+	python3 tests/local_iceberg/insert_groups.py
+local-iceberg-capacity:
+	python3 tests/local_iceberg/capacity.py
+local-iceberg-wal-retention-test:
+	python3 tests/local_iceberg/wal_retention.py
+local-iceberg-wal-disk-test:
+	python3 tests/local_iceberg/wal_disk.py
+local-iceberg-pgdata-disk-test:
+	python3 tests/local_iceberg/pgdata_disk.py
+
+.PHONY: local-iceberg-pull-compare
+local-iceberg-pull-compare:
+	python3 tests/local_iceberg/pull_compare.py
+
+.PHONY: local-iceberg-delete-filter-test local-iceberg-delete-filter-compare local-iceberg-publication-profile
+local-iceberg-delete-filter-test:
+	python3 tests/local_iceberg/delete_filter.py
+local-iceberg-delete-filter-compare:
+	python3 tests/local_iceberg/delete_filter_compare.py
+local-iceberg-publication-profile:
+	python3 tests/local_iceberg/publication_profile.py
+
+.PHONY: local-iceberg-coalescing-followup-test
+local-iceberg-coalescing-followup-test:
+	python3 tests/local_iceberg/coalescing_followup.py
+
+.PHONY: local-iceberg-update-conversion-test local-iceberg-update-stream-test local-iceberg-update-conversion-compare
+local-iceberg-update-conversion-test:
+	python3 tests/local_iceberg/update_conversion.py
+local-iceberg-update-stream-test:
+	python3 tests/local_iceberg/update_conversion_stream.py
+local-iceberg-update-conversion-compare:
+	python3 tests/local_iceberg/update_conversion_compare.py

@@ -1,0 +1,185 @@
+{
+  "architectures": {
+    "amd64": {
+      "artifact_id": 13928033339,
+      "github_reported_artifact_zip_sha256": "0dae70022c227d9262a0a3cd11ae503eda0eb8e800d757c378f2b6cec907ce44",
+      "evidence_root": ".qualification/worker-identity/native-d5e05d2/lifecycle-qualification-amd64",
+      "provenance": {
+        "archive": "lake_replication-0.1.0-beta.5-linux-amd64.tar.gz",
+        "receiver_sql_overlay_identical_to_archive": true,
+        "run_id": "43177452431",
+        "sha256": "5f997236ce541cda8871138564931791b4ccf7b3dbdc8b85a1dbfda9698298fa",
+        "source_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d"
+      },
+      "reports": [
+        {
+          "checks": 2,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_074839_storage_preflight/results.json",
+          "sha256": "83b7d54a660b169f2e49b7853d50c1973eebcdede9b666f3833684daa43e5349",
+          "status": "passed"
+        },
+        {
+          "checks": 119,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_082721_base_lifecycle/results.json",
+          "sha256": "88817c2d39c953fc8c1b37bb4fecd154e1bbf935b3844533bb55dad32c2b5007",
+          "status": "passed"
+        },
+        {
+          "checks": 21,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_082916_archive_tls/results.json",
+          "sha256": "ec6ede60836562b40b83f8e250e8def6db6d8e202bd06ca2b1ee036c778bd0c2",
+          "status": "passed"
+        },
+        {
+          "checks": 17,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_082938_base_faults/results.json",
+          "sha256": "cc5f08edae2fbfbada524105894009c340d71987f50b1334d19c6d4aed4847d8",
+          "status": "passed"
+        },
+        {
+          "checks": 97,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_082956_empty_filtered/results.json",
+          "sha256": "45f1e883379ade9c284182eac687a66b831cd42f1f0de66737621d074cee69cc",
+          "status": "passed"
+        },
+        {
+          "checks": 94,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_083112_update_compare/results.json",
+          "sha256": "106d93c643a7e0b6085671982d6dbdef329886f1f4f11811464f6bfec9945f33",
+          "status": "passed"
+        },
+        {
+          "checks": 30,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_083139_slot_cleanup/results.json",
+          "sha256": "8a00e2dc4ccfcbc905e03d6e3a253a5c47732a5bad1467026e72c6835f173148",
+          "status": "passed"
+        },
+        {
+          "checks": 30,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_083248_physical_recovery/results.json",
+          "sha256": "98dc0beddc303350c90b83b370277bc2a5a22c1054133aebe9fe8429faab5e6e",
+          "status": "passed"
+        },
+        {
+          "checks": 333,
+          "cleanup_returncode": null,
+          "path": "qualification_20261112_083346_production_admission/results.json",
+          "sha256": "824324f242ffd275d0b6a017522d0183138abaa0cab680533a5f264de0cd523c",
+          "status": "passed"
+        },
+        {
+          "checks": 47,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084552_base_upgrade/results.json",
+          "sha256": "d82ab673e32fc5aad753163a12eb19d0b4f03f4a993c95a33fe44d6994011104",
+          "status": "passed"
+        }
+      ],
+      "total_checks": 790
+    },
+    "arm64": {
+      "artifact_id": 13930190501,
+      "github_reported_artifact_zip_sha256": "dbf87990a3eb68be10bf1af608f404676880972b88e89cf692b01b72cf93f9d2",
+      "evidence_root": ".qualification/worker-identity/native-d5e05d2/lifecycle-qualification-arm64",
+      "provenance": {
+        "archive": "lake_replication-0.1.0-beta.5-linux-arm64.tar.gz",
+        "receiver_sql_overlay_identical_to_archive": true,
+        "run_id": "43177452431",
+        "sha256": "f844f0c6ffc26d963e63734f4bfdf235cda7aa07506e47a007a957aff36cd601",
+        "source_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d"
+      },
+      "reports": [
+        {
+          "checks": 2,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_074745_storage_preflight/results.json",
+          "sha256": "69de619eb896bbac5dd9eca0ec91cb4fbafacac85b5d33caef167f71475ec57a",
+          "status": "passed"
+        },
+        {
+          "checks": 119,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084208_base_lifecycle/results.json",
+          "sha256": "d7dbfccd167d962f584c45efae1aa89e6929f4d9c6957b3cabedad9a7fea687a",
+          "status": "passed"
+        },
+        {
+          "checks": 21,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084446_archive_tls/results.json",
+          "sha256": "81a9665177d91c5da7ed2a3051e816b5dc30ed54c4b7db103d709564aae29e73",
+          "status": "passed"
+        },
+        {
+          "checks": 17,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084508_base_faults/results.json",
+          "sha256": "79b2f6c1c3c785a90d011d943a514bf37b064f2e842d83379b2123b0b96230eb",
+          "status": "passed"
+        },
+        {
+          "checks": 97,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084526_empty_filtered/results.json",
+          "sha256": "b94124f2f4806dbdb05867695aa81b9ae099fd09acd6c91b299655dab94c7d32",
+          "status": "passed"
+        },
+        {
+          "checks": 94,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084630_update_compare/results.json",
+          "sha256": "986408f1dfdf2ec31dbcf373dd3f426ebb6609b9940d94bbbc4220914a4c02e4",
+          "status": "passed"
+        },
+        {
+          "checks": 30,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084703_slot_cleanup/results.json",
+          "sha256": "5c22aa6b32a6fbdce7f9b94088d2cb06089d9b6742066a81c4171f59c8bc97a8",
+          "status": "passed"
+        },
+        {
+          "checks": 30,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_084823_physical_recovery/results.json",
+          "sha256": "733117cf742ea0fe45ba5795463de49392aabfc32fbce3fc6b0d6603eb282f39",
+          "status": "passed"
+        },
+        {
+          "checks": 333,
+          "cleanup_returncode": null,
+          "path": "qualification_20261112_084949_production_admission/results.json",
+          "sha256": "1b01e3fbcb384d8ea151b9abd9e248fe9f67b26091c53753c5c0cda23122659c",
+          "status": "passed"
+        },
+        {
+          "checks": 47,
+          "cleanup_returncode": 0,
+          "path": "qualification_20261112_090303_base_upgrade/results.json",
+          "sha256": "fae8c03370946a10dcf8594ffbee09219490912c0dfcbd2773489b511d168071",
+          "status": "passed"
+        }
+      ],
+      "total_checks": 790
+    }
+  },
+  "candidate": "d5e05d2780796dd9979e99a08edfdf57c2266a3d",
+  "ci_run_id": 43177452431,
+  "qualification_run_id": 43177860675,
+  "remaining": [
+    "Compatibility range must be refreshed for changed archives.",
+    "24-hour soak is deferred.",
+    "Worker privilege, subscription isolation, retention and resource reviews remain open.",
+    "Signed publication and independent download verification remain open."
+  ],
+  "scope": "Exact merged candidate before the subsequent explicit-worker-login changes",
+  "status": "passed"
+}

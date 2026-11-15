@@ -1,0 +1,430 @@
+{
+  "architecture": "arm64",
+  "archive": "lake_replication-0.1.0-beta.5.tar.gz",
+  "archive_sha256": "f4d92f9b7fb97074edc995698a53c55b34601c04b768c9ba786b2a21b2791ffd",
+  "checks": [
+    {
+      "actual": "f4d92f9b7fb97074edc995698a53c55b34601c04b768c9ba786b2a21b2791ffd",
+      "expected": "f4d92f9b7fb97074edc995698a53c55b34601c04b768c9ba786b2a21b2791ffd",
+      "name": "release archive checksum",
+      "passed": true
+    },
+    {
+      "actual": "arm64",
+      "expected": "arm64",
+      "name": "archive architecture matches qualification host",
+      "passed": true
+    },
+    {
+      "actual": "lake_replication:0.1.0-beta.5",
+      "expected": "lake_replication:0.1.0-beta.5",
+      "name": "archive-installed extension loads",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0:true",
+      "expected": "0.1.0:true",
+      "name": "development baseline excludes beta observability schema",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.5:upgrade_fixture:0/10:degraded",
+      "expected": "0.1.0-beta.5:upgrade_fixture:0/10:degraded",
+      "name": "extension upgrades in place and preserves control-plane state",
+      "passed": true
+    },
+    {
+      "actual": "numeric(12,2):character varying(32)",
+      "expected": "numeric(12,2):character varying(32)",
+      "name": "extension upgrade installs common parameterized type resolution",
+      "passed": true
+    },
+    {
+      "actual": "true:1",
+      "expected": "true:1",
+      "name": "extension upgrade adds per-subscription credential metadata",
+      "passed": true
+    },
+    {
+      "actual": "22:1",
+      "expected": "22:1",
+      "name": "upgrade registers durable extension state for logical backup",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "logical backup contains durable state but not regenerated seed mappings",
+      "passed": true
+    },
+    {
+      "actual": "0.1.0-beta.5:1:1",
+      "expected": "0.1.0-beta.5:1:1",
+      "name": "logical backup restores extension versions and durable control state",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "no unsupported SQL downgrade path is advertised",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported enabled fails instead of being ignored",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported copy_data fails instead of being ignored",
+      "passed": true
+    },
+    {
+      "actual": "0:0",
+      "expected": "0:0",
+      "name": "rolled-back subscriptions leave no source slots or control rows",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "subscription notice does not expose the source password",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:1",
+      "expected": "/credentials/destination-only.env:1",
+      "name": "subscription records its selected credential file",
+      "passed": true
+    },
+    {
+      "actual": "lake_source:true",
+      "expected": "lake_source:true",
+      "name": "postgres URI credentials are stored for workers without a source password file",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "pending cleanup contains no connection or password columns",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "pg_read_all_data cannot read stored connection secrets or invoke the worker getter",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "relative per-subscription credential paths are rejected without mutation",
+      "passed": true
+    },
+    {
+      "actual": "initial",
+      "expected": "initial",
+      "name": "initial copy reaches the artifact-installed destination",
+      "passed": true
+    },
+    {
+      "actual": "pgoutput:logical:false:true",
+      "expected": "pgoutput:logical:false:true",
+      "name": "initial sync automatically creates a persistent source pgoutput slot",
+      "passed": true
+    },
+    {
+      "actual": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "expected": "amount:numeric(12,2),code:character varying(32),region:character(2),label:character varying:42.50:initial-sku:DE:initial-label",
+      "name": "common parameterized types retain schema and values",
+      "passed": true
+    },
+    {
+      "actual": "healthy:streaming",
+      "expected": "healthy:streaming",
+      "name": "subscription becomes healthy",
+      "passed": true
+    },
+    {
+      "actual": "12",
+      "expected": "12",
+      "name": "all documented metrics are exported",
+      "passed": true
+    },
+    {
+      "actual": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "expected": "1=initial-updated:43.75:updated-sku:DE:updated-label,2=streamed:99.99:streamed-sku:US:streamed-label",
+      "name": "live insert and update replicate",
+      "passed": true
+    },
+    {
+      "actual": "numeric(6,2):1=1.25,2=NULL",
+      "expected": "numeric(6,2):1=1.25,2=NULL",
+      "name": "nullable parameterized column is added and replicated online",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "supervisor stops before the source password changes",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:3:true:running",
+      "expected": "/credentials/destination-only.env:3:true:running",
+      "name": "postgresql URI credential rotation replaces the subscription supervisor",
+      "passed": true
+    },
+    {
+      "actual": "rotated-credential",
+      "expected": "rotated-credential",
+      "name": "replication authenticates with the rotated credential",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "supervisor stops before restoring the source password",
+      "passed": true
+    },
+    {
+      "actual": "/credentials/destination-only.env:5:true:running",
+      "expected": "/credentials/destination-only.env:5:true:running",
+      "name": "CONNECTION can return to the original password",
+      "passed": true
+    },
+    {
+      "actual": "stopped",
+      "expected": "stopped",
+      "name": "disable reaches stopped state",
+      "passed": true
+    },
+    {
+      "actual": "while-disabled",
+      "expected": "while-disabled",
+      "name": "enable catches up changes made while stopped",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "destination is ready after container restart",
+      "passed": true
+    },
+    {
+      "actual": "after-restart",
+      "expected": "after-restart",
+      "name": "launcher resumes replication after restart",
+      "passed": true
+    },
+    {
+      "actual": "degraded:backoff:true:true:true:true:true",
+      "expected": "degraded:backoff:true:true:true:true:true",
+      "name": "source outage becomes observable retry state",
+      "passed": true
+    },
+    {
+      "actual": "0:true:true",
+      "expected": "0:true:true",
+      "name": "retry metrics mark the subscription unhealthy",
+      "passed": true
+    },
+    {
+      "actual": "1",
+      "expected": "1",
+      "name": "source is ready after outage",
+      "passed": true
+    },
+    {
+      "actual": "healthy:running:0:true:true:true",
+      "expected": "healthy:running:0:true:true:true",
+      "name": "subscription recovers while retaining last-failure evidence",
+      "passed": true
+    },
+    {
+      "actual": "after-source-outage",
+      "expected": "after-source-outage",
+      "name": "replication resumes after source outage",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured worker logs emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "structured failure and recovery events emitted",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "credential values absent from worker logs",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "drop removes the source replication slot",
+      "passed": true
+    },
+    {
+      "actual": "snapshot",
+      "expected": "snapshot",
+      "name": "pre-created slot supplies a snapshot copy",
+      "passed": true
+    },
+    {
+      "actual": "streamed",
+      "expected": "streamed",
+      "name": "pre-created slot streams later changes",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "temporary snapshot slot is released",
+      "passed": true
+    },
+    {
+      "actual": "0",
+      "expected": "0",
+      "name": "drop removes the pre-created slot",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupted initial copy keeps staged rows",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "initial copy restarts from a fresh snapshot",
+      "passed": true
+    },
+    {
+      "actual": "one,two,three",
+      "expected": "one,two,three",
+      "name": "restarted copy publishes each source row once",
+      "passed": true
+    },
+    {
+      "actual": "true:1",
+      "expected": "true:1",
+      "name": "restarted copy advances the checkpoint and retains one source slot",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "persistent slot streams after restarted copy",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "recovered stream publishes new changes",
+      "passed": true
+    },
+    {
+      "actual": "after-restart",
+      "expected": "after-restart",
+      "name": "change after interrupted copy appears at destination",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "uninstaller removes only project program files",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+  "prerequisite": {
+    "identity": {
+      "architecture": "arm64",
+      "format": 1,
+      "inputs": {
+        "deploy/poc/Dockerfile": "3bf0a4159f93ab576c8a67a9f767f335f57434825225137544a912630e57e3b9",
+        "deploy/prepare-upstream.py": "1f5dc79115ff37b3320f85485b294e8400fe20bec29392e5dd0ccf3c4f863234",
+        "tests/qualification/prerequisite.py": "d8e7300b166c035a4d25f6b216c11274de67481d3d270e1306f61ca86e800c38"
+      },
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+    },
+    "image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+    "runtime": {
+      "identity": {
+        "architecture": "arm64",
+        "base_image_id": "sha256:bba82507de0b21cd542d983ffd2ea0aea0c274e02c5f1862476adc6f55fa5633",
+        "inputs": {
+          "deploy/pg_lake/.dockerignore": "05cc6ae53cfd6129f1d7010aa874c6cf0a6019b1adfeff3f4fab27f2d04f43ca",
+          "deploy/pg_lake/Dockerfile": "5791554632063ccdc149e573a1732503d2def397c5dbd604c760b3efdbf5baf2",
+          "deploy/pg_lake/NOTICE": "ce0e49969fe2ca58c1941eac151dedb97fc6d29cd0df099ae19b48168d27235a",
+          "deploy/pg_lake/README.md": "bddbc77d8c2e5a31f34a513e22f3777a8a5ec152b86dbaf39a7d057debb7e7b0",
+          "deploy/pg_lake/UPSTREAM-LICENSE": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+          "deploy/pg_lake/patches/skip-clean-manifests.patch": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+          "deploy/pg_lake/patchset.json": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+          "deploy/pg_lake/patchset.py": "4bca16d68c4cf842ede48566aa72ec1f8381d0d856bcdea324e6998e8297980e",
+          "tests/qualification/runtime.py": "0b3361ed5cd6af1d67604b1b94a62d2d8b780e69e0ba68819862ff6baa59ef4b"
+        },
+        "revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+      },
+      "image_id": "sha256:24c43a3d1c2a1ec926248f313f0f4946aa58feb4d3c2ae75c8400934278f40f6",
+      "installed": {
+        "libraries": {
+          "pg_lake_iceberg": "607b796f36401b8cc0140b43bd194d38b6e32de6f0002b44fb5675e7ea3e9b0c",
+          "pg_lake_table": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128"
+        },
+        "manifest_sha256": "a88f6abee78ae4c4a9ed1998bf7869ba05581b42f6ef237c1109efa4d6ce99c2",
+        "patch_sha256": "1401531bf8962ceedcdd237e124594b68f6b32ddeb62a20782d0a2198ee1fecb",
+        "patchset": "lake-replication-manifest-cleanup-v1",
+        "postgres_version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2)",
+        "state": "after",
+        "upstream_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e"
+      }
+    }
+  },
+  "run": "qualification_20261113_191324",
+  "source_revision": "d5e05d2780796dd9979e99a08edfdf57c2266a3d-dirty",
+  "status": "passed",
+  "storage_fixtures": {
+    "storage": {
+      "architecture": "arm64",
+      "image": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+      "image_id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+      "origin": "pinned_source_build",
+      "recipe_sha256": "033deb90501718dc5ef25dcf2dc139a637632c160b6d25ea7ef0902ee410938a",
+      "source_revision": "0d7408fc9969caf07de6a8c3a84f9fbb10a6739e"
+    },
+    "storage-init": {
+      "architecture": "arm64",
+      "image": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+      "image_id": "sha256:ff0c9bd37f9eb808ba395ae78196da90c343978e83986da37345432a290a6481",
+      "origin": "pinned_source_build",
+      "recipe_sha256": "033deb90501718dc5ef25dcf2dc139a637632c160b6d25ea7ef0902ee410938a",
+      "source_revision": "b00526b153a31b36767991a4f5ce2cced435ee8e"
+    }
+  },
+  "worker_log_events": [
+    "batch_published",
+    "copy_chunk_staged",
+    "cycle_failed",
+    "initial_copy_admitted",
+    "initial_copy_completed",
+    "process_failed",
+    "replication_started",
+    "snapshot_acquired",
+    "stopped",
+    "table_copied",
+    "transaction_staged"
+  ],
+  "worker_log_records": 30
+}

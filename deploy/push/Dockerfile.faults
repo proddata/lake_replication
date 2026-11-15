@@ -1,0 +1,11 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+USER root
+# Test-only instrumentation over the qualified runtime. Never ship this layer.
+COPY deploy/docker-compose/patches/pg-lake-lab-crash-points.patch /push/crash-points.patch
+RUN git -C /opt/pg_lake apply --check /push/crash-points.patch \
+    && git -C /opt/pg_lake apply /push/crash-points.patch \
+    && make -C /opt/pg_lake/pg_lake_table clean with_llvm=no \
+    && make -C /opt/pg_lake/pg_lake_table -j2 install with_llvm=no \
+    && python3 -c 'import hashlib,json,pathlib,subprocess; shared=pathlib.Path(subprocess.check_output(["pg_config","--sharedir"],text=True).strip()); lib=pathlib.Path(subprocess.check_output(["pg_config","--pkglibdir"],text=True).strip()); marker={"test_only":True,"patch_sha256":hashlib.sha256(pathlib.Path("/push/crash-points.patch").read_bytes()).hexdigest(),"library_sha256":hashlib.sha256((lib/"pg_lake_table.so").read_bytes()).hexdigest()}; (shared/"pg_lake/push-faults.json").write_text(json.dumps(marker,sort_keys=True)+"\n")'
+LABEL io.proddata.push.test-only="crash-boundaries-v1"
