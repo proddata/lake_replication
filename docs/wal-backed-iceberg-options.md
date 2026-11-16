@@ -1,7 +1,7 @@
 # WAL-backed replication to Iceberg: journal options
 
 Status: discussion draft, 15 November 2026. This records the options from the
-design discussion; it does not select or implement a replacement pipeline.
+design discussion; it does not select a replacement for the default pipeline.
 
 ## Goal
 
@@ -254,3 +254,26 @@ and final apply, not compare capture-only cost against a complete mirror pipelin
 Open choices are the desired durable handoff, apply placement, supported schema
 changes, WAL/spill retention budgets and rebuild policy. No performance gain or
 implementation selection is assumed by this draft.
+
+## Experimental implementation
+
+An isolated [frozen-schema prototype](../experiments/wal_direct/README.md) now
+implements the first option-B slice: bounded committed transactions feed the
+existing row-apply functions, with a direct publication checkpoint and no bulk
+PostgreSQL journal admission. It is outside the default installation and does
+not replace the qualified journal pipeline. Its bootstrap, recovery evidence,
+resource bounds and remaining gaps are tracked with the experiment.
+
+The [first bounded performance comparison](wal-direct-performance.md) finds
+lower WAL generation relative to matched one-transaction journal publications,
+but little total CPU improvement. The existing coalesced journal reference is
+considerably cheaper than the unbatched direct prototype. The [coalesced follow-up](wal-direct-coalescing.md) now qualifies bounded
+direct coalescing and records lower CPU/generated WAL under matched policy
+settings, with more publication groups/requests and higher mixed-workload WAL
+retention. Nonempty snapshot, streaming/spill, managed lifecycle and outage
+qualification remain open.
+
+
+The [bounded nonempty snapshot slice](wal-direct-snapshot.md) now copies existing tables directly to Iceberg under an exported logical-slot snapshot, with one atomic activation/checkpoint commit and concurrent-write catch-up. Native interruption, response-loss, budget/target/type guards and publication-crash tests pass. This does not provide a large resumable-copy pipeline or complete production validation.
+
+The optional direct experiment also supports [streamed large transactions and outage recovery](wal-direct-streaming.md): private disposable spill, bounded chunks in one final transaction, a durable WAL replay floor for interleaved commits, and explicit snapshot recovery after WAL-history loss. Streamed mode publishes each source transaction separately. Production memory admission, sustained sizing and managed direct-worker lifecycle remain open.

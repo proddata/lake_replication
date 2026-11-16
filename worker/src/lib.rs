@@ -1,6 +1,7 @@
 //! Shared protocol, credentials, logging, and journal types for the receiver,
-//! initial sync, publisher, and supervisor executables. The receiver must not
-//! acknowledge WAL until the decoded transaction is durable in the journal.
+//! initial sync, publisher, and supervisor executables. The default receiver
+//! acknowledges WAL only after durable journal admission. Experimental direct
+//! publication owns a separate final-table/checkpoint acknowledgement boundary.
 
 pub mod credentials;
 pub mod events;

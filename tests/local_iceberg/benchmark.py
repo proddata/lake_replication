@@ -2,7 +2,6 @@
 """Fresh-fixture local mirroring versus application-only resource comparison."""
 from datetime import datetime,timezone
 import json
-from bisect import bisect_right
 import os
 from pathlib import Path
 import statistics
@@ -47,8 +46,10 @@ class LocalBenchmark(LocalIcebergProbe):
 
     def frontier(self):
         if self.mirror:
-            published=int(self.value("SELECT coalesce(max(xid),0) FROM lake_replication.transactions WHERE state='published'"))
-            return bisect_right(tuple(self.application_xids),published)
+            # XID allocation order is not commit/publication order. A later
+            # bookkeeping commit can publish while a streamed user XID is open.
+            xids=','.join(map(str,tuple(self.application_xids)))
+            return int(self.value(f"SELECT count(DISTINCT xid) FROM lake_replication.transactions WHERE state='published' AND xid=ANY(ARRAY[{xids}]::bigint[])")) if xids else 0
         return int(self.value('SELECT least(coalesce((SELECT max(id) FROM a),0),coalesce((SELECT max(id) FROM b),0))'))//self.rows
 
     def application_sql_args(self):
@@ -83,6 +84,7 @@ class LocalBenchmark(LocalIcebergProbe):
         self.evidence['measurement']=dict(status='running',samples=samples)
         try:
             trace.start();application=Session(self.application_sql_args());before_db=self.database();before=self.resources();started=time.monotonic()
+            self.evidence['measurement'].update(before=before,before_database=before_db)
             sampler=threading.Thread(target=sample);sampler.start()
             for transaction in range(self.transactions):
                 if errors:raise RuntimeError('resource observer failed: '+errors[0])
@@ -128,7 +130,7 @@ class LocalBenchmark(LocalIcebergProbe):
                 self.check('trace observes final Iceberg writes',operations['categories'].get('local_mirror',{}).get('api:s3.PutObject',0)>0,True)
             else:self.check('application-only baseline writes no Iceberg objects',operations['categories'].get('local_mirror',{}).get('api:s3.PutObject',0),0)
         except Exception as error:
-            self.evidence['measurement'].update(status='error',error=str(error),application_commits=len(commits))
+            self.evidence['measurement'].update(status='error',error=str(error),application_commits=len(commits),application_xids=list(self.application_xids))
             diagnostic=self.sql("SELECT json_build_object('heap_a_rows',(SELECT count(*) FROM a),'heap_b_rows',(SELECT count(*) FROM b),'journal_states',(SELECT jsonb_object_agg(state,n) FROM (SELECT state,count(*) AS n FROM lake_replication.transactions GROUP BY state) t),'slots',(SELECT jsonb_agg(jsonb_build_object('wal_status',wal_status,'retained_wal_bytes',pg_wal_lsn_diff(pg_current_wal_lsn(),restart_lsn))) FROM pg_replication_slots WHERE database=current_database()))",required=False)
             self.evidence['measurement']['failure_diagnostic']=diagnostic.stdout.strip() if diagnostic.returncode==0 else diagnostic.stderr[-1000:]
             raise

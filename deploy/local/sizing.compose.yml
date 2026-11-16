@@ -1,0 +1,9 @@
+# Test-only larger engine budget for mixed-workload sizing.
+# Layer over compose.yml and limits.compose.yml; PostgreSQL stays at 512 MiB.
+services:
+  postgres:
+    memswap_limit: 512m
+  pgduck:
+    mem_limit: 2g
+    memswap_limit: 2g
+    command: [--unix_socket_directory, /var/run/pgduck, --port, '5332', --memory_limit, 1536MB, --cache_dir, /tmp/pgduck-cache, --init_file_path, /push/pgduck-limits.sql]

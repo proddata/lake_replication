@@ -56,6 +56,7 @@ pub struct Client {
     stream: Transport,
     reader: MessageReader,
     trace: Option<crate::trace::QueryTrace>,
+    last_query_sqlstate: Option<String>,
 }
 
 enum Transport {
@@ -230,6 +231,7 @@ impl Client {
             stream,
             reader: MessageReader::default(),
             trace,
+            last_query_sqlstate: None,
         };
         let mut scram = None;
         let mut scram_verified = false;
@@ -380,16 +382,29 @@ impl Client {
         result
     }
 
+    /// SQLSTATE from the most recent simple-query server error, populated
+    /// only after ReadyForQuery. Transport/protocol failures never authorize replay.
+    pub fn last_query_sqlstate(&self) -> Option<&str> {
+        self.last_query_sqlstate.as_deref()
+    }
+
     fn simple_query_inner(&mut self, sql: &str) -> Result<Vec<Vec<Option<String>>>, Error> {
+        self.last_query_sqlstate = None;
         self.send_message(b'Q', nul_terminated(sql).as_slice())?;
         let mut rows = Vec::new();
         let mut server_error = None;
+        let mut server_code = None;
         loop {
             let (tag, body) = self.read_message()?;
             if server_error.is_some() {
                 match tag {
                     b'N' | b'C' | b'I' => continue,
-                    b'Z' => return Err(server_error.take().unwrap()),
+                    b'Z' => {
+                        if body.len() == 1 && matches!(body[0], b'I' | b'T' | b'E') {
+                            self.last_query_sqlstate = server_code;
+                        }
+                        return Err(server_error.take().unwrap());
+                    }
                     _ => continue,
                 }
             }
@@ -398,7 +413,10 @@ impl Client {
                 // SET of a reported session setting (including
                 // standard_conforming_strings) emits ParameterStatus.
                 b'T' | b'C' | b'I' | b'N' | b'S' => {}
-                b'E' => server_error = Some(Error::Server(error_message(&body))),
+                b'E' => {
+                    server_code = error_sqlstate(&body);
+                    server_error = Some(Error::Server(error_message(&body)));
+                }
                 b'Z' => return Ok(rows),
                 other => {
                     return Err(Error::Protocol(format!(
@@ -692,6 +710,32 @@ fn data_row(body: &[u8]) -> Result<Vec<Option<String>>, Error> {
     Ok(row)
 }
 
+fn error_sqlstate(body: &[u8]) -> Option<String> {
+    let mut offset = 0;
+    let mut state = None;
+    loop {
+        let tag = *body.get(offset)?;
+        offset += 1;
+        if tag == 0 {
+            return if offset == body.len() { state } else { None };
+        }
+        let end = offset + body.get(offset..)?.iter().position(|b| *b == 0)?;
+        if tag == b'C' {
+            let value = &body[offset..end];
+            if state.is_some()
+                || value.len() != 5
+                || !value
+                    .iter()
+                    .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit())
+            {
+                return None;
+            }
+            state = Some(std::str::from_utf8(value).ok()?.to_owned());
+        }
+        offset = end + 1;
+    }
+}
+
 fn error_message(body: &[u8]) -> String {
     let mut position = 0;
     let mut fields = Vec::new();
@@ -758,6 +802,79 @@ fn postgres_now_micros() -> i64 {
 mod tests {
     use super::*;
     use std::net::SocketAddr;
+
+    #[test]
+    fn sqlstate_is_a_protocol_field_not_message_text() {
+        assert_eq!(
+            error_sqlstate(b"Mmessage C=40P01\0C23505\0SERROR\0\0"),
+            Some("23505".into())
+        );
+        assert_eq!(
+            error_sqlstate(b"C40P01\0Mlocalized message\0\0"),
+            Some("40P01".into())
+        );
+        for body in [
+            b"C40P01\0C23505\0\0".as_slice(),
+            b"C40P01",
+            b"C40P01\0\0trailing",
+            b"Cbad\0\0",
+        ] {
+            assert_eq!(error_sqlstate(body), None);
+        }
+    }
+
+    #[test]
+    fn sqlstate_requires_ready_for_query_and_is_cleared_on_next_query() {
+        use std::net::{TcpListener, TcpStream};
+        fn send(stream: &mut TcpStream, tag: u8, body: &[u8]) {
+            stream.write_all(&[tag]).unwrap();
+            stream
+                .write_all(&((body.len() + 4) as u32).to_be_bytes())
+                .unwrap();
+            stream.write_all(body).unwrap();
+        }
+        fn packet(stream: &mut TcpStream) {
+            let mut size = [0; 4];
+            stream.read_exact(&mut size).unwrap();
+            let mut body = vec![0; u32::from_be_bytes(size) as usize - 4];
+            stream.read_exact(&mut body).unwrap();
+        }
+        for synchronized in [false, true] {
+            let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+            let address = listener.local_addr().unwrap();
+            let server = std::thread::spawn(move || {
+                let (mut stream, _) = listener.accept().unwrap();
+                packet(&mut stream);
+                send(&mut stream, b'R', &0u32.to_be_bytes());
+                send(&mut stream, b'Z', b"I");
+                let mut tag = [0];
+                stream.read_exact(&mut tag).unwrap();
+                assert_eq!(tag, [b'Q']);
+                packet(&mut stream);
+                send(&mut stream, b'E', b"SERROR\0C40P01\0Mdeadlock\0\0");
+                if synchronized {
+                    send(&mut stream, b'Z', b"E");
+                    stream.read_exact(&mut tag).unwrap();
+                    assert_eq!(tag, [b'Q']);
+                    packet(&mut stream);
+                    send(&mut stream, b'C', b"ROLLBACK\0");
+                    send(&mut stream, b'Z', b"I");
+                }
+            });
+            let mut client = Client::connect(address, "postgres", "fixture", false).unwrap();
+            let error = client.simple_query("COMMIT").unwrap_err();
+            if synchronized {
+                assert!(matches!(error, Error::Server(_)));
+                assert_eq!(client.last_query_sqlstate(), Some("40P01"));
+                client.simple_query("ROLLBACK").unwrap();
+                assert_eq!(client.last_query_sqlstate(), None);
+            } else {
+                assert!(matches!(error, Error::Io(_)));
+                assert_eq!(client.last_query_sqlstate(), None);
+            }
+            server.join().unwrap();
+        }
+    }
 
     // Inject timeouts after every possible header/body boundary. The same
     // framing reader is used above both plain TCP and rustls transports.
