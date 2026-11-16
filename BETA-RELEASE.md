@@ -2,14 +2,14 @@
 
 Target: `v0.1.0-beta.5` development candidate
 
-Status: **not releasable yet**. Merged candidate `d5e05d2` passes full native
-qualification on ARM64 and AMD64: 790 checks per architecture, including
-storage preflight, update filtering, source TLS and cleanup regressions. See the
-[exact candidate evidence](docs/beta5-d5e05d2-native-qualification.md).
+Status: **not releasable yet**. Merged candidate `8154ccf` passes default-branch
+CI and full exact-archive lifecycle qualification on ARM64 and AMD64, including
+the cumulative development refresh, explicit worker login and scoped runtime
+grants. See [current candidate evidence](docs/beta5-8154ccf-native-qualification.md).
 Compatibility-range evidence remains tied to older `b0a703a` archives and must
-be refreshed for changed candidates. The 24-hour soak and first signed
-prerelease still need evidence. Subsequent worker-login changes require new
-archive qualification.
+be refreshed for changed candidates. The 24-hour soak, signed publication and
+independent download verification remain open. Experimental WAL-backed direct
+publication is separate local work and is not included in those archives.
 
 The historical [ten-minute packaged soak](docs/beta5-short-soak.md) now passes: 1,166
 transactions, 45 assertions, exact data after all four faults, and complete
@@ -35,25 +35,25 @@ Status values: `PASS`, `PARTIAL`, `NOT STARTED`, `BLOCKED`.
 
 | Gate | Status | Exit criterion | Current evidence / next action |
 |---|---|---|---|
-| G0. Remote CI | PASS | Required checks pass on the release commit in GitHub | Merged candidate `d5e05d2` passes [CI 43177452431](https://github.com/proddata/lake_replication/actions/runs/43177452431), including native archive builds and security audits. Recheck changed candidates. |
-| G1. Installable artifacts | PASS | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Candidate `d5e05d2` passes exact CI archive qualification on both native architectures; see [candidate evidence](docs/beta5-d5e05d2-native-qualification.md). |
-| G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | Both native architectures pass all 119 fresh lifecycle checks from the candidate CI archives, including restore, interrupted copy, management and uninstall. The supported pg_lake runtime is separately built and verified. |
-| G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Candidate `d5e05d2` passes 790 checks per architecture. Historical short soaks do not cover this candidate or satisfy the day-long gate, which remains deferred. |
+| G0. Remote CI | PASS | Required checks pass on the release commit in GitHub | Merged candidate `8154ccf` passes [CI 43822064964](https://github.com/proddata/lake_replication/actions/runs/43822064964), including native archive builds and security audits. Recheck changed candidates. |
+| G1. Installable artifacts | PASS | amd64 and arm64 archives install and load from exported artifacts; checksums verify | Candidate `8154ccf` passes exact CI archive qualification on both native architectures; see [candidate evidence](docs/beta5-8154ccf-native-qualification.md). |
+| G2. Clean-host qualification | PASS | A fresh supported host with preinstalled PostgreSQL 18 + pg_lake installs only from the archive and completes one replication cycle | Both native architectures pass the fresh lifecycle checks from candidate `8154ccf` CI archives, including restore, interrupted copy, management and uninstall. The supported pg_lake runtime is separately built and verified. |
+| G3. Release-candidate correctness and soak | PARTIAL | The release candidate completes the core suite plus a documented 24-hour soak with restart, storage outage, backlog, and recovery events | Candidate `8154ccf` passes the full packaged lifecycle workflow on both architectures. Historical short soaks do not cover this candidate or satisfy the day-long gate, which remains deferred. |
 | G4. Compatibility range | PARTIAL | The release notes name an evidence-backed pg_lake revision range, with at least two independently selected revisions passing the compatibility lane | Historical candidate `b0a703a` from CI run 42201527552 passes 57 artifact-only checks at each exact pg_lake endpoint 8180647d4535 and f609ecb17891 on native ARM64 with the supported patchset and frozen committed recipe. Native AMD64 full qualification separately covers the pinned endpoint. These are two tested points, not every intervening commit. See [refresh evidence](docs/evidence/2026-11-11-beta5-compatibility-refresh.json) and the [compatibility contract](deploy/install/COMPATIBILITY.md). Recheck for changed release archives. |
 | G5. Operations and observability | PASS | Operators can detect unhealthy subscriptions, lag, retries, and last failure without reading ad-hoc files | Local beta.5 lifecycle and admission checks verify documented metrics, failures, fencing, live counters and cleanup. The operations guide now covers split checkpoints, chunk staging, initial-copy session admission and pacing. See [current qualification](docs/checkpoint-chunk-migration-results.md). |
-| G6. Supply-chain and security review | PARTIAL | Published files have checksums, SBOMs, signatures, vulnerability results, and an approved runtime license inventory with no unresolved high-severity finding | Candidate `d5e05d2` passes both CI archive audits with rustls 0.23.46 and checked dependency/toolchain notices. Publication now applies the same pinned Syft/Grype audit and high/critical gate to the exact newly built assets before signing; published SPDX SBOMs come from that audit. This workflow change still needs execution on the release commit. Published signatures and independent download verification remain outstanding. See [security review](docs/dependency-security-review.md) and [verification procedure](docs/release-verification.md). |
-| G7. Upgrade and rollback | PASS | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | Candidate `d5e05d2` passes all 30 coordinated physical recovery/rollback checks, production admission with beta.2 upgrade, and 47 beta.1 package-handoff checks on both native architectures. No SQL downgrade is supplied. See [procedure](docs/upgrade-and-rollback.md) and [native evidence](docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json). |
+| G6. Supply-chain and security review | PARTIAL | Published files have checksums, SBOMs, signatures, vulnerability results, and an approved runtime license inventory with no unresolved high-severity finding | Candidate `8154ccf` passes both CI archive audits with rustls 0.23.46 and checked dependency/toolchain notices. Publication now applies the same pinned Syft/Grype audit and high/critical gate to the exact newly built assets before signing; published SPDX SBOMs come from that audit. This workflow change still needs execution on the release commit. Published signatures and independent download verification remain outstanding. See [security review](docs/dependency-security-review.md) and [verification procedure](docs/release-verification.md). |
+| G7. Upgrade and rollback | PASS | Install from an earlier beta, upgrade without data loss, and execute the documented binary/config rollback procedure | Candidate `8154ccf` passes coordinated physical recovery/rollback, production admission with beta.2 upgrade, and beta.1 package handoff on both native architectures. No SQL downgrade is supplied. See [procedure](docs/upgrade-and-rollback.md) and [native evidence](docs/evidence/2026-11-16-beta5-8154ccf-lifecycle.json). |
 | G8. Operator documentation | PASS | A new operator can install, configure, verify, monitor, troubleshoot, upgrade, and remove the beta from published documentation alone | The README covers evaluation, install, configuration, verification, and lifecycle; the operations guide covers monitoring, alerts, logs, and first response; the shipped bundle includes backup/upgrade/rollback and conservative uninstall procedures. |
 | G9. Signed prerelease publication | PARTIAL | GitHub prerelease `v0.1.0-beta.5` is published and independently verified from downloaded assets on a non-build machine | Worker, primary extension, and artifact versions now match `0.1.0-beta.5`, and prerelease tags create GitHub prereleases. Publish, then verify checksums, Sigstore identities, SBOMs, and installation from downloaded assets. |
 
 ## Release decision
 
-Merged candidate `d5e05d2` passes 790 checks per architecture in
-[run 43177860675](https://github.com/proddata/lake_replication/actions/runs/43177860675).
-The earlier `b0a703a` result and failures below remain historical evidence.
-Subsequent explicit-worker-login changes require their own final-commit native
-qualification; compatibility refresh, the deferred soak and publication gates
-remain open.
+Merged candidate `8154ccf` passes
+[CI 43822064964](https://github.com/proddata/lake_replication/actions/runs/43822064964)
+and full native [lifecycle run 43822411522](https://github.com/proddata/lake_replication/actions/runs/43822411522)
+on both architectures. The earlier `d5e05d2` and `b0a703a` results remain
+historical evidence. Compatibility refresh, the deferred soak and publication
+gates remain open. Direct-publication experiments require their own qualification.
 
 ## Historical candidate investigations
 

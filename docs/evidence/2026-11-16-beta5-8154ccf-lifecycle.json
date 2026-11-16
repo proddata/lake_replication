@@ -1,0 +1,1138 @@
+{
+  "status": "passed",
+  "scope": "Merged default journal pipeline; experimental direct publication is not included in these release archives",
+  "ci": {
+    "conclusion": "success",
+    "event": "push",
+    "headSha": "8154ccfface14a1b5b4926f7531bac3e7fad89aa",
+    "jobs": [
+      {
+        "completedAt": "2026-11-16T07:13:05Z",
+        "conclusion": "success",
+        "databaseId": 133147190768,
+        "name": "bundle (arm64)",
+        "startedAt": "2026-11-16T07:11:47Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-16T07:11:49Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-16T07:11:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:11:51Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-11-16T07:11:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:04Z",
+            "conclusion": "success",
+            "name": "Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 3,
+            "startedAt": "2026-11-16T07:11:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:02Z",
+            "conclusion": "success",
+            "name": "Build arm64 bundle natively",
+            "number": 4,
+            "startedAt": "2026-11-16T07:12:04Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:03Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+            "number": 5,
+            "startedAt": "2026-11-16T07:13:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:04Z",
+            "conclusion": "success",
+            "name": "Post Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 9,
+            "startedAt": "2026-11-16T07:13:03Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:04Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-11-16T07:13:04Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:04Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-11-16T07:13:04Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/43822064964/job/133147190768"
+      },
+      {
+        "completedAt": "2026-11-16T07:12:59Z",
+        "conclusion": "success",
+        "databaseId": 133147190961,
+        "name": "check",
+        "startedAt": "2026-11-16T07:11:45Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-16T07:11:49Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-16T07:11:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:11:54Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-11-16T07:11:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:01Z",
+            "conclusion": "success",
+            "name": "Select Rust 1.85",
+            "number": 3,
+            "startedAt": "2026-11-16T07:11:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:43Z",
+            "conclusion": "success",
+            "name": "Check",
+            "number": 4,
+            "startedAt": "2026-11-16T07:12:01Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:54Z",
+            "conclusion": "success",
+            "name": "Test optional push prototype",
+            "number": 5,
+            "startedAt": "2026-11-16T07:12:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:56Z",
+            "conclusion": "success",
+            "name": "Test demo dashboard and workload controls",
+            "number": 6,
+            "startedAt": "2026-11-16T07:12:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:56Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 12,
+            "startedAt": "2026-11-16T07:12:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:56Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 13,
+            "startedAt": "2026-11-16T07:12:56Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/43822064964/job/133147190961"
+      },
+      {
+        "completedAt": "2026-11-16T07:12:49Z",
+        "conclusion": "success",
+        "databaseId": 133147191110,
+        "name": "bundle (amd64)",
+        "startedAt": "2026-11-16T07:11:45Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-16T07:11:46Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-16T07:11:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:11:48Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-11-16T07:11:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:11:56Z",
+            "conclusion": "success",
+            "name": "Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 3,
+            "startedAt": "2026-11-16T07:11:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:44Z",
+            "conclusion": "success",
+            "name": "Build amd64 bundle",
+            "number": 4,
+            "startedAt": "2026-11-16T07:11:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:46Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+            "number": 5,
+            "startedAt": "2026-11-16T07:12:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:46Z",
+            "conclusion": "success",
+            "name": "Post Run docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5",
+            "number": 9,
+            "startedAt": "2026-11-16T07:12:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:47Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-11-16T07:12:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:12:47Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-11-16T07:12:47Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/43822064964/job/133147191110"
+      },
+      {
+        "completedAt": "2026-11-16T07:12:59Z",
+        "conclusion": "skipped",
+        "databaseId": 133147675420,
+        "name": "qualify-amd64",
+        "startedAt": "2026-11-16T07:12:59Z",
+        "status": "completed",
+        "steps": [],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/43822064964/job/133147675420"
+      },
+      {
+        "completedAt": "2026-11-16T07:14:06Z",
+        "conclusion": "success",
+        "databaseId": 133147713354,
+        "name": "artifact security and notices",
+        "startedAt": "2026-11-16T07:13:08Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-16T07:13:10Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-16T07:13:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:11Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-11-16T07:13:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:12Z",
+            "conclusion": "success",
+            "name": "Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+            "number": 3,
+            "startedAt": "2026-11-16T07:13:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:13:13Z",
+            "conclusion": "success",
+            "name": "Install checksum-pinned audit tools",
+            "number": 4,
+            "startedAt": "2026-11-16T07:13:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:04Z",
+            "conclusion": "success",
+            "name": "Audit both exported archives",
+            "number": 5,
+            "startedAt": "2026-11-16T07:13:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:05Z",
+            "conclusion": "success",
+            "name": "Upload SBOMs and vulnerability evidence",
+            "number": 6,
+            "startedAt": "2026-11-16T07:14:04Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:05Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 12,
+            "startedAt": "2026-11-16T07:14:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:05Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 13,
+            "startedAt": "2026-11-16T07:14:05Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/43822064964/job/133147713354"
+      }
+    ],
+    "url": "https://github.com/proddata/lake_replication/actions/runs/43822064964"
+  },
+  "lifecycle": {
+    "conclusion": "success",
+    "createdAt": "2026-11-16T07:14:38Z",
+    "event": "workflow_dispatch",
+    "headSha": "8154ccfface14a1b5b4926f7531bac3e7fad89aa",
+    "jobs": [
+      {
+        "completedAt": "2026-11-16T07:41:03Z",
+        "conclusion": "success",
+        "databaseId": 133148311193,
+        "name": "lifecycle (arm64)",
+        "startedAt": "2026-11-16T07:14:44Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-16T07:14:46Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-16T07:14:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:46Z",
+            "conclusion": "success",
+            "name": "Validate probe selection",
+            "number": 2,
+            "startedAt": "2026-11-16T07:14:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:49Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 3,
+            "startedAt": "2026-11-16T07:14:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:51Z",
+            "conclusion": "success",
+            "name": "Validate the successful candidate CI revision",
+            "number": 4,
+            "startedAt": "2026-11-16T07:14:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:53Z",
+            "conclusion": "success",
+            "name": "Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+            "number": 5,
+            "startedAt": "2026-11-16T07:14:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:54Z",
+            "conclusion": "success",
+            "name": "Verify candidate provenance",
+            "number": 6,
+            "startedAt": "2026-11-16T07:14:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:54Z",
+            "conclusion": "skipped",
+            "name": "Reclaim unused SDK space on the AMD64 probe runner",
+            "number": 7,
+            "startedAt": "2026-11-16T07:14:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:16:47Z",
+            "conclusion": "success",
+            "name": "Build and verify source-pinned storage fixtures",
+            "number": 8,
+            "startedAt": "2026-11-16T07:14:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:16:52Z",
+            "conclusion": "success",
+            "name": "Reclaim storage fixture build cache",
+            "number": 9,
+            "startedAt": "2026-11-16T07:16:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:16:52Z",
+            "conclusion": "success",
+            "name": "Resolve source-keyed prerequisite cache",
+            "number": 10,
+            "startedAt": "2026-11-16T07:16:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:17:12Z",
+            "conclusion": "success",
+            "name": "Restore prerequisite image archive",
+            "number": 11,
+            "startedAt": "2026-11-16T07:16:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "success",
+            "name": "Verify and load cached prerequisite image",
+            "number": 12,
+            "startedAt": "2026-11-16T07:17:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "success",
+            "name": "Prepare upstream-only prerequisite image",
+            "number": 13,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Reclaim prerequisite build cache before export",
+            "number": 14,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Export optional prerequisite cache",
+            "number": 15,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Save verified prerequisite cache",
+            "number": 16,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "success",
+            "name": "Free the local cache archive before replication",
+            "number": 17,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Controlled copy-contention diagnostic",
+            "number": 18,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Focused native admission and four-copy probe",
+            "number": 19,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Configured copy comparison",
+            "number": 20,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Matched publication transaction diagnostic",
+            "number": 21,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Guarded manifest cleanup comparison (upstream binary overlay)",
+            "number": 22,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Unguarded manifest patch verification (upstream binary overlay)",
+            "number": 23,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Checkpoint partition prototype diagnostic (SQL overlay)",
+            "number": 24,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Checkpoint original-split-original comparison (performance diagnostic)",
+            "number": 25,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Bulk copy row-cap comparison (SQL and worker configuration overlays)",
+            "number": 26,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:00Z",
+            "conclusion": "skipped",
+            "name": "Staging representation comparison (SQL overlays, unchanged worker and copy limits)",
+            "number": 27,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:21:34Z",
+            "conclusion": "success",
+            "name": "Fresh packaged lifecycle",
+            "number": 28,
+            "startedAt": "2026-11-16T07:19:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:21:56Z",
+            "conclusion": "success",
+            "name": "Archived worker TLS and SCRAM",
+            "number": 29,
+            "startedAt": "2026-11-16T07:21:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:22:14Z",
+            "conclusion": "success",
+            "name": "Forced Rust child crashes",
+            "number": 30,
+            "startedAt": "2026-11-16T07:21:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:23:29Z",
+            "conclusion": "success",
+            "name": "Receiver regressions with unchanged archived SQL and binaries",
+            "number": 31,
+            "startedAt": "2026-11-16T07:22:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:23:58Z",
+            "conclusion": "success",
+            "name": "Packaged update-key types, rollback and upgrade paths",
+            "number": 32,
+            "startedAt": "2026-11-16T07:23:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:24:24Z",
+            "conclusion": "success",
+            "name": "Active subscription DROP and busy source-slot retry",
+            "number": 33,
+            "startedAt": "2026-11-16T07:23:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:24:45Z",
+            "conclusion": "success",
+            "name": "Explicit launcher-managed worker identity",
+            "number": 34,
+            "startedAt": "2026-11-16T07:24:24Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:25:21Z",
+            "conclusion": "success",
+            "name": "Non-superuser runtime grants and access denials",
+            "number": 35,
+            "startedAt": "2026-11-16T07:24:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:25:22Z",
+            "conclusion": "success",
+            "name": "Check out the preserved beta.2 source",
+            "number": 36,
+            "startedAt": "2026-11-16T07:25:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:25:22Z",
+            "conclusion": "success",
+            "name": "Reclaim prerequisite build cache before beta.2 build",
+            "number": 37,
+            "startedAt": "2026-11-16T07:25:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:26:09Z",
+            "conclusion": "success",
+            "name": "Build the beta.2 package for admission upgrade qualification",
+            "number": 38,
+            "startedAt": "2026-11-16T07:25:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:27:31Z",
+            "conclusion": "success",
+            "name": "Coordinated physical upgrade rollback",
+            "number": 39,
+            "startedAt": "2026-11-16T07:26:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:39:10Z",
+            "conclusion": "success",
+            "name": "Production admission and beta.2 upgrade",
+            "number": 40,
+            "startedAt": "2026-11-16T07:27:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:39:11Z",
+            "conclusion": "success",
+            "name": "Check out the preserved beta.1 source",
+            "number": 41,
+            "startedAt": "2026-11-16T07:39:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:39:15Z",
+            "conclusion": "success",
+            "name": "Reclaim build cache before beta.1 build",
+            "number": 42,
+            "startedAt": "2026-11-16T07:39:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:40:04Z",
+            "conclusion": "success",
+            "name": "Build the real beta.1 package for this architecture",
+            "number": 43,
+            "startedAt": "2026-11-16T07:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:40:59Z",
+            "conclusion": "success",
+            "name": "Packaged beta.1 upgrade handoff",
+            "number": 44,
+            "startedAt": "2026-11-16T07:40:04Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:41:01Z",
+            "conclusion": "success",
+            "name": "Upload qualification evidence and legacy package",
+            "number": 45,
+            "startedAt": "2026-11-16T07:40:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:41:01Z",
+            "conclusion": "success",
+            "name": "Post Check out the preserved beta.1 source",
+            "number": 88,
+            "startedAt": "2026-11-16T07:41:01Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:41:02Z",
+            "conclusion": "success",
+            "name": "Post Check out the preserved beta.2 source",
+            "number": 89,
+            "startedAt": "2026-11-16T07:41:01Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:41:02Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 90,
+            "startedAt": "2026-11-16T07:41:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:41:02Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 91,
+            "startedAt": "2026-11-16T07:41:02Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/43822411522/job/133148311193"
+      },
+      {
+        "completedAt": "2026-11-16T07:44:50Z",
+        "conclusion": "success",
+        "databaseId": 133148311543,
+        "name": "lifecycle (amd64)",
+        "startedAt": "2026-11-16T07:14:42Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-16T07:14:44Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-16T07:14:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:44Z",
+            "conclusion": "success",
+            "name": "Validate probe selection",
+            "number": 2,
+            "startedAt": "2026-11-16T07:14:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:48Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 3,
+            "startedAt": "2026-11-16T07:14:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:48Z",
+            "conclusion": "success",
+            "name": "Validate the successful candidate CI revision",
+            "number": 4,
+            "startedAt": "2026-11-16T07:14:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:50Z",
+            "conclusion": "success",
+            "name": "Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+            "number": 5,
+            "startedAt": "2026-11-16T07:14:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:14:51Z",
+            "conclusion": "success",
+            "name": "Verify candidate provenance",
+            "number": 6,
+            "startedAt": "2026-11-16T07:14:50Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:16:07Z",
+            "conclusion": "success",
+            "name": "Reclaim unused SDK space on the AMD64 probe runner",
+            "number": 7,
+            "startedAt": "2026-11-16T07:14:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:18:51Z",
+            "conclusion": "success",
+            "name": "Build and verify source-pinned storage fixtures",
+            "number": 8,
+            "startedAt": "2026-11-16T07:16:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:18:59Z",
+            "conclusion": "success",
+            "name": "Reclaim storage fixture build cache",
+            "number": 9,
+            "startedAt": "2026-11-16T07:18:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:18:59Z",
+            "conclusion": "success",
+            "name": "Resolve source-keyed prerequisite cache",
+            "number": 10,
+            "startedAt": "2026-11-16T07:18:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:19:17Z",
+            "conclusion": "success",
+            "name": "Restore prerequisite image archive",
+            "number": 11,
+            "startedAt": "2026-11-16T07:18:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "success",
+            "name": "Verify and load cached prerequisite image",
+            "number": 12,
+            "startedAt": "2026-11-16T07:19:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "success",
+            "name": "Prepare upstream-only prerequisite image",
+            "number": 13,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Reclaim prerequisite build cache before export",
+            "number": 14,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Export optional prerequisite cache",
+            "number": 15,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Save verified prerequisite cache",
+            "number": 16,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "success",
+            "name": "Free the local cache archive before replication",
+            "number": 17,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Controlled copy-contention diagnostic",
+            "number": 18,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Focused native admission and four-copy probe",
+            "number": 19,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Configured copy comparison",
+            "number": 20,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Matched publication transaction diagnostic",
+            "number": 21,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Guarded manifest cleanup comparison (upstream binary overlay)",
+            "number": 22,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Unguarded manifest patch verification (upstream binary overlay)",
+            "number": 23,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Checkpoint partition prototype diagnostic (SQL overlay)",
+            "number": 24,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Checkpoint original-split-original comparison (performance diagnostic)",
+            "number": 25,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Bulk copy row-cap comparison (SQL and worker configuration overlays)",
+            "number": 26,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:20:32Z",
+            "conclusion": "skipped",
+            "name": "Staging representation comparison (SQL overlays, unchanged worker and copy limits)",
+            "number": 27,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:23:02Z",
+            "conclusion": "success",
+            "name": "Fresh packaged lifecycle",
+            "number": 28,
+            "startedAt": "2026-11-16T07:20:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:23:27Z",
+            "conclusion": "success",
+            "name": "Archived worker TLS and SCRAM",
+            "number": 29,
+            "startedAt": "2026-11-16T07:23:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:23:50Z",
+            "conclusion": "success",
+            "name": "Forced Rust child crashes",
+            "number": 30,
+            "startedAt": "2026-11-16T07:23:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:25:19Z",
+            "conclusion": "success",
+            "name": "Receiver regressions with unchanged archived SQL and binaries",
+            "number": 31,
+            "startedAt": "2026-11-16T07:23:50Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:25:56Z",
+            "conclusion": "success",
+            "name": "Packaged update-key types, rollback and upgrade paths",
+            "number": 32,
+            "startedAt": "2026-11-16T07:25:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:26:25Z",
+            "conclusion": "success",
+            "name": "Active subscription DROP and busy source-slot retry",
+            "number": 33,
+            "startedAt": "2026-11-16T07:25:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:26:51Z",
+            "conclusion": "success",
+            "name": "Explicit launcher-managed worker identity",
+            "number": 34,
+            "startedAt": "2026-11-16T07:26:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:27:34Z",
+            "conclusion": "success",
+            "name": "Non-superuser runtime grants and access denials",
+            "number": 35,
+            "startedAt": "2026-11-16T07:26:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:27:35Z",
+            "conclusion": "success",
+            "name": "Check out the preserved beta.2 source",
+            "number": 36,
+            "startedAt": "2026-11-16T07:27:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:27:36Z",
+            "conclusion": "success",
+            "name": "Reclaim prerequisite build cache before beta.2 build",
+            "number": 37,
+            "startedAt": "2026-11-16T07:27:35Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:28:25Z",
+            "conclusion": "success",
+            "name": "Build the beta.2 package for admission upgrade qualification",
+            "number": 38,
+            "startedAt": "2026-11-16T07:27:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:29:26Z",
+            "conclusion": "success",
+            "name": "Coordinated physical upgrade rollback",
+            "number": 39,
+            "startedAt": "2026-11-16T07:28:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:43:14Z",
+            "conclusion": "success",
+            "name": "Production admission and beta.2 upgrade",
+            "number": 40,
+            "startedAt": "2026-11-16T07:29:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:43:14Z",
+            "conclusion": "success",
+            "name": "Check out the preserved beta.1 source",
+            "number": 41,
+            "startedAt": "2026-11-16T07:43:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:43:19Z",
+            "conclusion": "success",
+            "name": "Reclaim build cache before beta.1 build",
+            "number": 42,
+            "startedAt": "2026-11-16T07:43:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:44:08Z",
+            "conclusion": "success",
+            "name": "Build the real beta.1 package for this architecture",
+            "number": 43,
+            "startedAt": "2026-11-16T07:43:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:44:44Z",
+            "conclusion": "success",
+            "name": "Packaged beta.1 upgrade handoff",
+            "number": 44,
+            "startedAt": "2026-11-16T07:44:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:44:46Z",
+            "conclusion": "success",
+            "name": "Upload qualification evidence and legacy package",
+            "number": 45,
+            "startedAt": "2026-11-16T07:44:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:44:47Z",
+            "conclusion": "success",
+            "name": "Post Check out the preserved beta.1 source",
+            "number": 88,
+            "startedAt": "2026-11-16T07:44:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:44:47Z",
+            "conclusion": "success",
+            "name": "Post Check out the preserved beta.2 source",
+            "number": 89,
+            "startedAt": "2026-11-16T07:44:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:44:47Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 90,
+            "startedAt": "2026-11-16T07:44:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-16T07:44:47Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 91,
+            "startedAt": "2026-11-16T07:44:47Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/proddata/lake_replication/actions/runs/43822411522/job/133148311543"
+      }
+    ],
+    "updatedAt": "2026-11-16T07:44:50Z",
+    "url": "https://github.com/proddata/lake_replication/actions/runs/43822411522"
+  }
+}
