@@ -30,11 +30,11 @@ an explicit validated recovery procedure, which remains to be implemented.
 
 ## Evidence
 
-The [first revised regression run](../../evidence/2026-10-19-base-recovery-regression-results.json) passed both previously failing paused
+The [first revised regression run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-recovery-regression-results.json) passed both previously failing paused
 launcher/wrapper kills (30/30 assertions). Worker logs show an actual contention
 retry before recovery, rather than only a fortuitous absence of the race.
 
-The [complete revised cohort](../../evidence/2026-10-19-base-recovery-full-results.json) then passed **91/91 assertions** across six kill
+The [complete revised cohort](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-recovery-full-results.json) then passed **91/91 assertions** across six kill
 cases and an independent slot-holder test. Each case used fresh private data
 volumes on Linux arm64/PostgreSQL 18.6 with Docker init. PostgreSQL launcher or
 wrapper kills each caused exactly one expected crash recovery; Rust supervisor
@@ -51,7 +51,7 @@ retry, rather than slot takeover.
 
 After this cohort, the final refinement clears stale budgets for alternative
 endpoints when a healthy endpoint is selected. Its virtual-time unit test also
-covers that reset. The [final image retest](../../evidence/2026-10-19-base-recovery-final-results.json)
+covers that reset. The [final image retest](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-recovery-final-results.json)
 passed all 41 assertions across both paused crash regressions and the
 persistent-holder case; exact sources are retained per run.
 The full six-kill cohort predates that small refinement. Multi-endpoint live

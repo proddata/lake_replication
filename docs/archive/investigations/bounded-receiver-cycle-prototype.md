@@ -66,7 +66,7 @@ checks.
 
 ## Local results, 2026-10-28
 
-[Retained evidence](../../evidence/2026-10-28-bounded-receiver-cycle-results.json)
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-bounded-receiver-cycle-results.json)
 includes every run in this comparison, input/source identities, exact overlaid
 Rust variants, log/table/result hashes, operational checks, phase summaries and
 independent audits. All three bounded runs have identical overlaid Rust source

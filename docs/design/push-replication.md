@@ -39,7 +39,7 @@ The optional artifacts remain a bounded prototype, not a general mirroring relea
 
 ## First implementation slice
 
-The [progress-barrier qualification](../evidence/2026-11-14-push-progress-qualification.json)
+The [progress-barrier qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-progress-qualification.json)
 retains 394 passing normal checks across 26 selected fixtures, 111 native source
 crash checks and 38 packaging checks. Progress requests include an older unfinished
 transaction case and actual upload/commit crashes. Bounded ordered schema evolution has an explicit
@@ -63,13 +63,13 @@ status, tracked diff hash, fixture hashes, PostgreSQL build, source identity,
 pg_lake revision/patchset and installed library hashes, and immutable container
 image IDs. An existing destination image is not used as source-side proof.
 
-The [retained source SQL run](../evidence/2026-11-13-push-capture-sql-feasibility.json)
+The [retained source SQL run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-capture-sql-feasibility.json)
 passes all 27 checks on ARM64 PostgreSQL 18.6 with pg_lake revision
 `8180647d4535fdb1ed223f92f301ba6094a8ec3e` and the manifest-cleanup-v1 runtime
 patchset. Fixture source hashes match the retained evidence and disposable
 container/volume cleanup succeeded.
 
-The [source crash/read-view run](../evidence/2026-11-13-push-capture-crash-boundaries.json)
+The [source crash/read-view run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-capture-crash-boundaries.json)
 passes 56 checks, including SIGKILL before/after upload completion and inside the
 postcommit callback before success reaches the client. Reconnect resolves the
 durable receipt before retrying. A reader that pins its snapshot before capture
@@ -77,15 +77,15 @@ sees the old manifest, both logs and checkpoint even when it first opens the
 Iceberg tables after capture commits.
 
 Logical correctness/recovery passes 57 checks both
-[before](../evidence/2026-11-13-push-logical-baseline.json) and
-[after](../evidence/2026-11-13-push-logical-refactor.json) extracting shared types and
+[before](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-baseline.json) and
+[after](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-refactor.json) extracting shared types and
 staging. Existing worker-crash recovery passes 17 checks
-[before](../evidence/2026-11-13-push-logical-baseline-faults.json) and
-[after](../evidence/2026-11-13-push-logical-refactor-faults.json). These are separate
+[before](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-baseline-faults.json) and
+[after](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-refactor-faults.json). These are separate
 source-pinned worktree archives, not a new release qualification. The publisher
 and SQL admission functions are unchanged by the extraction.
 
-The [synthetic importer run](../evidence/2026-11-14-push-synthetic-importer.json)
+The [synthetic importer run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-synthetic-importer.json)
 passes 33 checks: cross-language protocol encoding, two-table materialization,
 replay/conflicts, invalid batches, atomic imported progress, process death
 before/after admission, journal backpressure and stale generation fencing.
@@ -96,28 +96,28 @@ existing ManagedClient fence.
 
 ## Native capture and bootstrap evidence
 
-The [live native run](../evidence/2026-11-13-push-native-live.json) passes 21 checks,
+The [live native run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-native-live.json) passes 21 checks,
 including independent pgoutput comparison, abort/subabort handling, duplicate
 leases, stop/start, child death, and capture while the importer is stopped.
-The [native crash run](../evidence/2026-11-13-push-native-crash-reconciliation.json)
+The [native crash run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-native-crash-reconciliation.json)
 passes 25 checks at upload/commit boundaries, including durable receipt
 reconciliation before slot advancement.
 
-[Paused snapshot qualification](../evidence/2026-11-14-push-paused-snapshot.json)
+[Paused snapshot qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-paused-snapshot.json)
 passes 18 checks. A SHARE lock freezes both selected tables while a slot and a
 bounded, complete baseline are created. Begin/chunk/complete/activate controls,
 baseline rows, receipt and source checkpoint commit together. Concurrent writers
 wait behind the baseline locks, then replay from its slot boundary. Incomplete
 copy requires reset and recopy; consumers cannot silently follow a new generation.
-[Scalar qualification](../evidence/2026-11-14-push-native-scalars.json) covers integer
+[Scalar qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-scalars.json) covers integer
 limits, bool, NULL, Unicode, compound keys, INCLUDE attributes and quoted names.
-[Lifecycle qualification](../evidence/2026-11-14-push-native-lifecycle.json) covers
+[Lifecycle qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-lifecycle.json) covers
 full postmaster restart, restored-source fencing, controlled cleanup, frozen DDL,
 oversize transactions and missing-history rejection.
 
 ## Retention and bounded upload attempts
 
-[Retention qualification](../evidence/2026-11-14-push-retention.json) verifies two
+[Retention qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-retention.json) verifies two
 registered consumers, acknowledgements derived from actual destination
 publication, conservative pruning, lagging-reader gap errors and bounded source
 capture when the importer is stopped. Imported journal admission alone never
@@ -125,7 +125,7 @@ releases logs. Every active consumer must acknowledge publication through the
 batch, and the source slot must have confirmed it, before logical pruning.
 New consumers after pruning require a new snapshot generation.
 
-[Upload-budget qualification](../evidence/2026-11-14-push-upload-budget.json) verifies
+[Upload-budget qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-upload-budget.json) verifies
 durable pre-upload reservations. If reservation fails, no object upload begins.
 A fatal child exit fences automatic retries for that configuration even when a
 metadata failure prevents persisting the error. Explicit start after repair
@@ -143,13 +143,13 @@ publication claim in this prototype.
 
 ## Gates still open
 
-[Mutation qualification](../evidence/2026-11-14-push-native-mutations.json) passes
+[Mutation qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-mutations.json) passes
 13 checks for historical TOAST, key changes, repeated mutations, delete/reinsert,
 NULL transitions, ordered TRUNCATE and replay. The decoder never fetches current
 source rows to repair historical values. A distinct replica-identity index is
 rejected at registration; default identity or the primary-key index is required.
 
-[Online snapshot qualification](../evidence/2026-11-14-push-online-snapshot.json)
+[Online snapshot qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-online-snapshot.json)
 passes 22 checks, including concurrent committed UPDATE/DELETE/key changes while
 the baseline is incomplete. `CREATE_REPLICATION_SLOT ... (SNAPSHOT 'export')`
 provides both the consistency boundary and the snapshot imported into the
@@ -158,7 +158,7 @@ until import completes. Baseline reads finish before a separate publication
 transaction, and protected WAL supplies all later commits. See the
 [PostgreSQL replication protocol](https://www.postgresql.org/docs/18/protocol-replication.html).
 
-Sustained resource benchmarking, general release qualification and larger resumable transactions/snapshots remain open. Bounded ordered DDL is separately qualified through the opt-in schema path. Optional destination APIs and native prototype packaging are qualified below. A [dedicated-role run](../evidence/2026-11-14-push-source-roles.json) verifies a
+Sustained resource benchmarking, general release qualification and larger resumable transactions/snapshots remain open. Bounded ordered DDL is separately qualified through the opt-in schema path. Optional destination APIs and native prototype packaging are qualified below. A [dedicated-role run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-source-roles.json) verifies a
 non-superuser LOGIN REPLICATION owner with explicit selected-table SELECT and
 MAINTAIN grants, plus a separate read-only log consumer. This is a trusted
 single-operator control plane, not isolation between untrusted operators sharing one source engine. The prototype uses a finite
@@ -167,7 +167,7 @@ configuration when exhausted. It is not a production mirroring release.
 
 ## Coordinated physical maintenance and outages
 
-[Maintenance qualification](../evidence/2026-11-14-push-maintenance.json) passes
+[Maintenance qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-maintenance.json) passes
 14 checks. Private logs disable automatic vacuum and expire old Iceberg snapshots
 on writes. Each importer takes a database-local shared advisory gate before
 starting its repeatable-read transaction. Every five minutes the capture worker
@@ -187,7 +187,7 @@ readers are outside this guarantee. Drop/reset ends the old generation and its
 reader contract. Old files still have the pg_lake deletion-retention/PITR policy;
 these tests do not override deployed retention settings.
 
-[Outage qualification](../evidence/2026-11-14-push-outages.json) passes eight checks.
+[Outage qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-outages.json) passes eight checks.
 Application COMMIT completes while the source object store is stopped. Capture
 hits its statement budget, retains a durable incomplete attempt, and leaves the
 manifest/slot frontier behind the pending source transaction. Explicit repaired
@@ -196,14 +196,14 @@ the imported checkpoint; restart and rebind restore exact publication.
 
 ## Larger ordering and publication recovery
 
-[Native chunk qualification](../evidence/2026-11-14-push-native-chunks.json) checks
+[Native chunk qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-chunks.json) checks
 more than ten transport chunks and event ordinals. Transport testing uses smaller
 bounded chunks, leaving the canonical batch unchanged. Numeric source columns
 explicitly determine SQL order, avoiding lexical ordering of text output aliases.
-The [12-batch cost experiment](../evidence/2026-11-14-push-source-impact.json) also
+The [12-batch cost experiment](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-source-impact.json) also
 covers multi-digit manifest sequences and compares complete mirrors to pgoutput.
 
-[Publisher fault qualification](../evidence/2026-11-14-push-publisher-crash-recovery.json)
+[Publisher fault qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-publisher-crash-recovery.json)
 passes 21 checks against a test-only instrumented destination. Actual backend
 SIGKILL before upload completion, after upload and after commit exercises INSERT,
 key changes and TRUNCATE respectively. Imported receipts survive every crash;
@@ -224,7 +224,7 @@ including observer overhead and process startup, not sustained latency or sizing
 results. Physical object count is not object request count. The source upload and
 metadata cost is material and does not support a low-overhead claim.
 
-A [paced concurrent run](../evidence/2026-11-14-push-concurrent-source-impact.json)
+A [paced concurrent run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-concurrent-source-impact.json)
 uses 120 transactions of ten rows per table at 250 ms intervals, with concurrent
 replication and two-second resource sampling. Pull completed in 30.47 seconds;
 single-transaction push drained in 49.43 seconds. Source plus source-engine CPU
@@ -264,11 +264,11 @@ uploads. An individually oversized transaction still stops capture. The Rust
 transport validates distinct message/chunk ordinals and a cumulative byte cap.
 These are payload high-water limits; SQL/hex copies and engine memory add cost.
 
-[Grouped qualification](../evidence/2026-11-14-push-grouped-publication.json) proves
+[Grouped qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-grouped-publication.json) proves
 twelve independent commits use one publication transaction and one data file
 per populated event/manifest log, including ordered key changes and TRUNCATE.
 It also forces read-window fallback and complete
-historical replay. [Grouped crash qualification](../evidence/2026-11-14-push-grouped-crashes.json)
+historical replay. [Grouped crash qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-grouped-crashes.json)
 checks all-or-none visibility before/after uploads and after a lost commit
 response. Grouping is opt-in; qualify its performance for the intended workload.
 
@@ -282,7 +282,7 @@ target is not a physical quota or a required chunk boundary. The stricter
 engine buffering and compression determine actual files. Reader-gated VACUUM
 provides later compaction and delayed cleanup.
 
-The [traced paced experiment](../evidence/2026-11-14-push-traced-source-impact.json)
+The [traced paced experiment](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-traced-source-impact.json)
 predates physical log-file batching. It used the same 120-transaction workload with groups up to 32 and a one-second
 interval. It observed 25 source publication commits, 12.51 source/engine CPU
 seconds, 3.84 MB of source WAL and a 32.33-second drain. The corresponding pull
@@ -301,7 +301,7 @@ overhead affect these results; no billing/completeness guarantee is implied.
 Source database growth and sampled frontiers/RSS/PSS are retained too. Actual
 Parquet metadata confirms Snappy and the 512 MiB approximate file target.
 
-After [packing grouped rows into one append per log](../evidence/2026-11-14-push-bulk-file-source-impact.json),
+After [packing grouped rows into one append per log](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-bulk-file-source-impact.json),
 the same paced workload observed 27 publication commits and 27 data files per
 event/manifest log before maintenance. Push used 9.58 source/engine CPU seconds,
 2.60 MB WAL and 486 source-prefix requests, plus 99 maintenance requests; its
@@ -312,7 +312,7 @@ does not isolate every timing effect. Source overhead remains material.
 The benchmark now retains pre-maintenance file counts and bytes separately
 from the compacted file profile.
 
-The [counterbalanced experiment](../evidence/2026-11-14-push-counterbalanced-source-impact.json)
+The [counterbalanced experiment](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-source-impact.json)
 repeats the 120-transaction paced workload in six fresh fixtures, three per
 mode order. These trials preceded the explicit progress-request path and generated
 no automatic barrier traffic. Median measured costs were:
@@ -331,7 +331,7 @@ are descriptive small-sample results; caches, catalog history, observer overhead
 and compressible data remain part of the experiment. The results show material
 source and overall database CPU cost in both mode orders.
 
-An [earlier interrupted trial](../evidence/2026-11-14-push-counterbalanced-interruption.json)
+An [earlier interrupted trial](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-interruption.json)
 had simultaneous source/destination log gaps of about 74 seconds and a WAL-sender
 timeout while writes were still in progress, suggesting a host/VM suspension.
 That matrix stopped without an aggregate. The complete six-fixture matrix ran
@@ -340,7 +340,7 @@ now retain bounded writer/replication diagnostics plus wall and monotonic timing
 
 ## Private storage identity
 
-[Storage-location qualification](../evidence/2026-11-14-push-storage-locations.json)
+[Storage-location qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-storage-locations.json)
 checks that registration persists the four actual private foreign-table roots
 in `streams.log_locations`, plus their common `object_prefix`. A session default
 changed after extension installation does not describe or reroute those existing
@@ -360,7 +360,7 @@ session locks, and adaptive read retries reacquire locks released by an abort.
 Metadata-only snapshot reservations avoid taking a second set of relation locks
 behind DDL waiting on their publishing connection.
 
-[Cleanup lease qualification](../evidence/2026-11-14-push-cleanup-leases.json) holds
+[Cleanup lease qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-cleanup-leases.json) holds
 a manual actor lease with an idle decoder slot. Reset/drop wait for that lease
 before deleting logs or removing protected WAL. Cleanup and pruning also reject
 storage-root drift. Administrative repair must restore the recorded original
@@ -369,7 +369,7 @@ supported relocation workflow.
 
 ## Credential scope and rotation
 
-[Storage credential qualification](../evidence/2026-11-14-push-storage-credentials.json)
+[Storage credential qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-storage-credentials.json)
 passes 11 checks with separate source/destination MinIO users. Their IAM policies
 limit object access to `iceberg/` and `destination/` respectively. Each engine can
 read its own metadata; cross-prefix reads return no data and cross-prefix writes
@@ -379,7 +379,7 @@ credentials, not isolation between untrusted SQL operators within one engine.
 The fixture administrator credential is used only by its storage initializer.
 Cloud-provider IAM and production credential distribution remain separate gates.
 
-[Credential rotation qualification](../evidence/2026-11-14-push-credential-rotation.json)
+[Credential rotation qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-credential-rotation.json)
 passes seven checks. The source child authenticates using SCRAM and an owner-only
 credential file. Explicit stop, atomic file replacement and a new start generation
 reload the password while retaining pending WAL. An obsolete password starts no
@@ -389,7 +389,7 @@ rotation is still unqualified.
 
 ## Optional destination companion and managed mode
 
-[Managed-mode qualification](../evidence/2026-11-14-push-managed-mode.json) covers the
+[Managed-mode qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-managed-mode.json) covers the
 separately installed `lake_replication_push` companion. An explicit
 `create_push_subscription` call requires `mode=iceberg_push`, a frozen two-table
 registry, transport/binding configuration, a credential file, an explicit runtime
@@ -419,7 +419,7 @@ database and managed subscription; the private multi-database fixture uses
 
 ## Optional native artifacts
 
-[Packaging qualification](../evidence/2026-11-14-push-packaging.json) verifies separate
+[Packaging qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-packaging.json) verifies separate
 source and destination ARM64 Linux/PostgreSQL 18 prototype archives. The source
 archive contains only the source companion/capture worker. The destination one
 contains the optional metadata companion, importer and push-capable supervisor;
@@ -452,7 +452,7 @@ refusal. After installation commits, `install.sh --finish` verifies every instal
 payload byte and mode before removing remaining staging directories. A SIGKILL
 after one staging directory was deleted, corrupt installed bytes, incorrect modes
 and attempted rollback of a committed installation are covered by the
-[cleanup recovery qualification](../evidence/2026-11-15-push-install-cleanup-recovery.json).
+[cleanup recovery qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-install-cleanup-recovery.json).
 New journals record the complete staging plan before creating external staging
 directories. After SIGKILL during planning or preparation, `install.sh --discard`
 removes unpublished staging data without changing original files or modes. These
@@ -466,7 +466,7 @@ and runtime are qualified by these results.
 
 ## Native decoding and snapshot resource boundaries
 
-[Spill qualification](../evidence/2026-11-14-push-native-spill.json) checks an actual
+[Spill qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-spill.json) checks an actual
 unfinished transaction with forced native PostgreSQL spilling. A 64 KiB spill
 allowance stops decoding before commit and before any log upload reservation.
 After the application commits, repaired capture replays the protected transaction
@@ -491,7 +491,7 @@ status exposes cumulative decoder spill bytes/counts; SQL statement and lock
 budgets remain in force. Configure server WAL retention and physical disk limits
 with headroom; source history loss still requires controlled rebuild.
 
-The [failure telemetry probe](../evidence/2026-11-14-push-failure-telemetry.json)
+The [failure telemetry probe](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-failure-telemetry.json)
 checks the dedicated nonsuperuser operator, native error-code classification,
 restart history, obsolete actors and counter saturation.
 `lake_capture.status` also exposes `capture_failure_count`,
@@ -524,21 +524,21 @@ are not an atomic cross-database snapshot. An unchanged frontier refreshes at
 most once per five seconds while polling; journal backpressure can leave it
 stale until another source read succeeds.
 
-[Snapshot-limit qualification](../evidence/2026-11-14-push-snapshot-limits.json) checks
+[Snapshot-limit qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-snapshot-limits.json) checks
 paused and online groups exceeding the row cap. Preflight counts only up to the
 remaining allowance plus one before evaluating byte inventory. No partial
 baseline, manifest or upload reservation is exposed; controlled cleanup removes
 any provisional online slot. This does not add independently resumable or
 unbounded baseline chunks.
 
-[External text-key qualification](../evidence/2026-11-14-push-toast-keys.json)
+[External text-key qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-toast-keys.json)
 uses actual out-of-line primary-key values. PostgreSQL can mark an unchanged
 new key as external while supplying its historical old identity. The importer
 resolves that marker from the transaction's old key or old full row, then applies
 ordinary updates, key changes and deletes through the existing journal. Missing
 historical identity is rejected; no current source-row lookup is used.
 
-[Physical spill disk-full qualification](../evidence/2026-11-14-push-disk-full.json)
+[Physical spill disk-full qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-disk-full.json)
 exhausts a 16 MiB disposable tmpfs mounted over one stopped native slot directory.
 An unfinished source transaction reaches PostgreSQL's real ENOSPC error without
 advancing complete capture or reserving uploads. Its application transaction can
@@ -547,19 +547,19 @@ slot replays protected history and the existing publisher applies all rows once.
 This qualifies native spill storage exhaustion, not full PGDATA/WAL disk failure.
 The fault fixture requires a mount capability inside its disposable container.
 
-The refreshed [capture crash qualification](../evidence/2026-11-14-push-native-crash-reconciliation.json)
+The refreshed [capture crash qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-crash-reconciliation.json)
 also restarts the entire source after a committed capture loses its response,
 while slot confirmation still lags. The receipt survives, implicit startup is
 fenced by the new postmaster binding, and explicit same-source rebind reconciles
 without duplicate log events or final rows.
 
-The [logical compatibility qualification](../evidence/2026-11-15-push-logical-compatibility.json)
+The [logical compatibility qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-logical-compatibility.json)
 runs the existing archive upgrade/restore, replication, interrupted initial-copy
 and uninstaller cases on fresh volumes with the optional extension installed and
 after removal: 55 checks in each state pass. Other logical test targets remain
 separate release gates.
 
-The [1,000-transaction comparison](../evidence/2026-11-15-push-sustained-1000-source-impact.json)
+The [1,000-transaction comparison](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-sustained-1000-source-impact.json)
 runs each mode for about 250 seconds at four transactions per second, with ten
 rows per table per transaction, concurrent draining and observed S3 requests.
 Both mirrors match. Source plus engine CPU is 118.0 seconds for push versus 14.0

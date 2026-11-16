@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-11-beta5-compatibility-refresh.json",
+      "sha256": "23f399225e091cfbbb9189b0f9501baf5c5181bafe10aa2ce27b046446f90cc5",
+      "bytes": 11269,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-11-beta5-compatibility-refresh.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "archive_sha256": "c67e8d19361282876fa0db3c2d87a42f6a01bc437e911a3a6cd7afd2677181fc",
   "artifact_id": 13495475027,
   "artifact_zip_sha256": "bd6442446bbde96e6971b6d019b77f65f452d470e91757eff4d91bb3ee9046a5",

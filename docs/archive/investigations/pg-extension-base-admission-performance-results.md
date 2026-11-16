@@ -3,7 +3,7 @@
 Evaluation completed on 2026-10-21. Five steady-load and five timing-validated
 catch-up pairs are retained, alongside both coexistence cases. The clock-disrupted
 catch-up attempt was rejected and replaced, not mixed into the accepted pairs.
-See the [retained results](../../evidence/2026-10-21-base-admission-performance-results.json).
+See the [retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-base-admission-performance-results.json).
 
 Bounded admission remains useful for engine safety, but the fixed one-permit
 policy is too restrictive for the large-copy responsiveness targets in this
@@ -26,7 +26,7 @@ Each cohort contains five whole alternating pairs. All source insertion windows,
 publication observation windows and warm-ups pass the realtime/monotonic audit.
 Source elapsed times also stay within one second of the prescribed write window.
 The accepted catch-up driver used scoped idle-sleep prevention. The interrupted
-unmatched case and [clock-disrupted cohort](../../evidence/2026-10-21-admission-rejected-clock-run.json)
+unmatched case and [clock-disrupted cohort](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-admission-rejected-clock-run.json)
 are excluded. Regression tests reject clock steps while accepting genuinely slow
 SQL with consistent clocks.
 

@@ -1,0 +1,3124 @@
+{
+  "format": "evidence_archive_index_v1",
+  "raw_source_commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+  "original_files": 249,
+  "original_bytes": 52194173,
+  "compact_files": 63,
+  "compact_bytes": 2359627,
+  "entries": [
+    {
+      "name": "2026-09-13-pg18-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-13-pg18-results.json",
+        "sha256": "5de42e9468dfcc8d5921ccfc408f352d279a9db34905f7699707c63c5df430ea",
+        "bytes": 4707,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-13-pg18-results.json"
+      },
+      "status": "native-blocked"
+    },
+    {
+      "name": "2026-09-14-auto-schema-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-auto-schema-results.json",
+        "sha256": "277b0bf1c09a34da3d23ac128b6fee80018803ee54bb16149d2fca980564cdbc",
+        "bytes": 2775,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-auto-schema-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-bounded-copy-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-bounded-copy-results.json",
+        "sha256": "514ed8ac548019a4e34aaf6a04c0f31304692d3d9218644600f7d5ce57d9684a",
+        "bytes": 3753,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-bounded-copy-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-initial-sync-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-initial-sync-results.json",
+        "sha256": "85685f73099d0289a60540dca8c3c9848fba4a09f5e637c854c351cffb0a5e99",
+        "bytes": 3205,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-initial-sync-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-journal-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-journal-results.json",
+        "sha256": "f1c59ac21a03c5f50533f2bdcbf034f134ded3215edb08a027695494176ae904",
+        "bytes": 2660,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-journal-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-multi-table-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-multi-table-results.json",
+        "sha256": "e3bf1d41e223e525d22a7379ff97f9094bcd408e30ea17cf6a9273f92305673b",
+        "bytes": 3109,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-multi-table-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-mutation-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-mutation-results.json",
+        "sha256": "e4a4f21ebee7553926c85338f45d4513a2e6e0818f575072ae7bcb163da4a3ba",
+        "bytes": 1773,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-mutation-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-pg18-crash-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-pg18-crash-results.json",
+        "sha256": "e8f28d19534b882ddb09486b1e6196e2e8bd3c6a45e07b8382d047993f20eb83",
+        "bytes": 6944,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-pg18-crash-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-pg18-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-pg18-results.json",
+        "sha256": "c98c03266a39f28f946630372da1bce3c99715c0e07eda9f4974a6a21e088a22",
+        "bytes": 4710,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-pg18-results.json"
+      },
+      "status": "native-blocked"
+    },
+    {
+      "name": "2026-09-14-publisher-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-publisher-results.json",
+        "sha256": "67f845b76be595dfb7fe45638b3afa1252e31c817748922292d9a004282d27bb",
+        "bytes": 2040,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-publisher-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-rebuild-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-rebuild-results.json",
+        "sha256": "6c41d98963b3531adc12c0e51d07cb9fe99f3e52620605139d018e5a2263cc70",
+        "bytes": 2853,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-rebuild-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-reconnect-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-reconnect-results.json",
+        "sha256": "9cf9f9925a77a9802b98dffc457c716d2059bb5384cff119337ed84eef678b30",
+        "bytes": 1948,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-reconnect-results.json"
+      }
+    },
+    {
+      "name": "2026-09-14-schema-evolution-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-schema-evolution-results.json",
+        "sha256": "395ef5b69fd559d2b3ad2cbed18d3c7573371fde1ac5684a05b3c21f939befd1",
+        "bytes": 2654,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-schema-evolution-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-source-continuity-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-source-continuity-results.json",
+        "sha256": "bf747726e01491d24b254ecbaa99b51cc70fd29ead5747d2ae20392eb3ccd798",
+        "bytes": 1828,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-source-continuity-results.json"
+      }
+    },
+    {
+      "name": "2026-09-14-streaming-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-streaming-results.json",
+        "sha256": "8cf213c13e541b2c299afbd5ea38d7644c940fab21493de8163c1be6a4816115",
+        "bytes": 1741,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-streaming-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-supervisor-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-supervisor-results.json",
+        "sha256": "297a2de57f5692588728598d89aa1afd200b5adc5a87278be00779b7192180d1",
+        "bytes": 1380,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-supervisor-results.json"
+      }
+    },
+    {
+      "name": "2026-09-14-toast-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-toast-results.json",
+        "sha256": "d99d3aab23963fa06ba626242885ad94ea9c8124929145e8edd1fc5cc4c58017",
+        "bytes": 2081,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-toast-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-14-transport-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-14-transport-results.json",
+        "sha256": "756b85ffcb73dedf1efaca00e034df6df224ef816bfd0bfc5dc7d238fd4406e1",
+        "bytes": 1507,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-transport-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-15-failover-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-failover-results.json",
+        "sha256": "43f3b288718b0a6d2933f1580c063d789aef5d34be55a3356b984ae33e088a12",
+        "bytes": 1980,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-failover-results.json"
+      }
+    },
+    {
+      "name": "2026-09-15-journal-maintenance-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-journal-maintenance-results.json",
+        "sha256": "12e744fca29e0943f4f0361f9fefc29f9287386330f699c90de09f67ee303be5",
+        "bytes": 1578,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-journal-maintenance-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-15-patroni-maintenance-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-patroni-maintenance-results.json",
+        "sha256": "64a39963c63b6f015d393f75d20cecc611ab9331cbc27e792bd22dfaee4406da",
+        "bytes": 6831,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-patroni-maintenance-results.json"
+      }
+    },
+    {
+      "name": "2026-09-15-patroni-rejoin-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-patroni-rejoin-results.json",
+        "sha256": "ce7cd6cafc53f6bff7fa532215557dc28e603faee89677a91d5955c7290443aa",
+        "bytes": 3763,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-patroni-rejoin-results.json"
+      }
+    },
+    {
+      "name": "2026-09-15-patroni-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-patroni-results.json",
+        "sha256": "06ea308d5e3b951724268b26c12d126400b2b2175c7e27078ca165cecd30a123",
+        "bytes": 1882,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-patroni-results.json"
+      }
+    },
+    {
+      "name": "2026-09-15-scram-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-scram-results.json",
+        "sha256": "123f0db7ae51c08f9368a4d4f77fc6d6618dbefd43a1e9b62e1dca1a081a492c",
+        "bytes": 1678,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-scram-results.json"
+      }
+    },
+    {
+      "name": "2026-09-15-slot-loss-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-slot-loss-results.json",
+        "sha256": "704bd49c4e21dfb16faed97d2b6e05daabc01561f7d41d989d2e615944ddd27b",
+        "bytes": 1602,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-slot-loss-results.json"
+      }
+    },
+    {
+      "name": "2026-09-15-source-endpoints-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-source-endpoints-results.json",
+        "sha256": "e1b5c3e993f906332a992e649e1ae7ec0fe85384632ae53bdc1f308761994341",
+        "bytes": 1503,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-source-endpoints-results.json"
+      }
+    },
+    {
+      "name": "2026-09-15-tls-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-15-tls-results.json",
+        "sha256": "fc99e1693267af7153a1745937f87b803ab4f9e18002e4d669fdcb25c0176f63",
+        "bytes": 1289,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-tls-results.json"
+      }
+    },
+    {
+      "name": "2026-09-16-iceberg-maintenance-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-16-iceberg-maintenance-results.json",
+        "sha256": "e1c680ed9e9c6eb70721fa9d273c8e90ad925ac5d3496c4c067c450731ae4f82",
+        "bytes": 1334,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-16-iceberg-maintenance-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-17-native-subscription-spike-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-17-native-subscription-spike-results.json",
+        "sha256": "b0be65baa09589dc51f38c5e51b999df888938db6d56373f766ca226c0d2be44",
+        "bytes": 973,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-17-native-subscription-spike-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-17-subscription-sugar-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-17-subscription-sugar-results.json",
+        "sha256": "fd3d4fc4e5e3dd029ec636156e9c29b66b726c32421fb037df00ac27c07d028b",
+        "bytes": 4609,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-17-subscription-sugar-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-20-install-bundle-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-20-install-bundle-results.json",
+        "sha256": "d099cad46f652d425e4b81e2b88a83add5dc4fe4e92d1a56e7c67ab9488a0a54",
+        "bytes": 1158,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-20-install-bundle-results.json"
+      }
+    },
+    {
+      "name": "2026-09-22-clean-host-qualification-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-22-clean-host-qualification-results.json",
+        "sha256": "70e3d6db4d3b97c10c138c099f39f1fd98a539903c55c0894fc260d798a17c36",
+        "bytes": 3068,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-22-clean-host-qualification-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-22-install-bundle-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-22-install-bundle-results.json",
+        "sha256": "394c02b7f2eb606027706fd786c3f4fc0182c9ddf34338ce6a8658aa77044c19",
+        "bytes": 738,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-22-install-bundle-results.json"
+      }
+    },
+    {
+      "name": "2026-09-22-multiarch-release-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-22-multiarch-release-results.json",
+        "sha256": "3bac7555140abbd63d5db053a47fbe2586e29d61830cfd0db57fbca3693eb7ce",
+        "bytes": 1601,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-22-multiarch-release-results.json"
+      }
+    },
+    {
+      "name": "2026-09-22-observability-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-22-observability-results.json",
+        "sha256": "6fb604a60ba059720e681aa23a5353068616eb515bdd376a230a7d7f1404992f",
+        "bytes": 2629,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-22-observability-results.json"
+      },
+      "status": "passed",
+      "scope": "G5 observability validation from the exact installable beta archive on disposable PostgreSQL 18 plus pg_lake hosts"
+    },
+    {
+      "name": "2026-09-22-pg-lake-compatibility-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-22-pg-lake-compatibility-results.json",
+        "sha256": "2e1a5a6f4a3e76128b9a2783d938d83c39917361f6144cbaf21cd8e6e1bfbb6f",
+        "bytes": 1453,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-22-pg-lake-compatibility-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-23-common-parameterized-types-results.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-23-common-parameterized-types-results.json",
+        "sha256": "e4cbdb307d1a7e93315976058781cdcf47e5cad6f60ab46de924172e8497bca4",
+        "bytes": 1601,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-23-common-parameterized-types-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-23-credential-rotation-results.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-23-credential-rotation-results.json",
+        "sha256": "86ceae053739c213eacf1fc6957d2fd837dc8ca67a3dc8ffcb93c8675c7855e1",
+        "bytes": 1759,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-23-credential-rotation-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-09-23-unified-extension-results.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-09-23-unified-extension-results.json",
+        "sha256": "d85a74c80d99351590b1cbed792f9dd7bf002ab44d3d6533462fb4c806b63966",
+        "bytes": 1810,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-23-unified-extension-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-18-base-event-wait-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-base-event-wait-results.json",
+        "sha256": "e439a48ab696698c445e9377d8004f91058543ab15c2040475240897ffc16e80",
+        "bytes": 19699,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-event-wait-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-18-base-workers-hardened-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-base-workers-hardened-results.json",
+        "sha256": "6112cc036987fe1a2cc7c19a0a4f0d47d739488acb1444521a80df05a143d88e",
+        "bytes": 15164,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-workers-hardened-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-18-base-workers-minimal-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-base-workers-minimal-results.json",
+        "sha256": "3850fb447a1c85946f2146613ea31eb06ddf641f9beea5dab8a9c21227893d16",
+        "bytes": 15526,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-workers-minimal-results.json"
+      },
+      "status": "findings"
+    },
+    {
+      "name": "2026-10-18-base-workers-provenance.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-base-workers-provenance.json",
+        "sha256": "adec5b02b728a6bfceb895decfcf854024d72143fe538edb8cea3cae06f265d6",
+        "bytes": 2010,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-workers-provenance.json"
+      },
+      "scope": "Experimental Docker overlay only; production extension C, control files, migrations, and workers are unchanged"
+    },
+    {
+      "name": "2026-10-18-fresh-submodule-qualification-provenance.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-fresh-submodule-qualification-provenance.json",
+        "sha256": "d52293fd2fcdfc77ff22f216a6d177cc1235edfc77f736fe40b1a1c9671c5635",
+        "bytes": 2195,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-fresh-submodule-qualification-provenance.json"
+      }
+    },
+    {
+      "name": "2026-10-18-fresh-submodule-qualification-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-fresh-submodule-qualification-results.json",
+        "sha256": "2466e0c1b63f6181236c6a36fa110d54c421c9e7a22ba34d1fcadd3b04ab0545",
+        "bytes": 7332,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-fresh-submodule-qualification-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-18-journal-observer-calibration-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-journal-observer-calibration-results.json",
+        "sha256": "d1d3cd5a14bcceb5b8e0d4472b162eeb73bf5d0f02f852182b208a535a6b0da9",
+        "bytes": 654263,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-journal-observer-calibration-results.json"
+      },
+      "status": "passed",
+      "scope": "single database/subscription insert screening; not saturation or full adoption qualification",
+      "adoption_qualified": false
+    },
+    {
+      "name": "2026-10-18-launcher-catchup-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-launcher-catchup-results.json",
+        "sha256": "4b05b899d932e3ef7b8e6cf506b1d99b0a84133f3e32bf6763aa287f42aeef83",
+        "bytes": 1737678,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-catchup-results.json"
+      },
+      "status": "passed",
+      "scope": "single database/subscription insert screening; not saturation or full adoption qualification"
+    },
+    {
+      "name": "2026-10-18-launcher-repeatability-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-launcher-repeatability-results.json",
+        "sha256": "41ffcd5d247f60528ab887f30582ff620c6fe82f4487fd01dc1095f1eb168b64",
+        "bytes": 138317,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-repeatability-results.json"
+      },
+      "status": "passed",
+      "scope": "single database/subscription insert screening; not saturation or full adoption qualification"
+    },
+    {
+      "name": "2026-10-18-launcher-screening-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-launcher-screening-results.json",
+        "sha256": "bec44682ae181da3006fb882b162d4c86d06e8fcc4238afd5a313bc04da779cc",
+        "bytes": 210080,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-screening-results.json"
+      },
+      "status": "passed",
+      "scope": "single database/subscription insert screening; not saturation or full adoption qualification"
+    },
+    {
+      "name": "2026-10-18-launcher-steady-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-launcher-steady-results.json",
+        "sha256": "193172f9d13dce474d04e428369501096050ebf3c41a2b21975b464f918b003d",
+        "bytes": 3007560,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-steady-results.json"
+      },
+      "status": "passed",
+      "scope": "single database/subscription insert screening; not saturation or full adoption qualification"
+    },
+    {
+      "name": "2026-10-18-lifecycle-qualification-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-lifecycle-qualification-results.json",
+        "sha256": "85ac3e41fe26929faed4285ad182f3dc7ceb8b0fadaf363b0bb89614d99dc7c2",
+        "bytes": 10682,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-lifecycle-qualification-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-18-measurement-validation-smoke-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-measurement-validation-smoke-results.json",
+        "sha256": "d9c60807c45bffb571cbdb39d1c2e8b8422a9b41d00881f2d48903de56698a9c",
+        "bytes": 54793,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-measurement-validation-smoke-results.json"
+      },
+      "status": "passed",
+      "scope": "single database/subscription insert screening; not saturation or full adoption qualification",
+      "adoption_qualified": false
+    },
+    {
+      "name": "2026-10-18-observer-poll-calibration-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-observer-poll-calibration-results.json",
+        "sha256": "e7853eb1459dc92b52dcf4f2d9a15af06ca2c3605314c73c5434fcd4df2a7cd3",
+        "bytes": 593279,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-observer-poll-calibration-results.json"
+      },
+      "status": "passed",
+      "scope": "single database/subscription insert screening; not saturation or full adoption qualification",
+      "adoption_qualified": false
+    },
+    {
+      "name": "2026-10-18-renamed-package-qualification-provenance.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-renamed-package-qualification-provenance.json",
+        "sha256": "257c771f75bc3d7446469d8203b493101d12ab5267d8f09bc260d5949f720800",
+        "bytes": 1547,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-renamed-package-qualification-provenance.json"
+      }
+    },
+    {
+      "name": "2026-10-18-renamed-package-qualification-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-renamed-package-qualification-results.json",
+        "sha256": "a68526dd5d8680eb0b65304251f7f2cb0935c7b5d63ddd0ec5b2a5cd04ce5db1",
+        "bytes": 7332,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-renamed-package-qualification-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-18-static-shared-hardening-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-static-shared-hardening-results.json",
+        "sha256": "a254b460e8ad538fa54727ec0728ca13b14a1d030c78acd5027045f1452833a2",
+        "bytes": 15124,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-static-shared-hardening-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-18-static-to-base-upgrade-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-18-static-to-base-upgrade-results.json",
+        "sha256": "068b07d0ae2c31fa21db143b0bbebeebfc87032e645aa97ac287daaf1238978f",
+        "bytes": 8143,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-static-to-base-upgrade-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-19-base-cold-transfer-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-cold-transfer-results.json",
+        "sha256": "8ac9abf6004ca3969eb6d8a7e09de0aaced92fa7ef7086e85bf382fd3b0e9271",
+        "bytes": 11052,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-cold-transfer-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-19-base-forced-crash-diagnostic-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-forced-crash-diagnostic-results.json",
+        "sha256": "1880fd61d4cc80d12f19fce5935e3a2ba9a1002e41ca252eedcfd224ae1971f5",
+        "bytes": 10968,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-forced-crash-diagnostic-results.json"
+      },
+      "status": "completed"
+    },
+    {
+      "name": "2026-10-19-base-forced-crash-init-control-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-forced-crash-init-control-results.json",
+        "sha256": "bfee8c72cf6a3cd273cde4776de0c61e05521263f5be5330d28267bc568e8b5d",
+        "bytes": 18058,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-forced-crash-init-control-results.json"
+      },
+      "status": "completed"
+    },
+    {
+      "name": "2026-10-19-base-forced-crash-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-forced-crash-results.json",
+        "sha256": "ec9ecaa3fe52405c3e1242b8712c217a1f5079f11ffc0c6ebbdb20110c8a4f29",
+        "bytes": 24960,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-forced-crash-results.json"
+      },
+      "status": "completed"
+    },
+    {
+      "name": "2026-10-19-base-fresh-rebuild-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-fresh-rebuild-results.json",
+        "sha256": "a9c5692ce542893f8193b3f51baf8c51dbda9fd5f59bdd2156f70a24729de1b1",
+        "bytes": 16859,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-fresh-rebuild-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-19-base-identity-baseline-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-identity-baseline-results.json",
+        "sha256": "ae4a0cf4c22b82f9dc88913093bd733fbecae4e242e155dca73eed9abf17f366",
+        "bytes": 13947,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-identity-baseline-results.json"
+      },
+      "status": "findings"
+    },
+    {
+      "name": "2026-10-19-base-identity-crash-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-identity-crash-results.json",
+        "sha256": "c921edb72547ff7dffac2df1d1127de7a7cfef6ea3f39c069a5cdf83fe981d60",
+        "bytes": 20526,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-identity-crash-results.json"
+      },
+      "status": "completed"
+    },
+    {
+      "name": "2026-10-19-base-identity-origin-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-identity-origin-results.json",
+        "sha256": "a8889c98a46df1fc5b4f01be878258b0c58755e12213362404c080abe41c0de0",
+        "bytes": 17249,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-identity-origin-results.json"
+      },
+      "status": "findings"
+    },
+    {
+      "name": "2026-10-19-base-publication-ownership-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-publication-ownership-results.json",
+        "sha256": "5bf3d6f5a54319e764df980718b3b8604f84a7c9f201ea6ce0ffa9040467f56c",
+        "bytes": 14231,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-publication-ownership-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-19-base-recovery-final-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-recovery-final-results.json",
+        "sha256": "4eb994a504688c33d393d05349493fe6dbb4cffdb17f2eb79766ac5e4d59fd16",
+        "bytes": 24840,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-recovery-final-results.json"
+      },
+      "status": "completed"
+    },
+    {
+      "name": "2026-10-19-base-recovery-full-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-recovery-full-results.json",
+        "sha256": "6aca16f139045319ca24b73b44b6fb0bc47d341eeeb5a1d16287f8288a407c7d",
+        "bytes": 50847,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-recovery-full-results.json"
+      },
+      "status": "completed"
+    },
+    {
+      "name": "2026-10-19-base-recovery-regression-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-19-base-recovery-regression-results.json",
+        "sha256": "919c7f955af2790827ccf99b8d4a49627e1edef3035d31e2eeee92792849a1dd",
+        "bytes": 19935,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-recovery-regression-results.json"
+      },
+      "status": "completed"
+    },
+    {
+      "name": "2026-10-20-base-admission-performance-partial-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-20-base-admission-performance-partial-results.json",
+        "sha256": "0467afdab4495e4ad8c8174ed2c62bb725b0eb0142c935b48d0ca09c0182afa3",
+        "bytes": 3874039,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-20-base-admission-performance-partial-results.json"
+      },
+      "status": "paused",
+      "scope": "Latest base prototype before/after one-permit admission; same 2GB/one-thread engine; local arm64"
+    },
+    {
+      "name": "2026-10-20-base-bounded-admission-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-20-base-bounded-admission-results.json",
+        "sha256": "5fc208d8661563f4b388d80088cd5edf97a1b3f254a81ee9bfbdf65141fc5a2a",
+        "bytes": 77936,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-20-base-bounded-admission-results.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-10-20-base-current-scaling-performance-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-20-base-current-scaling-performance-results.json",
+        "sha256": "131cee1456cf6e395eddde5c2138a9bea261c19be604710b3ba684e9f33b1507",
+        "bytes": 4869829,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-20-base-current-scaling-performance-results.json"
+      },
+      "status": "completed_with_findings",
+      "scope": "Current publication/recovery prototype, Linux arm64; total subscriptions distributed across databases; no production adoption qualification"
+    },
+    {
+      "name": "2026-10-20-empty-filtered-stream-diagnostic-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-20-empty-filtered-stream-diagnostic-results.json",
+        "sha256": "d154bc696231c5e89fdd242f2f3ecde0ec62fa5a65dd699721d4759b4e11a66d",
+        "bytes": 598500,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-20-empty-filtered-stream-diagnostic-results.json"
+      },
+      "status": "reproduced_before_and_after_admission"
+    },
+    {
+      "name": "2026-10-21-admission-rejected-clock-run.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-21-admission-rejected-clock-run.json",
+        "sha256": "13828f6ed89d39cb054d0e56ffb07df1f7211c83ef5ba6d0e306d7790e0c3a8f",
+        "bytes": 1735537,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-admission-rejected-clock-run.json"
+      },
+      "status": "invalid_timing",
+      "scope": "Latest base prototype before/after one-permit admission; same 2GB/one-thread engine; local arm64"
+    },
+    {
+      "name": "2026-10-21-base-admission-performance-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-21-base-admission-performance-results.json",
+        "sha256": "07e03f8613ffd3e44a5a69768eea5faba3706b5137d098de54d5965d604822f0",
+        "bytes": 5566431,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-base-admission-performance-results.json"
+      },
+      "status": "completed_with_findings",
+      "adoption_qualified": false
+    },
+    {
+      "name": "2026-10-21-base-lifecycle-migration-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-21-base-lifecycle-migration-results.json",
+        "sha256": "c3b211eac52f7c37d13a70eceeb73b50d6532c7de87fa831f42a45f0ad7228e2",
+        "bytes": 69950,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-base-lifecycle-migration-results.json"
+      },
+      "status": "passed",
+      "scope": "Production pg_extension_base migration candidate 0.1.0-beta.2, Linux arm64"
+    },
+    {
+      "name": "2026-10-21-empty-filtered-stream-fix-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-21-empty-filtered-stream-fix-results.json",
+        "sha256": "e365f4f5c4b6d3cdbbf142f271f51148a9d08e06373587c23d0bfb80698d75cf",
+        "bytes": 12500,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-empty-filtered-stream-fix-results.json"
+      },
+      "status": "passed",
+      "scope": "Current SQL overlay; archived native binaries unchanged; not release qualification"
+    },
+    {
+      "name": "2026-10-21-native-bulk-timeout-diagnostic-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-21-native-bulk-timeout-diagnostic-results.json",
+        "sha256": "626a2729635f33f49ef13c78aa8c2c0292efa9157fd7c623b514d4540730bd72",
+        "bytes": 13794,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-native-bulk-timeout-diagnostic-results.json"
+      },
+      "status": "error",
+      "scope": "Current SQL overlay; archived native binaries unchanged; not release qualification"
+    },
+    {
+      "name": "2026-10-21-receiver-progress-fix-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-21-receiver-progress-fix-results.json",
+        "sha256": "1baaca2ee5e5671425615684e78d744d69338ead46dad363668d4eb8970db525",
+        "bytes": 17224,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-receiver-progress-fix-results.json"
+      },
+      "status": "passed",
+      "scope": "Current SQL overlay; current Rust workers; not release qualification"
+    },
+    {
+      "name": "2026-10-22-bulk-operations-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-22-bulk-operations-results.json",
+        "sha256": "51066d88def69340ee1004c0d5ce14772b8245fe4f224549d125dcf9b70713b6",
+        "bytes": 51507,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-22-bulk-operations-results.json"
+      },
+      "status": "accepted_cases_passed_with_prior_defect_and_harness_attempt_retained",
+      "scope": "Local arm64 experimental bulk-only policy operational qualification; production sources unchanged; not release qualification."
+    },
+    {
+      "name": "2026-10-22-bulk-performance-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-22-bulk-performance-results.json",
+        "sha256": "2a09242c189192b16036b7e59998db4469cd01a64060477a306cbd470bb2ce06",
+        "bytes": 161632,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-22-bulk-performance-results.json"
+      },
+      "status": "passed",
+      "scope": "Five alternating paired cohorts for the current bulk-only candidate."
+    },
+    {
+      "name": "2026-10-22-engine-admission-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-22-engine-admission-results.json",
+        "sha256": "7838057af3cdd8a97eba52752cf45a05ed7343ab07336381cc27e0e988b8419d",
+        "bytes": 116938,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-22-engine-admission-results.json"
+      },
+      "scope": "Current-runtime engine admission diagnostics, Linux arm64; not release or statistical capacity qualification"
+    },
+    {
+      "name": "2026-10-23-bulk-admission-migration-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-23-bulk-admission-migration-results.json",
+        "sha256": "9265c4f98667ce507798dc6f7d05f844bf5850a7439c9d295c76547e9571c01d",
+        "bytes": 193651,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-23-bulk-admission-migration-results.json"
+      },
+      "status": "blocked_by_reproduced_streaming_engine_oom"
+    },
+    {
+      "name": "2026-10-23-stream-pool-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-23-stream-pool-results.json",
+        "sha256": "ab87c3c50ce73d39aedb984195f21a211b00d48628214f3cc08e9a6670f8848e",
+        "bytes": 47948,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-23-stream-pool-results.json"
+      },
+      "status": "diagnostics_passed_not_adoption_qualified"
+    },
+    {
+      "name": "2026-10-24-stream-pool-migration-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-24-stream-pool-migration-results.json",
+        "sha256": "9f13730badeedab5febf1f66f853d092e19448d8b50aae8bd239c20783ff54cf",
+        "bytes": 193236,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-24-stream-pool-migration-results.json"
+      },
+      "status": "local_arm64_package_qualification_passed",
+      "scope": "Production beta.3: one bulk transaction and four streaming slots. Uncommitted development candidate, not a signed release or native amd64 qualification."
+    },
+    {
+      "name": "2026-10-24-stream-pool-qualification-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-24-stream-pool-qualification-results.json",
+        "sha256": "4eb725f99dd6979a7fd8fd3c451eb7c2ebf97adcbe1de95d6ffba24ccae688b1",
+        "bytes": 244271,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-24-stream-pool-qualification-results.json"
+      },
+      "status": "local_performance_and_operational_gates_passed",
+      "scope": "Experimental four-slot streaming pool on the unchanged beta.3 bulk-only archive; distinct from later production package qualification"
+    },
+    {
+      "name": "2026-10-25-local-copy-contention.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-25-local-copy-contention.json",
+        "sha256": "8bd090cd5afe6ca4b3adfa705a6c47739d31a76995b7ec657ae3f1051c03d9eb",
+        "bytes": 27339,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-25-local-copy-contention.json"
+      },
+      "scope": "Exploratory shared-four-CPU copy-contention diagnostic, not native release qualification"
+    },
+    {
+      "name": "2026-10-25-native-qualification-failures.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-25-native-qualification-failures.json",
+        "sha256": "e87720e9ffc34efeeacbf42b2fcf24461f13b96088d35ba6e9fbab0ead6cf668",
+        "bytes": 6403,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-25-native-qualification-failures.json"
+      },
+      "status": "failed"
+    },
+    {
+      "name": "2026-10-25-source-storage-fixture-results.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-25-source-storage-fixture-results.json",
+        "sha256": "c5874f3ca86620e8958de6660d86df7331449e20b6cd8c22ab557099635e00e4",
+        "bytes": 33234,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-25-source-storage-fixture-results.json"
+      },
+      "status": "local_source_fixture_preflight_and_lifecycle_passed"
+    },
+    {
+      "name": "2026-10-27-local-contention-investigation.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-27-local-contention-investigation.json",
+        "sha256": "670e869823fdab31882651b450c1a4cc4e769a1f746d075e5cc9f284190c9d0c",
+        "bytes": 218440,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-27-local-contention-investigation.json"
+      },
+      "scope": "Local diagnosis of native copy contention; experimental pacing, not release approval"
+    },
+    {
+      "name": "2026-10-27-shared-staging-budget-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-27-shared-staging-budget-results.json",
+        "sha256": "1bd3f68658b2af5f6c77716cb059b5c11d625cf689f70e90a629d599f35d9c6a",
+        "bytes": 142468,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-27-shared-staging-budget-results.json"
+      },
+      "scope": "Isolated shared-staging-budget prototype; not production or release qualification"
+    },
+    {
+      "name": "2026-10-28-bounded-receiver-cycle-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-28-bounded-receiver-cycle-results.json",
+        "sha256": "ebd5dda53e0fd5fbc46e8fca03f3a9ac7ea299d5b383bd265ab9ffc997a1f489",
+        "bytes": 302552,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-bounded-receiver-cycle-results.json"
+      },
+      "scope": "Local M5 cycle attribution and bounded receiver-lifetime experiment; no production policy migration."
+    },
+    {
+      "name": "2026-10-28-pressure-visibility-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-28-pressure-visibility-results.json",
+        "sha256": "8f66d4fbb912061ab6abef07822439bbe8a2ce85100ff9ff21ce23000da50c5b",
+        "bytes": 25216,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-pressure-visibility-results.json"
+      },
+      "scope": "Local M5 two-CPU visibility experiment, not release qualification or a production controller."
+    },
+    {
+      "name": "2026-10-28-receiver-progress-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-28-receiver-progress-results.json",
+        "sha256": "a881d5862e29919a449ca8666b14687d673225e00f2e45113c283638e13335c2",
+        "bytes": 189419,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-receiver-progress-results.json"
+      },
+      "scope": "Local M5 receiver telemetry overlay, not a controller or production migration."
+    },
+    {
+      "name": "2026-10-28-staging-gate-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-28-staging-gate-results.json",
+        "sha256": "472c08a3e90b9b2e46ae3b05a2c5bb5a0040bcce04a9d0789930dca3cc74e9c5",
+        "bytes": 495206,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-staging-gate-results.json"
+      },
+      "scope": "Local M5 staging-concurrency experiment; no production migration or remote workflow."
+    },
+    {
+      "name": "2026-10-28-streaming-only-capacity-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-28-streaming-only-capacity-results.json",
+        "sha256": "c16f70ecfea68894d67feb3faad9d7cb0523f3f123da44ac4cae279ec53bf286",
+        "bytes": 47802,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-streaming-only-capacity-results.json"
+      },
+      "scope": "Local M5 streaming-only capacity controls; unchanged beta.3 archive, fresh volumes; not release qualification."
+    },
+    {
+      "name": "2026-10-29-checkpoint-comparison-local.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-checkpoint-comparison-local.json",
+        "sha256": "966f2f9f746d7ed462174d668b8b0898057c45b86cc4ffc82dea956ca6303b6e",
+        "bytes": 35841,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-comparison-local.json"
+      },
+      "scope": "One local fixed ABA comparison and an exploratory equivalently profiled pair; not native or release qualification"
+    },
+    {
+      "name": "2026-10-29-checkpoint-coupling.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-checkpoint-coupling.json",
+        "sha256": "deeec35179c49944796425bea76bbdf45dcb8bd189e6bdec936483c711d252d3",
+        "bytes": 10812,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-coupling.json"
+      }
+    },
+    {
+      "name": "2026-10-29-checkpoint-split-native.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-checkpoint-split-native.json",
+        "sha256": "8dc6905d095ea355d616675c1369f5203d331883a0b90d265fa1bdcfd4b0ce03",
+        "bytes": 11075,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-split-native.json"
+      },
+      "scope": "Native ARM64 SQL-overlay diagnostic; stream latency passes but complete workload gate fails"
+    },
+    {
+      "name": "2026-10-29-checkpoint-split-prototype.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-checkpoint-split-prototype.json",
+        "sha256": "2dbd38564b550cdb119868aaa16ea2cef12e4720852ce80d9d3a67618336e2a5",
+        "bytes": 39993,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-split-prototype.json"
+      },
+      "scope": "Single local sequential original/SQL-overlay observations, not native qualification or statistical performance proof"
+    },
+    {
+      "name": "2026-10-29-native-beta4-probe-findings.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-native-beta4-probe-findings.json",
+        "sha256": "67f0642063df5b921c9f6d1536449ab956d3042995fdaf509ec76c85d144a59a",
+        "bytes": 684654,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-native-beta4-probe-findings.json"
+      },
+      "scope": "Failed native beta.4 probes and local heartbeat-lock correction. Includes failing and inconclusive attempts; corrected native qualification remains pending."
+    },
+    {
+      "name": "2026-10-29-native-followup-diagnostics.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-native-followup-diagnostics.json",
+        "sha256": "94777ded4c6a090271fa22f103b98bbf54c4d9487e1679ba4b37021b9cc09918",
+        "bytes": 334428,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-native-followup-diagnostics.json"
+      },
+      "scope": "Follow-up native failure and locally validated diagnostic preparation; no new runtime latency fix claimed."
+    },
+    {
+      "name": "2026-10-29-native-probe-preparation.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-native-probe-preparation.json",
+        "sha256": "723ef05f46f55e1b3b08783ae80a4b3314f4927f5524fee76fce691725818d07",
+        "bytes": 20344,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-native-probe-preparation.json"
+      },
+      "scope": "Native candidate provenance and prerequisite-cache preparation; native replication results remain pending."
+    },
+    {
+      "name": "2026-10-29-staging-journal-migration-results.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-29-staging-journal-migration-results.json",
+        "sha256": "e433e75bb362dc3ddce0a8f21209b60de5f64ea896a2528845f5dd5147cacaf1",
+        "bytes": 1014466,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-staging-journal-migration-results.json"
+      },
+      "scope": "Local dirty-tree beta.4 production integration. Includes failed, superseded and successful attempts; not final native release qualification."
+    },
+    {
+      "name": "2026-10-30-bulk-copy-chunk-local.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-bulk-copy-chunk-local.json",
+        "sha256": "480126925253b6c6f9fe75b2f676a8e182579b6e7b16cc696be9ac06ba633d7b",
+        "bytes": 106674,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-bulk-copy-chunk-local.json"
+      },
+      "scope": "Bounded initial-copy row-cap diagnostics; archived executable unchanged; all observations retained"
+    },
+    {
+      "name": "2026-10-30-bulk-copy-chunk-native.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-bulk-copy-chunk-native.json",
+        "sha256": "4fc96f212ebf05565652af0aec811ace0628ad3abb4ebb3aed7ddb86db063f05",
+        "bytes": 31180,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-bulk-copy-chunk-native.json"
+      },
+      "scope": "Prospective native ARM64 fixed 1000/4000/1000 row-cap diagnostic with split checkpoints throughout; not production qualification"
+    },
+    {
+      "name": "2026-10-30-bulk-copy-chunk-sql-profile.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-bulk-copy-chunk-sql-profile.json",
+        "sha256": "badddaee769c38fa4bc61fef318db782785fc683bcaea8b3b35db555ab9d5dab",
+        "bytes": 52465,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-bulk-copy-chunk-sql-profile.json"
+      },
+      "scope": "Local diagnostic 1000/4000 row-cap pair, both with identical pg_stat_statements instrumentation, split checkpoints and unchanged archived worker. Sequential unbracketed observations do not qualify native latency or prove causality."
+    },
+    {
+      "name": "2026-10-30-checkpoint-native-comparison.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-checkpoint-native-comparison.json",
+        "sha256": "2db20657dc58e3dd69c28a58ae72fccfbd89f27d9120e552e0d5c373ac38886a",
+        "bytes": 18274,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-checkpoint-native-comparison.json"
+      },
+      "scope": "Native same-runner serial-source comparison; all observations fail source cadence and are not valid qualification"
+    },
+    {
+      "name": "2026-10-30-independent-source-local.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-independent-source-local.json",
+        "sha256": "26abd34901f5c06f923b54b2f79893c26812b7d8573177c5e7ab15a3807808a4",
+        "bytes": 17295,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-independent-source-local.json"
+      },
+      "scope": "Local original/split/original rebaseline with independent durable source sessions; not native qualification"
+    },
+    {
+      "name": "2026-10-30-independent-source-native.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-independent-source-native.json",
+        "sha256": "0b90207ca3e2012c1b5d5277fb65d5fcd5387fd7793395bc3d772e03df4a28ec",
+        "bytes": 20464,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-independent-source-native.json"
+      },
+      "scope": "Prospective native independent-source comparison: valid candidate passes source/stream/data gates but misses copy limit; final control clock audit invalidates full ABA"
+    },
+    {
+      "name": "2026-10-30-staging-chunk-local.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-staging-chunk-local.json",
+        "sha256": "106109de391b6acbd67c30c20281970e5e94e17e811e744c71c22d40e98845c6",
+        "bytes": 118984,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-chunk-local.json"
+      },
+      "scope": "Isolated staging-cost investigation and frozen chunk-store safety evidence; no production schema or worker change"
+    },
+    {
+      "name": "2026-10-30-staging-chunk-native.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-staging-chunk-native.json",
+        "sha256": "90e5fc0dd76184b5b7afd93530c7c84f9a27c0dec54b8260d3ae1123274b7ff0",
+        "bytes": 34238,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-chunk-native.json"
+      },
+      "scope": "Prospective native ARM64 per-row/chunk/per-row staging comparison with split checkpoints and unchanged 1000-row/8MiB worker configuration; not production qualification"
+    },
+    {
+      "name": "2026-10-30-staging-pacing-local.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-staging-pacing-local.json",
+        "sha256": "8c058f6782a51eb2c0f5e83203eabb3f4a5585570b6014411fa178bf034c7b22",
+        "bytes": 90781,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-pacing-local.json"
+      },
+      "scope": "Prespecified 40ms post-commit pacing at unchanged 1000-row/8MiB limits, using the unchanged archived executable and chunk storage; all observations retained"
+    },
+    {
+      "name": "2026-10-30-staging-pacing-native.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-30-staging-pacing-native.json",
+        "sha256": "651b01c19d642d23083c28c56e4b935267d433a02173d31510dbd57f90f88ac0",
+        "bytes": 27852,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-pacing-native.json"
+      },
+      "scope": "Prospective native ARM64 unpaced/40ms/unpaced chunk-storage diagnostic at unchanged 1000-row/8MiB limits. Paced candidate independently passes; first control overlap failure invalidates full comparison. Not release qualification."
+    },
+    {
+      "name": "2026-10-31-beta5-native-arm64-results.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-31-beta5-native-arm64-results.json",
+        "sha256": "0217ab8820f87b3b6f75d887d29e54dc6d1158f3aa078174c3743b9f0eb9aa5d",
+        "bytes": 614322,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-31-beta5-native-arm64-results.json"
+      },
+      "scope": "Focused native ARM64 production beta.5 qualification; full release qualification remains open"
+    },
+    {
+      "name": "2026-10-31-checkpoint-chunk-migration-results.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-10-31-checkpoint-chunk-migration-results.json",
+        "sha256": "ff1c2fa0228e27790bdb07eed6e21f3e2d61291d62c7ec4e8b9a131d9e38ab54",
+        "bytes": 63286,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-31-checkpoint-chunk-migration-results.json"
+      },
+      "scope": "Local production migration candidate; actual exported archives, no SQL/binary overlays; not release qualification"
+    },
+    {
+      "name": "2026-11-01-beta5-full-native-results.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-01-beta5-full-native-results.json",
+        "sha256": "32c7a8865442e2028e4434b06bf876309648a104d9fb4ec3bb3d631931f2a1c0",
+        "bytes": 213901,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-01-beta5-full-native-results.json"
+      },
+      "scope": "Full production beta.5 qualification on native ARM64 and AMD64; release recovery, compatibility, security and soak gates remain separate"
+    },
+    {
+      "name": "2026-11-01-beta5-latency-investigation.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-01-beta5-latency-investigation.json",
+        "sha256": "7d1803b3ba93e727d69388ba358681bf138c53e8dc9bcb55dd8e724ef54f999b",
+        "bytes": 92760,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-01-beta5-latency-investigation.json"
+      },
+      "scope": "Retained valid native latency failure and fixed local diagnostic cohorts; not release qualification"
+    },
+    {
+      "name": "2026-11-01-beta5-local-release-gates.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-01-beta5-local-release-gates.json",
+        "sha256": "b782cd29a9d2d9a313022bb75bad76117b227ea56730a3faddcef486c1778308",
+        "bytes": 72818,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-01-beta5-local-release-gates.json"
+      },
+      "scope": "Local patched beta.5 release-gate validation; dirty-source development artifacts, clean CI/native qualification still required"
+    },
+    {
+      "name": "2026-11-01-beta5-transaction-trace.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-01-beta5-transaction-trace.json",
+        "sha256": "d956b78ba6d65814db9623fb22e6e6dc8cc707b7f6b46835a634550f05c048c0",
+        "bytes": 62394,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-01-beta5-transaction-trace.json"
+      },
+      "scope": "Local opt-in transaction diagnostics; not native or release qualification"
+    },
+    {
+      "name": "2026-11-05-beta5-commit-internals.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-05-beta5-commit-internals.json",
+        "sha256": "7697cace2762da3ed35e794cec174ad74349433c0c7a9ea3417b83e6778a6f83",
+        "bytes": 64171,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-05-beta5-commit-internals.json"
+      },
+      "scope": "Local commit diagnostics and guarded manifest cleanup prototype; no release qualification"
+    },
+    {
+      "name": "2026-11-05-beta5-manifest-delivery.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-05-beta5-manifest-delivery.json",
+        "sha256": "74447cbb12077ac3627bbeb7c14dbcbc52d37adde0fb9b5cd37d77a3f8375899",
+        "bytes": 53449,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-05-beta5-manifest-delivery.json"
+      },
+      "scope": "Native guarded comparison and unguarded delivery verification; diagnostic overlays, no release qualification"
+    },
+    {
+      "name": "2026-11-06-beta5-full-native-runtime-pass.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json",
+        "sha256": "ecc0648a99bde045a5cebfabdd87d0ee12b4c0098753f5fcea073845e98c3548",
+        "bytes": 50946,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json"
+      },
+      "scope": "Full artifact-only supported-runtime native qualification; corrected receiver fixture"
+    },
+    {
+      "name": "2026-11-06-beta5-full-runtime-qualification.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-06-beta5-full-runtime-qualification.json",
+        "sha256": "3fdb40cb0158d99bb49b82acf67e94dddf2cc83b6a072e1d0e71e659b481cf08",
+        "bytes": 48261,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-full-runtime-qualification.json"
+      },
+      "scope": "Full native supported-runtime qualification at 6d1ef13; ARM receiver-harness failure retained"
+    },
+    {
+      "name": "2026-11-06-beta5-maintenance-profiles.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-06-beta5-maintenance-profiles.json",
+        "sha256": "8c1e3481581b902593040bd28c351be3d0a97aaf44ab9483cb19b44c9df2d1ba",
+        "bytes": 42472,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-maintenance-profiles.json"
+      },
+      "scope": "Two local ARM64 600-second maintenance experiments; neither satisfies the 24-hour gate"
+    },
+    {
+      "name": "2026-11-06-beta5-native-manifest-patch.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-06-beta5-native-manifest-patch.json",
+        "sha256": "a41e1ec6aba9cada1c855382db9f9321c9b5e423819c92258894006b4f763991",
+        "bytes": 42397,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-native-manifest-patch.json"
+      },
+      "scope": "Exact unguarded pg_lake patch native verification; binary overlays, not full production qualification"
+    },
+    {
+      "name": "2026-11-06-beta5-runtime-prerequisite.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-06-beta5-runtime-prerequisite.json",
+        "sha256": "5649467ee88f74743899217c3120d85da82635a75a505666a9a46bc75d9746c2",
+        "bytes": 23542,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-runtime-prerequisite.json"
+      },
+      "status": "local_validation_passed_with_invalid_trial_retained",
+      "scope": "Supported runtime dependency delivery; local archived workers with explicit prerequisite identities"
+    },
+    {
+      "name": "2026-11-06-beta5-short-soak.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-06-beta5-short-soak.json",
+        "sha256": "7d4bd7d8780a5fce1420e846f1876c8f423c6508a79c5807a4c532b3c0a66b49",
+        "bytes": 12566,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-short-soak.json"
+      },
+      "status": "passed",
+      "scope": "Ten-minute soak-runner validation; not a 24-hour release soak"
+    },
+    {
+      "name": "2026-11-11-beta5-compatibility-refresh.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-11-beta5-compatibility-refresh.json",
+        "sha256": "23f399225e091cfbbb9189b0f9501baf5c5181bafe10aa2ce27b046446f90cc5",
+        "bytes": 11269,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-11-beta5-compatibility-refresh.json"
+      },
+      "status": "passed",
+      "scope": "Accepted beta.5 CI archive compatibility refresh at two exact pg_lake endpoints; native local ARM64, supported runtime, artifact-only fixtures"
+    },
+    {
+      "name": "2026-11-11-update-performance.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-11-update-performance.json",
+        "sha256": "d352669cbf2c99be8d29e78f15b630acd92ebc8cd964094a7a7f4ac871a15d4c",
+        "bytes": 18433,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-11-update-performance.json"
+      },
+      "status": "passed",
+      "scope": "Local ARM64 update application and native-worker investigation; fixture-only key-filter SQL; no production defaults changed"
+    },
+    {
+      "name": "2026-11-12-beta5-d5e05d2-native-qualification.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json",
+        "sha256": "44be4c4fb4a65fd3bfcd02aacaf081f9b9a3fad4773f9a7f62fd1b49deecbcc5",
+        "bytes": 7436,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json"
+      },
+      "status": "passed",
+      "scope": "Exact merged candidate before the subsequent explicit-worker-login changes"
+    },
+    {
+      "name": "2026-11-12-security-qualification-refresh.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-12-security-qualification-refresh.json",
+        "sha256": "f5d078b40fd3b355ba15e8e31f900e8c3e8b7c1a21c21baaf8bb925c92529cc3",
+        "bytes": 14895,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-security-qualification-refresh.json"
+      },
+      "status": "passed_local_arm64",
+      "scope": "Local archive-only ARM64 source TLS, migration and replication qualification; builds for both supported architectures"
+    },
+    {
+      "name": "2026-11-12-source-slot-cleanup.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-12-source-slot-cleanup.json",
+        "sha256": "6573750d7974ec6f8b3e410aac44625e6567d1f6dba18435162f5875012bfbf7",
+        "bytes": 10804,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-source-slot-cleanup.json"
+      },
+      "status": "local_cleanup_and_packaged_checks_passed"
+    },
+    {
+      "name": "2026-11-12-update-key-filter.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-12-update-key-filter.json",
+        "sha256": "04a3b8e23690a64cee2c5cb572cc5d8314b8e08160cd940894ff75ad681f73d1",
+        "bytes": 25325,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-update-key-filter.json"
+      },
+      "status": "local_validation_passed_with_separate_active_drop_failure"
+    },
+    {
+      "name": "2026-11-13-push-capture-crash-boundaries.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-capture-crash-boundaries.json",
+        "sha256": "19ff377fcf514976c143bb2d3f50754434218df6a85faa92f725a120b7e9303e",
+        "bytes": 20115,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-capture-crash-boundaries.json"
+      },
+      "status": "passed",
+      "scope": "instrumented synthetic source SQL crash boundaries"
+    },
+    {
+      "name": "2026-11-13-push-capture-sql-feasibility.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-capture-sql-feasibility.json",
+        "sha256": "cbedae421da24dd2539304444347ee3272354ffc7d9272d81b3e1ef65c940b23",
+        "bytes": 10688,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-capture-sql-feasibility.json"
+      },
+      "status": "passed",
+      "scope": "synthetic source SQL; no decoder or importer"
+    },
+    {
+      "name": "2026-11-13-push-logical-baseline-faults.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-logical-baseline-faults.json",
+        "sha256": "57aca256c30cd425896b7741b9646a83b30514c9a821f93190979397d533fdfa",
+        "bytes": 7182,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-baseline-faults.json"
+      },
+      "status": "passed",
+      "scope": "Packaged production base lifecycle; forced Rust supervisor/receiver SIGKILL, not PostgreSQL wrapper SIGKILL"
+    },
+    {
+      "name": "2026-11-13-push-logical-baseline.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-logical-baseline.json",
+        "sha256": "de3e30f2f8fbc712f9e59abd56476ed0ceae0528c5018fc68211b310cc313871",
+        "bytes": 14241,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-baseline.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-11-13-push-logical-refactor-faults.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-logical-refactor-faults.json",
+        "sha256": "ab80f57daf2ce9ffc04348ed554ee3d74049750921d739e630cf01b70f33d808",
+        "bytes": 7182,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-refactor-faults.json"
+      },
+      "status": "passed",
+      "scope": "Packaged production base lifecycle; forced Rust supervisor/receiver SIGKILL, not PostgreSQL wrapper SIGKILL"
+    },
+    {
+      "name": "2026-11-13-push-logical-refactor.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-logical-refactor.json",
+        "sha256": "50edd0207a3cfa7081f591d3d0eaaf2e5feb0a07883406b54eb9963f53ee3a8e",
+        "bytes": 14241,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-logical-refactor.json"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "2026-11-13-push-native-crash-reconciliation.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-native-crash-reconciliation.json",
+        "sha256": "2f6d32f8c42f35ea0bccb1a445784b419d6497cc3adb9e6a50af7fb587bd902a",
+        "bytes": 14100,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-native-crash-reconciliation.json"
+      },
+      "status": "passed",
+      "scope": "native capture upload/COMMIT crashes and slot durability through existing publisher"
+    },
+    {
+      "name": "2026-11-13-push-native-lifecycle.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-native-lifecycle.json",
+        "sha256": "8d0e305dc36904c746dbd792a87c578bb8f8519828638a1e9b21e678f3d89861",
+        "bytes": 12930,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-native-lifecycle.json"
+      },
+      "status": "passed",
+      "scope": "native optional source lifecycle/clone/unsupported-change safety"
+    },
+    {
+      "name": "2026-11-13-push-native-live.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-native-live.json",
+        "sha256": "e3daa266f0be0607da2c1d89964b06a4f3910e069ee4ef8c22019e99d9a1f424",
+        "bytes": 11516,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-native-live.json"
+      },
+      "status": "passed",
+      "scope": "native source extension INSERT/abort vertical slice"
+    },
+    {
+      "name": "2026-11-13-push-paused-snapshot.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-paused-snapshot.json",
+        "sha256": "73c8c0656c0a96f29754a9059e286bbcb39fabb21be1a8a23a7a3414201f3313",
+        "bytes": 12061,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-paused-snapshot.json"
+      },
+      "status": "passed",
+      "scope": "bounded paused source snapshot and private destination generations"
+    },
+    {
+      "name": "2026-11-13-push-synthetic-importer.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-push-synthetic-importer.json",
+        "sha256": "1e004ebb980c9a1be5f446aa178522007cdb3595987c760414ddbab6cd75e9d8",
+        "bytes": 12234,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-push-synthetic-importer.json"
+      },
+      "status": "passed",
+      "scope": "synthetic source Iceberg logs -> existing journal/publisher"
+    },
+    {
+      "name": "2026-11-13-worker-login-requirement.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-worker-login-requirement.json",
+        "sha256": "2b6778af2b9b371d7fd195a1f52ca87c19326377279d4381d0d3872d550de5d0",
+        "bytes": 6297,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-worker-login-requirement.json"
+      },
+      "status": "local_validation_passed"
+    },
+    {
+      "name": "2026-11-13-worker-runtime-grants.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-13-worker-runtime-grants.json",
+        "sha256": "e416960da877334974011aa61f3b4ec1a6bfe05c0a65fae6762d2a30d444a540",
+        "bytes": 7694,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-worker-runtime-grants.json"
+      },
+      "status": "local_runtime_grants_passed"
+    },
+    {
+      "name": "2026-11-14-push-bulk-file-source-impact.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-bulk-file-source-impact.json",
+        "sha256": "b96df5bf3ab3be8426cfe232d39824b94d52f2abbc192e2a348758f832068c11",
+        "bytes": 49677,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-bulk-file-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-cleanup-leases.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-cleanup-leases.json",
+        "sha256": "7099b0fd6f0cde8bc5e2a5e8aa5bef3482fc8c4a62775f428c6e01ea8b58e510",
+        "bytes": 18211,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-cleanup-leases.json"
+      },
+      "status": "passed",
+      "scope": "source reset/drop coordination with manual actor lease holders"
+    },
+    {
+      "name": "2026-11-14-push-concurrent-source-impact.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-concurrent-source-impact.json",
+        "sha256": "4df164e093e9768800994ba5c4337ef5a092b98aac520355ccffffa8eccf6985",
+        "bytes": 43322,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-concurrent-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-1-pull-first.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-1-pull-first.json",
+        "sha256": "851b247877361d1df58607ffcbe4d41ad7b10359059526bfb607dbf2972e9f16",
+        "bytes": 66948,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-1-pull-first.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-1-push-first.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-1-push-first.json",
+        "sha256": "e508ba100ec59abdc28aad00bd70f06ed65d676471dc26f1012c9793d353eb1c",
+        "bytes": 67341,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-1-push-first.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-2-pull-first.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-2-pull-first.json",
+        "sha256": "271790257a493f47d81467a7c56936b20d2c5acdb14a8af16f9a289fec61757e",
+        "bytes": 69685,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-2-pull-first.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-2-push-first.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-2-push-first.json",
+        "sha256": "8b79a08ab71feaa225b46f44643335130eb088e6d863bfbb6f7251605ee64bfc",
+        "bytes": 68616,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-2-push-first.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-3-pull-first.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-3-pull-first.json",
+        "sha256": "d81c415bc2df33068f7ad322825b6b8eb38ff93968e8ec9ae5cae438468b99f3",
+        "bytes": 68247,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-3-pull-first.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-3-push-first.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-3-push-first.json",
+        "sha256": "bdb3afeea07a1e50205a5aa0edbf465e37c85de97a3671557893664bbfa2fb3d",
+        "bytes": 68633,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-3-push-first.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-interruption.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-interruption.json",
+        "sha256": "f914c46e089d25c7720b209a161a68e9eed079a1445f18ff8e4e70b03c1365f5",
+        "bytes": 795,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-interruption.json"
+      },
+      "scope": "interrupted counterbalanced experiment retained separately from complete timing results"
+    },
+    {
+      "name": "2026-11-14-push-counterbalanced-source-impact.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-counterbalanced-source-impact.json",
+        "sha256": "cd93a3b9a9cc24e9456fea884e1685f0ac30ca8669edc1cdbee3c232dfdf0ccf",
+        "bytes": 332758,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-counterbalanced-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "repeated counterbalanced local pull/push database resource experiment"
+    },
+    {
+      "name": "2026-11-14-push-credential-rotation.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-credential-rotation.json",
+        "sha256": "9c10937bbcfb24f7dea0b666156b3c6be003ef8529917ea35d4dec33d492df44",
+        "bytes": 18150,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-credential-rotation.json"
+      },
+      "status": "passed",
+      "scope": "source SCRAM secret-file rotation and authentication-failure retry fence"
+    },
+    {
+      "name": "2026-11-14-push-disk-full.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-disk-full.json",
+        "sha256": "94cb6c1e3c76830c425213045d42688e9f4033063a2ed90bda82a5ff1f37c770",
+        "bytes": 18352,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-disk-full.json"
+      },
+      "status": "passed",
+      "scope": "physical ENOSPC on native decoder spill storage and repair"
+    },
+    {
+      "name": "2026-11-14-push-failure-telemetry.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-failure-telemetry.json",
+        "sha256": "14078b7e99214c320112a9813206a66e6021f9e28097a7dd19e67fedb8bba01e",
+        "bytes": 19012,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-failure-telemetry.json"
+      },
+      "status": "passed",
+      "scope": "best-effort durable capture failure telemetry"
+    },
+    {
+      "name": "2026-11-14-push-frontier-qualification.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-frontier-qualification.json",
+        "sha256": "46dec69b4afe2f7f6d5a6a40f9144d6ed9c49e53b17ab05b719abd3f370d911c",
+        "bytes": 5107,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-frontier-qualification.json"
+      },
+      "status": "passed",
+      "scope": "bulk log appends, capture error telemetry, observed source frontier and explicit SIGKILL install rollback"
+    },
+    {
+      "name": "2026-11-14-push-grouped-crashes.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-grouped-crashes.json",
+        "sha256": "a7dec825a8ea01f38867d2f9a75fdcfa1388568c760dab9ff46cbde4a2119341",
+        "bytes": 19444,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-grouped-crashes.json"
+      },
+      "status": "passed",
+      "scope": "grouped source publication native crash and receipt reconciliation"
+    },
+    {
+      "name": "2026-11-14-push-grouped-publication.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-grouped-publication.json",
+        "sha256": "3a18dacb2cdacf66ad49e5ee394e9a4067b2517acf745f4bdccbc3612c2c4810",
+        "bytes": 19418,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-grouped-publication.json"
+      },
+      "status": "passed",
+      "scope": "opt-in bounded complete-transaction capture publication groups"
+    },
+    {
+      "name": "2026-11-14-push-grouped-source-impact.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-grouped-source-impact.json",
+        "sha256": "8015ee944f3929d3f022d3bf367597fde962539024c092f939b1793772a36e68",
+        "bytes": 42899,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-grouped-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-maintenance.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-maintenance.json",
+        "sha256": "f0698659fb3d7ae529deb93e5c6ed07ed33cb59647694dcd051bd8459ad5b533",
+        "bytes": 19557,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-maintenance.json"
+      },
+      "status": "passed",
+      "scope": "reader-gated private source-log maintenance and finite maintenance attempts"
+    },
+    {
+      "name": "2026-11-14-push-managed-mode.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-managed-mode.json",
+        "sha256": "46076f2b0df49cfcdc49f14db1d96882305def9ecbbfc4f6e411e186e9ea5b79",
+        "bytes": 23353,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-managed-mode.json"
+      },
+      "status": "passed",
+      "scope": "optional destination API and native managed push importer/publisher"
+    },
+    {
+      "name": "2026-11-14-push-native-chunks.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-native-chunks.json",
+        "sha256": "b2c3a0621734a8994c5e8cd754e930bd346daa2479741aba3c33e8f11a60a61f",
+        "bytes": 19620,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-chunks.json"
+      },
+      "status": "passed",
+      "scope": "native multi-digit transport chunk and event ordinal ordering"
+    },
+    {
+      "name": "2026-11-14-push-native-crash-reconciliation.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-native-crash-reconciliation.json",
+        "sha256": "cf127c1869b9c7000a9d89ebd954552df71e687fb56b77bd2c19d0e283aa881d",
+        "bytes": 21740,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-crash-reconciliation.json"
+      },
+      "status": "passed",
+      "scope": "native capture upload/COMMIT crashes and slot durability through existing publisher"
+    },
+    {
+      "name": "2026-11-14-push-native-lifecycle.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-native-lifecycle.json",
+        "sha256": "8555b71394226a5953b6bdfb6fcbf06c275b5b6e03a3148086c28b0b26ed210d",
+        "bytes": 20911,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-lifecycle.json"
+      },
+      "status": "passed",
+      "scope": "native optional source lifecycle/clone/unsupported-change safety"
+    },
+    {
+      "name": "2026-11-14-push-native-live.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-native-live.json",
+        "sha256": "b24ea9d85d80f3951c43614e0f15359fea451fbb4dcf0210b738bc8d6ca52ea6",
+        "bytes": 20957,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-live.json"
+      },
+      "status": "passed",
+      "scope": "native source extension INSERT/abort vertical slice"
+    },
+    {
+      "name": "2026-11-14-push-native-mutations.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-native-mutations.json",
+        "sha256": "79dac4c6debb8c0ebd2f6a5cb5c847b7a9022ee0ada9d33a1f894970244a0520",
+        "bytes": 6620305,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-mutations.json"
+      },
+      "status": "passed",
+      "scope": "native frozen-schema mutations and historical TOAST"
+    },
+    {
+      "name": "2026-11-14-push-native-scalars.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-native-scalars.json",
+        "sha256": "7ba4ec257aefe72ca742a77c11033d531dbc424a741e9a34420a67ac8eb66334",
+        "bytes": 18821,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-scalars.json"
+      },
+      "status": "passed",
+      "scope": "native source extension INSERT/abort vertical slice"
+    },
+    {
+      "name": "2026-11-14-push-native-spill.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-native-spill.json",
+        "sha256": "6be22a87eca8b6394917c7467cc1ebe77168c93d9c9f708e411b20903de72c2f",
+        "bytes": 19506,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-native-spill.json"
+      },
+      "status": "passed",
+      "scope": "native pre-commit decoder spill quota and unfinished spill crash recovery"
+    },
+    {
+      "name": "2026-11-14-push-object-requests.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-object-requests.json",
+        "sha256": "4ebb22579d2c22a0c7ddb0844c0b775859b6a8c80a9e5a835627be719dfbc971",
+        "bytes": 24864,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-object-requests.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-online-snapshot-crashes.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-online-snapshot-crashes.json",
+        "sha256": "e931fdf2ab5b4f3912442a1a6d93a3a51f77fa45c43a4f924be96005baa42918",
+        "bytes": 19394,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-online-snapshot-crashes.json"
+      },
+      "status": "passed",
+      "scope": "online_copy snapshot activation upload/COMMIT crash recovery"
+    },
+    {
+      "name": "2026-11-14-push-online-snapshot.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-online-snapshot.json",
+        "sha256": "5b4f86ce032540282f3b486fe746259233bf2f4926824147c6bc36413d36c0d4",
+        "bytes": 21146,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-online-snapshot.json"
+      },
+      "status": "passed",
+      "scope": "bounded online slot-exported baseline with concurrent mutations"
+    },
+    {
+      "name": "2026-11-14-push-outages.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-outages.json",
+        "sha256": "ad5b217751479e0565da58cb23d64429bf367082c204070dc92efcc9534aa3fc",
+        "bytes": 18355,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-outages.json"
+      },
+      "status": "passed",
+      "scope": "source object-store and source-catalog outage recovery"
+    },
+    {
+      "name": "2026-11-14-push-packaging.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-packaging.json",
+        "sha256": "49b942714fe38915865e0c640b66332806db29ec6eaee2b6233044ee7f448095",
+        "bytes": 54995,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-packaging.json"
+      },
+      "status": "passed",
+      "scope": "native prototype archive checksums, staged installation and running-server refusal"
+    },
+    {
+      "name": "2026-11-14-push-paused-snapshot-crashes.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-paused-snapshot-crashes.json",
+        "sha256": "2a3e5e052e6a880d697aa1df7328f0386c59060a450dc9ff85517d345f6d1bd6",
+        "bytes": 19394,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-paused-snapshot-crashes.json"
+      },
+      "status": "passed",
+      "scope": "paused_copy snapshot activation upload/COMMIT crash recovery"
+    },
+    {
+      "name": "2026-11-14-push-paused-snapshot.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-paused-snapshot.json",
+        "sha256": "63b7746dbf6ddf9cdb92f50312dcdb57c773b710ee6b2174bbac9a056cbd0529",
+        "bytes": 21016,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-paused-snapshot.json"
+      },
+      "status": "passed",
+      "scope": "bounded paused source snapshot and private destination generations"
+    },
+    {
+      "name": "2026-11-14-push-pgoutput-reference.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-pgoutput-reference.json",
+        "sha256": "10ceddb969b11e04b0f3ea2f498369212d8c143ab67f0850f32c780564021884",
+        "bytes": 20218,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-pgoutput-reference.json"
+      },
+      "status": "passed",
+      "scope": "native capture versus independent pgoutput with interleaving and mutations"
+    },
+    {
+      "name": "2026-11-14-push-progress-barriers.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-progress-barriers.json",
+        "sha256": "2ed32fe66fd81df5fda89acb88300a85f7a9344f4721a0df78e19af25be00fda",
+        "bytes": 19775,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-progress-barriers.json"
+      },
+      "status": "passed",
+      "scope": "bounded explicit complete-commit source progress barriers"
+    },
+    {
+      "name": "2026-11-14-push-progress-crashes.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-progress-crashes.json",
+        "sha256": "50e4397d55e0a403253d825afdb78a011904ff43ca037dd1fea2ffa82ed3fcf4",
+        "bytes": 20368,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-progress-crashes.json"
+      },
+      "status": "passed",
+      "scope": "control-only source progress upload/commit crash recovery"
+    },
+    {
+      "name": "2026-11-14-push-progress-qualification.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-progress-qualification.json",
+        "sha256": "03fcfd8a5eee7dcebee0942925a7f25f1553ae1529bf8ae50fe7e66bb1180b16",
+        "bytes": 4744,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-progress-qualification.json"
+      },
+      "status": "passed",
+      "scope": "explicit progress barriers and prior grouped capture, telemetry and install recovery"
+    },
+    {
+      "name": "2026-11-14-push-publisher-crash-recovery.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-publisher-crash-recovery.json",
+        "sha256": "49fa3c36cefa023dca98e0c2933d7bb91786b0605d9a7e699a828abd693ae9a9",
+        "bytes": 19997,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-publisher-crash-recovery.json"
+      },
+      "status": "passed",
+      "scope": "push journal -> unchanged publisher upload/COMMIT crash recovery"
+    },
+    {
+      "name": "2026-11-14-push-retention.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-retention.json",
+        "sha256": "8796763282812c307019d9da4071ce405bae90e1b379fe4faa612161348b79bc",
+        "bytes": 20085,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-retention.json"
+      },
+      "status": "passed",
+      "scope": "conservative publication acknowledgements, logical log pruning and bounded generation budgets"
+    },
+    {
+      "name": "2026-11-14-push-schema-feasibility.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-schema-feasibility.json",
+        "sha256": "5240ea0c11dce8f88f8084fd433ee9d25634d644ab8e2abb4081a0524516cf90",
+        "bytes": 19391,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-schema-feasibility.json"
+      },
+      "status": "passed",
+      "scope": "destination pg_lake mixed DML/DDL transaction feasibility"
+    },
+    {
+      "name": "2026-11-14-push-schema-history.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-schema-history.json",
+        "sha256": "602d66cb7cb46329a4a302dd67f3d98b7ba855bb41e755a71d297f5a7f754407",
+        "bytes": 290831,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-schema-history.json"
+      },
+      "status": "passed",
+      "scope": "registration-time schema history, current-snapshot DDL fences and version framing foundations"
+    },
+    {
+      "name": "2026-11-14-push-snapshot-limits.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-snapshot-limits.json",
+        "sha256": "c8a2da91914fa2f859eb5d0f063093e4f2217ffbe8d377a19cfc4d60e378a5db",
+        "bytes": 17968,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-snapshot-limits.json"
+      },
+      "status": "passed",
+      "scope": "bounded paused/online snapshot rejection and controlled slot cleanup"
+    },
+    {
+      "name": "2026-11-14-push-source-impact.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-source-impact.json",
+        "sha256": "d6e09659a18b4227c69bfdee7b0226573aacb58f070bcb6fb15564bcb3932989",
+        "bytes": 14737,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "small sequential logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-source-roles.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-source-roles.json",
+        "sha256": "3835debddb18a30c8f1a068e51ddfa80f0010e875307b02505aa7118a58c5c75",
+        "bytes": 20123,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-source-roles.json"
+      },
+      "status": "passed",
+      "scope": "dedicated source replication LOGIN and read-only consumer"
+    },
+    {
+      "name": "2026-11-14-push-storage-credentials.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-storage-credentials.json",
+        "sha256": "7c3c1042513c5009f934dc7743a6ffc861159f8ed280746e9d5e69d74b07dbb4",
+        "bytes": 19657,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-storage-credentials.json"
+      },
+      "status": "passed",
+      "scope": "distinct source/destination object-prefix IAM credentials"
+    },
+    {
+      "name": "2026-11-14-push-storage-locations.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-storage-locations.json",
+        "sha256": "79a486b0324f5b783b2b7c01ae4dab6a3c0fd11b5c67de8a4ac08845d2fa5ceb",
+        "bytes": 20526,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-storage-locations.json"
+      },
+      "status": "passed",
+      "scope": "catalog-pinned private log destinations and drift fencing"
+    },
+    {
+      "name": "2026-11-14-push-synthetic-importer.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-synthetic-importer.json",
+        "sha256": "570321fa55acabba1bcb2a95b14d24c58499c6ee21ead0b1e71ba9c96d2fcd92",
+        "bytes": 22612,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-synthetic-importer.json"
+      },
+      "status": "passed",
+      "scope": "synthetic source Iceberg logs -> existing journal/publisher"
+    },
+    {
+      "name": "2026-11-14-push-toast-keys.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-toast-keys.json",
+        "sha256": "cbef78e66f3a3e424306695c760ed5bea234cb225401f275653db223d2643242",
+        "bytes": 18089,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-toast-keys.json"
+      },
+      "status": "passed",
+      "scope": "external text primary-key identity across unchanged, changed and deleted rows"
+    },
+    {
+      "name": "2026-11-14-push-traced-source-impact.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-traced-source-impact.json",
+        "sha256": "23973520fa660bc651d914e4eeadad4f92aa124c5aaf64e169ebdcc4eec16bf7",
+        "bytes": 48815,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-traced-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-14-push-upload-budget.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-14-push-upload-budget.json",
+        "sha256": "c565e09b2038be6323b06b1d187c2e3bb40561c9587e4f47740345dd7dac8b7b",
+        "bytes": 18038,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-upload-budget.json"
+      },
+      "status": "passed",
+      "scope": "native source extension INSERT/abort vertical slice"
+    },
+    {
+      "name": "2026-11-15-local-capacity-map.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-capacity-map.json",
+        "sha256": "4a38292b389b66162d08bb4636362137546c0f846d4e874b148d27c5f4518238",
+        "bytes": 74530,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-capacity-map.json"
+      },
+      "status": "passed",
+      "scope": "bounded local transaction-rate and transaction-size map"
+    },
+    {
+      "name": "2026-11-15-local-coalescing-followup-regression.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-coalescing-followup-regression.json",
+        "sha256": "3be25b25e3cec3dafd250fba4315035da2775c9100b5fd1a87766e7e0487dbc9",
+        "bytes": 65700,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-coalescing-followup-regression.json"
+      },
+      "status": "passed",
+      "scope": "deterministic before/after regression: source arrival during an already-running publication"
+    },
+    {
+      "name": "2026-11-15-local-coalescing-runtime.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-coalescing-runtime.json",
+        "sha256": "a92dd91582ed0c98c2fe72fc09500082f15defd3e742ef20ea6dce102c034480",
+        "bytes": 505935,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-coalescing-runtime.json"
+      },
+      "status": "passed",
+      "scope": "coalescing-window worker runtime qualification"
+    },
+    {
+      "name": "2026-11-15-local-coalescing-windows.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-coalescing-windows.json",
+        "sha256": "c1860e318eab971652fa570592f0965eec2dc9bbb44f9c3b825c21665532020a",
+        "bytes": 507935,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-coalescing-windows.json"
+      },
+      "status": "passed",
+      "scope": "Counterbalanced publication-window comparison with durable batch statistics."
+    },
+    {
+      "name": "2026-11-15-local-delete-filter-correctness.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-delete-filter-correctness.json",
+        "sha256": "4811aaad9ee0405c2160066dd19cf838fa257223cf5e2c45d5dbdc2b3a4d485a",
+        "bytes": 40772,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-delete-filter-correctness.json"
+      },
+      "status": "passed",
+      "scope": "one PostgreSQL instance and database: local WAL -> local journal -> final Iceberg tables"
+    },
+    {
+      "name": "2026-11-15-local-delete-filter-runtime.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-delete-filter-runtime.json",
+        "sha256": "e901e2f4f47aca4c5bf2d3483e3731de27cf64902e4aefab2464fd17c6349fb9",
+        "bytes": 212407,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-delete-filter-runtime.json"
+      },
+      "status": "passed",
+      "scope": "packaged ordered DELETE key-filter runtime qualification"
+    },
+    {
+      "name": "2026-11-15-local-delete-filter-seeded.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-delete-filter-seeded.json",
+        "sha256": "ec4fb0994bd66986dd87c2f8453aa29edd53419fccb3ff4ea48187d13c344407",
+        "bytes": 202724,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-delete-filter-seeded.json"
+      },
+      "status": "passed",
+      "scope": "Counterbalanced same-runtime DELETE key-filter comparison."
+    },
+    {
+      "name": "2026-11-15-local-delete-filter-small.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-delete-filter-small.json",
+        "sha256": "b2abe6c209884eb47da1f1e00667fa32fe5151a64376af1fcc935a9f6e46425f",
+        "bytes": 201881,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-delete-filter-small.json"
+      },
+      "status": "passed",
+      "scope": "Counterbalanced same-runtime DELETE key-filter comparison."
+    },
+    {
+      "name": "2026-11-15-local-direct-iceberg-crashes.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-direct-iceberg-crashes.json",
+        "sha256": "dae407a8789e168d16b2dd05012e950b158cd363fd757545ce5d2ac5207df5a2",
+        "bytes": 23189,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-direct-iceberg-crashes.json"
+      },
+      "status": "passed",
+      "scope": "single-instance application/WAL/journal/Iceberg publisher crash recovery"
+    },
+    {
+      "name": "2026-11-15-local-direct-iceberg.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-direct-iceberg.json",
+        "sha256": "4ea817dcd8018effa0f85f2c4f8fa1965224959612989232cd68ec249b3d72be",
+        "bytes": 19116,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-direct-iceberg.json"
+      },
+      "status": "passed",
+      "scope": "one PostgreSQL instance and database: local WAL -> local journal -> final Iceberg tables"
+    },
+    {
+      "name": "2026-11-15-local-grouped-sustained-10000.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-grouped-sustained-10000.json",
+        "sha256": "59830971bbbcce2df56ab52ca747cbd8f7fbaa06b3a0de83cf01226d1ec0dbe7",
+        "bytes": 111238,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-grouped-sustained-10000.json"
+      },
+      "status": "passed",
+      "scope": "fresh-fixture single-instance local mirroring versus application-only baseline"
+    },
+    {
+      "name": "2026-11-15-local-independent-insert-crashes.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-independent-insert-crashes.json",
+        "sha256": "e9ec7cfbdbecfb764cf5b7f99f6e89fedc7616bb13db0cd5a3a0cf11db08713e",
+        "bytes": 33795,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-independent-insert-crashes.json"
+      },
+      "status": "passed",
+      "scope": "single-instance application/WAL/journal/Iceberg publisher crash recovery"
+    },
+    {
+      "name": "2026-11-15-local-independent-insert-groups.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-independent-insert-groups.json",
+        "sha256": "c3a598a18667fa03a0c471148da8e6f4a48617d45b7c9d4a8f561f0baa800822",
+        "bytes": 30318,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-independent-insert-groups.json"
+      },
+      "status": "passed",
+      "scope": "opt-in pure INSERT grouping with native target eligibility, barriers, ACLs and DDL race fences"
+    },
+    {
+      "name": "2026-11-15-local-independent-insert-performance.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-independent-insert-performance.json",
+        "sha256": "6b01ccb1e0d67216c404d39f4370edc961a528c510949559768454c92739d091",
+        "bytes": 80989,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-independent-insert-performance.json"
+      },
+      "status": "passed",
+      "scope": "same-runtime sequential opt-in independent INSERT comparison"
+    },
+    {
+      "name": "2026-11-15-local-insert-runtime-logical-regressions.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-insert-runtime-logical-regressions.json",
+        "sha256": "61a4df3b96b31254a47b352f223848e3d107ad7c4f1eaea0ced32e6c892f3df7",
+        "bytes": 11836,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-insert-runtime-logical-regressions.json"
+      },
+      "status": "passed",
+      "scope": "unchanged logical-mode qualification cases on current local-mirroring core/workers"
+    },
+    {
+      "name": "2026-11-15-local-logical-regressions.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-logical-regressions.json",
+        "sha256": "d48a5cf7061b36b06ef70a3b5203ba2c5e670731414621399c6af91b8a1a2fee",
+        "bytes": 11836,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-logical-regressions.json"
+      },
+      "status": "passed",
+      "scope": "unchanged logical-mode qualification cases on current local-mirroring core/workers"
+    },
+    {
+      "name": "2026-11-15-local-maintenance.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-maintenance.json",
+        "sha256": "edb550df2ee89a652948131e40cec041973660cff1e9966fe0a67e607efe8456",
+        "bytes": 19875,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-maintenance.json"
+      },
+      "status": "passed",
+      "scope": "single-instance mirror data-file compaction and safe bounded journal cleanup"
+    },
+    {
+      "name": "2026-11-15-local-pgdata-enospc.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-pgdata-enospc.json",
+        "sha256": "d2fa4b1fea68881f72b953d42b020dc65310d61ef718528ed684b47e571a0fc9",
+        "bytes": 31064,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-pgdata-enospc.json"
+      },
+      "status": "passed",
+      "scope": "physical ENOSPC on bounded private pgdata filesystem with shared-instance recovery"
+    },
+    {
+      "name": "2026-11-15-local-publication-coalescing.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-publication-coalescing.json",
+        "sha256": "4c7a97ff74d1c03ab26b431599c230141a1ff693b96463ba5a8f7bb195f23bb7",
+        "bytes": 19648,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-publication-coalescing.json"
+      },
+      "status": "passed",
+      "scope": "bounded opt-in local publication coalescing with managed stop/start"
+    },
+    {
+      "name": "2026-11-15-local-publication-phase-profile-optimized.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-publication-phase-profile-optimized.json",
+        "sha256": "32e5fc22a73bc71d6daf2cd9a50bf17c4b49968107e80b4fadb1a66b10137918",
+        "bytes": 49518,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-publication-phase-profile-optimized.json"
+      },
+      "status": "passed",
+      "scope": "Diagnostic timings only: SQL wrappers and split worker transaction phases."
+    },
+    {
+      "name": "2026-11-15-local-publication-phase-profile.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-publication-phase-profile.json",
+        "sha256": "c54923a1ea7a433ecb8c05d3295c01a5b01f3d6303c77245bad538b6bd6a1ff5",
+        "bytes": 48641,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-publication-phase-profile.json"
+      },
+      "status": "passed",
+      "scope": "Diagnostic timings only: SQL wrappers and split worker transaction phases."
+    },
+    {
+      "name": "2026-11-15-local-publication-source-impact.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-publication-source-impact.json",
+        "sha256": "d7d064d387de1a4f75753fff79bb1ec7d9b97bcf9d6bb2f5bfb3697c2ee1f3ba",
+        "bytes": 93819,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-publication-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "single-instance same-runtime default versus one-second publication coalescing, each with a fresh application-only baseline"
+    },
+    {
+      "name": "2026-11-15-local-resource-budget.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-resource-budget.json",
+        "sha256": "497990bdedb3c1ab30bd945839d38bea86cfe373301684647f3990d737155187",
+        "bytes": 21740,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-resource-budget.json"
+      },
+      "status": "passed",
+      "scope": "single-instance local mirroring under a bounded private CPU/RAM fixture"
+    },
+    {
+      "name": "2026-11-15-local-runtime-qualification.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-runtime-qualification.json",
+        "sha256": "1d4581c4b3f8a0e7eeecfa93fe4e0408d1fad05f696b14619ecf51ff59337552",
+        "bytes": 127677,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-runtime-qualification.json"
+      },
+      "status": "passed",
+      "scope": "JSONB-fixed same-instance runtime qualification"
+    },
+    {
+      "name": "2026-11-15-local-scalar-types-full.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-scalar-types-full.json",
+        "sha256": "c46ce1e4f551daa605024dec4c66596dc8346c0b0d98080361c1674c071cddc3",
+        "bytes": 22718,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-scalar-types-full.json"
+      },
+      "status": "passed",
+      "scope": "local initial-copy and WAL fidelity for supported scalar types, compound keys and external TOAST"
+    },
+    {
+      "name": "2026-11-15-local-scalar-types.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-scalar-types.json",
+        "sha256": "aa583c2889e6c2fbb989deadda5811b5c8ff6286113e3344373e519e574ef5e6",
+        "bytes": 22686,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-scalar-types.json"
+      },
+      "status": "passed",
+      "scope": "local initial-copy and WAL fidelity for supported scalar types, compound keys and external TOAST"
+    },
+    {
+      "name": "2026-11-15-local-sustained-1000.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-sustained-1000.json",
+        "sha256": "9ef6acea6e85e189578dac529cf6dd400d5fe9cad733f45547b09f4092f50905",
+        "bytes": 154401,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-sustained-1000.json"
+      },
+      "status": "passed",
+      "scope": "fresh-fixture single-instance local mirroring versus application-only baseline"
+    },
+    {
+      "name": "2026-11-15-local-update-conversion-performance.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-update-conversion-performance.json",
+        "sha256": "e5b4966728d6a5dd5c4d3b421bd9f82844639f736c5f8fdd539a28ab25ac88b3",
+        "bytes": 419958,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-update-conversion-performance.json"
+      },
+      "status": "passed",
+      "scope": "Counterbalanced full-pipeline comparison of wide UPDATE row conversion."
+    },
+    {
+      "name": "2026-11-15-local-update-conversion-plans.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-update-conversion-plans.json",
+        "sha256": "21db43bbe6fee14eda2a59bb008c702b9fc1ee84e4c449f7a49b925352ace739",
+        "bytes": 63788,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-update-conversion-plans.json"
+      },
+      "status": "passed",
+      "scope": "Isolate UPDATE row conversion and plans in disposable Iceberg targets."
+    },
+    {
+      "name": "2026-11-15-local-update-conversion-runtime.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-update-conversion-runtime.json",
+        "sha256": "2b6e327a846410532ab7a77503e43c41be8f2c3830bd9307504d24c3a6ff04e4",
+        "bytes": 675645,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-update-conversion-runtime.json"
+      },
+      "status": "passed",
+      "scope": "packaged wide UPDATE conversion runtime qualification"
+    },
+    {
+      "name": "2026-11-15-local-update-phase-profile.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-update-phase-profile.json",
+        "sha256": "275fd39ee7a2165f9db46e56bc0f98262e4171327339a4613794c8796129d829",
+        "bytes": 50218,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-update-phase-profile.json"
+      },
+      "status": "passed",
+      "scope": "Diagnostic timings only: SQL wrappers and split worker transaction phases."
+    },
+    {
+      "name": "2026-11-15-local-versus-remote-pull.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-versus-remote-pull.json",
+        "sha256": "21cfea37c784c1e9bb505ba75d354afc67f56db790e82592f00ab183a8eeb9ee",
+        "bytes": 386897,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-versus-remote-pull.json"
+      },
+      "status": "passed",
+      "scope": "Counterbalanced local mirroring versus separate-instance logical pull."
+    },
+    {
+      "name": "2026-11-15-local-wal-enospc.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-wal-enospc.json",
+        "sha256": "e683a7cb97dc9a1d2c151d895ece0e67ba2edb1919094d79dfe26a4d1101f595",
+        "bytes": 31390,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-wal-enospc.json"
+      },
+      "status": "passed",
+      "scope": "physical ENOSPC on bounded private wal filesystem with shared-instance recovery"
+    },
+    {
+      "name": "2026-11-15-local-wal-retention.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-local-wal-retention.json",
+        "sha256": "f9263ad899f119dbb6533323dbaa8155d21b6a9b7ac13e0776d9898f4d97832f",
+        "bytes": 30908,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-wal-retention.json"
+      },
+      "status": "passed",
+      "scope": "single-instance WAL retention overrun, fail-closed checkpoints and explicit snapshot rebuild"
+    },
+    {
+      "name": "2026-11-15-push-install-cleanup-recovery.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-push-install-cleanup-recovery.json",
+        "sha256": "d0ea65afd134fd093b2a16c17797017feb8f2790cad60647400e7134135cf5fe",
+        "bytes": 59986,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-install-cleanup-recovery.json"
+      },
+      "status": "passed",
+      "scope": "native prototype archive checksums, staged installation and running-server refusal"
+    },
+    {
+      "name": "2026-11-15-push-logical-compatibility.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-push-logical-compatibility.json",
+        "sha256": "573b0a0c835fa963d2e46f2a05ebcccf74d34219ffcc4f44951c325c601f4b9e",
+        "bytes": 21369,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-logical-compatibility.json"
+      },
+      "status": "passed",
+      "scope": "existing logical archive qualification with optional push installed and removed"
+    },
+    {
+      "name": "2026-11-15-push-ordered-schema.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-push-ordered-schema.json",
+        "sha256": "43ccce128985362a849d942b7e6e427d9bd2cb436869b574ea19f67678909c79",
+        "bytes": 298326,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-ordered-schema.json"
+      },
+      "status": "passed",
+      "scope": "bounded opt-in ordered source schema capture, journal admission and atomic publication"
+    },
+    {
+      "name": "2026-11-15-push-sustained-1000-source-impact.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-push-sustained-1000-source-impact.json",
+        "sha256": "51b9cba03df353471666bb5d3746ed4fa371aee7034d425127d9846a5a8de8b3",
+        "bytes": 326929,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-sustained-1000-source-impact.json"
+      },
+      "status": "passed",
+      "scope": "logical-pull versus source-push source-impact experiment"
+    },
+    {
+      "name": "2026-11-15-wal-direct-performance.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-wal-direct-performance.json",
+        "sha256": "aade8c18c138292b3f144ad6ada97ba92f27769a4c696ecba8c6132f6e3b09b5",
+        "bytes": 519709,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-wal-direct-performance.json"
+      },
+      "status": "passed",
+      "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines."
+    },
+    {
+      "name": "2026-11-15-wal-direct-prototype.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-15-wal-direct-prototype.json",
+        "sha256": "960fc260dee3274b64e44ea225966a648d320423e0fba521365a894ea60f83ca",
+        "bytes": 72276,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-wal-direct-prototype.json"
+      },
+      "status": "passed",
+      "scope": "First frozen-schema WAL-backed direct-publication slice; manually bootstrapped empty tables; not production qualification"
+    },
+    {
+      "name": "2026-11-16-beta5-8154ccf-lifecycle.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-beta5-8154ccf-lifecycle.json",
+        "sha256": "759ced5bb14e4d881c3271040072fb4021a535ccc44f2fe1df9d3983ecda3a5b",
+        "bytes": 40916,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-beta5-8154ccf-lifecycle.json"
+      },
+      "status": "passed",
+      "scope": "Merged default journal pipeline; experimental direct publication is not included in these release archives"
+    },
+    {
+      "name": "2026-11-16-beta5-refresh-regression.json",
+      "retention": "archive_only",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-beta5-refresh-regression.json",
+        "sha256": "eb2758dfaac94284b544f690a2fcfbfe4277af35a3d99487c85b2f2c905f4d1f",
+        "bytes": 43746,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-beta5-refresh-regression.json"
+      },
+      "status": "passed",
+      "scope": "Cached ARM64 native SQL regression of cumulative beta5 development refresh; not archive or full lifecycle qualification"
+    },
+    {
+      "name": "2026-11-16-wal-direct-coalesced-performance.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-coalesced-performance.json",
+        "sha256": "f2b0507a9ec29a6c6c4354d262fde3d9104dff5d2ccef40a3445eeb2cb785676",
+        "bytes": 381109,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-coalesced-performance.json"
+      },
+      "status": "passed",
+      "scope": "Same-runtime comparison of coalesced direct and journal pipelines."
+    },
+    {
+      "name": "2026-11-16-wal-direct-coalescing-runtime.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-coalescing-runtime.json",
+        "sha256": "b40651ea87737e9a3ef13aae594a869954f71447f9c883a4bae09b6933ad9c76",
+        "bytes": 111196,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-coalescing-runtime.json"
+      },
+      "status": "passed",
+      "scope": "Experimental bounded direct coalescing and immediate-mode regression, frozen schema and empty bootstrap"
+    },
+    {
+      "name": "2026-11-16-wal-direct-deadlock-recovery.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-deadlock-recovery.json",
+        "sha256": "24acb04853cb2cab1b5bd33c5f571ba96d4b1259025ce5a8eab5ed773d297fc7",
+        "bytes": 1426893,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-deadlock-recovery.json"
+      },
+      "status": "bounded_recovery_passed_with_capacity_limit",
+      "scope": "Whole-publication retry on protocol-confirmed 40P01 abort; normal/coalesced and streamed paths, exact rows under concurrent native maintenance",
+      "all_load_envelopes_passed": false
+    },
+    {
+      "name": "2026-11-16-wal-direct-prelock.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-prelock.json",
+        "sha256": "376ec07a2179f75b708266cb2b77797267f9da8e70d5212561def7df83e30a2f",
+        "bytes": 507223,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-prelock.json"
+      },
+      "status": "bounded_prelock_improvement_with_capacity_limit",
+      "scope": "Private native table-lock bridge and optional full-mapping prelock before direct publication writes; existing retry remains",
+      "all_load_envelopes_passed": false
+    },
+    {
+      "name": "2026-11-16-wal-direct-publication-profile.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-publication-profile.json",
+        "sha256": "d0bfc11a2729cc19c23b9df447cdea4d5f67b9f4207cddefed5032ce5cdee29a",
+        "bytes": 2341022,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-publication-profile.json"
+      },
+      "status": "profiling_complete_maintenance_not_qualified",
+      "scope": "Fixed 32-transaction mixed direct batches; native file-catalog load and compaction diagnosis"
+    },
+    {
+      "name": "2026-11-16-wal-direct-sizing.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-sizing.json",
+        "sha256": "61b16a291ecac84b424b9eafbbba2c55bcdb689a528ce225ca41e97bba067945",
+        "bytes": 1757740,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-sizing.json"
+      },
+      "status": "completed_with_resource_limits",
+      "scope": "Bounded single-instance direct/journal CPU, memory and load exploration; not production qualification",
+      "all_configurations_passed": false
+    },
+    {
+      "name": "2026-11-16-wal-direct-snapshot.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-snapshot.json",
+        "sha256": "85af4effee41ed3471fcb06d3082a086c0a68de6d361bc42df756945db74cff1",
+        "bytes": 337232,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-snapshot.json"
+      },
+      "status": "passed",
+      "scope": "Bounded same-instance exported snapshot, direct native Iceberg writes, frozen supported schema, 2000 source rows"
+    },
+    {
+      "name": "2026-11-16-wal-direct-streaming.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-streaming.json",
+        "sha256": "8d466461522c32a6222e48a5c67fc6eeb9104d23174ceeef0a022898829ca171",
+        "bytes": 323110,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-streaming.json"
+      },
+      "status": "passed",
+      "scope": "Experimental same-instance direct publication: streamed transactions, disposable spill, durable replay floor, storage outage and WAL-history loss"
+    },
+    {
+      "name": "2026-11-16-wal-direct-sustained-maintenance.json",
+      "retention": "compact_summary",
+      "source": {
+        "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+        "path": "docs/evidence/2026-11-16-wal-direct-sustained-maintenance.json",
+        "sha256": "63dae6e03786cfb2d80e23dd7422160cdfd73ee09e793442be2b88f237529ae2",
+        "bytes": 104623,
+        "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-sustained-maintenance.json"
+      },
+      "status": "partial",
+      "scope": "15-minute sequential ARM64 mixed-write maintenance fixtures at 6 and 8 transactions/second on unchanged v13 runtime",
+      "all_load_envelopes_passed": false
+    }
+  ]
+}

@@ -4,7 +4,7 @@ The local performance and operational checks support adopting four streaming
 transaction slots alongside the existing bulk permit. The production source now
 contains that policy; its [exported arm64 package qualification](stream-pool-migration-results.md)
 also passes. Native amd64, final-commit CI and the release soak remain open.
-[Retained evidence](../../evidence/2026-10-24-stream-pool-qualification-results.json)
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-24-stream-pool-qualification-results.json)
 records all 40 performance cases, the initial inconclusive result, the fixed copy
 extension and 25 operational checks, with exact input/image/archive fingerprints.
 

@@ -60,12 +60,12 @@ archive. If an older cached prerequisite image triggers that guard, rerun with
 `QUALIFICATION_REBUILD_BASE=1`.
 
 The renamed arm64 archive from commit `6772922` passed all 36 checks with
-the upstream-only fixture. See the [retained results](../../docs/evidence/2026-10-18-renamed-package-qualification-results.json)
-and [build/fixture provenance](../../docs/evidence/2026-10-18-renamed-package-qualification-provenance.json).
+the upstream-only fixture. See the [retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-renamed-package-qualification-results.json)
+and [build/fixture provenance](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-renamed-package-qualification-provenance.json).
 
-The subsequent [fresh-submodule run](../../docs/evidence/2026-10-18-fresh-submodule-qualification-results.json)
+The subsequent [fresh-submodule run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-fresh-submodule-qualification-results.json)
 also passed all 36 checks after completing the full upstream build from the
-local bundle. Its [provenance](../../docs/evidence/2026-10-18-fresh-submodule-qualification-provenance.json)
+local bundle. Its [provenance](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-fresh-submodule-qualification-provenance.json)
 records the build retries and the fix to refresh Debian package indexes before
 installing late build dependencies.
 
@@ -99,7 +99,7 @@ recovery drill.
 
 The committed lifecycle candidate `85a32b4` subsequently passed all 57
 checks, including source connection credentials, existing slots, and interrupted
-initial-copy recovery. See its [retained results](../../docs/evidence/2026-10-18-lifecycle-qualification-results.json).
+initial-copy recovery. See its [retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-lifecycle-qualification-results.json).
 The earlier 36-check results above describe the earlier package and probe.
 
 ## pg_lake compatibility lane

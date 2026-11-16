@@ -52,7 +52,7 @@ no private key or certificate is committed. It configures PostgreSQL to reject
 non-TLS TCP connections and requires SCRAM authentication inside TLS.
 
 Run `tls_20260915_102010` passed all eight assertions. The retained
-[results](../../evidence/2026-09-15-tls-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-tls-results.json) demonstrate:
 
 - server-side rejection of plaintext TCP;
 - an encrypted administrative control session;

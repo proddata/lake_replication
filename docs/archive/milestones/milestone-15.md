@@ -49,7 +49,7 @@ Migration `0013_source_continuity.sql` appends these fields to
 ## Evidence
 
 Run `source_20260914_200541` passed all ten assertions. The retained
-[results](../../evidence/2026-09-14-source-continuity-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-source-continuity-results.json) demonstrate:
 
 - normal replication and graceful stop after a successful preflight;
 - durable observation of the exact source system identifier, database OID, and

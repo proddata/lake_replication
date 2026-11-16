@@ -48,7 +48,7 @@ observes the promotion immediately instead of waiting for a checkpoint.
 ## Evidence
 
 Run `failover_20260915_045438` passed all ten assertions. The retained
-[results](../../evidence/2026-09-15-failover-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-failover-results.json) demonstrate:
 
 - creation of a persistent, valid failover logical slot;
 - publication through the original primary;

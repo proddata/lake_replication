@@ -13,7 +13,7 @@ prototype; the shipped extension and release archive are unchanged.
 
 Run `python3 experiments/base_workers/admission_probe.py`. The final run is
 `.qualification/qualification_20261020_055358_admission/`, with **118/118 checks
-passing**. The [retained evidence](../../evidence/2026-10-20-base-bounded-admission-results.json)
+passing**. The [retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-20-base-bounded-admission-results.json)
 includes image/source/archive fingerprints, inventories, checks and log hashes.
 The new image is
 `sha256:7a416dc7d646735c7c02ce69e1ee74dd2751abd2061555389e637fe4455e62b6`.

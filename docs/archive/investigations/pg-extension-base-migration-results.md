@@ -50,7 +50,7 @@ require a rebuild. See [the operator procedure](../../guides/upgrade-and-rollbac
 
 ## Accepted qualification
 
-[Retained evidence](../../evidence/2026-10-21-base-lifecycle-migration-results.json)
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-base-lifecycle-migration-results.json)
 includes source hashes, both archive identities, all checks, raw-run references
 and log hashes. All accepted runs use the same executable/SQL payload.
 

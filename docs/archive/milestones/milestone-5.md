@@ -43,7 +43,7 @@ rebuilds the transaction deterministically.
 ## Evidence
 
 Run `streaming_20260914_102042` passed all 12 assertions. The
-[retained results](../../evidence/2026-09-14-streaming-results.json) record 120 actual
+[retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-streaming-results.json) record 120 actual
 stream segments for one source transaction.
 
 During that transaction, durable fragments were visible while the main journal

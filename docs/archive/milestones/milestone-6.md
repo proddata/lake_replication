@@ -18,7 +18,7 @@ inline value is carried normally and replaces the prior value.
 ## Evidence
 
 Run `toast_20260914_102520` passed all 11 assertions. The
-[retained results](../../evidence/2026-09-14-toast-results.json) cover seven committed
+[retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-toast-results.json) cover seven committed
 source transactions and seven published journal changes.
 
 The source column was configured with `STORAGE EXTERNAL`, filled with 128,000

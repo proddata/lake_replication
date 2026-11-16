@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-13-worker-runtime-grants.json",
+      "sha256": "e416960da877334974011aa61f3b4ec1a6bfe05c0a65fae6762d2a30d444a540",
+      "bytes": 7694,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-worker-runtime-grants.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "archive": {
     "changes_since_first_54_check_archive": [
       "lake_replication-0.1.0-beta.5/README.md",

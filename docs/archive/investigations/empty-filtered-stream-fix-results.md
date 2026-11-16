@@ -34,7 +34,7 @@ Run the private fixture with:
 make empty-filtered-test
 ```
 
-The [75-check passing evidence](../../evidence/2026-10-21-empty-filtered-stream-fix-results.json)
+The [75-check passing evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-empty-filtered-stream-fix-results.json)
 records the source SQL hashes, generated install/upgrade SQL hashes, test driver
 hash, immutable test image ID and unchanged native archive fingerprint. Raw
 results and worker logs remain in
@@ -66,7 +66,7 @@ make -C extensions/lake_replication generate
 python3 tests/streaming/empty_filtered.py --native-bulk
 ```
 
-The [retained failure](../../evidence/2026-10-21-native-bulk-timeout-diagnostic-results.json)
+The [retained failure](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-native-bulk-timeout-diagnostic-results.json)
 passes the 75 SQL/wire checks and native initial copy, then fails to receive a
 real change following an excluded two-million-row source transaction within
 90 seconds. The subscription continues to report `streaming` without an error.

@@ -34,7 +34,7 @@ on unsupported authentication, pgoutput messages, or malformed data.
 ## Evidence
 
 Run `transport_20260914_061335` passed all nine assertions. The
-[retained results](../../evidence/2026-09-14-transport-results.json) show two source
+[retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-transport-results.json) show two source
 transactions and three ordered inserts decoded by two separate receiver
 processes.
 

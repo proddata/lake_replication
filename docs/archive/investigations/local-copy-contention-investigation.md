@@ -4,7 +4,7 @@ The native failures are reproducible as a streaming backlog in a local,
 CPU-constrained fixture. Pacing initial-copy staging eliminates that backlog in
 the measured local case while extending copy time. This is a diagnostic result,
 not a production resource policy or release approval. No new GitHub workflow
-was dispatched for this investigation. [Retained evidence](../../evidence/2026-10-27-local-contention-investigation.json)
+was dispatched for this investigation. [Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-27-local-contention-investigation.json)
 contains case metrics, clock audits, resource summaries, raw-result hashes,
 source fingerprints and diagnostic drivers.
 

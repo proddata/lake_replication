@@ -39,7 +39,7 @@ archive as AArch64 ELF objects. The artifacts recorded the expected target and
 the intentionally dirty source revision.
 
 The exact test artifact sizes and hashes, plus the validation commands, are in
-[the retained result](../../evidence/2026-09-22-multiarch-release-results.json).
+[the retained result](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-22-multiarch-release-results.json).
 `make check`, shell syntax checks, workflow YAML parsing, and
 `git diff --check` all passed.
 

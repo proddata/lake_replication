@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-16-beta5-8154ccf-lifecycle.json",
+      "sha256": "759ced5bb14e4d881c3271040072fb4021a535ccc44f2fe1df9d3983ecda3a5b",
+      "bytes": 40916,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-beta5-8154ccf-lifecycle.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "status": "passed",
   "scope": "Merged default journal pipeline; experimental direct publication is not included in these release archives",
   "ci": {

@@ -43,7 +43,7 @@ available under the backup suffix after promotion.
 ## Evidence
 
 Run `rebuild_20260914_172153` passed all 12 assertions. The retained
-[results](../../evidence/2026-09-14-rebuild-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-rebuild-results.json) demonstrate:
 
 - an old slot held at `0/71FA1C0` after a `text` to `bigint` incompatibility;
 - a readable two-row `text` Iceberg table during replacement;

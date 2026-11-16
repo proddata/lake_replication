@@ -55,7 +55,7 @@ online binary replacement or physical takeover is introduced.
 
 The production probe installs only exported packages; it applies no experimental
 SQL or binary overlay. Shared operational and measurement helpers are reused
-from the qualification libraries. [Retained evidence](../../evidence/2026-10-23-bulk-admission-migration-results.json)
+from the qualification libraries. [Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-23-bulk-admission-migration-results.json)
 records exact input fingerprints, payload/archive hashes, checks, source snapshots
 and raw-log hashes. The final local arm64 archive is
 `dist/bulk-beta3-aligned/lake_replication-0.1.0-beta.3.tar.gz`, SHA256

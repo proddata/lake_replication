@@ -46,7 +46,7 @@ replication feedback.
 ## Evidence
 
 Run `evolution_20260914_170156` passed all 10 assertions. The retained
-[results](../../evidence/2026-09-14-schema-evolution-results.json) show:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-schema-evolution-results.json) show:
 
 - automatic addition of a nullable `extra text` column as relation version 2;
 - correct update and insert publication with the pre-existing row receiving NULL;

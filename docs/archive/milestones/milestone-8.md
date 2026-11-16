@@ -30,7 +30,7 @@ defined in Milestone 7.
 ## Evidence
 
 Run `initial_20260914_105011` passed all 18 assertions. The retained
-[results](../../evidence/2026-09-14-bounded-copy-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-bounded-copy-results.json) demonstrate:
 
 - durable progress at 25 rows before process completion;
 - the previous Iceberg state still visible after that first chunk;

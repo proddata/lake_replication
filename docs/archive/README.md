@@ -7,6 +7,6 @@
 | [Original project brief](project-brief.md) | Historical product requirements; current direction is in the replication roadmap |
 | [Source-push checklist](source-push-implementation-checklist.md) | Earlier transport experiment and its experiment-specific open work |
 
-Historical statements and unchecked boxes describe their captured revision. They do not override the [current roadmap](../roadmap/replication.md), [release gates](../roadmap/release.md) or [operator guides](../guides/README.md). Some recorded paths name sources/artifacts removed from today’s tree; use the exact captured revision to reproduce them. Run evidence retains its original provenance under [evidence](../evidence/README.md).
+Historical statements and unchecked boxes describe their captured revision. They do not override the [current roadmap](../roadmap/replication.md), [release gates](../roadmap/release.md) or [operator guides](../guides/README.md). Some recorded paths name sources/artifacts removed from today’s tree; use the exact captured revision to reproduce them. Original run artifacts remain available through the [evidence archive index](../evidence/README.md); current summaries are explicitly labeled as derived.
 
 [Documentation home](../README.md).

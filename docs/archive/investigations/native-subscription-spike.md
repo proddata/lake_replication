@@ -86,7 +86,7 @@ The probe:
    throughout -- nothing silently substituted a foreign table.
 
 All 5 checks passed. Run `natsub_20260917_041052` is
-[recorded here](../../evidence/2026-09-17-native-subscription-spike-results.json).
+[recorded here](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-17-native-subscription-spike-results.json).
 
 ### An unrelated deadlock found along the way
 
@@ -205,7 +205,7 @@ This was built and run against the live lab as
 `extensions/lake_subscription_sugar/monitoring_views.sql` (historical source path).
 Run `make subscription-sugar-test` to reproduce it; run
 `subsug_20260917_050818` passed all 11 assertions, recorded
-[here](../../evidence/2026-09-17-subscription-sugar-results.json). (The manual
+[here](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-17-subscription-sugar-results.json). (The manual
 `LOAD` shown next was later replaced by a proper `CREATE EXTENSION` --
 see "Packaged the way `pg_lake` itself ships" below.)
 
@@ -283,7 +283,7 @@ Run `make subscription-sugar-test` to reproduce it end to end: a single
 pre-existing row unattended, then streams live `INSERT`/`UPDATE`s with no
 manual worker invocation at all, into a real Iceberg destination table.
 Run `subsug_20260917_054401` passed all 16 assertions, recorded
-[here](../../evidence/2026-09-17-subscription-sugar-results.json).
+[here](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-17-subscription-sugar-results.json).
 
 ### A real crash, and what it means for this container specifically
 
@@ -392,7 +392,7 @@ installs and activates it this same way -- `CREATE EXTENSION` plus
 `ALTER DATABASE ... SET session_preload_libraries`, no per-statement `LOAD`
 anywhere in the probe either. All 18 checks still pass this way; run
 `subsug_20260917_063631` recorded
-[here](../../evidence/2026-09-17-subscription-sugar-results.json).
+[here](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-17-subscription-sugar-results.json).
 
 ## ALTER SUBSCRIPTION ... ENABLE genuinely restarts replication
 

@@ -81,7 +81,7 @@ and 1.173–1.264-second streaming p95. Source lateness stays around 10 ms. Cloc
 overlap, exact-data and safety checks pass, with no engine OOM or PostgreSQL
 crash. This is not a matched one-CPU speed comparison.
 
-[Local evidence](../../evidence/2026-10-30-staging-pacing-local.json) records all checks,
+[Local evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-pacing-local.json) records all checks,
 both complete cohorts, the prespecified confirmation policy, coverage misses,
 one-CPU sensitivity, archive/input/image/worker/configuration hashes and the
 basis for the native trial.
@@ -136,7 +136,7 @@ cache), 169 MiB engine memory.current and 6.05 MiB aggregate initial-sync proces
 PSS. These are sampled observations, not exact peaks or new memory guarantees.
 The existing encoded-byte target and engine limits remain unchanged.
 
-[Native evidence](../../evidence/2026-10-30-staging-pacing-native.json) retains the full
+[Native evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-pacing-native.json) retains the full
 comparison, all failed gates, overlap counts, resource summaries and original
 archive/image/worker/configuration/source hashes. Historical failures remain
 retained separately.

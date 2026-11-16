@@ -41,7 +41,7 @@ in this prototype, although it now applies every supported operation.
 ## Evidence
 
 Run `mutations_20260914_063517` passed all 13 assertions. The
-[retained results](../../evidence/2026-09-14-mutation-results.json) cover:
+[retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-mutation-results.json) cover:
 
 - a two-row initial insert;
 - an UPDATE that retained its primary key;

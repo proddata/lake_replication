@@ -8,7 +8,7 @@ engine. Native amd64, final-commit CI and release-soak qualification remain open
 The locally tested archive was built from the development tree; it is not a
 published release. Final-commit CI qualification is separate.
 
-[Retained package evidence](../../evidence/2026-10-24-stream-pool-migration-results.json)
+[Retained package evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-24-stream-pool-migration-results.json)
 records exact archive/payload hashes, source fingerprints, all checks and raw
 log hashes. The archive is
 `dist/stream-beta3/lake_replication-0.1.0-beta.3.tar.gz`, SHA256

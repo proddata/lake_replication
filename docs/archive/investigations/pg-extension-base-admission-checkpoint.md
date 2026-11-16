@@ -6,7 +6,7 @@ in the main extension as a local beta.2 migration checkpoint. Its packaged arm64
 lanes pass 279 checks. Admission policy is still experimental and separate.
 
 [Final report](pg-extension-base-admission-performance-results.md) and
-[accepted evidence](../../evidence/2026-10-21-base-admission-performance-results.json).
+[accepted evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-base-admission-performance-results.json).
 
 ## Accepted measurements
 
@@ -22,7 +22,7 @@ lanes pass 279 checks. Admission policy is still experimental and separate.
 The paused run's unmatched catch-up baseline is excluded. The first resumed
 cohort (`qualification_20261020_215359_admission_measure`) has clock jumps in two
 baselines, is marked invalid, and has its earlier nominal assessment withdrawn.
-[Rejected evidence](../../evidence/2026-10-21-admission-rejected-clock-run.json) retains
+[Rejected evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-admission-rejected-clock-run.json) retains
 it. The clean redo used scoped idle-sleep prevention and timing validation.
 
 ## Next implementation work

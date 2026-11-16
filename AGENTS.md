@@ -16,9 +16,9 @@ Active plans and TODO-style documents live in [docs/roadmap/](docs/roadmap/READM
 - `docs/qualification/`: candidate-specific correctness, recovery and release reports.
 - `docs/roadmap/`: active plans, proposals and release/security task lists.
 - `docs/archive/`: historical milestones, investigations and superseded planning context.
-- `docs/evidence/`: retained run artifacts and provenance; preserve existing artifact bytes and recorded historical paths.
+- `docs/evidence/`: concise results/provenance summaries and an archive index; follow its retention policy.
 
-Use the project’s own architecture terms. Keep dependency names, required notices, actual historical API identifiers and necessary source citations accurate; avoid comparison-driven product naming. When moving documents, update relative links, indexes, source references and packaging `COPY` inputs. Keep evidence immutable; historical paths in artifacts refer to the captured source revision. Add documents to their section index instead of expanding the main README into a report catalog.
+Use the project’s own architecture terms. Keep dependency names, required notices, actual historical API identifiers and necessary source citations accurate; avoid comparison-driven product naming. When moving documents, update relative links, indexes, source references and packaging `COPY` inputs. Keep raw archived evidence immutable. Prefer labeled compact summaries with pinned retrieval URLs and hashes; keep full logs/timelines in durable artifact storage. Preserve failure outcomes and historical provenance when deriving summaries. Add documents to their section index instead of expanding the main README into a report catalog.
 
 ## Validation
 

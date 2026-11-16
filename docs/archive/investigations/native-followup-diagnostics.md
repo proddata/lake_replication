@@ -56,7 +56,7 @@ The first targeted ARM64 diagnostic should retain the existing recipe/cache;
 the shared-target recipe can then be checked as a separate build change.
 Its cold native build duration remains unverified.
 
-[Machine-readable evidence](../../evidence/2026-10-29-native-followup-diagnostics.json)
+[Machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-native-followup-diagnostics.json)
 retains native findings, local timestamp measurements, input hashes and the
 shared-library relink check. No additional runtime policy or latency threshold
 is changed by this diagnostic work.
@@ -112,7 +112,7 @@ or retries safely at capacity. Then compare the unchanged two-CPU workload
 with the baseline. Do not move the publication marker into a separate commit
 or loosen the latency gate to hide this coupling.
 
-[Checkpoint evidence](../../evidence/2026-10-29-checkpoint-coupling.json) retains the
+[Checkpoint evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-coupling.json) retains the
 native phase summaries and local archive/input hashes and assertions. The
 local prerequisite image was reused; the pending Dockerfile optimization was
 not rebuilt or qualified by this diagnostic.

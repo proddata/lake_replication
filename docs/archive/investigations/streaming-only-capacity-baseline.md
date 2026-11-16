@@ -33,7 +33,7 @@ local M5 remains a capacity experiment, not a cloud performance guarantee.
 
 ## Local results, 2026-10-28
 
-[Retained evidence](../../evidence/2026-10-28-streaming-only-capacity-results.json)
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-streaming-only-capacity-results.json)
 includes all five attempts: an archive-selection error, a zero-copy summary bug,
 and three completed measurements. The two harness failures are excluded from
 performance conclusions. The summary bug was fixed before the valid runs.

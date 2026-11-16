@@ -65,7 +65,7 @@ are unchanged. The AMD64 disk preparation and corrected replication behavior
 still require native verification. No further remote run was started while
 investigating and testing these changes locally.
 
-[Machine-readable evidence](../../evidence/2026-10-29-native-beta4-probe-findings.json)
+[Machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-native-beta4-probe-findings.json)
 retains the native findings, archive/input hashes, baseline regression failure,
 both local measurements and successful managed regressions. The candidate is
 still not release-qualified.

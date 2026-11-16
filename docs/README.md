@@ -21,8 +21,8 @@
 | [Qualification](qualification/README.md) | Exact-candidate correctness, recovery and release reports |
 | [Roadmap](roadmap/README.md) | Active implementation plans, security follow-up and release checklists |
 | [Archive](archive/README.md) | Historical milestones, investigations and superseded plans |
-| [Evidence](evidence/README.md) | Immutable machine-readable run artifacts and provenance |
+| [Evidence](evidence/README.md) | Compact result/provenance summaries and the raw archive index |
 
 The journaled pipeline is the packaged default beta. Direct publication is a development direction with an opt-in prototype; the [contract](design/direct-publication.md) separates intended support from what is implemented and qualified. Current release status is owned by the release gates. Historical reports and their unchecked tasks do not define current priorities.
 
-For a new document, choose the owning section and add a link to its index. Keep active TODO-style plans in `roadmap/`. Preserve evidence bytes and historical provenance when moving authored documents. See [repository guidance](../AGENTS.md).
+For a new document, choose the owning section and add a link to its index. Keep active TODO-style plans in `roadmap/`. Preserve historical provenance when moving authored documents. Follow the [evidence retention policy](evidence/README.md) for summaries and raw archives. See [repository guidance](../AGENTS.md).

@@ -41,7 +41,7 @@ destination acknowledgement.
 ## Evidence
 
 Run `patroni_20260915_052545` passed all 18 assertions. The retained
-[results](../../evidence/2026-09-15-patroni-rejoin-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-patroni-rejoin-results.json) demonstrate:
 
 - first automatic promotion in 19.506 seconds;
 - exact replication through the first failover;

@@ -70,7 +70,7 @@ name; any future per-table storage observability view needs to account for
 this rather than joining on `table_name`.
 
 Run `icebergvac_20260916_190130` passed all 8 assertions; its retained result
-is [recorded here](../../evidence/2026-09-16-iceberg-maintenance-results.json).
+is [recorded here](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-16-iceberg-maintenance-results.json).
 
 ## Remaining boundary
 

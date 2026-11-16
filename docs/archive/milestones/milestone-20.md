@@ -49,7 +49,7 @@ counter.
 ## Evidence
 
 Run `patroni_20260915_053457` passed all 32 assertions. The retained
-[results](../../evidence/2026-09-15-patroni-maintenance-results.json) cover the complete
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-patroni-maintenance-results.json) cover the complete
 three-milestone Patroni lifecycle and specifically demonstrate:
 
 - a clean supervisor drain before maintenance;

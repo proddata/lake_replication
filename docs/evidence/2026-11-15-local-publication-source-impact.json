@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-15-local-publication-source-impact.json",
+      "sha256": "d7d064d387de1a4f75753fff79bb1ec7d9b97bcf9d6bb2f5bfb3697c2ee1f3ba",
+      "bytes": 93819,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-publication-source-impact.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "scope": "single-instance same-runtime default versus one-second publication coalescing, each with a fresh application-only baseline",
   "status": "passed",
   "experiments": [
@@ -47,242 +58,12 @@
                 "process_pss_kib_sum": 114059
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.3320304580265656,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3296783,
-                    "memory_bytes": 118857728,
-                    "process_rss_kib_sum": 185584,
-                    "process_pss_kib_sum": 47650
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6509326,
-                    "memory_bytes": 140513280,
-                    "process_rss_kib_sum": 111828,
-                    "process_pss_kib_sum": 105867
-                  }
-                },
-                "published_application_commits": 10
-              },
-              {
-                "elapsed_seconds": 4.634340416989289,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3417136,
-                    "memory_bytes": 125071360,
-                    "process_rss_kib_sum": 186148,
-                    "process_pss_kib_sum": 47701
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6604067,
-                    "memory_bytes": 145072128,
-                    "process_rss_kib_sum": 113908,
-                    "process_pss_kib_sum": 107947
-                  }
-                },
-                "published_application_commits": 19
-              },
-              {
-                "elapsed_seconds": 6.9338120829779655,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3526116,
-                    "memory_bytes": 124018688,
-                    "process_rss_kib_sum": 186260,
-                    "process_pss_kib_sum": 47749
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6670240,
-                    "memory_bytes": 142307328,
-                    "process_rss_kib_sum": 113908,
-                    "process_pss_kib_sum": 107947
-                  }
-                },
-                "published_application_commits": 28
-              },
-              {
-                "elapsed_seconds": 9.187608791980892,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3667792,
-                    "memory_bytes": 126287872,
-                    "process_rss_kib_sum": 186400,
-                    "process_pss_kib_sum": 47819
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6734098,
-                    "memory_bytes": 144625664,
-                    "process_rss_kib_sum": 113876,
-                    "process_pss_kib_sum": 107915
-                  }
-                },
-                "published_application_commits": 37
-              },
-              {
-                "elapsed_seconds": 11.490960250026546,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3789231,
-                    "memory_bytes": 119431168,
-                    "process_rss_kib_sum": 186696,
-                    "process_pss_kib_sum": 47923
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6788423,
-                    "memory_bytes": 142278656,
-                    "process_rss_kib_sum": 113876,
-                    "process_pss_kib_sum": 107915
-                  }
-                },
-                "published_application_commits": 46
-              },
-              {
-                "elapsed_seconds": 13.815409207949415,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3912667,
-                    "memory_bytes": 119574528,
-                    "process_rss_kib_sum": 187260,
-                    "process_pss_kib_sum": 47977
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6853362,
-                    "memory_bytes": 142815232,
-                    "process_rss_kib_sum": 115928,
-                    "process_pss_kib_sum": 109967
-                  }
-                },
-                "published_application_commits": 56
-              },
-              {
-                "elapsed_seconds": 16.118114458047785,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4028206,
-                    "memory_bytes": 126439424,
-                    "process_rss_kib_sum": 187376,
-                    "process_pss_kib_sum": 48030
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6913767,
-                    "memory_bytes": 144625664,
-                    "process_rss_kib_sum": 115920,
-                    "process_pss_kib_sum": 109959
-                  }
-                },
-                "published_application_commits": 65
-              },
-              {
-                "elapsed_seconds": 18.39185820799321,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4192060,
-                    "memory_bytes": 128909312,
-                    "process_rss_kib_sum": 189512,
-                    "process_pss_kib_sum": 49722
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6973563,
-                    "memory_bytes": 146731008,
-                    "process_rss_kib_sum": 117972,
-                    "process_pss_kib_sum": 112011
-                  }
-                },
-                "published_application_commits": 74
-              },
-              {
-                "elapsed_seconds": 20.673399792052805,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4307441,
-                    "memory_bytes": 122851328,
-                    "process_rss_kib_sum": 189704,
-                    "process_pss_kib_sum": 49779
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7035133,
-                    "memory_bytes": 146739200,
-                    "process_rss_kib_sum": 117972,
-                    "process_pss_kib_sum": 112011
-                  }
-                },
-                "published_application_commits": 83
-              },
-              {
-                "elapsed_seconds": 22.950852417037822,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4434743,
-                    "memory_bytes": 122650624,
-                    "process_rss_kib_sum": 189836,
-                    "process_pss_kib_sum": 49846
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7112066,
-                    "memory_bytes": 148766720,
-                    "process_rss_kib_sum": 120048,
-                    "process_pss_kib_sum": 114087
-                  }
-                },
-                "published_application_commits": 92
-              },
-              {
-                "elapsed_seconds": 25.229033916955814,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4551169,
-                    "memory_bytes": 123215872,
-                    "process_rss_kib_sum": 189948,
-                    "process_pss_kib_sum": 49895
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7173773,
-                    "memory_bytes": 148803584,
-                    "process_rss_kib_sum": 120048,
-                    "process_pss_kib_sum": 114087
-                  }
-                },
-                "published_application_commits": 101
-              },
-              {
-                "elapsed_seconds": 27.51234687503893,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4659650,
-                    "memory_bytes": 130269184,
-                    "process_rss_kib_sum": 190124,
-                    "process_pss_kib_sum": 49945
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7239202,
-                    "memory_bytes": 149057536,
-                    "process_rss_kib_sum": 120048,
-                    "process_pss_kib_sum": 113681
-                  }
-                },
-                "published_application_commits": 111
-              },
-              {
-                "elapsed_seconds": 29.772148499963805,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4805597,
-                    "memory_bytes": 130281472,
-                    "process_rss_kib_sum": 190276,
-                    "process_pss_kib_sum": 50027
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7295029,
-                    "memory_bytes": 146710528,
-                    "process_rss_kib_sum": 120020,
-                    "process_pss_kib_sum": 114059
-                  }
-                },
-                "published_application_commits": 120
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "b6d3be527960d9b5f393e471deca4698840606270b50dccb169f02ced5ffccb5",
+              "entries_or_characters": 13
+            },
             "application_commits": 120,
             "application_commit_median_seconds": 0.0040540004265494645,
             "application_commit_p95_seconds": 0.006086749956011772,
@@ -340,101 +121,21 @@
             }
           },
           "files_sha256": {
-            "tests/push_capture/README.md": "aeaf12f3cabe5234692c692bd2725c2bc1596e2208d5617f44d0137246c4f900",
-            "tests/push_capture/benchmark.py": "a229a971ef4a2e63987951b749601b07580fad44c412001205733e5373a8b28a",
-            "tests/push_capture/benchmark_failures.py": "0fb5120cdb5f2871babe8fdf10ec55a767aa6748a0335a6040802b70df84f5c5",
-            "tests/push_capture/benchmark_matrix.py": "bee32b72debb4a0d5d8d89a6846c9c9ebe1bfe12382f69a9c664ef8de28cbf08",
-            "tests/push_capture/chunks.py": "f792bd193c53b7b7aa67b6f45a401eefe7d255ea77930fd57f9719cdd29d9651",
-            "tests/push_capture/credentials.py": "57502dc3a0ceba92330927f10e036db541e9fcae21a3b30e67586451938db099",
-            "tests/push_capture/ddl_snapshots.py": "01c5267463d76a160a77197f829b7e2ef45a472b1edc248d4dd73e88db83ea22",
-            "tests/push_capture/disk_full.py": "f830a069ffeda5da504ccf3145be009665643d33aaf1a846b91bad1339b4e000",
-            "tests/push_capture/faults.py": "9b01027efe48432011ea7baca986e4d38b3304606fb4430fa53c01a056225455",
-            "tests/push_capture/fixture.sql": "43035290a6784d23d07e7091cbaab5295f77c782b156bae9682f23f4028ecacd",
-            "tests/push_capture/grouped.py": "aa193427544453d0e329ca8fe6c4f8571ada98da3b197cc4525540cd535e4678",
-            "tests/push_capture/grouped_faults.py": "8c211bb9aa2b8856a1cdf81ed88b64dcd12a3221167708e323bc05d1b781fb10",
-            "tests/push_capture/lease_cleanup.py": "38f72b59dc9dc980a7c430d2aea0ed698fdf1b80f9b992c84d2505f061ac69c1",
-            "tests/push_capture/lifecycle.py": "0130c10e0024b5bf90cf8369c225506ecdd3b74788d937ad8830baad3dff005d",
-            "tests/push_capture/live.py": "f616d4c8c14944ee2e1071b5b40ce4daf2c3eb1098908fd443ddf2184f33dc21",
-            "tests/push_capture/locations.py": "c46a87b182e5a723ca149cdd6d44f16fb6179f4de19a07ffb38a8c1c570f22bc",
-            "tests/push_capture/logical_compatibility.py": "a5825af53b9abedc16d9bece2d48675637fc093b00701b6ac52c69574e8e5639",
-            "tests/push_capture/maintenance.py": "7b36313dc66271995bff33ed00e84eb76b8cdec9b7853d7c9ed527c08c7352e2",
-            "tests/push_capture/managed.py": "e494975bf66eb6247420079146707ee80faaf6302878f7ffb32224afcb02daee",
-            "tests/push_capture/mutations.py": "37361f9554871e4df6769149d736db5cfbb872a7d9733c44f5e6096d368e2cd6",
-            "tests/push_capture/native_faults.py": "083d63daf79052bc5e6cc6460b5a12eb20d008ccbd083bc9745b25715fa58ed5",
-            "tests/push_capture/object_trace.py": "5883cf5a692b2613e3705c708ab161a86c71456e5883d8efe37d9f4a8f9cf6e2",
-            "tests/push_capture/online_snapshot.py": "44069b599c13b5990c339a9b53b2c0f4846478488f06e87854440bdc3bd12d1c",
-            "tests/push_capture/outages.py": "bc71d48f976cf329e51a22de0e127eac3e0098c80a34bc3e65ecf7c9965f3e5c",
-            "tests/push_capture/packaging.py": "f11a6ba739d5e475ba72afacf91422a5a34d3fdf4b4c174b86b6b0effa998c0f",
-            "tests/push_capture/probe.py": "49a22196718233e1f83cd6125e48f237b757cd8940709a151cfe1f781cfa4c3a",
-            "tests/push_capture/progress.py": "42036d69322a2c092144d562998dc01f87e1619f92531897b2d6eab224456bd2",
-            "tests/push_capture/progress_faults.py": "ada25312ccae3d890cee69a2453ea32873543e6f7c6ea03c29e5e646f95d1cf8",
-            "tests/push_capture/publisher_faults.py": "b895ce7efd770745fb9a80db62c13737c93d865dc8d6b29e034e27694014a005",
-            "tests/push_capture/reference.py": "31242293597f097dd0f6f65419791d3db9a79e8f5a7e409e01286cdddef73d25",
-            "tests/push_capture/retention.py": "4175552fd56db971dc7a2751796aa3745cff0a18165b170a1b9856ac526dda74",
-            "tests/push_capture/roles.py": "0b03c465cb053c6cb72d2e7ed1d9f552658ea224d9aeefeffa7a6966bd9840d2",
-            "tests/push_capture/scalars.py": "e6dbe51f3a4438c2c995c81894267a54e3aa0fca96129b64c440a1cb6233372f",
-            "tests/push_capture/schema_audit.py": "17da609fdd30171a650bf340dfa6262518a5538f7e6f9fc247802368599e19ff",
-            "tests/push_capture/schema_capture_faults.py": "a948b7edb921ebbfa64ddef6a11569225a45fd848faf39b796fc51eb7efad7d2",
-            "tests/push_capture/schema_descriptors.py": "308ed9ddeb55a0f2f98577775be74734984ad1cad0c688f3d5a6b5ab742567fb",
-            "tests/push_capture/schema_destination_admission.py": "f7e2652853bc3c7931ab27f095202aaeda821550939387cf4b0e54974672fc41",
-            "tests/push_capture/schema_destination_history.py": "b7598dfc3354bb5dab87741f3838bb30847dc0050078407aef0f8fe7ee8f26fc",
-            "tests/push_capture/schema_destination_publish.py": "51b0d5094094923d62146083ee4233abb8f359d395c24d4563ac471ab8a0b64d",
-            "tests/push_capture/schema_empty_snapshot.py": "87efb2f8fed3b9689fc9026a7ccf3246c73d61ce0eedcd8ca820e7a19ec06c4b",
-            "tests/push_capture/schema_feasibility.py": "fe687023097de311ac44b640c3e6f8a88c00f25e61c295e55501615e7117c8fd",
-            "tests/push_capture/schema_history.py": "6aa6ce73a6082f690f664e62074ea3fd46c7280ac396e9c8a467b8edbaa1cabd",
-            "tests/push_capture/schema_live.py": "aecccaa5b08cc448df0d7f91c6c1434418e876d1701cebbfe9b639bb35951fb9",
-            "tests/push_capture/schema_managed.py": "26db7aed28010fb1b13a3af2b7cf814289aa91f66d61bdc5832594487ed4c116",
-            "tests/push_capture/schema_mutations.py": "b8867bf88f293413fdd9d3ea0b24790835c44d4f7be39905e93f8a3e568d14ae",
-            "tests/push_capture/schema_native.py": "0ee55e88bb0e97bb129f5d38f24348297cc41acb7316a79a8fe1b0702f2c8c64",
-            "tests/push_capture/schema_publisher_faults.py": "32aed341712b05c3450caaee539a95105c75c25ecfc96a155d2adeceb5795c2f",
-            "tests/push_capture/session.py": "bea74a61d5f055043609f55becfb72807bad41cd9440bb5d4d9a6df00c2d1b7c",
-            "tests/push_capture/snapshot.py": "01023f4ce9816d2ecab485c25a6c2abb428982b5d524f7519cdf16896203a554",
-            "tests/push_capture/snapshot_faults.py": "064256e12d7bd0bd8cc84f6e1d110eb0c7f407ff7654d645418bb07c988eb3f4",
-            "tests/push_capture/snapshot_limits.py": "e1b86c2bfe2e13d4d77d6e9b4ad5cc5b230a6b9ed88c7fe3a3a160ee6b87f589",
-            "tests/push_capture/spill.py": "48170b47a600db5a7399e2c18af337d92f216e387410d001f09d008cc983aef1",
-            "tests/push_capture/storage_credentials.py": "9acb4cb50c1df91f43e0c4ce124453cbfb02dc5b89f8551396be505d90826b6c",
-            "tests/push_capture/telemetry.py": "88794ac6932b175c035860d9000429ed827bda2ee957f7ba2f3eddaba5e0ef4e",
-            "tests/push_capture/toast_keys.py": "bd758bcfe15b4d8037e0a2384d738dc07b0e262f47ff6119ae66f7c44ba93e5e",
-            "tests/push_capture/upload_budget.py": "39c0cb947efed88f0d154311fb7763d13f9673eb39943ff16414c79fef9ef474",
-            "deploy/push/Dockerfile.capture": "e4ecd83bb47dd0d2c6e3ca88983b1f583e817095b978ee6f7e0919cfe36d38e2",
-            "deploy/push/Dockerfile.faults": "c1fc926248f1012401a328b93e6abaadf665204ba092eca1c5b8926c3fabfe52",
-            "deploy/push/Dockerfile.importer": "13c2e8254ce50e26e283fe471f645c79d7753ee9ab4fde34e4f6975193703597",
-            "deploy/push/build-bundles.py": "5c5a905a152e3c9c645d60d6fb70f43fabc2a7a8173535be3bd15aca5d56eacd",
-            "deploy/push/compose.yml": "05c27cff6887a1f28e7a3b50ffa6b78ccc479bd1f4053cb5f1efb71fd9745e45",
-            "deploy/push/destination-init/10-destination.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
-            "deploy/push/destination-pgduck.sql": "2a732dcfb44076be809869c908483586471de878b9de47321b54cedcb2ae1436",
-            "deploy/push/importer.compose.yml": "dc7447cfa615a0c6748daf869f44c5dbe1478608a6eb5547a6706085c100dc7a",
-            "deploy/push/init/10-capture.sql": "85906bfe4dcc46bd230a2e76da7dfb747b16a27c298761d20349652c0daa06cd",
-            "deploy/push/install-optional.sh": "f9db14c2c443adc20809c439b8fc0960e448e7051f4b8e1b31ef71f524cbe2d2",
-            "deploy/push/pgduck.sql": "48807b9f4c54a0964cc040613fadd74dd2a0d4b1d2c2c7f7b4a837fe596e8e67",
-            "deploy/push/policies/destination.json": "9e356ff9f2185b82ff81677c590e40ffe3f2450cce4a8d4aa0dc5636bfd644d8",
-            "deploy/push/policies/source.json": "0875a6db295b1ad86c680f4caef40b3792c61e78bd04b705b9046e8d8bb190d5",
-            "deploy/push/source-grants.sql": "8b9669ada6897f11b718e3b85890e3fe73131aca39e7e132d087e03faf5a666b",
-            "deploy/push/spill-disk.compose.yml": "6343bc443f8eeef0b67c61dddb2248dd26dacfbc5e64d5b817634b64d26dbdc3",
-            "deploy/local/Dockerfile": "d2ae7c16585c42efa9df83984ab536b943ae646b0b3798eb64306b67bbe23b30",
-            "deploy/local/compose.yml": "8ad1d5037d56be410175b84780951e356e7f9404e6fb2531993464103054c066",
-            "tests/local_iceberg/benchmark.py": "ce381b2fc12de8f1ad6e530b021153d64c783578a96053d2b221472213e35368",
-            "tests/local_iceberg/recovery.py": "be438068fffa18b142bf2b50e528a8f5229e28c06d0d9bc49ee37f0bf0bd1456",
-            "tests/local_iceberg/outages.py": "9bad43dfda38623e3294ee80f9b1601740bf57318e1597c48237efdfff6a3c1a",
-            "tests/local_iceberg/coalescing.py": "36c25580db468ab66917f3cb2266f326ac54cad6e38a63cd62e65ff4afefd39a",
-            "tests/local_iceberg/probe.py": "41f1d8dc84b1dc229bddfe8cad0a1829bc60dc2b3de85e608bceceeb0f436868",
-            "tests/local_iceberg/faults.py": "06ccfdabd610384913ba9128d99c9c55c87b5129163deb75115e06b3a60e410a",
-            "tests/local_iceberg/contention.py": "ddf8be91f671fc3130b2b0dd592db7aa5aa01ed23efeac681bfc18d88a615621"
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "26a5188edcfcc8b3d5edbbb26380603704ee27e764aa0e91e5ff209d118a0e3e",
+            "entries_or_characters": 80
           },
-          "checks": [
-            {
-              "name": "both source heaps contain every application row",
-              "actual": "1200:1200",
-              "expected": "1200:1200",
-              "passed": true
-            },
-            {
-              "name": "application-only baseline writes no Iceberg objects",
-              "actual": 0,
-              "expected": 0,
-              "passed": true
-            }
-          ]
+          "checks": {
+            "_omitted_detail": true,
+            "reason": "Individual successful assertion values are archived",
+            "canonical_json_sha256": "457f001afc56aa68a5d7642b316d9d4182ff9af53a56c7a83eaa5b107f5bf922",
+            "entries_or_characters": 2,
+            "total": 2,
+            "passed": 2,
+            "failed": 0,
+            "failures": []
+          }
         },
         {
           "mode": "local_mirror",
@@ -470,242 +171,12 @@
                 "process_pss_kib_sum": 160215
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.3002965409541503,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3867958,
-                    "memory_bytes": 144322560,
-                    "process_rss_kib_sum": 347564,
-                    "process_pss_kib_sum": 71368
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1779729,
-                    "memory_bytes": 201248768,
-                    "process_rss_kib_sum": 168076,
-                    "process_pss_kib_sum": 161723
-                  }
-                },
-                "published_application_commits": 9
-              },
-              {
-                "elapsed_seconds": 4.536715665948577,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4517189,
-                    "memory_bytes": 146092032,
-                    "process_rss_kib_sum": 314788,
-                    "process_pss_kib_sum": 65527
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2265698,
-                    "memory_bytes": 192331776,
-                    "process_rss_kib_sum": 161456,
-                    "process_pss_kib_sum": 155103
-                  }
-                },
-                "published_application_commits": 18
-              },
-              {
-                "elapsed_seconds": 6.8008953330572695,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5141284,
-                    "memory_bytes": 150155264,
-                    "process_rss_kib_sum": 351884,
-                    "process_pss_kib_sum": 73767
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2819260,
-                    "memory_bytes": 195452928,
-                    "process_rss_kib_sum": 162888,
-                    "process_pss_kib_sum": 156535
-                  }
-                },
-                "published_application_commits": 27
-              },
-              {
-                "elapsed_seconds": 9.067888790974393,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5839363,
-                    "memory_bytes": 153497600,
-                    "process_rss_kib_sum": 353504,
-                    "process_pss_kib_sum": 73203
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3418143,
-                    "memory_bytes": 197689344,
-                    "process_rss_kib_sum": 163260,
-                    "process_pss_kib_sum": 156907
-                  }
-                },
-                "published_application_commits": 36
-              },
-              {
-                "elapsed_seconds": 11.413512332946993,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 6613602,
-                    "memory_bytes": 154816512,
-                    "process_rss_kib_sum": 354756,
-                    "process_pss_kib_sum": 73952
-                  },
-                  "pgduck": {
-                    "cpu_usec": 4177332,
-                    "memory_bytes": 198430720,
-                    "process_rss_kib_sum": 165380,
-                    "process_pss_kib_sum": 158956
-                  }
-                },
-                "published_application_commits": 45
-              },
-              {
-                "elapsed_seconds": 13.66499387496151,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 7436143,
-                    "memory_bytes": 147562496,
-                    "process_rss_kib_sum": 320220,
-                    "process_pss_kib_sum": 66794
-                  },
-                  "pgduck": {
-                    "cpu_usec": 4924323,
-                    "memory_bytes": 210067456,
-                    "process_rss_kib_sum": 172180,
-                    "process_pss_kib_sum": 165756
-                  }
-                },
-                "published_application_commits": 54
-              },
-              {
-                "elapsed_seconds": 15.913814791012555,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 8273712,
-                    "memory_bytes": 146141184,
-                    "process_rss_kib_sum": 321316,
-                    "process_pss_kib_sum": 66931
-                  },
-                  "pgduck": {
-                    "cpu_usec": 5668890,
-                    "memory_bytes": 205467648,
-                    "process_rss_kib_sum": 169872,
-                    "process_pss_kib_sum": 163555
-                  }
-                },
-                "published_application_commits": 63
-              },
-              {
-                "elapsed_seconds": 18.166075916029513,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 9167455,
-                    "memory_bytes": 149843968,
-                    "process_rss_kib_sum": 321816,
-                    "process_pss_kib_sum": 68424
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6446379,
-                    "memory_bytes": 199331840,
-                    "process_rss_kib_sum": 162256,
-                    "process_pss_kib_sum": 155832
-                  }
-                },
-                "published_application_commits": 72
-              },
-              {
-                "elapsed_seconds": 20.425464750034735,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 10031991,
-                    "memory_bytes": 150216704,
-                    "process_rss_kib_sum": 322896,
-                    "process_pss_kib_sum": 68587
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7341766,
-                    "memory_bytes": 203800576,
-                    "process_rss_kib_sum": 162008,
-                    "process_pss_kib_sum": 155584
-                  }
-                },
-                "published_application_commits": 81
-              },
-              {
-                "elapsed_seconds": 22.73376350000035,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 10943583,
-                    "memory_bytes": 161402880,
-                    "process_rss_kib_sum": 362128,
-                    "process_pss_kib_sum": 77758
-                  },
-                  "pgduck": {
-                    "cpu_usec": 8372748,
-                    "memory_bytes": 208183296,
-                    "process_rss_kib_sum": 163932,
-                    "process_pss_kib_sum": 157508
-                  }
-                },
-                "published_application_commits": 90
-              },
-              {
-                "elapsed_seconds": 25.009596750023775,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 11945764,
-                    "memory_bytes": 158048256,
-                    "process_rss_kib_sum": 360432,
-                    "process_pss_kib_sum": 75722
-                  },
-                  "pgduck": {
-                    "cpu_usec": 9419024,
-                    "memory_bytes": 208818176,
-                    "process_rss_kib_sum": 170988,
-                    "process_pss_kib_sum": 164564
-                  }
-                },
-                "published_application_commits": 99
-              },
-              {
-                "elapsed_seconds": 27.264263791032135,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 12719380,
-                    "memory_bytes": 163733504,
-                    "process_rss_kib_sum": 364424,
-                    "process_pss_kib_sum": 77698
-                  },
-                  "pgduck": {
-                    "cpu_usec": 10018456,
-                    "memory_bytes": 211775488,
-                    "process_rss_kib_sum": 164920,
-                    "process_pss_kib_sum": 158567
-                  }
-                },
-                "published_application_commits": 109
-              },
-              {
-                "elapsed_seconds": 29.56476850004401,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 13333825,
-                    "memory_bytes": 154087424,
-                    "process_rss_kib_sum": 362356,
-                    "process_pss_kib_sum": 75706
-                  },
-                  "pgduck": {
-                    "cpu_usec": 10548375,
-                    "memory_bytes": 218447872,
-                    "process_rss_kib_sum": 169552,
-                    "process_pss_kib_sum": 163199
-                  }
-                },
-                "published_application_commits": 118
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "9452ff165f562f5ecc180283065ddb13430c238f5a3e978d5f225a61b565d442",
+              "entries_or_characters": 13
+            },
             "application_commits": 120,
             "application_commit_median_seconds": 0.0016782915336079895,
             "application_commit_p95_seconds": 0.0025347090559080243,
@@ -792,113 +263,21 @@
             }
           },
           "files_sha256": {
-            "tests/push_capture/README.md": "aeaf12f3cabe5234692c692bd2725c2bc1596e2208d5617f44d0137246c4f900",
-            "tests/push_capture/benchmark.py": "a229a971ef4a2e63987951b749601b07580fad44c412001205733e5373a8b28a",
-            "tests/push_capture/benchmark_failures.py": "0fb5120cdb5f2871babe8fdf10ec55a767aa6748a0335a6040802b70df84f5c5",
-            "tests/push_capture/benchmark_matrix.py": "bee32b72debb4a0d5d8d89a6846c9c9ebe1bfe12382f69a9c664ef8de28cbf08",
-            "tests/push_capture/chunks.py": "f792bd193c53b7b7aa67b6f45a401eefe7d255ea77930fd57f9719cdd29d9651",
-            "tests/push_capture/credentials.py": "57502dc3a0ceba92330927f10e036db541e9fcae21a3b30e67586451938db099",
-            "tests/push_capture/ddl_snapshots.py": "01c5267463d76a160a77197f829b7e2ef45a472b1edc248d4dd73e88db83ea22",
-            "tests/push_capture/disk_full.py": "f830a069ffeda5da504ccf3145be009665643d33aaf1a846b91bad1339b4e000",
-            "tests/push_capture/faults.py": "9b01027efe48432011ea7baca986e4d38b3304606fb4430fa53c01a056225455",
-            "tests/push_capture/fixture.sql": "43035290a6784d23d07e7091cbaab5295f77c782b156bae9682f23f4028ecacd",
-            "tests/push_capture/grouped.py": "aa193427544453d0e329ca8fe6c4f8571ada98da3b197cc4525540cd535e4678",
-            "tests/push_capture/grouped_faults.py": "8c211bb9aa2b8856a1cdf81ed88b64dcd12a3221167708e323bc05d1b781fb10",
-            "tests/push_capture/lease_cleanup.py": "38f72b59dc9dc980a7c430d2aea0ed698fdf1b80f9b992c84d2505f061ac69c1",
-            "tests/push_capture/lifecycle.py": "0130c10e0024b5bf90cf8369c225506ecdd3b74788d937ad8830baad3dff005d",
-            "tests/push_capture/live.py": "f616d4c8c14944ee2e1071b5b40ce4daf2c3eb1098908fd443ddf2184f33dc21",
-            "tests/push_capture/locations.py": "c46a87b182e5a723ca149cdd6d44f16fb6179f4de19a07ffb38a8c1c570f22bc",
-            "tests/push_capture/logical_compatibility.py": "a5825af53b9abedc16d9bece2d48675637fc093b00701b6ac52c69574e8e5639",
-            "tests/push_capture/maintenance.py": "7b36313dc66271995bff33ed00e84eb76b8cdec9b7853d7c9ed527c08c7352e2",
-            "tests/push_capture/managed.py": "e494975bf66eb6247420079146707ee80faaf6302878f7ffb32224afcb02daee",
-            "tests/push_capture/mutations.py": "37361f9554871e4df6769149d736db5cfbb872a7d9733c44f5e6096d368e2cd6",
-            "tests/push_capture/native_faults.py": "083d63daf79052bc5e6cc6460b5a12eb20d008ccbd083bc9745b25715fa58ed5",
-            "tests/push_capture/object_trace.py": "5883cf5a692b2613e3705c708ab161a86c71456e5883d8efe37d9f4a8f9cf6e2",
-            "tests/push_capture/online_snapshot.py": "44069b599c13b5990c339a9b53b2c0f4846478488f06e87854440bdc3bd12d1c",
-            "tests/push_capture/outages.py": "bc71d48f976cf329e51a22de0e127eac3e0098c80a34bc3e65ecf7c9965f3e5c",
-            "tests/push_capture/packaging.py": "f11a6ba739d5e475ba72afacf91422a5a34d3fdf4b4c174b86b6b0effa998c0f",
-            "tests/push_capture/probe.py": "49a22196718233e1f83cd6125e48f237b757cd8940709a151cfe1f781cfa4c3a",
-            "tests/push_capture/progress.py": "42036d69322a2c092144d562998dc01f87e1619f92531897b2d6eab224456bd2",
-            "tests/push_capture/progress_faults.py": "ada25312ccae3d890cee69a2453ea32873543e6f7c6ea03c29e5e646f95d1cf8",
-            "tests/push_capture/publisher_faults.py": "b895ce7efd770745fb9a80db62c13737c93d865dc8d6b29e034e27694014a005",
-            "tests/push_capture/reference.py": "31242293597f097dd0f6f65419791d3db9a79e8f5a7e409e01286cdddef73d25",
-            "tests/push_capture/retention.py": "4175552fd56db971dc7a2751796aa3745cff0a18165b170a1b9856ac526dda74",
-            "tests/push_capture/roles.py": "0b03c465cb053c6cb72d2e7ed1d9f552658ea224d9aeefeffa7a6966bd9840d2",
-            "tests/push_capture/scalars.py": "e6dbe51f3a4438c2c995c81894267a54e3aa0fca96129b64c440a1cb6233372f",
-            "tests/push_capture/schema_audit.py": "17da609fdd30171a650bf340dfa6262518a5538f7e6f9fc247802368599e19ff",
-            "tests/push_capture/schema_capture_faults.py": "a948b7edb921ebbfa64ddef6a11569225a45fd848faf39b796fc51eb7efad7d2",
-            "tests/push_capture/schema_descriptors.py": "308ed9ddeb55a0f2f98577775be74734984ad1cad0c688f3d5a6b5ab742567fb",
-            "tests/push_capture/schema_destination_admission.py": "f7e2652853bc3c7931ab27f095202aaeda821550939387cf4b0e54974672fc41",
-            "tests/push_capture/schema_destination_history.py": "b7598dfc3354bb5dab87741f3838bb30847dc0050078407aef0f8fe7ee8f26fc",
-            "tests/push_capture/schema_destination_publish.py": "51b0d5094094923d62146083ee4233abb8f359d395c24d4563ac471ab8a0b64d",
-            "tests/push_capture/schema_empty_snapshot.py": "87efb2f8fed3b9689fc9026a7ccf3246c73d61ce0eedcd8ca820e7a19ec06c4b",
-            "tests/push_capture/schema_feasibility.py": "fe687023097de311ac44b640c3e6f8a88c00f25e61c295e55501615e7117c8fd",
-            "tests/push_capture/schema_history.py": "6aa6ce73a6082f690f664e62074ea3fd46c7280ac396e9c8a467b8edbaa1cabd",
-            "tests/push_capture/schema_live.py": "aecccaa5b08cc448df0d7f91c6c1434418e876d1701cebbfe9b639bb35951fb9",
-            "tests/push_capture/schema_managed.py": "26db7aed28010fb1b13a3af2b7cf814289aa91f66d61bdc5832594487ed4c116",
-            "tests/push_capture/schema_mutations.py": "b8867bf88f293413fdd9d3ea0b24790835c44d4f7be39905e93f8a3e568d14ae",
-            "tests/push_capture/schema_native.py": "0ee55e88bb0e97bb129f5d38f24348297cc41acb7316a79a8fe1b0702f2c8c64",
-            "tests/push_capture/schema_publisher_faults.py": "32aed341712b05c3450caaee539a95105c75c25ecfc96a155d2adeceb5795c2f",
-            "tests/push_capture/session.py": "bea74a61d5f055043609f55becfb72807bad41cd9440bb5d4d9a6df00c2d1b7c",
-            "tests/push_capture/snapshot.py": "01023f4ce9816d2ecab485c25a6c2abb428982b5d524f7519cdf16896203a554",
-            "tests/push_capture/snapshot_faults.py": "064256e12d7bd0bd8cc84f6e1d110eb0c7f407ff7654d645418bb07c988eb3f4",
-            "tests/push_capture/snapshot_limits.py": "e1b86c2bfe2e13d4d77d6e9b4ad5cc5b230a6b9ed88c7fe3a3a160ee6b87f589",
-            "tests/push_capture/spill.py": "48170b47a600db5a7399e2c18af337d92f216e387410d001f09d008cc983aef1",
-            "tests/push_capture/storage_credentials.py": "9acb4cb50c1df91f43e0c4ce124453cbfb02dc5b89f8551396be505d90826b6c",
-            "tests/push_capture/telemetry.py": "88794ac6932b175c035860d9000429ed827bda2ee957f7ba2f3eddaba5e0ef4e",
-            "tests/push_capture/toast_keys.py": "bd758bcfe15b4d8037e0a2384d738dc07b0e262f47ff6119ae66f7c44ba93e5e",
-            "tests/push_capture/upload_budget.py": "39c0cb947efed88f0d154311fb7763d13f9673eb39943ff16414c79fef9ef474",
-            "deploy/push/Dockerfile.capture": "e4ecd83bb47dd0d2c6e3ca88983b1f583e817095b978ee6f7e0919cfe36d38e2",
-            "deploy/push/Dockerfile.faults": "c1fc926248f1012401a328b93e6abaadf665204ba092eca1c5b8926c3fabfe52",
-            "deploy/push/Dockerfile.importer": "13c2e8254ce50e26e283fe471f645c79d7753ee9ab4fde34e4f6975193703597",
-            "deploy/push/build-bundles.py": "5c5a905a152e3c9c645d60d6fb70f43fabc2a7a8173535be3bd15aca5d56eacd",
-            "deploy/push/compose.yml": "05c27cff6887a1f28e7a3b50ffa6b78ccc479bd1f4053cb5f1efb71fd9745e45",
-            "deploy/push/destination-init/10-destination.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
-            "deploy/push/destination-pgduck.sql": "2a732dcfb44076be809869c908483586471de878b9de47321b54cedcb2ae1436",
-            "deploy/push/importer.compose.yml": "dc7447cfa615a0c6748daf869f44c5dbe1478608a6eb5547a6706085c100dc7a",
-            "deploy/push/init/10-capture.sql": "85906bfe4dcc46bd230a2e76da7dfb747b16a27c298761d20349652c0daa06cd",
-            "deploy/push/install-optional.sh": "f9db14c2c443adc20809c439b8fc0960e448e7051f4b8e1b31ef71f524cbe2d2",
-            "deploy/push/pgduck.sql": "48807b9f4c54a0964cc040613fadd74dd2a0d4b1d2c2c7f7b4a837fe596e8e67",
-            "deploy/push/policies/destination.json": "9e356ff9f2185b82ff81677c590e40ffe3f2450cce4a8d4aa0dc5636bfd644d8",
-            "deploy/push/policies/source.json": "0875a6db295b1ad86c680f4caef40b3792c61e78bd04b705b9046e8d8bb190d5",
-            "deploy/push/source-grants.sql": "8b9669ada6897f11b718e3b85890e3fe73131aca39e7e132d087e03faf5a666b",
-            "deploy/push/spill-disk.compose.yml": "6343bc443f8eeef0b67c61dddb2248dd26dacfbc5e64d5b817634b64d26dbdc3",
-            "deploy/local/Dockerfile": "d2ae7c16585c42efa9df83984ab536b943ae646b0b3798eb64306b67bbe23b30",
-            "deploy/local/compose.yml": "8ad1d5037d56be410175b84780951e356e7f9404e6fb2531993464103054c066",
-            "tests/local_iceberg/benchmark.py": "ce381b2fc12de8f1ad6e530b021153d64c783578a96053d2b221472213e35368",
-            "tests/local_iceberg/recovery.py": "be438068fffa18b142bf2b50e528a8f5229e28c06d0d9bc49ee37f0bf0bd1456",
-            "tests/local_iceberg/outages.py": "9bad43dfda38623e3294ee80f9b1601740bf57318e1597c48237efdfff6a3c1a",
-            "tests/local_iceberg/coalescing.py": "36c25580db468ab66917f3cb2266f326ac54cad6e38a63cd62e65ff4afefd39a",
-            "tests/local_iceberg/probe.py": "41f1d8dc84b1dc229bddfe8cad0a1829bc60dc2b3de85e608bceceeb0f436868",
-            "tests/local_iceberg/faults.py": "06ccfdabd610384913ba9128d99c9c55c87b5129163deb75115e06b3a60e410a",
-            "tests/local_iceberg/contention.py": "ddf8be91f671fc3130b2b0dd592db7aa5aa01ed23efeac681bfc18d88a615621"
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "26a5188edcfcc8b3d5edbbb26380603704ee27e764aa0e91e5ff209d118a0e3e",
+            "entries_or_characters": 80
           },
-          "checks": [
-            {
-              "name": "both source heaps contain every application row",
-              "actual": "1200:1200",
-              "expected": "1200:1200",
-              "passed": true
-            },
-            {
-              "name": "local Iceberg mirror equals heap a",
-              "actual": "t",
-              "expected": "t",
-              "passed": true
-            },
-            {
-              "name": "local Iceberg mirror equals heap b",
-              "actual": "t",
-              "expected": "t",
-              "passed": true
-            },
-            {
-              "name": "trace observes final Iceberg writes",
-              "actual": true,
-              "expected": true,
-              "passed": true
-            }
-          ]
+          "checks": {
+            "_omitted_detail": true,
+            "reason": "Individual successful assertion values are archived",
+            "canonical_json_sha256": "bd85eace6ffcfb8ac018131b0e5cdef468f8b47dbf308efd6b72de72cfa6edcb",
+            "entries_or_characters": 4,
+            "total": 4,
+            "passed": 4,
+            "failed": 0,
+            "failures": []
+          }
         }
       ],
       "status": "passed"
@@ -948,242 +327,12 @@
                 "process_pss_kib_sum": 142369
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.295141707989387,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3605561,
-                    "memory_bytes": 138006528,
-                    "process_rss_kib_sum": 313140,
-                    "process_pss_kib_sum": 66120
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1547465,
-                    "memory_bytes": 198258688,
-                    "process_rss_kib_sum": 170236,
-                    "process_pss_kib_sum": 163885
-                  }
-                },
-                "published_application_commits": 6
-              },
-              {
-                "elapsed_seconds": 4.59941295790486,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3994151,
-                    "memory_bytes": 138498048,
-                    "process_rss_kib_sum": 314508,
-                    "process_pss_kib_sum": 66378
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1819990,
-                    "memory_bytes": 180895744,
-                    "process_rss_kib_sum": 153448,
-                    "process_pss_kib_sum": 147097
-                  }
-                },
-                "published_application_commits": 17
-              },
-              {
-                "elapsed_seconds": 6.918830082984641,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4305958,
-                    "memory_bytes": 139268096,
-                    "process_rss_kib_sum": 315424,
-                    "process_pss_kib_sum": 66521
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2024421,
-                    "memory_bytes": 181673984,
-                    "process_rss_kib_sum": 152424,
-                    "process_pss_kib_sum": 146073
-                  }
-                },
-                "published_application_commits": 23
-              },
-              {
-                "elapsed_seconds": 9.236875457921997,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4727902,
-                    "memory_bytes": 139653120,
-                    "process_rss_kib_sum": 316792,
-                    "process_pss_kib_sum": 66772
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2351271,
-                    "memory_bytes": 180486144,
-                    "process_rss_kib_sum": 151332,
-                    "process_pss_kib_sum": 144981
-                  }
-                },
-                "published_application_commits": 34
-              },
-              {
-                "elapsed_seconds": 11.481302707921714,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5129703,
-                    "memory_bytes": 146591744,
-                    "process_rss_kib_sum": 355136,
-                    "process_pss_kib_sum": 74637
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2695625,
-                    "memory_bytes": 176304128,
-                    "process_rss_kib_sum": 149940,
-                    "process_pss_kib_sum": 143589
-                  }
-                },
-                "published_application_commits": 46
-              },
-              {
-                "elapsed_seconds": 13.787936458014883,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5477712,
-                    "memory_bytes": 140595200,
-                    "process_rss_kib_sum": 319912,
-                    "process_pss_kib_sum": 67124
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2928203,
-                    "memory_bytes": 180625408,
-                    "process_rss_kib_sum": 151428,
-                    "process_pss_kib_sum": 145077
-                  }
-                },
-                "published_application_commits": 52
-              },
-              {
-                "elapsed_seconds": 16.031131582916714,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5920694,
-                    "memory_bytes": 139444224,
-                    "process_rss_kib_sum": 280448,
-                    "process_pss_kib_sum": 64651
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3284560,
-                    "memory_bytes": 183013376,
-                    "process_rss_kib_sum": 153496,
-                    "process_pss_kib_sum": 147291
-                  }
-                },
-                "published_application_commits": 64
-              },
-              {
-                "elapsed_seconds": 18.33690787490923,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 6297288,
-                    "memory_bytes": 150560768,
-                    "process_rss_kib_sum": 322096,
-                    "process_pss_kib_sum": 68777
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3464458,
-                    "memory_bytes": 178503680,
-                    "process_rss_kib_sum": 148868,
-                    "process_pss_kib_sum": 142517
-                  }
-                },
-                "published_application_commits": 70
-              },
-              {
-                "elapsed_seconds": 20.588889500009827,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 6748272,
-                    "memory_bytes": 151298048,
-                    "process_rss_kib_sum": 323060,
-                    "process_pss_kib_sum": 68950
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3845556,
-                    "memory_bytes": 179748864,
-                    "process_rss_kib_sum": 149832,
-                    "process_pss_kib_sum": 143481
-                  }
-                },
-                "published_application_commits": 82
-              },
-              {
-                "elapsed_seconds": 22.90476808301173,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 7063828,
-                    "memory_bytes": 145174528,
-                    "process_rss_kib_sum": 324124,
-                    "process_pss_kib_sum": 69109
-                  },
-                  "pgduck": {
-                    "cpu_usec": 4106233,
-                    "memory_bytes": 175910912,
-                    "process_rss_kib_sum": 145368,
-                    "process_pss_kib_sum": 139017
-                  }
-                },
-                "published_application_commits": 88
-              },
-              {
-                "elapsed_seconds": 25.14833387499675,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 7531856,
-                    "memory_bytes": 154730496,
-                    "process_rss_kib_sum": 324972,
-                    "process_pss_kib_sum": 69254
-                  },
-                  "pgduck": {
-                    "cpu_usec": 4490151,
-                    "memory_bytes": 179003392,
-                    "process_rss_kib_sum": 148956,
-                    "process_pss_kib_sum": 142605
-                  }
-                },
-                "published_application_commits": 100
-              },
-              {
-                "elapsed_seconds": 27.45762587490026,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 7847996,
-                    "memory_bytes": 152571904,
-                    "process_rss_kib_sum": 326120,
-                    "process_pss_kib_sum": 69440
-                  },
-                  "pgduck": {
-                    "cpu_usec": 4747798,
-                    "memory_bytes": 185065472,
-                    "process_rss_kib_sum": 150840,
-                    "process_pss_kib_sum": 144489
-                  }
-                },
-                "published_application_commits": 106
-              },
-              {
-                "elapsed_seconds": 29.759964291006327,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 8294136,
-                    "memory_bytes": 146485248,
-                    "process_rss_kib_sum": 327068,
-                    "process_pss_kib_sum": 69608
-                  },
-                  "pgduck": {
-                    "cpu_usec": 5129766,
-                    "memory_bytes": 179044352,
-                    "process_rss_kib_sum": 146476,
-                    "process_pss_kib_sum": 140125
-                  }
-                },
-                "published_application_commits": 117
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "3ac83ac8601a9e2fc173e624916748d3689049699a983502f76c1c7182deb021",
+              "entries_or_characters": 13
+            },
             "application_commits": 120,
             "application_commit_median_seconds": 0.002730000007431954,
             "application_commit_p95_seconds": 0.005546291940845549,
@@ -1270,113 +419,21 @@
             }
           },
           "files_sha256": {
-            "tests/push_capture/README.md": "aeaf12f3cabe5234692c692bd2725c2bc1596e2208d5617f44d0137246c4f900",
-            "tests/push_capture/benchmark.py": "a229a971ef4a2e63987951b749601b07580fad44c412001205733e5373a8b28a",
-            "tests/push_capture/benchmark_failures.py": "0fb5120cdb5f2871babe8fdf10ec55a767aa6748a0335a6040802b70df84f5c5",
-            "tests/push_capture/benchmark_matrix.py": "bee32b72debb4a0d5d8d89a6846c9c9ebe1bfe12382f69a9c664ef8de28cbf08",
-            "tests/push_capture/chunks.py": "f792bd193c53b7b7aa67b6f45a401eefe7d255ea77930fd57f9719cdd29d9651",
-            "tests/push_capture/credentials.py": "57502dc3a0ceba92330927f10e036db541e9fcae21a3b30e67586451938db099",
-            "tests/push_capture/ddl_snapshots.py": "01c5267463d76a160a77197f829b7e2ef45a472b1edc248d4dd73e88db83ea22",
-            "tests/push_capture/disk_full.py": "f830a069ffeda5da504ccf3145be009665643d33aaf1a846b91bad1339b4e000",
-            "tests/push_capture/faults.py": "9b01027efe48432011ea7baca986e4d38b3304606fb4430fa53c01a056225455",
-            "tests/push_capture/fixture.sql": "43035290a6784d23d07e7091cbaab5295f77c782b156bae9682f23f4028ecacd",
-            "tests/push_capture/grouped.py": "aa193427544453d0e329ca8fe6c4f8571ada98da3b197cc4525540cd535e4678",
-            "tests/push_capture/grouped_faults.py": "8c211bb9aa2b8856a1cdf81ed88b64dcd12a3221167708e323bc05d1b781fb10",
-            "tests/push_capture/lease_cleanup.py": "38f72b59dc9dc980a7c430d2aea0ed698fdf1b80f9b992c84d2505f061ac69c1",
-            "tests/push_capture/lifecycle.py": "0130c10e0024b5bf90cf8369c225506ecdd3b74788d937ad8830baad3dff005d",
-            "tests/push_capture/live.py": "f616d4c8c14944ee2e1071b5b40ce4daf2c3eb1098908fd443ddf2184f33dc21",
-            "tests/push_capture/locations.py": "c46a87b182e5a723ca149cdd6d44f16fb6179f4de19a07ffb38a8c1c570f22bc",
-            "tests/push_capture/logical_compatibility.py": "a5825af53b9abedc16d9bece2d48675637fc093b00701b6ac52c69574e8e5639",
-            "tests/push_capture/maintenance.py": "7b36313dc66271995bff33ed00e84eb76b8cdec9b7853d7c9ed527c08c7352e2",
-            "tests/push_capture/managed.py": "e494975bf66eb6247420079146707ee80faaf6302878f7ffb32224afcb02daee",
-            "tests/push_capture/mutations.py": "37361f9554871e4df6769149d736db5cfbb872a7d9733c44f5e6096d368e2cd6",
-            "tests/push_capture/native_faults.py": "083d63daf79052bc5e6cc6460b5a12eb20d008ccbd083bc9745b25715fa58ed5",
-            "tests/push_capture/object_trace.py": "5883cf5a692b2613e3705c708ab161a86c71456e5883d8efe37d9f4a8f9cf6e2",
-            "tests/push_capture/online_snapshot.py": "44069b599c13b5990c339a9b53b2c0f4846478488f06e87854440bdc3bd12d1c",
-            "tests/push_capture/outages.py": "bc71d48f976cf329e51a22de0e127eac3e0098c80a34bc3e65ecf7c9965f3e5c",
-            "tests/push_capture/packaging.py": "f11a6ba739d5e475ba72afacf91422a5a34d3fdf4b4c174b86b6b0effa998c0f",
-            "tests/push_capture/probe.py": "49a22196718233e1f83cd6125e48f237b757cd8940709a151cfe1f781cfa4c3a",
-            "tests/push_capture/progress.py": "42036d69322a2c092144d562998dc01f87e1619f92531897b2d6eab224456bd2",
-            "tests/push_capture/progress_faults.py": "ada25312ccae3d890cee69a2453ea32873543e6f7c6ea03c29e5e646f95d1cf8",
-            "tests/push_capture/publisher_faults.py": "b895ce7efd770745fb9a80db62c13737c93d865dc8d6b29e034e27694014a005",
-            "tests/push_capture/reference.py": "31242293597f097dd0f6f65419791d3db9a79e8f5a7e409e01286cdddef73d25",
-            "tests/push_capture/retention.py": "4175552fd56db971dc7a2751796aa3745cff0a18165b170a1b9856ac526dda74",
-            "tests/push_capture/roles.py": "0b03c465cb053c6cb72d2e7ed1d9f552658ea224d9aeefeffa7a6966bd9840d2",
-            "tests/push_capture/scalars.py": "e6dbe51f3a4438c2c995c81894267a54e3aa0fca96129b64c440a1cb6233372f",
-            "tests/push_capture/schema_audit.py": "17da609fdd30171a650bf340dfa6262518a5538f7e6f9fc247802368599e19ff",
-            "tests/push_capture/schema_capture_faults.py": "a948b7edb921ebbfa64ddef6a11569225a45fd848faf39b796fc51eb7efad7d2",
-            "tests/push_capture/schema_descriptors.py": "308ed9ddeb55a0f2f98577775be74734984ad1cad0c688f3d5a6b5ab742567fb",
-            "tests/push_capture/schema_destination_admission.py": "f7e2652853bc3c7931ab27f095202aaeda821550939387cf4b0e54974672fc41",
-            "tests/push_capture/schema_destination_history.py": "b7598dfc3354bb5dab87741f3838bb30847dc0050078407aef0f8fe7ee8f26fc",
-            "tests/push_capture/schema_destination_publish.py": "51b0d5094094923d62146083ee4233abb8f359d395c24d4563ac471ab8a0b64d",
-            "tests/push_capture/schema_empty_snapshot.py": "87efb2f8fed3b9689fc9026a7ccf3246c73d61ce0eedcd8ca820e7a19ec06c4b",
-            "tests/push_capture/schema_feasibility.py": "fe687023097de311ac44b640c3e6f8a88c00f25e61c295e55501615e7117c8fd",
-            "tests/push_capture/schema_history.py": "6aa6ce73a6082f690f664e62074ea3fd46c7280ac396e9c8a467b8edbaa1cabd",
-            "tests/push_capture/schema_live.py": "aecccaa5b08cc448df0d7f91c6c1434418e876d1701cebbfe9b639bb35951fb9",
-            "tests/push_capture/schema_managed.py": "26db7aed28010fb1b13a3af2b7cf814289aa91f66d61bdc5832594487ed4c116",
-            "tests/push_capture/schema_mutations.py": "b8867bf88f293413fdd9d3ea0b24790835c44d4f7be39905e93f8a3e568d14ae",
-            "tests/push_capture/schema_native.py": "0ee55e88bb0e97bb129f5d38f24348297cc41acb7316a79a8fe1b0702f2c8c64",
-            "tests/push_capture/schema_publisher_faults.py": "32aed341712b05c3450caaee539a95105c75c25ecfc96a155d2adeceb5795c2f",
-            "tests/push_capture/session.py": "bea74a61d5f055043609f55becfb72807bad41cd9440bb5d4d9a6df00c2d1b7c",
-            "tests/push_capture/snapshot.py": "01023f4ce9816d2ecab485c25a6c2abb428982b5d524f7519cdf16896203a554",
-            "tests/push_capture/snapshot_faults.py": "064256e12d7bd0bd8cc84f6e1d110eb0c7f407ff7654d645418bb07c988eb3f4",
-            "tests/push_capture/snapshot_limits.py": "e1b86c2bfe2e13d4d77d6e9b4ad5cc5b230a6b9ed88c7fe3a3a160ee6b87f589",
-            "tests/push_capture/spill.py": "48170b47a600db5a7399e2c18af337d92f216e387410d001f09d008cc983aef1",
-            "tests/push_capture/storage_credentials.py": "9acb4cb50c1df91f43e0c4ce124453cbfb02dc5b89f8551396be505d90826b6c",
-            "tests/push_capture/telemetry.py": "88794ac6932b175c035860d9000429ed827bda2ee957f7ba2f3eddaba5e0ef4e",
-            "tests/push_capture/toast_keys.py": "bd758bcfe15b4d8037e0a2384d738dc07b0e262f47ff6119ae66f7c44ba93e5e",
-            "tests/push_capture/upload_budget.py": "39c0cb947efed88f0d154311fb7763d13f9673eb39943ff16414c79fef9ef474",
-            "deploy/push/Dockerfile.capture": "e4ecd83bb47dd0d2c6e3ca88983b1f583e817095b978ee6f7e0919cfe36d38e2",
-            "deploy/push/Dockerfile.faults": "c1fc926248f1012401a328b93e6abaadf665204ba092eca1c5b8926c3fabfe52",
-            "deploy/push/Dockerfile.importer": "13c2e8254ce50e26e283fe471f645c79d7753ee9ab4fde34e4f6975193703597",
-            "deploy/push/build-bundles.py": "5c5a905a152e3c9c645d60d6fb70f43fabc2a7a8173535be3bd15aca5d56eacd",
-            "deploy/push/compose.yml": "05c27cff6887a1f28e7a3b50ffa6b78ccc479bd1f4053cb5f1efb71fd9745e45",
-            "deploy/push/destination-init/10-destination.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
-            "deploy/push/destination-pgduck.sql": "2a732dcfb44076be809869c908483586471de878b9de47321b54cedcb2ae1436",
-            "deploy/push/importer.compose.yml": "dc7447cfa615a0c6748daf869f44c5dbe1478608a6eb5547a6706085c100dc7a",
-            "deploy/push/init/10-capture.sql": "85906bfe4dcc46bd230a2e76da7dfb747b16a27c298761d20349652c0daa06cd",
-            "deploy/push/install-optional.sh": "f9db14c2c443adc20809c439b8fc0960e448e7051f4b8e1b31ef71f524cbe2d2",
-            "deploy/push/pgduck.sql": "48807b9f4c54a0964cc040613fadd74dd2a0d4b1d2c2c7f7b4a837fe596e8e67",
-            "deploy/push/policies/destination.json": "9e356ff9f2185b82ff81677c590e40ffe3f2450cce4a8d4aa0dc5636bfd644d8",
-            "deploy/push/policies/source.json": "0875a6db295b1ad86c680f4caef40b3792c61e78bd04b705b9046e8d8bb190d5",
-            "deploy/push/source-grants.sql": "8b9669ada6897f11b718e3b85890e3fe73131aca39e7e132d087e03faf5a666b",
-            "deploy/push/spill-disk.compose.yml": "6343bc443f8eeef0b67c61dddb2248dd26dacfbc5e64d5b817634b64d26dbdc3",
-            "deploy/local/Dockerfile": "d2ae7c16585c42efa9df83984ab536b943ae646b0b3798eb64306b67bbe23b30",
-            "deploy/local/compose.yml": "8ad1d5037d56be410175b84780951e356e7f9404e6fb2531993464103054c066",
-            "tests/local_iceberg/benchmark.py": "ce381b2fc12de8f1ad6e530b021153d64c783578a96053d2b221472213e35368",
-            "tests/local_iceberg/recovery.py": "be438068fffa18b142bf2b50e528a8f5229e28c06d0d9bc49ee37f0bf0bd1456",
-            "tests/local_iceberg/outages.py": "9bad43dfda38623e3294ee80f9b1601740bf57318e1597c48237efdfff6a3c1a",
-            "tests/local_iceberg/coalescing.py": "36c25580db468ab66917f3cb2266f326ac54cad6e38a63cd62e65ff4afefd39a",
-            "tests/local_iceberg/probe.py": "41f1d8dc84b1dc229bddfe8cad0a1829bc60dc2b3de85e608bceceeb0f436868",
-            "tests/local_iceberg/faults.py": "06ccfdabd610384913ba9128d99c9c55c87b5129163deb75115e06b3a60e410a",
-            "tests/local_iceberg/contention.py": "ddf8be91f671fc3130b2b0dd592db7aa5aa01ed23efeac681bfc18d88a615621"
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "26a5188edcfcc8b3d5edbbb26380603704ee27e764aa0e91e5ff209d118a0e3e",
+            "entries_or_characters": 80
           },
-          "checks": [
-            {
-              "name": "both source heaps contain every application row",
-              "actual": "1200:1200",
-              "expected": "1200:1200",
-              "passed": true
-            },
-            {
-              "name": "local Iceberg mirror equals heap a",
-              "actual": "t",
-              "expected": "t",
-              "passed": true
-            },
-            {
-              "name": "local Iceberg mirror equals heap b",
-              "actual": "t",
-              "expected": "t",
-              "passed": true
-            },
-            {
-              "name": "trace observes final Iceberg writes",
-              "actual": true,
-              "expected": true,
-              "passed": true
-            }
-          ]
+          "checks": {
+            "_omitted_detail": true,
+            "reason": "Individual successful assertion values are archived",
+            "canonical_json_sha256": "bd85eace6ffcfb8ac018131b0e5cdef468f8b47dbf308efd6b72de72cfa6edcb",
+            "entries_or_characters": 4,
+            "total": 4,
+            "passed": 4,
+            "failed": 0,
+            "failures": []
+          }
         },
         {
           "mode": "application_only",
@@ -1412,242 +469,12 @@
                 "process_pss_kib_sum": 108241
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.2914177499478683,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3115613,
-                    "memory_bytes": 118816768,
-                    "process_rss_kib_sum": 186068,
-                    "process_pss_kib_sum": 47699
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1372454,
-                    "memory_bytes": 141107200,
-                    "process_rss_kib_sum": 110084,
-                    "process_pss_kib_sum": 104137
-                  }
-                },
-                "published_application_commits": 10
-              },
-              {
-                "elapsed_seconds": 4.591409832937643,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3223826,
-                    "memory_bytes": 125755392,
-                    "process_rss_kib_sum": 186504,
-                    "process_pss_kib_sum": 47604
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1455357,
-                    "memory_bytes": 140959744,
-                    "process_rss_kib_sum": 110112,
-                    "process_pss_kib_sum": 104165
-                  }
-                },
-                "published_application_commits": 19
-              },
-              {
-                "elapsed_seconds": 6.885025250026956,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3330771,
-                    "memory_bytes": 119279616,
-                    "process_rss_kib_sum": 186616,
-                    "process_pss_kib_sum": 47801
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1508003,
-                    "memory_bytes": 143638528,
-                    "process_rss_kib_sum": 110112,
-                    "process_pss_kib_sum": 104165
-                  }
-                },
-                "published_application_commits": 28
-              },
-              {
-                "elapsed_seconds": 9.142563582980074,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3470133,
-                    "memory_bytes": 126148608,
-                    "process_rss_kib_sum": 186756,
-                    "process_pss_kib_sum": 47870
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1556255,
-                    "memory_bytes": 143101952,
-                    "process_rss_kib_sum": 112136,
-                    "process_pss_kib_sum": 106189
-                  }
-                },
-                "published_application_commits": 37
-              },
-              {
-                "elapsed_seconds": 11.404864249983802,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3575329,
-                    "memory_bytes": 126529536,
-                    "process_rss_kib_sum": 187032,
-                    "process_pss_kib_sum": 47951
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1619225,
-                    "memory_bytes": 145477632,
-                    "process_rss_kib_sum": 114188,
-                    "process_pss_kib_sum": 108241
-                  }
-                },
-                "published_application_commits": 46
-              },
-              {
-                "elapsed_seconds": 13.702219333034009,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3694991,
-                    "memory_bytes": 124481536,
-                    "process_rss_kib_sum": 187612,
-                    "process_pss_kib_sum": 48026
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1684856,
-                    "memory_bytes": 145424384,
-                    "process_rss_kib_sum": 114188,
-                    "process_pss_kib_sum": 108241
-                  }
-                },
-                "published_application_commits": 55
-              },
-              {
-                "elapsed_seconds": 16.008940832922235,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3817562,
-                    "memory_bytes": 126689280,
-                    "process_rss_kib_sum": 187728,
-                    "process_pss_kib_sum": 48077
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1747574,
-                    "memory_bytes": 145670144,
-                    "process_rss_kib_sum": 114188,
-                    "process_pss_kib_sum": 108241
-                  }
-                },
-                "published_application_commits": 64
-              },
-              {
-                "elapsed_seconds": 18.2960297500249,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3990632,
-                    "memory_bytes": 131477504,
-                    "process_rss_kib_sum": 189864,
-                    "process_pss_kib_sum": 49762
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1812527,
-                    "memory_bytes": 145420288,
-                    "process_rss_kib_sum": 114188,
-                    "process_pss_kib_sum": 108241
-                  }
-                },
-                "published_application_commits": 74
-              },
-              {
-                "elapsed_seconds": 20.57424862496555,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4108105,
-                    "memory_bytes": 129875968,
-                    "process_rss_kib_sum": 190056,
-                    "process_pss_kib_sum": 49825
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1874411,
-                    "memory_bytes": 147234816,
-                    "process_rss_kib_sum": 114188,
-                    "process_pss_kib_sum": 108241
-                  }
-                },
-                "published_application_commits": 83
-              },
-              {
-                "elapsed_seconds": 22.855033707921393,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4224264,
-                    "memory_bytes": 127709184,
-                    "process_rss_kib_sum": 190172,
-                    "process_pss_kib_sum": 49878
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1935754,
-                    "memory_bytes": 145223680,
-                    "process_rss_kib_sum": 114188,
-                    "process_pss_kib_sum": 108241
-                  }
-                },
-                "published_application_commits": 92
-              },
-              {
-                "elapsed_seconds": 25.098305332940072,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4334610,
-                    "memory_bytes": 131604480,
-                    "process_rss_kib_sum": 190300,
-                    "process_pss_kib_sum": 49942
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2021111,
-                    "memory_bytes": 145100800,
-                    "process_rss_kib_sum": 114216,
-                    "process_pss_kib_sum": 108269
-                  }
-                },
-                "published_application_commits": 101
-              },
-              {
-                "elapsed_seconds": 27.394940832979046,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4450258,
-                    "memory_bytes": 123191296,
-                    "process_rss_kib_sum": 190476,
-                    "process_pss_kib_sum": 49994
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2086631,
-                    "memory_bytes": 145166336,
-                    "process_rss_kib_sum": 114216,
-                    "process_pss_kib_sum": 108269
-                  }
-                },
-                "published_application_commits": 110
-              },
-              {
-                "elapsed_seconds": 29.663672792026773,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4586997,
-                    "memory_bytes": 132182016,
-                    "process_rss_kib_sum": 190612,
-                    "process_pss_kib_sum": 50057
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2148072,
-                    "memory_bytes": 147202048,
-                    "process_rss_kib_sum": 114188,
-                    "process_pss_kib_sum": 108241
-                  }
-                },
-                "published_application_commits": 119
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "3ef44407422be016abe96dd48e860de134aaf1f937c2b68b56a3de800e8b18af",
+              "entries_or_characters": 13
+            },
             "application_commits": 120,
             "application_commit_median_seconds": 0.004008000483736396,
             "application_commit_p95_seconds": 0.005825208034366369,
@@ -1705,101 +532,21 @@
             }
           },
           "files_sha256": {
-            "tests/push_capture/README.md": "aeaf12f3cabe5234692c692bd2725c2bc1596e2208d5617f44d0137246c4f900",
-            "tests/push_capture/benchmark.py": "a229a971ef4a2e63987951b749601b07580fad44c412001205733e5373a8b28a",
-            "tests/push_capture/benchmark_failures.py": "0fb5120cdb5f2871babe8fdf10ec55a767aa6748a0335a6040802b70df84f5c5",
-            "tests/push_capture/benchmark_matrix.py": "bee32b72debb4a0d5d8d89a6846c9c9ebe1bfe12382f69a9c664ef8de28cbf08",
-            "tests/push_capture/chunks.py": "f792bd193c53b7b7aa67b6f45a401eefe7d255ea77930fd57f9719cdd29d9651",
-            "tests/push_capture/credentials.py": "57502dc3a0ceba92330927f10e036db541e9fcae21a3b30e67586451938db099",
-            "tests/push_capture/ddl_snapshots.py": "01c5267463d76a160a77197f829b7e2ef45a472b1edc248d4dd73e88db83ea22",
-            "tests/push_capture/disk_full.py": "f830a069ffeda5da504ccf3145be009665643d33aaf1a846b91bad1339b4e000",
-            "tests/push_capture/faults.py": "9b01027efe48432011ea7baca986e4d38b3304606fb4430fa53c01a056225455",
-            "tests/push_capture/fixture.sql": "43035290a6784d23d07e7091cbaab5295f77c782b156bae9682f23f4028ecacd",
-            "tests/push_capture/grouped.py": "aa193427544453d0e329ca8fe6c4f8571ada98da3b197cc4525540cd535e4678",
-            "tests/push_capture/grouped_faults.py": "8c211bb9aa2b8856a1cdf81ed88b64dcd12a3221167708e323bc05d1b781fb10",
-            "tests/push_capture/lease_cleanup.py": "38f72b59dc9dc980a7c430d2aea0ed698fdf1b80f9b992c84d2505f061ac69c1",
-            "tests/push_capture/lifecycle.py": "0130c10e0024b5bf90cf8369c225506ecdd3b74788d937ad8830baad3dff005d",
-            "tests/push_capture/live.py": "f616d4c8c14944ee2e1071b5b40ce4daf2c3eb1098908fd443ddf2184f33dc21",
-            "tests/push_capture/locations.py": "c46a87b182e5a723ca149cdd6d44f16fb6179f4de19a07ffb38a8c1c570f22bc",
-            "tests/push_capture/logical_compatibility.py": "a5825af53b9abedc16d9bece2d48675637fc093b00701b6ac52c69574e8e5639",
-            "tests/push_capture/maintenance.py": "7b36313dc66271995bff33ed00e84eb76b8cdec9b7853d7c9ed527c08c7352e2",
-            "tests/push_capture/managed.py": "e494975bf66eb6247420079146707ee80faaf6302878f7ffb32224afcb02daee",
-            "tests/push_capture/mutations.py": "37361f9554871e4df6769149d736db5cfbb872a7d9733c44f5e6096d368e2cd6",
-            "tests/push_capture/native_faults.py": "083d63daf79052bc5e6cc6460b5a12eb20d008ccbd083bc9745b25715fa58ed5",
-            "tests/push_capture/object_trace.py": "5883cf5a692b2613e3705c708ab161a86c71456e5883d8efe37d9f4a8f9cf6e2",
-            "tests/push_capture/online_snapshot.py": "44069b599c13b5990c339a9b53b2c0f4846478488f06e87854440bdc3bd12d1c",
-            "tests/push_capture/outages.py": "bc71d48f976cf329e51a22de0e127eac3e0098c80a34bc3e65ecf7c9965f3e5c",
-            "tests/push_capture/packaging.py": "f11a6ba739d5e475ba72afacf91422a5a34d3fdf4b4c174b86b6b0effa998c0f",
-            "tests/push_capture/probe.py": "49a22196718233e1f83cd6125e48f237b757cd8940709a151cfe1f781cfa4c3a",
-            "tests/push_capture/progress.py": "42036d69322a2c092144d562998dc01f87e1619f92531897b2d6eab224456bd2",
-            "tests/push_capture/progress_faults.py": "ada25312ccae3d890cee69a2453ea32873543e6f7c6ea03c29e5e646f95d1cf8",
-            "tests/push_capture/publisher_faults.py": "b895ce7efd770745fb9a80db62c13737c93d865dc8d6b29e034e27694014a005",
-            "tests/push_capture/reference.py": "31242293597f097dd0f6f65419791d3db9a79e8f5a7e409e01286cdddef73d25",
-            "tests/push_capture/retention.py": "4175552fd56db971dc7a2751796aa3745cff0a18165b170a1b9856ac526dda74",
-            "tests/push_capture/roles.py": "0b03c465cb053c6cb72d2e7ed1d9f552658ea224d9aeefeffa7a6966bd9840d2",
-            "tests/push_capture/scalars.py": "e6dbe51f3a4438c2c995c81894267a54e3aa0fca96129b64c440a1cb6233372f",
-            "tests/push_capture/schema_audit.py": "17da609fdd30171a650bf340dfa6262518a5538f7e6f9fc247802368599e19ff",
-            "tests/push_capture/schema_capture_faults.py": "a948b7edb921ebbfa64ddef6a11569225a45fd848faf39b796fc51eb7efad7d2",
-            "tests/push_capture/schema_descriptors.py": "308ed9ddeb55a0f2f98577775be74734984ad1cad0c688f3d5a6b5ab742567fb",
-            "tests/push_capture/schema_destination_admission.py": "f7e2652853bc3c7931ab27f095202aaeda821550939387cf4b0e54974672fc41",
-            "tests/push_capture/schema_destination_history.py": "b7598dfc3354bb5dab87741f3838bb30847dc0050078407aef0f8fe7ee8f26fc",
-            "tests/push_capture/schema_destination_publish.py": "51b0d5094094923d62146083ee4233abb8f359d395c24d4563ac471ab8a0b64d",
-            "tests/push_capture/schema_empty_snapshot.py": "87efb2f8fed3b9689fc9026a7ccf3246c73d61ce0eedcd8ca820e7a19ec06c4b",
-            "tests/push_capture/schema_feasibility.py": "fe687023097de311ac44b640c3e6f8a88c00f25e61c295e55501615e7117c8fd",
-            "tests/push_capture/schema_history.py": "6aa6ce73a6082f690f664e62074ea3fd46c7280ac396e9c8a467b8edbaa1cabd",
-            "tests/push_capture/schema_live.py": "aecccaa5b08cc448df0d7f91c6c1434418e876d1701cebbfe9b639bb35951fb9",
-            "tests/push_capture/schema_managed.py": "26db7aed28010fb1b13a3af2b7cf814289aa91f66d61bdc5832594487ed4c116",
-            "tests/push_capture/schema_mutations.py": "b8867bf88f293413fdd9d3ea0b24790835c44d4f7be39905e93f8a3e568d14ae",
-            "tests/push_capture/schema_native.py": "0ee55e88bb0e97bb129f5d38f24348297cc41acb7316a79a8fe1b0702f2c8c64",
-            "tests/push_capture/schema_publisher_faults.py": "32aed341712b05c3450caaee539a95105c75c25ecfc96a155d2adeceb5795c2f",
-            "tests/push_capture/session.py": "bea74a61d5f055043609f55becfb72807bad41cd9440bb5d4d9a6df00c2d1b7c",
-            "tests/push_capture/snapshot.py": "01023f4ce9816d2ecab485c25a6c2abb428982b5d524f7519cdf16896203a554",
-            "tests/push_capture/snapshot_faults.py": "064256e12d7bd0bd8cc84f6e1d110eb0c7f407ff7654d645418bb07c988eb3f4",
-            "tests/push_capture/snapshot_limits.py": "e1b86c2bfe2e13d4d77d6e9b4ad5cc5b230a6b9ed88c7fe3a3a160ee6b87f589",
-            "tests/push_capture/spill.py": "48170b47a600db5a7399e2c18af337d92f216e387410d001f09d008cc983aef1",
-            "tests/push_capture/storage_credentials.py": "9acb4cb50c1df91f43e0c4ce124453cbfb02dc5b89f8551396be505d90826b6c",
-            "tests/push_capture/telemetry.py": "88794ac6932b175c035860d9000429ed827bda2ee957f7ba2f3eddaba5e0ef4e",
-            "tests/push_capture/toast_keys.py": "bd758bcfe15b4d8037e0a2384d738dc07b0e262f47ff6119ae66f7c44ba93e5e",
-            "tests/push_capture/upload_budget.py": "39c0cb947efed88f0d154311fb7763d13f9673eb39943ff16414c79fef9ef474",
-            "deploy/push/Dockerfile.capture": "e4ecd83bb47dd0d2c6e3ca88983b1f583e817095b978ee6f7e0919cfe36d38e2",
-            "deploy/push/Dockerfile.faults": "c1fc926248f1012401a328b93e6abaadf665204ba092eca1c5b8926c3fabfe52",
-            "deploy/push/Dockerfile.importer": "13c2e8254ce50e26e283fe471f645c79d7753ee9ab4fde34e4f6975193703597",
-            "deploy/push/build-bundles.py": "5c5a905a152e3c9c645d60d6fb70f43fabc2a7a8173535be3bd15aca5d56eacd",
-            "deploy/push/compose.yml": "05c27cff6887a1f28e7a3b50ffa6b78ccc479bd1f4053cb5f1efb71fd9745e45",
-            "deploy/push/destination-init/10-destination.sql": "7da80077cfb8eeb9a111e5b6e0392938d37b0dba11c6c119cec1335801d3a87b",
-            "deploy/push/destination-pgduck.sql": "2a732dcfb44076be809869c908483586471de878b9de47321b54cedcb2ae1436",
-            "deploy/push/importer.compose.yml": "dc7447cfa615a0c6748daf869f44c5dbe1478608a6eb5547a6706085c100dc7a",
-            "deploy/push/init/10-capture.sql": "85906bfe4dcc46bd230a2e76da7dfb747b16a27c298761d20349652c0daa06cd",
-            "deploy/push/install-optional.sh": "f9db14c2c443adc20809c439b8fc0960e448e7051f4b8e1b31ef71f524cbe2d2",
-            "deploy/push/pgduck.sql": "48807b9f4c54a0964cc040613fadd74dd2a0d4b1d2c2c7f7b4a837fe596e8e67",
-            "deploy/push/policies/destination.json": "9e356ff9f2185b82ff81677c590e40ffe3f2450cce4a8d4aa0dc5636bfd644d8",
-            "deploy/push/policies/source.json": "0875a6db295b1ad86c680f4caef40b3792c61e78bd04b705b9046e8d8bb190d5",
-            "deploy/push/source-grants.sql": "8b9669ada6897f11b718e3b85890e3fe73131aca39e7e132d087e03faf5a666b",
-            "deploy/push/spill-disk.compose.yml": "6343bc443f8eeef0b67c61dddb2248dd26dacfbc5e64d5b817634b64d26dbdc3",
-            "deploy/local/Dockerfile": "d2ae7c16585c42efa9df83984ab536b943ae646b0b3798eb64306b67bbe23b30",
-            "deploy/local/compose.yml": "8ad1d5037d56be410175b84780951e356e7f9404e6fb2531993464103054c066",
-            "tests/local_iceberg/benchmark.py": "ce381b2fc12de8f1ad6e530b021153d64c783578a96053d2b221472213e35368",
-            "tests/local_iceberg/recovery.py": "be438068fffa18b142bf2b50e528a8f5229e28c06d0d9bc49ee37f0bf0bd1456",
-            "tests/local_iceberg/outages.py": "9bad43dfda38623e3294ee80f9b1601740bf57318e1597c48237efdfff6a3c1a",
-            "tests/local_iceberg/coalescing.py": "36c25580db468ab66917f3cb2266f326ac54cad6e38a63cd62e65ff4afefd39a",
-            "tests/local_iceberg/probe.py": "41f1d8dc84b1dc229bddfe8cad0a1829bc60dc2b3de85e608bceceeb0f436868",
-            "tests/local_iceberg/faults.py": "06ccfdabd610384913ba9128d99c9c55c87b5129163deb75115e06b3a60e410a",
-            "tests/local_iceberg/contention.py": "ddf8be91f671fc3130b2b0dd592db7aa5aa01ed23efeac681bfc18d88a615621"
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "26a5188edcfcc8b3d5edbbb26380603704ee27e764aa0e91e5ff209d118a0e3e",
+            "entries_or_characters": 80
           },
-          "checks": [
-            {
-              "name": "both source heaps contain every application row",
-              "actual": "1200:1200",
-              "expected": "1200:1200",
-              "passed": true
-            },
-            {
-              "name": "application-only baseline writes no Iceberg objects",
-              "actual": 0,
-              "expected": 0,
-              "passed": true
-            }
-          ]
+          "checks": {
+            "_omitted_detail": true,
+            "reason": "Individual successful assertion values are archived",
+            "canonical_json_sha256": "457f001afc56aa68a5d7642b316d9d4182ff9af53a56c7a83eaa5b107f5bf922",
+            "entries_or_characters": 2,
+            "total": 2,
+            "passed": 2,
+            "failed": 0,
+            "failures": []
+          }
         }
       ],
       "status": "passed"

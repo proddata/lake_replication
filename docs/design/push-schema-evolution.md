@@ -108,9 +108,9 @@ a 4 KiB header. Existing 64 MiB complete-batch, 8 MiB event, 100,000-event and
 at 64 MiB. Oversized or unrepresentable work stops without advancing import or
 publication. An evolved stream requires drop/new registration for recopy.
 
-The [initial history qualification](../evidence/2026-11-14-push-schema-history.json)
+The [initial history qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-14-push-schema-history.json)
 covers registration locks, stale snapshots, descriptor codecs and selected
-regressions. The [ordered pipeline qualification](../evidence/2026-11-15-push-ordered-schema.json)
+regressions. The [ordered pipeline qualification](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-push-ordered-schema.json)
 retains 588 passing normal checks across 38 fixtures, 135 source crash checks and
 58 publication crash checks, including 37 for ordered schemas. The pipeline exercises delayed capture,
 DDL-only and mixed commits, quotas, ordinary ownership, managed runtime logins,

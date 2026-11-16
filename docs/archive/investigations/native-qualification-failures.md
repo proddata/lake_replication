@@ -4,7 +4,7 @@
 qualified the native CI archives at `8bcd5b218da761ed737f0fcb2b82e9487566ccf5`.
 Both architectures passed source-storage preflight, 119 fresh lifecycle checks,
 17 forced-child-crash checks, and 96 receiver checks. The run failed and does
-not qualify the candidate for release. [Retained summary](../../evidence/2026-10-25-native-qualification-failures.json)
+not qualify the candidate for release. [Retained summary](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-25-native-qualification-failures.json)
 records archive evidence hashes and the failed metrics; full raw results are in
 the run's `lifecycle-qualification-arm64` and `lifecycle-qualification-amd64`
 artifacts (30-day retention).
@@ -65,7 +65,7 @@ The unchanged `8bcd5b2` ARM64 CI archive was also exercised using the instrument
 CPU affinity `0-3`. The host observer was outside that affinity restriction.
 Both runs used fresh volumes and identical harness inputs. The order was four
 copies followed by one copy; these are single observations, not a paired
-statistical qualification. [Evidence and exact fixture driver](../../evidence/2026-10-25-local-copy-contention.json)
+statistical qualification. [Evidence and exact fixture driver](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-25-local-copy-contention.json)
 retain input hashes and activity/pressure summaries.
 
 | Simultaneous copies | Copy duration | Streaming p95 range | Result |

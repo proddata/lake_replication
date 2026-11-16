@@ -44,7 +44,7 @@ inside the final destination transaction.
 ## Evidence
 
 Run `initial_20260914_103652` passed all 15 assertions. The retained
-[results](../../evidence/2026-09-14-initial-sync-results.json) show:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-initial-sync-results.json) show:
 
 - a 100-row exported snapshot at `0/5375598`;
 - an observable `copying` state and exact `ready:100` progress;

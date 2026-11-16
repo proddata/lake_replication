@@ -81,7 +81,7 @@ Only the scoped instrumented paths above are claimed. The SQL installer asserts
 ten matching function signatures before modifying their bodies; this is a
 fresh-install experiment, not a qualified in-place package upgrade.
 
-The [retained results](../../evidence/2026-10-19-base-publication-ownership-results.json)
+The [retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-publication-ownership-results.json)
 record the archive/image identity, harness/adapter fingerprints, checks and log
 hashes. Exact sources and logs remain under
 `.qualification/qualification_20261019_111922_ownership/`. Earlier exploratory

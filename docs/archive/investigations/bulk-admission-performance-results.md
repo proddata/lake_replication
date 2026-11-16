@@ -11,7 +11,7 @@ implementing the policy in production source while retaining pg_extension_base
 and unrestricted streaming concurrency. Production scheduling is still unchanged.
 Packaged qualification on both architectures and the release soak remain required.
 
-[Retained evidence](../../evidence/2026-10-22-bulk-performance-results.json) contains
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-22-bulk-performance-results.json) contains
 all 30 case summaries, paired ratios, checks, input hashes, exact image/archive
 identities and raw-result/log hashes. The runtime image is identical to the
 corrected operational candidate, `sha256:ddf2a8b27ea9caf70f20e25a04a6da2be1263be814f151a58cee185684691268`.

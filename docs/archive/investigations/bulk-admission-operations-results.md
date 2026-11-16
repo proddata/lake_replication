@@ -10,7 +10,7 @@ copy request. Production scheduling remains unchanged. The subsequent
 [paired performance qualification](bulk-admission-performance-results.md) also
 passes; production migration and packaging are next.
 
-[Retained evidence](../../evidence/2026-10-22-bulk-operations-results.json) includes the
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-22-bulk-operations-results.json) includes the
 failed policy, accepted cases, excluded harness attempt, exact input hashes,
 image/archive identities and raw-log hashes. These are local arm64 fixtures
 against the exported beta.2 archive, not release-package qualification.

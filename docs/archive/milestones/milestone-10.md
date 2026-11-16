@@ -42,7 +42,7 @@ constraints. Destination assignment occurs only after validation.
 ## Evidence
 
 Run `schema_20260914_165528` passed all nine assertions. The retained
-[results](../../evidence/2026-09-14-auto-schema-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-auto-schema-results.json) demonstrate:
 
 - creation of a writable `pg_lake_iceberg` foreign table;
 - canonical `bigint`, `text`, `boolean`, and `timestamp with time zone` columns;

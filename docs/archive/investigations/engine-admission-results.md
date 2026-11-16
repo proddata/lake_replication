@@ -14,7 +14,7 @@ restart burst and single-copy diagnostic without admission. The historical OOM
 did not reproduce. Reserving and serializing streaming capacity adds observed
 latency without a demonstrated benefit in those cases.
 
-[Retained evidence](../../evidence/2026-10-22-engine-admission-results.json) records
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-22-engine-admission-results.json) records
 checks, input hashes, archive/image identities, timing audits and log hashes.
 The [protocol](engine-admission-experiment.md) describes the workload and limits.
 These are single local arm64 diagnostics, not paired statistical performance

@@ -9,7 +9,7 @@ fixed; the new work changes measurement and adds an isolated upgrade fixture.
 
 ## Observer calibration
 
-The [poll-frequency cohort](../../evidence/2026-10-18-observer-poll-calibration-results.json)
+The [poll-frequency cohort](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-observer-poll-calibration-results.json)
 used three static-baseline repetitions each at 100 ms and 1,000 ms polling.
 Observer SQL wait time fell from a median 2.081 s to 0.259 s per measured phase,
 while completion-rate medians were 452 and 448 rows/s. Paired differences varied
@@ -17,7 +17,7 @@ in direction. This does not establish a consistent throughput penalty, and the
 one-second observer has a much wider final-visibility interval. Do not subtract
 observer wait time from replication time or equate it with CPU consumption.
 
-The [journal/visibility calibration](../../evidence/2026-10-18-journal-observer-calibration-results.json)
+The [journal/visibility calibration](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-journal-observer-calibration-results.json)
 used two repetitions per observer at a 200 rows/s target. Publication-commit
 p95 medians were 224 ms with Iceberg observation and 227 ms with journal
 observation. Observer SQL wait time was 2.795 s versus 0.512 s. Throughput here
@@ -43,7 +43,7 @@ polling. Analysis uses exact resampling of whole pairs, keeps absolute
 latency/backlog checks separate from relative comparisons, and records the
 analysis input/source hashes.
 
-The [steady-load cohort](../../evidence/2026-10-18-launcher-steady-results.json)
+The [steady-load cohort](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-steady-results.json)
 completed all ten fixtures and matches the frozen protocol. All absolute checks
 passed: p95 publication-commit lag below two seconds, publication catch-up within
 two seconds, no more than four transactions unobserved at end of source writes,
@@ -66,7 +66,7 @@ the relative latency result is **inconclusive**, despite passing the absolute
 local latency/backlog limits. Do not round the interval into a pass or move the
 margin after seeing the data.
 
-The [backlog/catch-up cohort](../../evidence/2026-10-18-launcher-catchup-results.json)
+The [backlog/catch-up cohort](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-catchup-results.json)
 also completed ten fixtures and matches the protocol. All 130,000 destination
 rows passed the generated-data checks. The offered rate exceeded completion
 capacity, so accumulated latency is expected and the two-second steady-load
@@ -97,7 +97,7 @@ then replaces the image with the same hardened base-worker implementation.
 The experimental target `0.1.0-beta.2-prototype` adds the SQL entry point and
 registration through an actual extension UPDATE script.
 
-The [upgrade run](../../evidence/2026-10-18-static-to-base-upgrade-results.json) passed
+The [upgrade run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-static-to-base-upgrade-results.json) passed
 42 checks. It starts from the real release archive, verifies that the original
 static launcher is running, drains the old subscription and external executable
 processes, and confirms no accidental postmaster restart during the drain.
@@ -125,7 +125,7 @@ The final `make check` passed, including six measurement/decision tests.
 All disposable evaluation containers and volumes were confirmed removed.
 Recorded analyses reproduce from the retained cases/parameters, and source,
 protocol and analyzer fingerprints were verified. A final
-[two-variant runner smoke test](../../evidence/2026-10-18-measurement-validation-smoke-results.json)
+[two-variant runner smoke test](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-measurement-validation-smoke-results.json)
 also passed after tightening the post-measurement predicate to reject NULL
 markers/payloads. The matched cohorts retain their exact pre-tightening runner
 snapshots; the timed workload and experimental C runtime did not change.

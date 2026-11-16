@@ -105,7 +105,7 @@ engine samples reach about 223 MiB versus 227–292 MiB. These are sampled value
 not exact peaks or guarantees. Source, destination, engine and object store share
 the same two CPUs; no cgroup quota throttling is observed.
 
-[Local evidence](../../evidence/2026-10-30-staging-chunk-local.json) retains the isolated
+[Local evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-chunk-local.json) retains the isolated
 plans, development-run qualification exclusion, all 131 frozen safety assertions,
 full fixed performance comparison, source/archive hashes and resource summaries.
 Repository `make check`, 39 admission unit tests and workflow lint pass. The
@@ -171,7 +171,7 @@ memory peaks. The workload uses repeated compressible payloads. Fewer parent
 checks, fewer index entries and chunk TOAST compression can all contribute;
 the copy improvement is not a guarantee for arbitrary data distributions.
 
-[Native evidence](../../evidence/2026-10-30-staging-chunk-native.json) retains every
+[Native evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-staging-chunk-native.json) retains every
 observation and failed gate, archive/input/runtime hashes, resource counters and
 the stream/publication timeline. Historical row-cap and checkpoint findings are
 unchanged.

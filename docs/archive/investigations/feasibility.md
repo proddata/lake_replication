@@ -8,7 +8,7 @@ failure windows and independent-reader checks remain later production gates.
 ## Observed lab results
 
 Run: `probe_20260914_045949`, evidence in `.lab/probe_20260914_045949/`.
-The [assertion results](../../evidence/2026-09-14-pg18-results.json) are also retained
+The [assertion results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-pg18-results.json) are also retained
 in the repository; full logs and inventories remain local under `.lab/`.
 Tested PostgreSQL 18.6 on Linux arm64, pg_lake extension version 3.6 at the
 revision below, and DuckDB v1.5.5. The instrumented image identity is
@@ -46,7 +46,7 @@ files, cleanup queues, and PostgreSQL logs are preserved with the run.
 
 Run `crash_20260914_045535` used the lab-only patch in
 `deploy/docker-compose/patches/pg-lake-lab-crash-points.patch`. The
-[crash assertion results](../../evidence/2026-09-14-pg18-crash-results.json) are
+[crash assertion results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-pg18-crash-results.json) are
 retained here; full per-boundary logs remain under `.lab/`.
 
 | Crash boundary | Client result | Recovered state | Cleanup state |

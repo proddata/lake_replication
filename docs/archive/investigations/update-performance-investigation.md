@@ -23,7 +23,7 @@ The tests use a locally built native archive from frozen committed source
 Concurrent demo/Dockerfile/Makefile edits are excluded from the build and
 measured harnesses. The archive is not substituted for an accepted CI release
 candidate. Exact hashes and measured source snapshots are retained in
-[structured evidence](../../evidence/2026-11-11-update-performance.json).
+[structured evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-11-update-performance.json).
 
 The disposable source, destination, engine and storage share CPU affinity `2-3`.
 Destination/engine container caps are 1.5/2 GiB; pgduck retains its 1-GB engine

@@ -116,7 +116,7 @@ staging crash tests pause supervision and kill the initial-sync child without
 DISABLE or backend cancellation, verify backend/permit cleanup and rollback,
 then resume supervision and verify exact data.
 
-The [machine-readable evidence](../../evidence/2026-10-29-staging-journal-migration-results.json)
+The [machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-staging-journal-migration-results.json)
 retains successful, failed and superseded attempts, input/result hashes, payload
 identity, source scheduling and measured latency. Raw logs and source snapshots
 remain in the referenced local qualification directories.

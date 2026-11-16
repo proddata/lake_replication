@@ -72,7 +72,7 @@ performance data. All attempts are identified in the retained evidence.
 
 ## Local comparison, 2026-10-28
 
-[Retained evidence](../../evidence/2026-10-28-staging-gate-results.json) covers seven
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-staging-gate-results.json) covers seven
 attempts including the two failures above and five completed workloads. It
 retains raw-result hashes, actual overlaid Rust/C/SQL variants, the helper binary
 hash, per-copy counters, operational checks and independent audits. All completed serial

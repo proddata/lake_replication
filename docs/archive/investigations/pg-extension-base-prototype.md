@@ -30,9 +30,9 @@ tables. No production extension or worker source was edited.
 | Minimal lifecycle adapter | 81 passed, 3 failed | Automatic loading and per-database replication work; inherited bindings and explicit child cleanup need additional handling. |
 | Adapter with binding fences and process ownership fixes | 85 passed, 0 failed | The tested lifecycle and fault cases pass with prototype-only fixes. |
 
-Evidence: [minimal results](../../evidence/2026-10-18-base-workers-minimal-results.json),
-[hardened results](../../evidence/2026-10-18-base-workers-hardened-results.json), and
-[source/prototype provenance](../../evidence/2026-10-18-base-workers-provenance.json).
+Evidence: [minimal results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-workers-minimal-results.json),
+[hardened results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-workers-hardened-results.json), and
+[source/prototype provenance](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-workers-provenance.json).
 Run instructions and implementation are in
 [`experiments/base_workers`](https://github.com/proddata/lake_replication/tree/7ef18381810075dddd26137ee959770591b95863/experiments/base_workers/README.md).
 

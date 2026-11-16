@@ -27,7 +27,7 @@ of catching up. The bounded run completed the large initial copy with its two
 million rows while a stream remained stuck; pgduck stayed healthy. The baseline
 diagnostic detects the same receiver error early and retains it as a finding.
 
-The [retained diagnostic evidence](../../evidence/2026-10-20-empty-filtered-stream-diagnostic-results.json)
+The [retained diagnostic evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-20-empty-filtered-stream-diagnostic-results.json)
 contains both runs, immutable image/source/archive fingerprints, parameters,
 source transaction records and PostgreSQL log excerpts/hashes. Fixtures were
 removed after diagnosis. This is a correctness diagnostic, not a completed

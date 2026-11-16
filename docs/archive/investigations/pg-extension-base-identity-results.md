@@ -6,7 +6,7 @@ restore, explicit rebind/takeover and production adoption remain unqualified.
 ## Baseline findings
 
 The exact recovery-qualified image was reused by immutable image ID, with
-fresh private source, destination and object-storage volumes. The [refined baseline](../../evidence/2026-10-19-base-identity-baseline-results.json)
+fresh private source, destination and object-storage volumes. The [refined baseline](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-identity-baseline-results.json)
 completed 39 assertions: 35 passed and four exposed these gaps:
 
 | Case | Name-only prototype result |
@@ -45,7 +45,7 @@ with an explicit error and preserves both the source slot and local metadata.
 These are dispatch/cleanup checks, not a destination lease or publication-time
 ownership enforcement inside every receiver/publisher transaction.
 
-The [revised identity run](../../evidence/2026-10-19-base-identity-origin-results.json)
+The [revised identity run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-identity-origin-results.json)
 completed 56 assertions: **55 passed**; the sole
 remaining finding is full Iceberg restore. Its scoped `binding_safety_passed`
 result is true. It covers different-name clones/restores, rename fencing,
@@ -93,7 +93,7 @@ writer procedure is still required. Publication-side validation, cross-cluster
 restore, rollback/recovery and migration of existing unbound rows remain open.
 The overlay is fresh-install experimental SQL, not a shipped upgrade package.
 
-The [combined crash retest](../../evidence/2026-10-19-base-identity-crash-results.json)
+The [combined crash retest](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-identity-crash-results.json)
 passed 30/30 assertions across the two paused launcher/wrapper kill regressions
 with Docker init and bounded Rust contention retries. Earlier performance and upgrade cohorts predate these
 origin checks and do not qualify the combined implementation. Production worker,

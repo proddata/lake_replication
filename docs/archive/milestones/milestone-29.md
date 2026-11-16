@@ -44,7 +44,7 @@ all payload checksums, runs the installer, loads both packaged extensions, and
 verifies every native file links on the target system.
 
 Run `install_20260920_152332` passed all six artifact assertions. Its retained
-result is [recorded here](../../evidence/2026-09-20-install-bundle-results.json).
+result is [recorded here](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-20-install-bundle-results.json).
 The reproducible arm64 archive checksum was
 `d3a89ad0046b9c462bc74861de8c11c019e059ce4fdb8a6972a2e7076076ab36`.
 

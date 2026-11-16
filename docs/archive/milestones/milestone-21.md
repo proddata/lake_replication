@@ -42,7 +42,7 @@ defines `max_slot_wal_keep_size` as the checkpoint-time bound used by the probe.
 ## Evidence
 
 Run `slot_loss_20260915_095846` passed all eight assertions. The retained
-[results](../../evidence/2026-09-15-slot-loss-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-slot-loss-results.json) demonstrate:
 
 - exact publication before the retention overrun;
 - clean receiver drain before forcing the slot inactive;

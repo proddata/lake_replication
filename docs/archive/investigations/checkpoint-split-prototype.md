@@ -92,7 +92,7 @@ targeted native diagnostic, not a claim that separation alone will meet the
 native two-second target. No additional local repeats were used to select a
 favorable result.
 
-[Machine-readable evidence](../../evidence/2026-10-29-checkpoint-split-prototype.json)
+[Machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-split-prototype.json)
 retains all four runs, source/overlay/archive hashes and unchanged gate results.
 The first two-CPU run predates the driver's automatic overlay marking of root
 and case results; its retained overlay declaration was applied afterward, with
@@ -170,7 +170,7 @@ variation from the schema change before selecting a copy/resource fix. Do not
 repeat an unchanged full qualification or presume that the three-second copy
 miss is harmless noise.
 
-[Native evidence](../../evidence/2026-10-29-checkpoint-split-native.json) retains the
+[Native evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-split-native.json) retains the
 archive/overlay hashes, timing summaries, exact source misses and the failed
 gates. The unmodified production archive remains blocked on native latency;
 this overlay is still an experiment.
@@ -237,7 +237,7 @@ python3 tests/admission/checkpoint_split_probe.py --cases fairness \
 
 Profiling is disabled in the native comparison. No production SQL or binary,
 prerequisite recipe or timing threshold changes in this diagnostic work.
-[Local comparison and profile evidence](../../evidence/2026-10-29-checkpoint-comparison-local.json)
+[Local comparison and profile evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-checkpoint-comparison-local.json)
 retains the full cohort, initial setup error, hashes and selected inclusive
 statement totals.
 
@@ -282,7 +282,7 @@ new original/split/original cohort. New results explicitly record
 The helper is included in source snapshots and input identity checks. Historical
 serial-source performance observations cannot qualify the revised workload.
 
-[Retained native comparison](../../evidence/2026-10-30-checkpoint-native-comparison.json)
+[Retained native comparison](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-checkpoint-native-comparison.json)
 includes every gate, identity and the source scheduling examples.
 
 The revised source producer passes a local two-CPU rebaseline:
@@ -307,7 +307,7 @@ the measured local cohort and pass ordering tests/full checks. They do not chang
 source SQL, cadence or acceptance limits. The next qualification is one prospective
 native cohort, not an unchanged retry of the invalid serial-source workload.
 
-[Independent-source local evidence](../../evidence/2026-10-30-independent-source-local.json)
+[Independent-source local evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-independent-source-local.json)
 retains the full three-run cohort and its hashes. Production migration remains
 unimplemented pending valid native evidence.
 
@@ -354,7 +354,7 @@ Do not loosen the three-minute limit or launch another unchanged native run.
 Requalify the complete workload and clock audit after a concrete, locally tested
 copy improvement; then implement the hardened production schema/upgrade.
 
-[Prospective native evidence](../../evidence/2026-10-30-independent-source-native.json)
+[Prospective native evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-independent-source-native.json)
 retains the valid pair, invalid final control, source round trips and all failed
 gates. This remains an experiment; the production archive still uses the shared
 checkpoint row.

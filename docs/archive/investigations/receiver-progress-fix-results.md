@@ -45,7 +45,7 @@ make receiver-progress-test
 make check
 ```
 
-The [retained evidence](../../evidence/2026-10-21-receiver-progress-fix-results.json)
+The [retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-receiver-progress-fix-results.json)
 records all 96 checks, source fingerprints, unchanged archive checksum, generated
 SQL fingerprints, test image ID and worker-log hash. Raw data and complete native
 worker logs remain in
@@ -73,7 +73,7 @@ All private containers and volumes were removed. The validation run itself did n
 The initial implementation passed bulk progress, disable and outage recovery
 but exposed DROP waiting about six seconds and leaving its source slot. The
 NOWAIT probe fixed that; the final run above includes actual source-slot removal.
-The earlier [native timeout diagnostic](../../evidence/2026-10-21-native-bulk-timeout-diagnostic-results.json)
+The earlier [native timeout diagnostic](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-native-bulk-timeout-diagnostic-results.json)
 remains historical evidence, not a current failure of these tested sources.
 
 ## Scope and next work

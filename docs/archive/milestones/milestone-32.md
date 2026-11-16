@@ -21,4 +21,4 @@ The exact exported bundle was then rebuilt and tested against the live pg_lake
 lab. All eight artifact assertions passed, including the compatibility matrix,
 checksums, PostgreSQL 18 selection, validated pg_lake notice, extension loading,
 and native linkage. The result is
-[retained here](../../evidence/2026-09-22-install-bundle-results.json).
+[retained here](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-22-install-bundle-results.json).

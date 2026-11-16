@@ -84,7 +84,7 @@ remain necessary.
 
 ## Retained evidence
 
-[Structured evidence](../../evidence/2026-11-06-beta5-maintenance-profiles.json)
+[Structured evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-maintenance-profiles.json)
 contains both run identities, checkpoints, resource summaries, raw-artifact
 checksums, measured input hashes and the independent reference check. Raw
 sources/logs remain under the recorded local qualification directories. The

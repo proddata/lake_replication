@@ -61,11 +61,11 @@ Before adoption, qualify paired steady/catch-up and copy overhead, copy/stream
 coexistence, cross-database cancellation/rollback and busy-pool progress. Then
 promote the chosen policy and repeat native package qualification and the soak.
 
-[Retained diagnostic evidence](../../evidence/2026-10-23-stream-pool-results.json)
+[Retained diagnostic evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-23-stream-pool-results.json)
 includes 216 checks across archive/lock handling and three scale repetitions,
 plus twelve checks in the four-copy run. All are passing. Raw result, log and
 source hashes are retained; full private fixture logs are not committed. The
 failed prototype startup caused by an OID arithmetic expression is retained and
 excluded from accepted measurements. All containers and volumes were removed.
-The [production migration evidence](../../evidence/2026-10-23-bulk-admission-migration-results.json)
+The [production migration evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-23-bulk-admission-migration-results.json)
 retains the failed candidate and the reproduced engine exit state separately.

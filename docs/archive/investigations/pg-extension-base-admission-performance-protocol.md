@@ -101,7 +101,7 @@ gross host/VM clock steps; it is not sub-second clock calibration.
 The first resumed cohort completed data checks but its last two baseline cases
 had database timestamp durations of roughly 10 and 46 minutes against about
 26 seconds of monotonic observation. Their nominal margin pass is withdrawn.
-The [rejected run and audit](../../evidence/2026-10-21-admission-rejected-clock-run.json)
+The [rejected run and audit](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-21-admission-rejected-clock-run.json)
 preserve the raw records. The completed steady/coexistence records pass the audit.
 Rerun the full catch-up cohort, keeping whole pairs together, with scoped idle
 sleep prevention and clock validation. Do not merge its rejected pairs into the

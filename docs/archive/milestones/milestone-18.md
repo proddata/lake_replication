@@ -45,7 +45,7 @@ then resumes receiver and publisher cycles.
 ## Evidence
 
 Run `patroni_20260915_051737` passed all nine assertions. The retained
-[results](../../evidence/2026-09-15-patroni-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-patroni-results.json) demonstrate:
 
 - election of one leader and one streaming synchronous standby;
 - publication through the original elected leader;

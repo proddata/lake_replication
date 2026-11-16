@@ -99,7 +99,7 @@ speedup claim. The original local cohort ran its two correctness fixtures
 separately first. The runner now automates those same safety checks, including
 the real-libavro count test, before the three fixed performance trials.
 
-[Machine-readable evidence](../../evidence/2026-11-05-beta5-commit-internals.json)
+[Machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-05-beta5-commit-internals.json)
 retains source/library/patch hashes, internal spans, correctness snapshots,
 reader checks and every control/candidate result. The native workflow's
 `manifest_cleanup` diagnostic runs the guarded comparison on a selected
@@ -151,7 +151,7 @@ Its 13 normalized row/file/manifest snapshots match the original control exactly
 including maintenance and rollback cases. This fixture has no diagnostic GUC
 assertion, accounting for one fewer assertion than the guarded fixtures.
 
-[Delivery evidence](../../evidence/2026-11-05-beta5-manifest-delivery.json) records the
+[Delivery evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-05-beta5-manifest-delivery.json) records the
 native trials, unsuccessful initial unguarded verification and complete fixed
 follow-up cohort, including artifact, image, library and raw-result hashes.
 
@@ -184,7 +184,7 @@ no OOM or PostgreSQL crash:
 | ARM64 | 125.67 s | 1.076 / 0.989 / 1.070 s |
 | AMD64 | 160.97 s | 1.733 / 1.711 / 1.756 s |
 
-[Native evidence](../../evidence/2026-11-06-beta5-native-manifest-patch.json) retains
+[Native evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-native-manifest-patch.json) retains
 the archive/image/library identities, snapshots and workload checks. Downloaded
 artifact ZIP checksums match GitHub's published digests.
 
@@ -207,7 +207,7 @@ fairness-only measurement with frozen runtime inputs passes valid timing and
 every gate: p95 0.552 / 0.547 / 0.514 seconds and copy completion 125.16 seconds.
 Both runs install identical library hashes, also matching the earlier unguarded
 patch build. No threshold is relaxed and the invalid run does not qualify.
-[Runtime delivery evidence](../../evidence/2026-11-06-beta5-runtime-prerequisite.json)
+[Runtime delivery evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-runtime-prerequisite.json)
 retains both observations and their prerequisite identities.
 The artifact-only compatibility lane also passes 57 checks at each exact
 endpoint with the patched runtime. The final offline installer explicitly

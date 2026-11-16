@@ -109,7 +109,7 @@ status remains `error` in the evidence. The corrected parser reads the same
 retained log successfully and finds all seven databases; the workload was not
 rerun to repair the parser. Raw-result and log hashes retain that distinction.
 
-[Machine-readable evidence](../../evidence/2026-11-01-beta5-latency-investigation.json)
+[Machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-01-beta5-latency-investigation.json)
 retains archive identities, raw-result hashes, failed gates, local controls,
 and the limits of each comparison.
 

@@ -48,7 +48,7 @@ insert into the source table.
 ## Evidence
 
 Run `scram_20260915_101007` passed all ten assertions. The retained
-[results](../../evidence/2026-09-15-scram-results.json) cover:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-scram-results.json) cover:
 
 - non-superuser replication-role attributes and read-only table access;
 - source-write denial;

@@ -46,7 +46,7 @@ Iceberg metadata changes and calls `FinishAllUploads`. Other transaction work,
 including PostgreSQL durability, is also included in the measured commit phase;
 the current trace does not attribute time to individual callbacks or uploads.
 
-[Machine-readable evidence](../../evidence/2026-11-01-beta5-transaction-trace.json)
+[Machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-01-beta5-transaction-trace.json)
 retains archive identities, runtime/harness input hashes, wrapper provenance,
 raw log/result hashes, matched counts and per-database summaries. Full per-batch
 matches and source snapshots remain in the referenced local qualification

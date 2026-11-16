@@ -9,4 +9,4 @@
 
 Maintain active implementation checklists here, with descriptive topic names. Add a new plan to this index and link it from the relevant design or guide. Keep experimental proposals separate from shipped behavior, and point checked items to evidence. Do not copy the same open task into several roadmaps; link to its owning plan.
 
-Historical checklists and completed investigations belong in [the archive](../archive/README.md). Their open boxes record historical scope and do not set current priorities. Immutable run artifacts stay in [evidence](../evidence/README.md). Repository guidance is in [AGENTS.md](../../AGENTS.md).
+Historical checklists and completed investigations belong in [the archive](../archive/README.md). Their open boxes record historical scope and do not set current priorities. Compact results and the raw archive index live in [evidence](../evidence/README.md). Repository guidance is in [AGENTS.md](../../AGENTS.md).

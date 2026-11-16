@@ -100,7 +100,7 @@ implemented in-place `rebind` API.
 
 ## Rehearsal results
 
-The [retained run](../../evidence/2026-10-19-base-fresh-rebuild-results.json) passed
+The [retained run](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-fresh-rebuild-results.json) passed
 **69/69 assertions** on Linux arm64/PostgreSQL 18.6 using the exact
 identity-qualified image. It exercises real writable Iceberg tables, not
 placeholder relations or metadata-only restoration.

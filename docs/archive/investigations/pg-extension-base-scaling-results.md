@@ -137,7 +137,7 @@ database/subscription and inserts; mixed mutations, many simultaneous writers,
 amd64, soak, latest-overlay upgrades and production fencing remain unqualified.
 The resource failures above remain findings despite these performance passes.
 
-The [retained evidence](../../evidence/2026-10-20-base-current-scaling-performance-results.json)
+The [retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-20-base-current-scaling-performance-results.json)
 contains raw transactions, analyses, fingerprints, worker inventories and log
 hashes/excerpts for both resource failures. All private containers and volumes
 were removed after the run; cached images remain. Nothing was committed or pushed.

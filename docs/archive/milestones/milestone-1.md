@@ -53,7 +53,7 @@ progress without weakening the rule that feedback never exceeds staged LSN.
 ## Evidence
 
 Run `journal_20260914_051629` passed all 16 assertions. The
-[retained results](../../evidence/2026-09-14-journal-results.json) show three staged
+[retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-journal-results.json) show three staged
 transactions, two published batches, three destination rows, and all four
 positions converged at `0/140`.
 

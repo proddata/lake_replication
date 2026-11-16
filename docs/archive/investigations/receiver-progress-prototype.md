@@ -60,7 +60,7 @@ freshness. The observer continues to report receiver health as unknown.
 
 ## Validation and results, 2026-10-28
 
-[Retained evidence](../../evidence/2026-10-28-receiver-progress-results.json) includes
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-receiver-progress-results.json) includes
 all five attempts, input identities, exact Rust/SQL variants, raw-result hashes,
 operational checks and independent snapshot audits. The final contention and
 control builds have identical overlaid Rust source hashes. This verifies

@@ -44,7 +44,7 @@ Failures encountered before a successful candidate remain visible for diagnosis.
 ## Evidence
 
 Run `endpoints_20260915_043735` passed all eight assertions. The retained
-[results](../../evidence/2026-09-15-source-endpoints-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-15-source-endpoints-results.json) demonstrate:
 
 - fallthrough from an unreachable first candidate to the writable source;
 - exact selected-address and candidate-error telemetry;

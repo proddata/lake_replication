@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-10-31-checkpoint-chunk-migration-results.json",
+      "sha256": "ff1c2fa0228e27790bdb07eed6e21f3e2d61291d62c7ec4e8b9a131d9e38ab54",
+      "bytes": 63286,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-31-checkpoint-chunk-migration-results.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "artifacts": {
     "documented": {
       "path": ".qualification/beta5_pipeline_build/lake_replication-0.1.0-beta.5.tar.gz",

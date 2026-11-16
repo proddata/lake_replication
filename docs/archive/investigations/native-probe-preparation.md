@@ -35,7 +35,7 @@ disconnect and exact-data recovery. Unit checks reject stale inputs, wrong
 architectures, changed archives and incorrect source labels, and exercise live
 build failure reporting. Both workflows pass actionlint.
 
-[Machine-readable evidence](../../evidence/2026-10-29-native-probe-preparation.json)
+[Machine-readable evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-29-native-probe-preparation.json)
 retains the candidate/archive identities, cache manifest and local test inputs.
 Native replication and final release gates remain pending; the cancelled attempt
 provides no native performance pass.

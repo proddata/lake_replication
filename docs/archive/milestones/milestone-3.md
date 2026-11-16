@@ -30,7 +30,7 @@ instead of replaying the Iceberg insert.
 ## Evidence
 
 Run `publisher_20260914_062208` passed all 14 assertions. The
-[retained results](../../evidence/2026-09-14-publisher-results.json) cover the complete
+[retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-publisher-results.json) cover the complete
 prototype path:
 
 ```text

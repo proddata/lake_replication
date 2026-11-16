@@ -18,7 +18,7 @@ object store and volumes. Runtime production sources remain unchanged.
 
 ## First cohort
 
-[Retained results](../../evidence/2026-10-19-base-forced-crash-results.json): six
+[Retained results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-forced-crash-results.json): six
 injections completed; 66 of 74 assertions passed. The eight failures are
 reported below, rather than treated as a successful qualification.
 
@@ -45,7 +45,7 @@ miss recovery within the surviving postmaster.
 
 ## Diagnosis
 
-An [instrumented repeat](../../evidence/2026-10-19-base-forced-crash-diagnostic-results.json) verified a genuinely stopped supervisor and receiver
+An [instrumented repeat](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-forced-crash-diagnostic-results.json) verified a genuinely stopped supervisor and receiver
 before killing the launcher. The replacement encountered:
 
 > replication slot is already active outside this worker cycle
@@ -64,7 +64,7 @@ used for each cohort.
 
 ## Init/reaper control
 
-The [Docker-init control](../../evidence/2026-10-19-base-forced-crash-init-control-results.json)
+The [Docker-init control](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-19-base-forced-crash-init-control-results.json)
 repeated both paused launcher/wrapper kills with a verified stopped receiver
 and the same C runtime. Both had exactly one expected PostgreSQL crash recovery,
 no untracked-child warnings, and no recorded old processes after five seconds.

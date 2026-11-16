@@ -27,7 +27,7 @@ caffeinate -is python3 tests/admission/contention.py --copies 4 \
 
 ## Local results, 2026-10-28
 
-[Retained evidence](../../evidence/2026-10-28-pressure-visibility-results.json)
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-28-pressure-visibility-results.json)
 records the sequential S2 runs, exact input identities, result hashes and
 per-stream summaries. The first control predates automatic capture of the
 helper source; an unchanged helper snapshot is retained separately and marked

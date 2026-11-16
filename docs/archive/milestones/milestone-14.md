@@ -40,7 +40,7 @@ rename or reorder its previous columns.
 ## Evidence
 
 Run `supervisor_20260914_194306` passed all ten assertions. The retained
-[results](../../evidence/2026-09-14-reconnect-results.json) demonstrate that:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-reconnect-results.json) demonstrate that:
 
 - child retry/backoff and duplicate-supervisor fencing still work;
 - the destination backend holding the supervisor control connection was

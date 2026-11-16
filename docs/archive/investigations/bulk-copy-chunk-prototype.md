@@ -122,7 +122,7 @@ All 37 admission tests, 24 analysis tests, workflow lint and `make check` pass.
 The clock validator also replays the previous native cohort without changing its
 valid/valid/invalid classifications. No historical control has been requalified.
 
-[Local evidence](../../evidence/2026-10-30-bulk-copy-chunk-local.json) retains safety
+[Local evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-bulk-copy-chunk-local.json) retains safety
 histograms, both row-cap candidates, the inconclusive cohort, confirmation,
 one-CPU run, archived-worker hashes and all failed gates.
 
@@ -159,7 +159,7 @@ averages about 0.27 cores, with no cgroup quota throttling. Such samples cannot
 exclude brief CPU, storage or lock contention. Initial-copy workers reach about
 18.0 MiB aggregate sampled PSS in the candidate versus 6.1–6.6 MiB in controls.
 
-[Native evidence](../../evidence/2026-10-30-bulk-copy-chunk-native.json) retains the
+[Native evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-bulk-copy-chunk-native.json) retains the
 complete comparison, every failed gate, archive/harness/worker hashes and sampled
 resource summaries. The workflow is correctly red because workload gates fail;
 this is not a fixture, source scheduling or observer-clock failure.
@@ -192,7 +192,7 @@ Streaming engine permit execution is negligible in this local pair. Neither
 fact identifies the native bottleneck: aggregate local SQL profiles are not
 native per-transaction traces.
 
-[Profile evidence](../../evidence/2026-10-30-bulk-copy-chunk-sql-profile.json) records
+[Profile evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-30-bulk-copy-chunk-sql-profile.json) records
 all gates, source/archive/worker/profile hashes and per-database statement costs.
 Raw profiles remain at the recorded local evidence paths. Both native and local
 failed/inconclusive observations elsewhere in this document remain retained.

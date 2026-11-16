@@ -101,7 +101,7 @@ reported as unmodified package qualification or production adoption.
 
 ## Local results and decision
 
-[Retained evidence](../../evidence/2026-10-27-shared-staging-budget-results.json)
+[Retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-27-shared-staging-budget-results.json)
 includes raw-result hashes, audits, exact overlaid source variants, operational
 checks and every attempted budget run, including invalid attempts. Rates below
 are aggregate reservation rates across all four copies.

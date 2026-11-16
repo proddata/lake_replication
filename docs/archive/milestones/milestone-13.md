@@ -47,7 +47,7 @@ staged transaction/change and streamed-transaction queue depths.
 ## Evidence
 
 Run `supervisor_20260914_173031` passed all seven assertions. The retained
-[results](../../evidence/2026-09-14-supervisor-results.json) demonstrate:
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-supervisor-results.json) demonstrate:
 
 - a lab-injected child failure became a future-dated backoff with durable
   consecutive and total failure counts;

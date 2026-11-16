@@ -13,8 +13,8 @@ errors update subscription rows only when their diagnostic state changes.
 Production sources, release packaging, and the data path remain unchanged.
 
 The expanded functional runs passed
-[111 base-worker checks](../../evidence/2026-10-18-base-event-wait-results.json) and
-[81 applicable static-baseline checks](../../evidence/2026-10-18-static-shared-hardening-results.json).
+[111 base-worker checks](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-base-event-wait-results.json) and
+[81 applicable static-baseline checks](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-static-shared-hardening-results.json).
 Both include a paused supervisor disable with explicit cleanup and unchanged
 postmaster start time, followed by ten enable/disable cycles. In both variants,
 the named handle context returned to exactly 240 used bytes within its 8,192-byte
@@ -28,7 +28,7 @@ confirmed removed.
 
 ## Initial A/B screening
 
-[Raw retained evidence](../../evidence/2026-10-18-launcher-screening-results.json)
+[Raw retained evidence](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-screening-results.json)
 contains five alternating repetitions per variant, fresh fixtures each time,
 with pinned upstream/release sources, image IDs, and host information. The
 ignored run directory also retains matching source snapshots and build/log
@@ -74,7 +74,7 @@ loading or to the presence of the explicit setting.
 
 ## Repeatability control
 
-The [second cohort](../../evidence/2026-10-18-launcher-repeatability-results.json)
+The [second cohort](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-10-18-launcher-repeatability-results.json)
 used three alternating repetitions per variant with `--base-preload`. It kept
 the same workload and shared C implementation, added worker logs and explicit
 base-launcher PID sampling, and retained both resource counters and source

@@ -37,7 +37,7 @@ transaction. A validation or write failure rolls back the entire group.
 ## Evidence
 
 Run `multi_20260914_163430` passed all 11 assertions. The retained
-[results](../../evidence/2026-09-14-multi-table-results.json) cover two tables under
+[results](https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-09-14-multi-table-results.json) cover two tables under
 one snapshot at `0/5CB9858`:
 
 - an accounts table publishing only `id` and `note`, filtered by
