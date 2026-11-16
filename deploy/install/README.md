@@ -154,19 +154,23 @@ then apply that script before enabling subscriptions. Same-version
 `ALTER EXTENSION UPDATE` does not install the new helper. The refresh refuses
 enabled subscriptions and records the helper as an extension member.
 
-The beta.5 update-key filter is included in fresh installation and the
-beta.4-to-beta.5 SQL upgrade. For an earlier unpublished beta.5 development
+The current beta.5 JSONB, INSERT-grouping, DELETE and UPDATE functions are
+included in fresh installation and the beta.4-to-beta.5 SQL upgrade. For an earlier unpublished beta.5 development
 database, stop subscriptions and follow the coordinated backup procedure in
 `UPGRADE.md`, then run the matching unpacked archive's transactional refresh:
 
 ```sh
 psql -X -v ON_ERROR_STOP=1 --dbname analytics \
-  --file DEVELOPMENT_UPDATES/0030_update_key_filter.sql
+  --file DEVELOPMENT_UPDATES/current_beta5.sql
 ```
 
 Same-version `ALTER EXTENSION UPDATE` does not rerun changed SQL; installing
 new binaries alone does not enable this optimization. The refresh preserves
-the existing function signature, privileges and extension membership.
+existing function signatures, privileges and extension membership. It applies
+migrations 0030–0034 transactionally, refuses running subscriptions, registers
+the native INSERT guard when needed, and can be reapplied. The earlier
+`0030_update_key_filter.sql` remains a historical single-migration artifact and
+does not bring an older development database to current beta.5.
 
 Build both supported Linux architectures with Docker Buildx and QEMU:
 

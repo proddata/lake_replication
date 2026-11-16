@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 import tarfile
 
@@ -129,7 +130,9 @@ def check_upgrade(h,patch):
         try:
             client.query('CREATE EXTENSION pg_lake CASCADE; CREATE EXTENSION dblink; '+
                          (f"CREATE EXTENSION lake_replication VERSION '{legacy}'" if legacy else 'CREATE EXTENSION lake_replication'))
-            if not legacy:client.query(historical_definition())
+            if not legacy:
+                client.query(historical_definition())
+                client.query('ALTER EXTENSION lake_replication DROP FUNCTION lake_replication.lock_insert_group_targets(regclass[]); DROP FUNCTION lake_replication.lock_insert_group_targets(regclass[])')
             client.query('CREATE TABLE uf_existing(customer_uuid uuid NOT NULL,payload text) USING iceberg; '
                          "INSERT INTO uf_existing VALUES('00112233-4455-6677-8899-aabbccddeeff','before')")
             before=body_hash(client)
@@ -143,6 +146,10 @@ def check_upgrade(h,patch):
             if legacy:client.query(upgrade)
             else:client.query(patch)
             q.check(database+' installs exact fresh-install function',body_hash(client),expected)
+            if not legacy:
+                client.query(patch)
+                q.check(database+' repeated refresh remains current',body_hash(client),expected)
+            q.check(database+' native guard remains an extension member',client.query("SELECT count(*) FROM pg_depend d JOIN pg_extension e ON e.oid=d.refobjid WHERE d.classid='pg_proc'::regclass AND d.objid='lake_replication.lock_insert_group_targets(regclass[])'::regprocedure AND d.refclassid='pg_extension'::regclass AND e.extname='lake_replication' AND d.deptype='e'"),['1'])
             q.check(database+' preserves function privileges',client.query("SELECT coalesce(proacl::text,'NULL') FROM pg_proc WHERE oid="
                     "'lake_replication.apply_change_run(text,regclass,jsonb[],jsonb[])'::regprocedure"),acl)
             q.check(database+' preserves pre-existing rows',client.query('SELECT payload FROM uf_existing'),['before'])
@@ -174,11 +181,11 @@ def main():
         h.setup()
         archive=h.q.archive_path()
         with tarfile.open(archive) as bundle:
-            matches=[m for m in bundle.getmembers() if m.name.endswith('/DEVELOPMENT_UPDATES/0030_update_key_filter.sql')]
+            matches=[m for m in bundle.getmembers() if m.name.endswith('/DEVELOPMENT_UPDATES/current_beta5.sql')]
             if len(matches)!=1:raise ValueError('archive is missing the development SQL refresh')
             patch=bundle.extractfile(matches[0]).read().decode()
-        expected_patch=(Path(__file__).resolve().parents[2]/'migrations/0030_update_key_filter.sql').read_text()
-        h.q.check('packaged refresh matches measured migration',patch,expected_patch)
+        expected_patch=subprocess.check_output(['sh',str(Path(__file__).resolve().parents[2]/'deploy/install/build-current-beta5-refresh.sh')],text=True)
+        h.q.check('packaged refresh matches current cumulative migrations',patch,expected_patch)
         h.report['packaged_refresh_sha256']=hashlib.sha256(patch.encode()).hexdigest()
         check_types(h)
         check_edges(h)
