@@ -7,7 +7,7 @@ intercepted and routed to this project's own lake_replication.* control
 plane -- with real source-identity discovery via dblink, not a stub --
 instead of PostgreSQL's real subscription/slot/apply-worker machinery ever
 running. Also installs and checks the crunchy_iceberg-shaped monitoring
-views. See docs/native-subscription-spike.md for the historical design work.
+views. See docs/archive/investigations/native-subscription-spike.md for the historical design work.
 
 The second half of this probe goes further: it builds the four Rust worker
 binaries, copies them into the lab container, and proves that a single

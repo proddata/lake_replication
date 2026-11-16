@@ -4,8 +4,8 @@ For the current controlled update investigation, use
 [`update_compare.py`](update_compare.py). It installs a selected native archive
 in disposable qualification fixtures and compares the installed update function
 against the historical control or a fixture-only candidate, depending on the
-archive. See the [original investigation](../../docs/update-performance-investigation.md)
-and [packaged integration results](../../docs/update-key-filter-integration.md).
+archive. See the [original investigation](../../docs/archive/investigations/update-performance-investigation.md)
+and [packaged integration results](../../docs/qualification/update-key-filter-integration.md).
 
 ```sh
 QUALIFICATION_ARCHIVE=/absolute/path/to/native-archive.tar.gz \

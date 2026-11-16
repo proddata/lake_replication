@@ -14,7 +14,7 @@ method name ("heap2", the same trick PostgreSQL's own create_am regression
 test uses) to check whether a *complete* table access method -- unlike
 pg_lake's placeholder -- would let native subscriptions work, informing
 whether a from-scratch Iceberg table access method is a viable alternative
-to today's external-worker design. See docs/native-subscription-spike.md.
+to today's external-worker design. See docs/archive/investigations/native-subscription-spike.md.
 """
 import json
 from datetime import datetime, timezone

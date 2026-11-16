@@ -9,9 +9,13 @@ Logical replication from ordinary PostgreSQL tables into
 The source tables and Iceberg mirrors can live in the **same PostgreSQL
 instance and database**. In that topology, a loopback receiver feeds a local
 journal and publisher directly; no separate destination PostgreSQL or intermediate
-Iceberg change logs are needed. See [single-instance mirroring](docs/local-iceberg.md).
+Iceberg change logs are needed. See [single-instance mirroring](docs/guides/local-iceberg.md).
+We are also developing [direct publication](docs/design/direct-publication.md)
+for that same deployment, with final-table publication replacing durable bulk
+journal admission as the WAL acknowledgement boundary. It remains opt-in and
+experimental.
 
-`lake_replication` consists of a PostgreSQL extension and four worker
+The packaged journaled path consists of a PostgreSQL extension and four worker
 executables, installed on the destination host beside PostgreSQL 18 and pg_lake.
 Together they take an initial snapshot, consume logical replication, stage
 source transactions durably, and publish bounded micro-batches into Iceberg.
@@ -35,8 +39,35 @@ does not need this extension installed.
 > [!WARNING]
 > This project is approaching its first beta and is not production-ready yet.
 > The release gates, remaining work, and evidence are tracked in
-> [BETA-RELEASE.md](BETA-RELEASE.md). The supported beta target is pg_lake's
+> [release gates](docs/roadmap/release.md). The supported beta target is pg_lake's
 > local PostgreSQL catalog; REST catalogs are not supported.
+
+## What we want to support
+
+The project is building two paths for PostgreSQL-to-Iceberg replication:
+
+| Path | Intended use | Current status |
+| --- | --- | --- |
+| **Journaled publication** | Mirror local application tables, or replicate a remote PostgreSQL source, with durable change capture separated from Iceberg publication | Packaged default beta pipeline |
+| **Direct publication** | A single PostgreSQL instance publishes its own application changes into final Iceberg tables, avoiding a durable bulk change journal | Opt-in prototype; managed lifecycle and production qualification remain open |
+
+For both paths, the intended product contract is consistent initial copy,
+continuous mutations, transaction-safe publication and replay, bounded resource
+use, and PostgreSQL-native lifecycle and monitoring. Direct publication is an
+explicit development direction. It does not require another PostgreSQL instance
+or intermediate Iceberg change logs.
+
+The direct prototype already exercises bounded snapshots, coalescing, large
+streamed transactions, checkpoint/final-data atomicity and crash/outage recovery.
+It acknowledges WAL **after final publication commits**; the journaled receiver
+acknowledges after durable journal admission. Direct publication therefore keeps
+source WAL longer when final storage or publication falls behind. General DDL,
+resumable large snapshots, managed direct ownership/credentials, resource
+admission and broader failover/soak coverage still need work.
+
+See [publication contracts and current boundaries](docs/design/direct-publication.md)
+and the [replication roadmap](docs/roadmap/replication.md). The documented
+installation and subscription examples below use the packaged journaled path.
 
 ## Why this exists
 
@@ -45,7 +76,7 @@ a pg_lake Iceberg foreign table. This project provides a separate replication
 path designed for that boundary while retaining PostgreSQL-native setup and
 control commands.
 
-It currently supports:
+The packaged journaled path currently supports:
 
 - initial snapshot copy followed by continuous logical replication;
 - `INSERT`, `UPDATE`, `DELETE`, primary-key changes, and `TRUNCATE`;
@@ -58,7 +89,7 @@ It currently supports:
 - source continuity checks and ordered failover endpoints; and
 - PostgreSQL 18 packages for Linux amd64 and arm64.
 
-## How it works
+## How the default journaled path works
 
 ```mermaid
 flowchart LR
@@ -102,10 +133,10 @@ gates remain open.
 ## Quick start
 
 For **one PostgreSQL instance and database**, follow the
-[single-instance setup](docs/local-iceberg.md#setup). It uses the same receiver,
+[single-instance setup](docs/guides/local-iceberg.md#setup). It uses the same receiver,
 journal and publisher, with application heaps and Iceberg mirrors in separate
 schemas. Mirroring is asynchronous and shares the application's CPU, memory,
-WAL and disk capacity; see the [local resource and recovery evidence](docs/local-iceberg.md#qualification-and-limits).
+WAL and disk capacity; see the [local resource and recovery evidence](docs/guides/local-iceberg.md#qualification-and-limits).
 
 The following walkthrough assumes a source database named `application` and a
 pg_lake-enabled destination database named `analytics`. It is intended for a
@@ -197,8 +228,8 @@ needed by the workers. Selecting a username grants no privileges;
 `lake_replication_worker` alone only permits the protected credential getters.
 The packaged `WORKER_GRANTS.sql` provides a tested non-superuser runtime recipe
 for a fresh login and dedicated destination schema; see the
-[grant guide](docs/worker-runtime-grants.md). Per-subscription and storage
-isolation remain in the [security follow-up](docs/security-todos.md).
+[grant guide](docs/guides/worker-runtime-grants.md). Per-subscription and storage
+isolation remain in the [security follow-up](docs/roadmap/security.md).
 
 The source user and password for a launcher-managed subscription come from its
 `CONNECTION` string. Managed workers also obtain their source TLS mode, CA path,
@@ -276,8 +307,7 @@ keep one extra `max_replication_slots` capacity until that copy completes. The
 pre-created slot must belong to the source database, be inactive and retain WAL
 from before the copy snapshot. Dropping the subscription drops that slot.
 `enabled` and `copy_data` are not yet implemented and are rejected if supplied.
-Crunchy's `create_tables_using = 'iceberg'` syntax is separate from this
-project's `lake_target = 'iceberg'` option.
+Use this project’s `lake_target = 'iceberg'` option; `create_tables_using` is not supported.
 
 `CONNECTION` is PostgreSQL's standard libpq connection string and also accepts
 `postgres://` and `postgresql://` URIs, for example
@@ -386,10 +416,10 @@ Useful first checks are:
 - the configured `lake_replication.log_directory` for per-subscription
   worker output.
 
-See the [operations guide](docs/operations.md) for metric names, suggested alert
+See the [operations guide](docs/guides/operations.md) for metric names, suggested alert
 thresholds, structured log fields, and the first-response checklist. Before
 changing an installed version, follow the coordinated
-[upgrade, backup, and rollback procedure](docs/upgrade-and-rollback.md).
+[upgrade, backup, and rollback procedure](docs/guides/upgrade-and-rollback.md).
 
 ## Beta limitations
 
@@ -406,7 +436,7 @@ changing an installed version, follow the coordinated
 - Mapping version 1 supports common scalar types plus bounded Iceberg decimals,
   `varchar`, and `char`. Unconstrained or over-precision numerics, arrays,
   enums, domains, generated columns, and custom types remain fail-closed; see
-  the [feature boundaries](docs/feature-gaps.md).
+  the [feature boundaries](docs/guides/support-boundaries.md).
 - Source passwords supplied through `CONNECTION` are stored in
   `lake_replication.source_connections` for worker reconnects and source slot
   cleanup. `pending_cleanup` holds only the slot name. Row-level security
@@ -422,7 +452,7 @@ changing an installed version, follow the coordinated
   artifacts are development outputs until the candidate is qualified and released.
 
 For the complete current decision record, see
-[BETA-RELEASE.md](BETA-RELEASE.md).
+[release gates](docs/roadmap/release.md).
 
 ## Try the local demo
 
@@ -459,12 +489,12 @@ from that source, without fetching the top-level pg_lake repository in Docker.
 Upstream nested dependencies and other build prerequisites still download on
 their first build. Standalone release bundles remain independent of the
 submodule and install beside the customer's existing pg_lake installation.
-See [upstream development and integration](docs/upstream-integration.md) for
+See [upstream development and integration](docs/design/upstream-integration.md) for
 revision overrides, direct Docker builds, and the worker integration assessment.
 
 ```sh
 make check                 # formatting and offline/static checks
-cargo test --workspace --all-features # include the optional push prototype
+cargo test --workspace --all-features # include optional replication prototypes
 npm test --prefix deploy/poc/webui    # dashboard and workload controls
 make install-bundle        # native installable archive
 make install-bundle-test   # test the exact exported archive in the lab
@@ -472,36 +502,19 @@ make install-bundle-test   # test the exact exported archive in the lab
 
 The integration lab contains correctness, crash, schema, failover, TLS, SCRAM,
 slot-loss, and maintenance probes. It builds a large development image and is
-kept separate from the quick start. See the [feasibility report](docs/feasibility.md)
-and [historical evidence](docs/) before running individual lab targets.
+kept separate from the quick start. See the [feasibility report](docs/archive/investigations/feasibility.md)
+and the [documentation index](docs/README.md) before running individual lab targets.
 
 ## Documentation
 
-- [Beta release gates](BETA-RELEASE.md)
-- [Compatibility contract](deploy/install/COMPATIBILITY.md)
-- [Bundle and installer details](deploy/install/README.md)
-- [Operations, metrics, logs, and alerts](docs/operations.md)
-- [Single-instance Iceberg mirroring, tuning, and qualification](docs/local-iceberg.md)
-- [Local mirroring versus remote pull](docs/local-pull-comparison.md)
-- [Experimental WAL-backed direct publication and snapshot bootstrap](experiments/wal_direct/README.md)
-- [Direct streamed transactions and outage recovery](docs/wal-direct-streaming.md)
-- [Direct publication load and memory limits](docs/wal-direct-sizing.md)
-- [Direct publication profiling and maintenance](docs/wal-direct-publication-profile.md)
-- [Direct publication deadlock recovery and sustained-load limits](docs/wal-direct-deadlock-recovery.md)
-- [15-minute direct publication maintenance tests](docs/wal-direct-sustained-maintenance.md)
-- [Native lock coordination experiment and measured results](docs/wal-direct-prelock.md)
-- [Proposed improvements to the direct write path](docs/wal-direct-write-path-improvements.md)
-- [Publication coalescing windows](docs/local-coalescing-windows.md)
-- [DELETE filtering](docs/local-delete-filter.md)
-- [Wide UPDATE conversion](docs/local-update-conversion.md)
-- [Optional source-push prototype](docs/push-replication.md)
-- [Local demo](deploy/poc/README.md)
-- [Feasibility and correctness report](docs/feasibility.md)
-- [Update performance investigation](docs/update-performance-investigation.md)
-- [Packaged update-key filter](docs/update-key-filter-integration.md)
-- [Dependency and license inventory](docs/dependencies.md)
-- [Beta feature boundaries](docs/feature-gaps.md)
-- [Why native PostgreSQL apply cannot target Iceberg](docs/native-subscription-spike.md)
+Start with the [documentation index](docs/README.md). It separates operating
+guides, architecture, measurements, qualification and historical work.
+
+- [Install and compatibility](deploy/install/README.md).
+- [Single-instance mirroring](docs/guides/local-iceberg.md).
+- [Operations and recovery](docs/guides/operations.md).
+- [Journaled and direct publication](docs/design/direct-publication.md).
+- [Active roadmaps and release gates](docs/roadmap/README.md).
 
 ## License
 

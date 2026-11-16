@@ -16,7 +16,7 @@ The accepted archive also passes the native ARM64
 [two-endpoint compatibility refresh](https://github.com/proddata/lake_replication/blob/main/docs/evidence/2026-11-11-beta5-compatibility-refresh.json).
 The RC soak and final release gates remain required.
 Earlier failed trials remain in the
-[investigation](../../docs/beta5-commit-internals.md).
+[investigation](../../docs/archive/investigations/beta5-commit-internals.md).
 
 The patchset manifest pins the patch checksum and all three source files before
 and after patching. The accepted revisions are `8180647d4535` and `f609ecb17891`;

@@ -4,7 +4,7 @@ compaction, per-table snapshot-retention overrides, autovacuum_enabled
 options, and the deletion-queue PITR retention window. This project does not
 implement Iceberg-side maintenance itself; it relies on pg_lake's built-in
 VACUUM (ICEBERG) support and background autovacuum worker. See
-docs/milestone-25.md.
+docs/archive/milestones/milestone-25.md.
 """
 import json
 from datetime import datetime, timezone

@@ -143,7 +143,7 @@ on failure as well as success. These probes do not qualify a release.
 Add `-f probe_arch=arm64` or `-f probe_arch=amd64` to isolate a focused
 probe; the default is both. Architecture selection requires `native_probe=true`.
 Full qualification always runs both architectures. The fairness report includes
-post-workload phase timings; see [timing semantics and current findings](../../docs/native-followup-diagnostics.md).
+post-workload phase timings; see [timing semantics and current findings](../../docs/archive/investigations/native-followup-diagnostics.md).
 
 Use either `native_probe` or the older `fairness_diagnostic` mode, not both.
 Leave both false for full qualification.
@@ -152,9 +152,9 @@ An opt-in local checkpoint coupling diagnostic is available with
 `python3 tests/admission/probe.py --cases checkpoint` and `QUALIFICATION_ARCHIVE`
 set to the candidate archive. A pass reproduces publication blocking staging
 and acknowledgement below journal capacity; it is not a release gate. See
-[the timing result and reproduction](../../docs/native-followup-diagnostics.md#targeted-timing-result-and-checkpoint-coupling).
+[the timing result and reproduction](../../docs/archive/investigations/native-followup-diagnostics.md#targeted-timing-result-and-checkpoint-coupling).
 
-The [checkpoint partition prototype](../../docs/checkpoint-split-prototype.md)
+The [checkpoint partition prototype](../../docs/archive/investigations/checkpoint-split-prototype.md)
 has a separate opt-in native diagnostic after its local safety checks:
 
 ```sh
@@ -205,7 +205,7 @@ The same comparison runs locally with `QUALIFICATION_ARCHIVE` set:
 python3 tests/admission/checkpoint_compare.py --cpuset 0-1
 ```
 
-For the [bounded bulk-copy row-cap experiment](../../docs/bulk-copy-chunk-prototype.md),
+For the [bounded bulk-copy row-cap experiment](../../docs/archive/investigations/bulk-copy-chunk-prototype.md),
 run a separate ARM64 comparison after its local byte/lifecycle checks:
 
 ```sh
@@ -240,7 +240,7 @@ python3 tests/qualification/storage_preflight.py
 
 The native workflows perform this automatically. Image IDs, source revisions,
 recipe hash and architecture are retained in qualification evidence. These test
-images are not part of the shipped runtime. See [provenance and limits](../../docs/qualification-storage-fixtures.md).
+images are not part of the shipped runtime. See [provenance and limits](../../docs/qualification/qualification-storage-fixtures.md).
 `QUALIFICATION_STORAGE_IMAGE` and `QUALIFICATION_STORAGE_INIT_IMAGE` may select
 already available local fixtures; explicit overrides are recorded and must match
 the host architecture.
