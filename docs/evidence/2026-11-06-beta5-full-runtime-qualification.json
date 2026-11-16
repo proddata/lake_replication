@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-06-beta5-full-runtime-qualification.json",
+      "sha256": "3fdb40cb0158d99bb49b82acf67e94dddf2cc83b6a072e1d0e71e659b481cf08",
+      "bytes": 48261,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-full-runtime-qualification.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "scope": "Full native supported-runtime qualification at 6d1ef13; ARM receiver-harness failure retained",
   "run_url": "https://github.com/proddata/lake_replication/actions/runs/42182134146",
   "source_revision": "6d1ef1319471a6a3dfbd99da91a6aa82d8c4e3cc",

@@ -1,4 +1,8 @@
-# Historical experiments
+# Experiments
+
+The active [direct-publication prototype](wal_direct/README.md) has explicit feature gates, private runtime images and separate qualification. Its intended support and remaining work are described in [the publication contracts](../docs/design/direct-publication.md) and [the roadmap](../docs/roadmap/replication.md).
+
+## Historical admission experiments
 
 Shared measurement and operational helpers now live in
 [`tests/support`](../tests/support/README.md). Production package qualification
@@ -7,7 +11,7 @@ lives under `tests/admission`, `tests/lifecycle` and `tests/soak`.
 Historical admission overlays, alternative extension implementations and their
 build/replay drivers have been removed from the active tree. They are not part
 of the installed extension or release package. Reports and evidence remain
-under `docs/`, with their recorded paths and source hashes unchanged.
+under [the documentation archive](../docs/archive/README.md) and [evidence](../docs/evidence/README.md). The evidence archive retains the originals; compact current summaries point to them with pinned URLs and hashes.
 
 To reproduce an old result, use the exact source snapshot, archive and runtime
 identities in that result. The

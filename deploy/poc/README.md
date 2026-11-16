@@ -27,7 +27,7 @@ statements are what starts replication -- they spawn this project's own
 inside the `postgres` container and route to its `lake_replication.*`
 control plane, instead of native PostgreSQL logical replication (which
 cannot target an Iceberg foreign table at all -- see
-[`docs/native-subscription-spike.md`](../../docs/native-subscription-spike.md)).
+[`docs/archive/investigations/native-subscription-spike.md`](../../docs/archive/investigations/native-subscription-spike.md)).
 
 A demo table (`application.public.orders`, three seed rows) and its
 publication (`orders_pub`) are created automatically. No subscription is

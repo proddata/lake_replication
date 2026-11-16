@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-06-beta5-short-soak.json",
+      "sha256": "7d4bd7d8780a5fce1420e846f1876c8f423c6508a79c5807a4c532b3c0a66b49",
+      "bytes": 12566,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-short-soak.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "scope": "Ten-minute soak-runner validation; not a 24-hour release soak",
   "status": "passed",
   "candidate_source_revision": "b0a703ab9f65a8f26904b21ed91c87df1944cdbc",

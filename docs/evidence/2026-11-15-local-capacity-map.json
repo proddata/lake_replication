@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-15-local-capacity-map.json",
+      "sha256": "4a38292b389b66162d08bb4636362137546c0f846d4e874b148d27c5f4518238",
+      "bytes": 74530,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-local-capacity-map.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "scope": "bounded local transaction-rate and transaction-size map",
   "status": "passed",
   "cases": [
@@ -44,84 +55,12 @@
                 "process_pss_kib_sum": 111115
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.302413917030208,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 2880650,
-                    "memory_bytes": 329551872,
-                    "process_rss_kib_sum": 187268,
-                    "process_pss_kib_sum": 48273
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3363941,
-                    "memory_bytes": 247803904,
-                    "process_rss_kib_sum": 115016,
-                    "process_pss_kib_sum": 109059
-                  }
-                },
-                "published_application_commits": 10,
-                "observed_application_commits": 10
-              },
-              {
-                "elapsed_seconds": 4.5767052919836715,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3001958,
-                    "memory_bytes": 328396800,
-                    "process_rss_kib_sum": 188728,
-                    "process_pss_kib_sum": 48837
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3442786,
-                    "memory_bytes": 242405376,
-                    "process_rss_kib_sum": 117112,
-                    "process_pss_kib_sum": 111155
-                  }
-                },
-                "published_application_commits": 19,
-                "observed_application_commits": 19
-              },
-              {
-                "elapsed_seconds": 6.883463584003039,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3123067,
-                    "memory_bytes": 332152832,
-                    "process_rss_kib_sum": 190008,
-                    "process_pss_kib_sum": 49413
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3504748,
-                    "memory_bytes": 240320512,
-                    "process_rss_kib_sum": 117104,
-                    "process_pss_kib_sum": 111149
-                  }
-                },
-                "published_application_commits": 28,
-                "observed_application_commits": 28
-              },
-              {
-                "elapsed_seconds": 9.147970083984546,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3267119,
-                    "memory_bytes": 333385728,
-                    "process_rss_kib_sum": 191364,
-                    "process_pss_kib_sum": 49998
-                  },
-                  "pgduck": {
-                    "cpu_usec": 3564947,
-                    "memory_bytes": 242589696,
-                    "process_rss_kib_sum": 117072,
-                    "process_pss_kib_sum": 111115
-                  }
-                },
-                "published_application_commits": 37,
-                "observed_application_commits": 37
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "fe2091dcac212c247ceb47d7bd3e47872955c2dad39c85e6edc57f95404d57bb",
+              "entries_or_characters": 4
+            },
             "application_commits": 40,
             "application_commit_median_seconds": 0.006972895993385464,
             "application_commit_p95_seconds": 0.008450457942672074,
@@ -218,84 +157,12 @@
                 "process_pss_kib_sum": 133238
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.273398375022225,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4595455,
-                    "memory_bytes": 159510528,
-                    "process_rss_kib_sum": 318340,
-                    "process_pss_kib_sum": 68434
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1533826,
-                    "memory_bytes": 193953792,
-                    "process_rss_kib_sum": 165464,
-                    "process_pss_kib_sum": 159114
-                  }
-                },
-                "published_application_commits": 6,
-                "observed_application_commits": 10
-              },
-              {
-                "elapsed_seconds": 4.53380420897156,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5008790,
-                    "memory_bytes": 162213888,
-                    "process_rss_kib_sum": 323736,
-                    "process_pss_kib_sum": 69877
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1840035,
-                    "memory_bytes": 196149248,
-                    "process_rss_kib_sum": 165288,
-                    "process_pss_kib_sum": 158938
-                  }
-                },
-                "published_application_commits": 18,
-                "observed_application_commits": 19
-              },
-              {
-                "elapsed_seconds": 6.811590958968736,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5420209,
-                    "memory_bytes": 165003264,
-                    "process_rss_kib_sum": 327112,
-                    "process_pss_kib_sum": 71229
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2110788,
-                    "memory_bytes": 180948992,
-                    "process_rss_kib_sum": 147800,
-                    "process_pss_kib_sum": 141450
-                  }
-                },
-                "published_application_commits": 24,
-                "observed_application_commits": 28
-              },
-              {
-                "elapsed_seconds": 9.076629334012978,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5937670,
-                    "memory_bytes": 168718336,
-                    "process_rss_kib_sum": 371736,
-                    "process_pss_kib_sum": 80676
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2566508,
-                    "memory_bytes": 173662208,
-                    "process_rss_kib_sum": 141748,
-                    "process_pss_kib_sum": 135399
-                  }
-                },
-                "published_application_commits": 36,
-                "observed_application_commits": 37
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "9aa2afdfe11e64301785c489639aeb51b1bfd10b8e20a3575e77681beff64040",
+              "entries_or_characters": 4
+            },
             "application_commits": 40,
             "application_commit_median_seconds": 0.0029078959487378597,
             "application_commit_p95_seconds": 0.005408541997894645,
@@ -432,141 +299,12 @@
                 "process_pss_kib_sum": 147068
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.2342430830467492,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4058057,
-                    "memory_bytes": 144584704,
-                    "process_rss_kib_sum": 277704,
-                    "process_pss_kib_sum": 64258
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7445418,
-                    "memory_bytes": 184578048,
-                    "process_rss_kib_sum": 154384,
-                    "process_pss_kib_sum": 148068
-                  }
-                },
-                "published_application_commits": 64,
-                "observed_application_commits": 90
-              },
-              {
-                "elapsed_seconds": 4.4732117500388995,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4926847,
-                    "memory_bytes": 141180928,
-                    "process_rss_kib_sum": 245160,
-                    "process_pss_kib_sum": 57936
-                  },
-                  "pgduck": {
-                    "cpu_usec": 8309633,
-                    "memory_bytes": 183549952,
-                    "process_rss_kib_sum": 151272,
-                    "process_pss_kib_sum": 144614
-                  }
-                },
-                "published_application_commits": 120,
-                "observed_application_commits": 179
-              },
-              {
-                "elapsed_seconds": 6.6999502499820665,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5838246,
-                    "memory_bytes": 161136640,
-                    "process_rss_kib_sum": 364252,
-                    "process_pss_kib_sum": 77046
-                  },
-                  "pgduck": {
-                    "cpu_usec": 9185935,
-                    "memory_bytes": 191418368,
-                    "process_rss_kib_sum": 156844,
-                    "process_pss_kib_sum": 150422
-                  }
-                },
-                "published_application_commits": 184,
-                "observed_application_commits": 268
-              },
-              {
-                "elapsed_seconds": 8.934275833074935,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 6767238,
-                    "memory_bytes": 151175168,
-                    "process_rss_kib_sum": 327288,
-                    "process_pss_kib_sum": 67007
-                  },
-                  "pgduck": {
-                    "cpu_usec": 10032454,
-                    "memory_bytes": 188784640,
-                    "process_rss_kib_sum": 150656,
-                    "process_pss_kib_sum": 144304
-                  }
-                },
-                "published_application_commits": 240,
-                "observed_application_commits": 358
-              },
-              {
-                "elapsed_seconds": 11.160069750039838,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 7762438,
-                    "memory_bytes": 163086336,
-                    "process_rss_kib_sum": 370564,
-                    "process_pss_kib_sum": 79142
-                  },
-                  "pgduck": {
-                    "cpu_usec": 11003845,
-                    "memory_bytes": 193286144,
-                    "process_rss_kib_sum": 154828,
-                    "process_pss_kib_sum": 148476
-                  }
-                },
-                "published_application_commits": 296,
-                "observed_application_commits": 400
-              },
-              {
-                "elapsed_seconds": 13.415267750038765,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 8786415,
-                    "memory_bytes": 165990400,
-                    "process_rss_kib_sum": 367836,
-                    "process_pss_kib_sum": 78226
-                  },
-                  "pgduck": {
-                    "cpu_usec": 11844044,
-                    "memory_bytes": 197763072,
-                    "process_rss_kib_sum": 154720,
-                    "process_pss_kib_sum": 148300
-                  }
-                },
-                "published_application_commits": 344,
-                "observed_application_commits": 400
-              },
-              {
-                "elapsed_seconds": 15.680090375011787,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 9878310,
-                    "memory_bytes": 161558528,
-                    "process_rss_kib_sum": 370340,
-                    "process_pss_kib_sum": 78801
-                  },
-                  "pgduck": {
-                    "cpu_usec": 12762700,
-                    "memory_bytes": 200171520,
-                    "process_rss_kib_sum": 155724,
-                    "process_pss_kib_sum": 149301
-                  }
-                },
-                "published_application_commits": 392,
-                "observed_application_commits": 400
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "56b6de122d16874739e5e797fd7f17fd90e404889f0f9323d8014a72e565ebdc",
+              "entries_or_characters": 7
+            },
             "application_commits": 400,
             "application_commit_median_seconds": 0.0009101045434363186,
             "application_commit_p95_seconds": 0.001471000025048852,
@@ -692,84 +430,12 @@
                 "process_pss_kib_sum": 142387
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.3295042499667034,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 2991490,
-                    "memory_bytes": 126947328,
-                    "process_rss_kib_sum": 187416,
-                    "process_pss_kib_sum": 48164
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2319892,
-                    "memory_bytes": 173809664,
-                    "process_rss_kib_sum": 144252,
-                    "process_pss_kib_sum": 138291
-                  }
-                },
-                "published_application_commits": 93,
-                "observed_application_commits": 94
-              },
-              {
-                "elapsed_seconds": 4.631613750010729,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3207235,
-                    "memory_bytes": 127967232,
-                    "process_rss_kib_sum": 188764,
-                    "process_pss_kib_sum": 48743
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2407568,
-                    "memory_bytes": 177627136,
-                    "process_rss_kib_sum": 146328,
-                    "process_pss_kib_sum": 140367
-                  }
-                },
-                "published_application_commits": 185,
-                "observed_application_commits": 186
-              },
-              {
-                "elapsed_seconds": 6.948284542071633,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3410464,
-                    "memory_bytes": 129138688,
-                    "process_rss_kib_sum": 190124,
-                    "process_pss_kib_sum": 49337
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2470383,
-                    "memory_bytes": 175849472,
-                    "process_rss_kib_sum": 146328,
-                    "process_pss_kib_sum": 140337
-                  }
-                },
-                "published_application_commits": 278,
-                "observed_application_commits": 278
-              },
-              {
-                "elapsed_seconds": 9.251818874967285,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3666989,
-                    "memory_bytes": 123498496,
-                    "process_rss_kib_sum": 191504,
-                    "process_pss_kib_sum": 49933
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2533856,
-                    "memory_bytes": 177938432,
-                    "process_rss_kib_sum": 148348,
-                    "process_pss_kib_sum": 142387
-                  }
-                },
-                "published_application_commits": 370,
-                "observed_application_commits": 370
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "bd59532b835f653a8e1f17594cdc54a4cdd1ea844381e84ee2429693feddcc2a",
+              "entries_or_characters": 4
+            },
             "application_commits": 400,
             "application_commit_median_seconds": 0.00347295799292624,
             "application_commit_p95_seconds": 0.005058208014816046,
@@ -877,84 +543,12 @@
                 "process_pss_kib_sum": 106865
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.300957457977347,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3132834,
-                    "memory_bytes": 128851968,
-                    "process_rss_kib_sum": 187472,
-                    "process_pss_kib_sum": 48246
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1349043,
-                    "memory_bytes": 135274496,
-                    "process_rss_kib_sum": 106656,
-                    "process_pss_kib_sum": 100709
-                  }
-                },
-                "published_application_commits": 229,
-                "observed_application_commits": 230
-              },
-              {
-                "elapsed_seconds": 4.597127957968041,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3455279,
-                    "memory_bytes": 121393152,
-                    "process_rss_kib_sum": 188820,
-                    "process_pss_kib_sum": 48825
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1421284,
-                    "memory_bytes": 137359360,
-                    "process_rss_kib_sum": 108740,
-                    "process_pss_kib_sum": 102793
-                  }
-                },
-                "published_application_commits": 459,
-                "observed_application_commits": 460
-              },
-              {
-                "elapsed_seconds": 6.8797160419635475,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3762905,
-                    "memory_bytes": 127393792,
-                    "process_rss_kib_sum": 190116,
-                    "process_pss_kib_sum": 49418
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1480017,
-                    "memory_bytes": 137457664,
-                    "process_rss_kib_sum": 110784,
-                    "process_pss_kib_sum": 104837
-                  }
-                },
-                "published_application_commits": 687,
-                "observed_application_commits": 688
-              },
-              {
-                "elapsed_seconds": 9.144108666921966,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4110474,
-                    "memory_bytes": 124035072,
-                    "process_rss_kib_sum": 191536,
-                    "process_pss_kib_sum": 49998
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1537147,
-                    "memory_bytes": 141348864,
-                    "process_rss_kib_sum": 112812,
-                    "process_pss_kib_sum": 106865
-                  }
-                },
-                "published_application_commits": 914,
-                "observed_application_commits": 915
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "69f429306a8a3d128eb777e667f5ced0fd5c3de3efffc5bd9a7aa2a22fb862d7",
+              "entries_or_characters": 4
+            },
             "application_commits": 1000,
             "application_commit_median_seconds": 0.0029072919860482216,
             "application_commit_p95_seconds": 0.004364541964605451,
@@ -1051,350 +645,12 @@
                 "process_pss_kib_sum": 147041
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.235207417048514,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3900055,
-                    "memory_bytes": 137912320,
-                    "process_rss_kib_sum": 278220,
-                    "process_pss_kib_sum": 64347
-                  },
-                  "pgduck": {
-                    "cpu_usec": 7192267,
-                    "memory_bytes": 192266240,
-                    "process_rss_kib_sum": 162572,
-                    "process_pss_kib_sum": 156475
-                  }
-                },
-                "published_application_commits": 64,
-                "observed_application_commits": 224
-              },
-              {
-                "elapsed_seconds": 4.487817459041253,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4809905,
-                    "memory_bytes": 139190272,
-                    "process_rss_kib_sum": 281612,
-                    "process_pss_kib_sum": 65746
-                  },
-                  "pgduck": {
-                    "cpu_usec": 8063473,
-                    "memory_bytes": 196472832,
-                    "process_rss_kib_sum": 164796,
-                    "process_pss_kib_sum": 158233
-                  }
-                },
-                "published_application_commits": 128,
-                "observed_application_commits": 449
-              },
-              {
-                "elapsed_seconds": 6.7394995839567855,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5726551,
-                    "memory_bytes": 143994880,
-                    "process_rss_kib_sum": 278508,
-                    "process_pss_kib_sum": 63633
-                  },
-                  "pgduck": {
-                    "cpu_usec": 8935305,
-                    "memory_bytes": 189435904,
-                    "process_rss_kib_sum": 155672,
-                    "process_pss_kib_sum": 149466
-                  }
-                },
-                "published_application_commits": 184,
-                "observed_application_commits": 674
-              },
-              {
-                "elapsed_seconds": 8.973524917033501,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 6690396,
-                    "memory_bytes": 160362496,
-                    "process_rss_kib_sum": 364580,
-                    "process_pss_kib_sum": 76911
-                  },
-                  "pgduck": {
-                    "cpu_usec": 9842272,
-                    "memory_bytes": 187592704,
-                    "process_rss_kib_sum": 150732,
-                    "process_pss_kib_sum": 144423
-                  }
-                },
-                "published_application_commits": 248,
-                "observed_application_commits": 898
-              },
-              {
-                "elapsed_seconds": 11.195744666969404,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 7724763,
-                    "memory_bytes": 157425664,
-                    "process_rss_kib_sum": 367164,
-                    "process_pss_kib_sum": 76519
-                  },
-                  "pgduck": {
-                    "cpu_usec": 10740198,
-                    "memory_bytes": 203100160,
-                    "process_rss_kib_sum": 165328,
-                    "process_pss_kib_sum": 159019
-                  }
-                },
-                "published_application_commits": 296,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 13.424682792043313,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 8778603,
-                    "memory_bytes": 165896192,
-                    "process_rss_kib_sum": 368996,
-                    "process_pss_kib_sum": 79504
-                  },
-                  "pgduck": {
-                    "cpu_usec": 11598897,
-                    "memory_bytes": 193536000,
-                    "process_rss_kib_sum": 156152,
-                    "process_pss_kib_sum": 149913
-                  }
-                },
-                "published_application_commits": 352,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 15.640832792036235,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 9833932,
-                    "memory_bytes": 167718912,
-                    "process_rss_kib_sum": 370088,
-                    "process_pss_kib_sum": 79975
-                  },
-                  "pgduck": {
-                    "cpu_usec": 12449462,
-                    "memory_bytes": 204746752,
-                    "process_rss_kib_sum": 163376,
-                    "process_pss_kib_sum": 157138
-                  }
-                },
-                "published_application_commits": 400,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 17.878216375014745,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 10964138,
-                    "memory_bytes": 171143168,
-                    "process_rss_kib_sum": 371620,
-                    "process_pss_kib_sum": 79639
-                  },
-                  "pgduck": {
-                    "cpu_usec": 13351816,
-                    "memory_bytes": 194109440,
-                    "process_rss_kib_sum": 155024,
-                    "process_pss_kib_sum": 148711
-                  }
-                },
-                "published_application_commits": 448,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 20.123579459032044,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 12095390,
-                    "memory_bytes": 171884544,
-                    "process_rss_kib_sum": 332680,
-                    "process_pss_kib_sum": 72432
-                  },
-                  "pgduck": {
-                    "cpu_usec": 14320089,
-                    "memory_bytes": 198705152,
-                    "process_rss_kib_sum": 155592,
-                    "process_pss_kib_sum": 149387
-                  }
-                },
-                "published_application_commits": 504,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 22.378733917023055,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 13223738,
-                    "memory_bytes": 169033728,
-                    "process_rss_kib_sum": 364376,
-                    "process_pss_kib_sum": 77067
-                  },
-                  "pgduck": {
-                    "cpu_usec": 15289876,
-                    "memory_bytes": 205283328,
-                    "process_rss_kib_sum": 157936,
-                    "process_pss_kib_sum": 151627
-                  }
-                },
-                "published_application_commits": 552,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 24.600907583953813,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 14385719,
-                    "memory_bytes": 166408192,
-                    "process_rss_kib_sum": 333008,
-                    "process_pss_kib_sum": 73097
-                  },
-                  "pgduck": {
-                    "cpu_usec": 16258288,
-                    "memory_bytes": 201687040,
-                    "process_rss_kib_sum": 153016,
-                    "process_pss_kib_sum": 146703
-                  }
-                },
-                "published_application_commits": 600,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 26.858581249951385,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 15517269,
-                    "memory_bytes": 166981632,
-                    "process_rss_kib_sum": 333512,
-                    "process_pss_kib_sum": 73234
-                  },
-                  "pgduck": {
-                    "cpu_usec": 17268924,
-                    "memory_bytes": 211402752,
-                    "process_rss_kib_sum": 166228,
-                    "process_pss_kib_sum": 159916
-                  }
-                },
-                "published_application_commits": 648,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 29.076072750031017,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 16703111,
-                    "memory_bytes": 168509440,
-                    "process_rss_kib_sum": 334824,
-                    "process_pss_kib_sum": 73560
-                  },
-                  "pgduck": {
-                    "cpu_usec": 18374880,
-                    "memory_bytes": 206827520,
-                    "process_rss_kib_sum": 151312,
-                    "process_pss_kib_sum": 145214
-                  }
-                },
-                "published_application_commits": 696,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 31.326599625055678,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 17812525,
-                    "memory_bytes": 168665088,
-                    "process_rss_kib_sum": 378496,
-                    "process_pss_kib_sum": 83028
-                  },
-                  "pgduck": {
-                    "cpu_usec": 19459518,
-                    "memory_bytes": 223961088,
-                    "process_rss_kib_sum": 167824,
-                    "process_pss_kib_sum": 161120
-                  }
-                },
-                "published_application_commits": 736,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 33.56206341704819,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 19029519,
-                    "memory_bytes": 170205184,
-                    "process_rss_kib_sum": 335536,
-                    "process_pss_kib_sum": 73971
-                  },
-                  "pgduck": {
-                    "cpu_usec": 20431857,
-                    "memory_bytes": 214777856,
-                    "process_rss_kib_sum": 157160,
-                    "process_pss_kib_sum": 150921
-                  }
-                },
-                "published_application_commits": 784,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 35.787754417047836,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 20166369,
-                    "memory_bytes": 160890880,
-                    "process_rss_kib_sum": 256316,
-                    "process_pss_kib_sum": 64452
-                  },
-                  "pgduck": {
-                    "cpu_usec": 21396187,
-                    "memory_bytes": 226078720,
-                    "process_rss_kib_sum": 166236,
-                    "process_pss_kib_sum": 160138
-                  }
-                },
-                "published_application_commits": 832,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 38.0179594589863,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 21367458,
-                    "memory_bytes": 191537152,
-                    "process_rss_kib_sum": 339544,
-                    "process_pss_kib_sum": 72639
-                  },
-                  "pgduck": {
-                    "cpu_usec": 22280144,
-                    "memory_bytes": 234778624,
-                    "process_rss_kib_sum": 172452,
-                    "process_pss_kib_sum": 166213
-                  }
-                },
-                "published_application_commits": 888,
-                "observed_application_commits": 1000
-              },
-              {
-                "elapsed_seconds": 40.2721791670192,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 22448932,
-                    "memory_bytes": 199041024,
-                    "process_rss_kib_sum": 377904,
-                    "process_pss_kib_sum": 83192
-                  },
-                  "pgduck": {
-                    "cpu_usec": 23139581,
-                    "memory_bytes": 255696896,
-                    "process_rss_kib_sum": 189576,
-                    "process_pss_kib_sum": 183267
-                  }
-                },
-                "published_application_commits": 944,
-                "observed_application_commits": 1000
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "401789199949bbdfa1875bc0ce4282d586a0a5e9c8b6793333c80458a9a550a1",
+              "entries_or_characters": 18
+            },
             "application_commits": 1000,
             "application_commit_median_seconds": 0.0008076250087469816,
             "application_commit_p95_seconds": 0.001390916993841529,
@@ -1531,84 +787,12 @@
                 "process_pss_kib_sum": 142216
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.264028458041139,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3864482,
-                    "memory_bytes": 185282560,
-                    "process_rss_kib_sum": 350952,
-                    "process_pss_kib_sum": 94681
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1569168,
-                    "memory_bytes": 210161664,
-                    "process_rss_kib_sum": 182396,
-                    "process_pss_kib_sum": 176045
-                  }
-                },
-                "published_application_commits": 6,
-                "observed_application_commits": 9
-              },
-              {
-                "elapsed_seconds": 4.511426417040639,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 4666502,
-                    "memory_bytes": 242380800,
-                    "process_rss_kib_sum": 409660,
-                    "process_pss_kib_sum": 119145
-                  },
-                  "pgduck": {
-                    "cpu_usec": 1896149,
-                    "memory_bytes": 193519616,
-                    "process_rss_kib_sum": 162920,
-                    "process_pss_kib_sum": 156492
-                  }
-                },
-                "published_application_commits": 18,
-                "observed_application_commits": 19
-              },
-              {
-                "elapsed_seconds": 6.764917667023838,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 5491234,
-                    "memory_bytes": 276475904,
-                    "process_rss_kib_sum": 379256,
-                    "process_pss_kib_sum": 120470
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2171745,
-                    "memory_bytes": 180813824,
-                    "process_rss_kib_sum": 153040,
-                    "process_pss_kib_sum": 146688
-                  }
-                },
-                "published_application_commits": 24,
-                "observed_application_commits": 28
-              },
-              {
-                "elapsed_seconds": 8.998719042050652,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 6334030,
-                    "memory_bytes": 333324288,
-                    "process_rss_kib_sum": 438416,
-                    "process_pss_kib_sum": 145365
-                  },
-                  "pgduck": {
-                    "cpu_usec": 2561407,
-                    "memory_bytes": 191426560,
-                    "process_rss_kib_sum": 162520,
-                    "process_pss_kib_sum": 156097
-                  }
-                },
-                "published_application_commits": 35,
-                "observed_application_commits": 36
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "a3eff95fcf6ec599ce23d1238c7da29a986bd7fb57ec90acb4b10436be224297",
+              "entries_or_characters": 4
+            },
             "application_commits": 40,
             "application_commit_median_seconds": 0.010346958530135453,
             "application_commit_p95_seconds": 0.014902915921993554,
@@ -1734,84 +918,12 @@
                 "process_pss_kib_sum": 109318
               }
             },
-            "samples": [
-              {
-                "elapsed_seconds": 2.3033169580157846,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 2993094,
-                    "memory_bytes": 138006528,
-                    "process_rss_kib_sum": 195792,
-                    "process_pss_kib_sum": 53436
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6376023,
-                    "memory_bytes": 142979072,
-                    "process_rss_kib_sum": 111176,
-                    "process_pss_kib_sum": 105218
-                  }
-                },
-                "published_application_commits": 10,
-                "observed_application_commits": 10
-              },
-              {
-                "elapsed_seconds": 4.57085033308249,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3169303,
-                    "memory_bytes": 149786624,
-                    "process_rss_kib_sum": 201912,
-                    "process_pss_kib_sum": 59172
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6452358,
-                    "memory_bytes": 142417920,
-                    "process_rss_kib_sum": 111200,
-                    "process_pss_kib_sum": 105242
-                  }
-                },
-                "published_application_commits": 19,
-                "observed_application_commits": 19
-              },
-              {
-                "elapsed_seconds": 6.874616958084516,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3337228,
-                    "memory_bytes": 172306432,
-                    "process_rss_kib_sum": 207712,
-                    "process_pss_kib_sum": 64883
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6514543,
-                    "memory_bytes": 144781312,
-                    "process_rss_kib_sum": 113248,
-                    "process_pss_kib_sum": 107292
-                  }
-                },
-                "published_application_commits": 28,
-                "observed_application_commits": 28
-              },
-              {
-                "elapsed_seconds": 9.135191166074947,
-                "services": {
-                  "postgres": {
-                    "cpu_usec": 3532183,
-                    "memory_bytes": 190857216,
-                    "process_rss_kib_sum": 213552,
-                    "process_pss_kib_sum": 70631
-                  },
-                  "pgduck": {
-                    "cpu_usec": 6572733,
-                    "memory_bytes": 147161088,
-                    "process_rss_kib_sum": 115276,
-                    "process_pss_kib_sum": 109318
-                  }
-                },
-                "published_application_commits": 37,
-                "observed_application_commits": 37
-              }
-            ],
+            "samples": {
+              "_omitted_detail": true,
+              "reason": "Raw timeline, inspection or repeated provenance is archived",
+              "canonical_json_sha256": "047c993bef559c654367e7bb0376e31729f100fc91aebd2caddd3b3b14badcf6",
+              "entries_or_characters": 4
+            },
             "application_commits": 40,
             "application_commit_median_seconds": 0.014134604076389223,
             "application_commit_p95_seconds": 0.016829750034958124,
@@ -1880,8 +992,10 @@
   ],
   "methodology": "Fresh private baseline and mirror volumes per case; order alternates. One-second publication coalescing. One persistent serial application writer. Requested rate is offered load, not guaranteed achieved throughput. Each write phase targets ten seconds; publication may drain afterward for at most ninety seconds. Resource and backlog observations include observer cost and sampling delay. Cases are sequential; no competing qualification jobs. No cold-cache isolation, capacity maximum, production sizing or confidence interval is established. Failed points are retained and do not stop the remaining cases.",
   "files_sha256": {
-    "tests/local_iceberg/capacity.py": "60a4f44beffd9b02d2326cb26b3e564c7e4ed619e48ae16b8ca138d8fdf25dc6",
-    "tests/local_iceberg/benchmark.py": "02e99153795c52b194363be028ea38f2ea131bd9e66be949e028dcdfd36a74e0"
+    "_omitted_detail": true,
+    "reason": "Raw timeline, inspection or repeated provenance is archived",
+    "canonical_json_sha256": "1ce09be7b997af66e8fc10d8c3098e0b5db521bd9df2441e2f651430d6b70845",
+    "entries_or_characters": 2
   },
   "failed_cases": 0
 }

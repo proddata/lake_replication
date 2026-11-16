@@ -8,6 +8,7 @@ publish = false
 
 [features]
 push-prototype = []
+wal-direct-prototype = []
 
 [dependencies]
 libc = "=0.2.189"
@@ -50,3 +51,13 @@ required-features = ["push-prototype"]
 name = "lake-replication-push-publisher"
 path = "src/push_publisher.rs"
 required-features = ["push-prototype"]
+
+[[bin]]
+name = "lake-replication-direct"
+path = "src/direct.rs"
+required-features = ["wal-direct-prototype"]
+
+[[bin]]
+name = "lake-replication-direct-init"
+path = "src/direct_init.rs"
+required-features = ["wal-direct-prototype"]

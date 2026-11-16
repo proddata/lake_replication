@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-12-source-slot-cleanup.json",
+      "sha256": "6573750d7974ec6f8b3e410aac44625e6567d1f6dba18435162f5875012bfbf7",
+      "bytes": 10804,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-source-slot-cleanup.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "archive": {
     "path": ".qualification/source-slot-cleanup/archive/lake_replication-0.1.0-beta.5.tar.gz",
     "sha256": "a4d2751842a9d65f134ea6b1b2ce9c7082e7b3a10e448b63859ff1e18aae5c00"

@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-12-security-qualification-refresh.json",
+      "sha256": "f5d078b40fd3b355ba15e8e31f900e8c3e8b7c1a21c21baaf8bb925c92529cc3",
+      "bytes": 14895,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-security-qualification-refresh.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "scope": "Local archive-only ARM64 source TLS, migration and replication qualification; builds for both supported architectures",
   "recorded_at_utc": "2026-11-12T07:21:21.936793+00:00",
   "source_revision": "30866e27f7df5c93d7a36d7c7be59771eed5949c",

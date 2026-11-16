@@ -1,0 +1,2338 @@
+{
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-16-wal-direct-prelock.json",
+      "sha256": "376ec07a2179f75b708266cb2b77797267f9da8e70d5212561def7df83e30a2f",
+      "bytes": 507223,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-prelock.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
+  "status": "bounded_prelock_improvement_with_capacity_limit",
+  "all_load_envelopes_passed": false,
+  "scope": "Private native table-lock bridge and optional full-mapping prelock before direct publication writes; existing retry remains",
+  "positive_native_checks": 398,
+  "regressions": [
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182107-019af4e2/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "b42cdeb617156e4fdd2013008c83de11ce3240a5e30e4a7459886e7e47435a15",
+        "entries_or_characters": 28,
+        "total": 28,
+        "passed": 28,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "111a5a86520b50fd3f629d37013d01c40aef470b1ad96f3fab394f817035b14e",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "510b5bfca7adf2cea90414154301b0e1dec7d09bc4a995305acea3196273fb4e",
+        "entries_or_characters": 222
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182123-0c225cd3/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "a955182b7b5868e1ef067813db63c5412f38bf9dd70a532a8f5aa45acdfe8a5a",
+        "entries_or_characters": 53,
+        "total": 53,
+        "passed": 53,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "111a5a86520b50fd3f629d37013d01c40aef470b1ad96f3fab394f817035b14e",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "510b5bfca7adf2cea90414154301b0e1dec7d09bc4a995305acea3196273fb4e",
+        "entries_or_characters": 222
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182148-448a68f1/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "f547a52058df410048411770d96ab0acc84d7d0ef559a0e5e540d3cd0c3629a2",
+        "entries_or_characters": 52,
+        "total": 52,
+        "passed": 52,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "111a5a86520b50fd3f629d37013d01c40aef470b1ad96f3fab394f817035b14e",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "510b5bfca7adf2cea90414154301b0e1dec7d09bc4a995305acea3196273fb4e",
+        "entries_or_characters": 222
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182212-727376f3/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "630f0648200267b66adfa3c9ddf5119f79669c75c4c1ad9c68675da5b9820c78",
+        "entries_or_characters": 49,
+        "total": 49,
+        "passed": 49,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "111a5a86520b50fd3f629d37013d01c40aef470b1ad96f3fab394f817035b14e",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "7bc812a75c3064a074ec476db8c6bf13a75666f4b66835261ab0e301449daf08",
+        "entries_or_characters": 222
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182617-6490a893/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "d30c13bc155ac336ed8b85f01b829bae2c1e383a8c5a5858ce310d4a864c66e3",
+        "entries_or_characters": 30,
+        "total": 30,
+        "passed": 30,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5ebc8c63af89507f49a6e5332ebe877ad9c6b42b7a8c120f1e2a67a35627aa4b",
+        "entries_or_characters": 224
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182635-2a8d640b/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "1725290fc8704f147efb4fe3261437a4292f32b5ce5f4b7a61efb36d949f6ffe",
+        "entries_or_characters": 18,
+        "total": 18,
+        "passed": 18,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": false,
+      "native_runtime": null,
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "494d7943506f2f348f03fe13f034b37f27199a9483221877000a62dc73244441",
+        "entries_or_characters": 208
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182654-d3d92a86/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "f32f9c1b5978696d73c05ba3fa44312e74b957d721222ef23396976fe24d5b62",
+        "entries_or_characters": 21,
+        "total": 21,
+        "passed": 21,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": false,
+      "native_runtime": null,
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "494d7943506f2f348f03fe13f034b37f27199a9483221877000a62dc73244441",
+        "entries_or_characters": 208
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182718-6d4f9707/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "4e72729d055c60863a85b5cd1fd5f46ad63a0572d7864a28d8ff79dacca42695",
+        "entries_or_characters": 76,
+        "total": 76,
+        "passed": 76,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "e21d3aabd7a5bfefb9b290b060f554759ad73e92ff89178f598b9d6e0a9b1b85",
+        "library_after_sha256": "e272dce0a0c004ff0c36a49806692c86499974c8fbd95ba0fae858d282a405f7"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg-faults:wal-direct-prelock-v14",
+          "id": "sha256:9647cf97af0d450f7512b1755017f1138bb197564b9f3aa71c93717da9ec23b9",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5ebc8c63af89507f49a6e5332ebe877ad9c6b42b7a8c120f1e2a67a35627aa4b",
+        "entries_or_characters": 224
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182742-a0572fac/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "ba7b28777c73dc9a9df6949a3bdf167d60c94b7a2233e4762b463b184e3dee42",
+        "entries_or_characters": 7,
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "e21d3aabd7a5bfefb9b290b060f554759ad73e92ff89178f598b9d6e0a9b1b85",
+        "library_after_sha256": "e272dce0a0c004ff0c36a49806692c86499974c8fbd95ba0fae858d282a405f7"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg-faults:wal-direct-prelock-v14",
+          "id": "sha256:9647cf97af0d450f7512b1755017f1138bb197564b9f3aa71c93717da9ec23b9",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5ebc8c63af89507f49a6e5332ebe877ad9c6b42b7a8c120f1e2a67a35627aa4b",
+        "entries_or_characters": 224
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182753-ed581f49/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "e03785bf8018883d448792ca744683de631882521494f0ef5f6768941ef7b1ae",
+        "entries_or_characters": 7,
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "e21d3aabd7a5bfefb9b290b060f554759ad73e92ff89178f598b9d6e0a9b1b85",
+        "library_after_sha256": "e272dce0a0c004ff0c36a49806692c86499974c8fbd95ba0fae858d282a405f7"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg-faults:wal-direct-prelock-v14",
+          "id": "sha256:9647cf97af0d450f7512b1755017f1138bb197564b9f3aa71c93717da9ec23b9",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5ebc8c63af89507f49a6e5332ebe877ad9c6b42b7a8c120f1e2a67a35627aa4b",
+        "entries_or_characters": 224
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182806-fc9f1eb9/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "127b5ec3ee516f9b2d5110dc962652cfa5cdf93ab43bd0b04a6ecf437658b5ad",
+        "entries_or_characters": 7,
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "e21d3aabd7a5bfefb9b290b060f554759ad73e92ff89178f598b9d6e0a9b1b85",
+        "library_after_sha256": "e272dce0a0c004ff0c36a49806692c86499974c8fbd95ba0fae858d282a405f7"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg-faults:wal-direct-prelock-v14",
+          "id": "sha256:9647cf97af0d450f7512b1755017f1138bb197564b9f3aa71c93717da9ec23b9",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5ebc8c63af89507f49a6e5332ebe877ad9c6b42b7a8c120f1e2a67a35627aa4b",
+        "entries_or_characters": 224
+      }
+    }
+  ],
+  "runs": [
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182238-fa6a4433/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "8cfb22690fc41bfcbcf9b7d459dc2ff27cfbba4ac0b0201db9ab1e9c627c54df",
+        "entries_or_characters": 25,
+        "total": 25,
+        "passed": 25,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "111a5a86520b50fd3f629d37013d01c40aef470b1ad96f3fab394f817035b14e",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "7bc812a75c3064a074ec476db8c6bf13a75666f4b66835261ab0e301449daf08",
+        "entries_or_characters": 222
+      },
+      "summary": {
+        "offered_tps": 8.0,
+        "source_transactions": 1200,
+        "status": "passed",
+        "error": null,
+        "checks_passed": 25,
+        "cleanup_returncode": 0,
+        "deadlock_retries": 0,
+        "maximum_retries_for_one_publication": 0,
+        "cpu_seconds": {
+          "postgres": 87.962477,
+          "pgduck": 36.35922
+        },
+        "total_cpu_seconds": 124.321697,
+        "cpu_window": "complete measurement",
+        "last_regular_sample": {
+          "elapsed_seconds": 160.87952741701156,
+          "published_application_commits": 1200,
+          "observed_application_commits": 1200
+        },
+        "maximum_sampled_backlog": 93,
+        "vacuum_events": 12,
+        "vacuum_elapsed_sum_seconds": 42.218723,
+        "vacuum_elapsed_max_seconds": 14.171033,
+        "observed_file_count_drops": 9,
+        "maximum_sampled_current_files": 777,
+        "cgroup_peak_bytes": {
+          "postgres": 344997888,
+          "pgduck": 313004032
+        },
+        "memory_event_deltas": {
+          "postgres": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "pgduck": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          }
+        },
+        "write_phase_seconds": 150.00484620803036,
+        "post_write_drain_seconds": 10.847222249954939,
+        "observed_publication_latency_upper_bound_seconds": {
+          "median": 5.0012969163944945,
+          "p95": 12.955982124898583,
+          "maximum": 16.349170750007033,
+          "sample_interval_seconds": 2
+        },
+        "wal_bytes": 106158768,
+        "observed_object_requests": 19863,
+        "publications": 51,
+        "peak_observed_retained_wal_bytes": 25872976,
+        "worker_lifetime_peak_rss_kib": 12040,
+        "worker_lifetime_cpu_seconds": 0.158756,
+        "publisher_wait_samples": [
+          {
+            "wait_event_type": "Extension",
+            "wait_event": "Extension",
+            "samples": 25
+          },
+          {
+            "wait_event_type": null,
+            "wait_event": null,
+            "samples": 24
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerShutdown",
+            "samples": 9
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueReceive",
+            "samples": 5
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueInternal",
+            "samples": 3
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerStartup",
+            "samples": 2
+          }
+        ]
+      },
+      "minute_progress": [
+        {
+          "minute": 0,
+          "samples": 23,
+          "last_elapsed_seconds": 58.953257124871016,
+          "last_published": 450,
+          "last_observed": 472,
+          "maximum_backlog": 40
+        },
+        {
+          "minute": 1,
+          "samples": 23,
+          "last_elapsed_seconds": 117.57643283298239,
+          "last_published": 901,
+          "last_observed": 941,
+          "maximum_backlog": 63
+        },
+        {
+          "minute": 2,
+          "samples": 17,
+          "last_elapsed_seconds": 160.87952741701156,
+          "last_published": 1200,
+          "last_observed": 1200,
+          "maximum_backlog": 93
+        }
+      ],
+      "resource_before": {
+        "postgres": {
+          "cpu_usec": 3502704,
+          "memory_bytes": 136982528,
+          "process_rss_kib_sum": 247412,
+          "process_pss_kib_sum": 60220,
+          "memory_peak_bytes": 147501056,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 33357824,
+            "file": 90796032,
+            "kernel": 11616256,
+            "shmem": 22196224
+          },
+          "direct_workers": [
+            {
+              "pid": 239,
+              "VmHWM": 2120,
+              "VmRSS": 2120,
+              "Rss": 2120,
+              "Pss": 961
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 1668634,
+          "memory_bytes": 144261120,
+          "process_rss_kib_sum": 109228,
+          "process_pss_kib_sum": 102960,
+          "memory_peak_bytes": 225038336,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 56098816,
+            "file": 73203712,
+            "kernel": 4116480,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "resource_after_or_failure": {
+        "postgres": {
+          "cpu_usec": 91465181,
+          "memory_bytes": 303120384,
+          "process_rss_kib_sum": 245032,
+          "process_pss_kib_sum": 80358,
+          "memory_peak_bytes": 344997888,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 30248960,
+            "file": 244154368,
+            "kernel": 26718208,
+            "shmem": 51032064
+          },
+          "direct_workers": []
+        },
+        "pgduck": {
+          "cpu_usec": 38027854,
+          "memory_bytes": 294035456,
+          "process_rss_kib_sum": 197936,
+          "process_pss_kib_sum": 191843,
+          "memory_peak_bytes": 313004032,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 143138816,
+            "file": 107290624,
+            "kernel": 34406400,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "vacuum_events": [
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.830265
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.149967
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.287694
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.23148
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.82226
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.213417
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.348191
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.216717
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 4.998027
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 7.042761
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 8.906911
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 14.171033
+        }
+      ],
+      "final_rows_sha256": {
+        "a": "4f6de0f56808b805c6510f070dd51de34aa2151c5dbe6b50a431c786e54defc8",
+        "b": "a50b42a0c364f3b578e2e691575f53c302daa0f4d2007bf4f3c617e48cffffc7"
+      },
+      "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts and active backend/wait states are sampled with progress and can miss brief peaks. Wait samples describe observed states, not CPU attribution. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward."
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-182819-6a0ee9eb/results.json",
+      "status": "passed",
+      "error": null,
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "6f55967bf71696cef225610743d24eada3aad13d2fc2a32f90e1b28714bcb88f",
+        "entries_or_characters": 25,
+        "total": 25,
+        "passed": 25,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5ebc8c63af89507f49a6e5332ebe877ad9c6b42b7a8c120f1e2a67a35627aa4b",
+        "entries_or_characters": 224
+      },
+      "summary": {
+        "offered_tps": 6.0,
+        "source_transactions": 5400,
+        "status": "passed",
+        "error": null,
+        "checks_passed": 25,
+        "cleanup_returncode": 0,
+        "deadlock_retries": 0,
+        "maximum_retries_for_one_publication": 0,
+        "cpu_seconds": {
+          "postgres": 379.296777,
+          "pgduck": 209.728895
+        },
+        "total_cpu_seconds": 589.025672,
+        "cpu_window": "complete measurement",
+        "last_regular_sample": {
+          "elapsed_seconds": 900.3572226669639,
+          "published_application_commits": 5390,
+          "observed_application_commits": 5400
+        },
+        "maximum_sampled_backlog": 35,
+        "vacuum_events": 82,
+        "vacuum_elapsed_sum_seconds": 60.933206,
+        "vacuum_elapsed_max_seconds": 2.611119,
+        "observed_file_count_drops": 59,
+        "maximum_sampled_current_files": 593,
+        "cgroup_peak_bytes": {
+          "postgres": 536870912,
+          "pgduck": 1218064384
+        },
+        "memory_event_deltas": {
+          "postgres": {
+            "low": 0,
+            "high": 0,
+            "max": 238,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "pgduck": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          }
+        },
+        "write_phase_seconds": 900.0013050418347,
+        "post_write_drain_seconds": 1.1222386669833213,
+        "observed_publication_latency_upper_bound_seconds": {
+          "median": 4.2991091458825395,
+          "p95": 6.154918458079919,
+          "maximum": 8.440846415935084,
+          "sample_interval_seconds": 2
+        },
+        "wal_bytes": 486360512,
+        "observed_object_requests": 91272,
+        "publications": 363,
+        "peak_observed_retained_wal_bytes": 27773560,
+        "worker_lifetime_peak_rss_kib": 14180,
+        "worker_lifetime_cpu_seconds": 1.035896,
+        "publisher_wait_samples": [
+          {
+            "wait_event_type": "Extension",
+            "wait_event": "Extension",
+            "samples": 103
+          },
+          {
+            "wait_event_type": null,
+            "wait_event": null,
+            "samples": 95
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerShutdown",
+            "samples": 26
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueReceive",
+            "samples": 17
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueInternal",
+            "samples": 6
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerStartup",
+            "samples": 4
+          }
+        ]
+      },
+      "minute_progress": [
+        {
+          "minute": 0,
+          "samples": 23,
+          "last_elapsed_seconds": 59.19570774980821,
+          "last_published": 342,
+          "last_observed": 356,
+          "maximum_backlog": 25
+        },
+        {
+          "minute": 1,
+          "samples": 23,
+          "last_elapsed_seconds": 118.28618574980646,
+          "last_published": 693,
+          "last_observed": 710,
+          "maximum_backlog": 23
+        },
+        {
+          "minute": 2,
+          "samples": 24,
+          "last_elapsed_seconds": 179.20817933394574,
+          "last_published": 1065,
+          "last_observed": 1076,
+          "maximum_backlog": 24
+        },
+        {
+          "minute": 3,
+          "samples": 23,
+          "last_elapsed_seconds": 237.99426408391446,
+          "last_published": 1413,
+          "last_observed": 1428,
+          "maximum_backlog": 20
+        },
+        {
+          "minute": 4,
+          "samples": 24,
+          "last_elapsed_seconds": 299.06208870885894,
+          "last_published": 1780,
+          "last_observed": 1795,
+          "maximum_backlog": 23
+        },
+        {
+          "minute": 5,
+          "samples": 23,
+          "last_elapsed_seconds": 357.89230833388865,
+          "last_published": 2130,
+          "last_observed": 2148,
+          "maximum_backlog": 20
+        },
+        {
+          "minute": 6,
+          "samples": 24,
+          "last_elapsed_seconds": 419.0203217919916,
+          "last_published": 2492,
+          "last_observed": 2515,
+          "maximum_backlog": 23
+        },
+        {
+          "minute": 7,
+          "samples": 23,
+          "last_elapsed_seconds": 477.9464114168659,
+          "last_published": 2854,
+          "last_observed": 2868,
+          "maximum_backlog": 34
+        },
+        {
+          "minute": 8,
+          "samples": 24,
+          "last_elapsed_seconds": 539.895048874896,
+          "last_published": 3219,
+          "last_observed": 3240,
+          "maximum_backlog": 30
+        },
+        {
+          "minute": 9,
+          "samples": 23,
+          "last_elapsed_seconds": 598.9629364169668,
+          "last_published": 3575,
+          "last_observed": 3594,
+          "maximum_backlog": 21
+        },
+        {
+          "minute": 10,
+          "samples": 23,
+          "last_elapsed_seconds": 659.1372746250127,
+          "last_published": 3937,
+          "last_observed": 3955,
+          "maximum_backlog": 32
+        },
+        {
+          "minute": 11,
+          "samples": 23,
+          "last_elapsed_seconds": 719.6839372089598,
+          "last_published": 4295,
+          "last_observed": 4319,
+          "maximum_backlog": 33
+        },
+        {
+          "minute": 12,
+          "samples": 23,
+          "last_elapsed_seconds": 779.3241950839292,
+          "last_published": 4641,
+          "last_observed": 4676,
+          "maximum_backlog": 35
+        },
+        {
+          "minute": 13,
+          "samples": 23,
+          "last_elapsed_seconds": 838.6253029168583,
+          "last_published": 5017,
+          "last_observed": 5032,
+          "maximum_backlog": 32
+        },
+        {
+          "minute": 14,
+          "samples": 23,
+          "last_elapsed_seconds": 897.7180227499921,
+          "last_published": 5376,
+          "last_observed": 5387,
+          "maximum_backlog": 20
+        },
+        {
+          "minute": 15,
+          "samples": 1,
+          "last_elapsed_seconds": 900.3572226669639,
+          "last_published": 5390,
+          "last_observed": 5400,
+          "maximum_backlog": 10
+        }
+      ],
+      "resource_before": {
+        "postgres": {
+          "cpu_usec": 3961709,
+          "memory_bytes": 137363456,
+          "process_rss_kib_sum": 247496,
+          "process_pss_kib_sum": 60211,
+          "memory_peak_bytes": 149577728,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 31543296,
+            "file": 90796032,
+            "kernel": 11587584,
+            "shmem": 22196224
+          },
+          "direct_workers": [
+            {
+              "pid": 238,
+              "VmHWM": 2120,
+              "VmRSS": 2120,
+              "Rss": 2120,
+              "Pss": 960
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 1693267,
+          "memory_bytes": 142372864,
+          "process_rss_kib_sum": 109352,
+          "process_pss_kib_sum": 103080,
+          "memory_peak_bytes": 226664448,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 56524800,
+            "file": 73203712,
+            "kernel": 4157440,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "resource_after_or_failure": {
+        "postgres": {
+          "cpu_usec": 383258486,
+          "memory_bytes": 499748864,
+          "process_rss_kib_sum": 307512,
+          "process_pss_kib_sum": 101219,
+          "memory_peak_bytes": 536870912,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 238,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 42594304,
+            "file": 383381504,
+            "kernel": 74768384,
+            "shmem": 57339904
+          },
+          "direct_workers": []
+        },
+        "pgduck": {
+          "cpu_usec": 211422162,
+          "memory_bytes": 1201967104,
+          "process_rss_kib_sum": 725816,
+          "process_pss_kib_sum": 719710,
+          "memory_peak_bytes": 1218064384,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 686075904,
+            "file": 369389568,
+            "kernel": 137826304,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "vacuum_events": [
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.343602
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.162622
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.473875
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.194413
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.221343
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.209761
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.632066
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.18478
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.766191
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.22158
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.991277
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.199009
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.708137
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.209532
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.199482
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.203788
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.201687
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.195928
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.659004
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.211762
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.144634
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.2379
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.242767
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.200242
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.360585
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.232861
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.278934
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.221217
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.19283
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.25694
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.295199
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.209952
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.733716
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.232341
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.931476
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.241157
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.937204
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.206251
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.054265
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.280973
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.664209
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.212549
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.35259
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.282183
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.231177
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.205899
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.269386
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.197731
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.079081
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.24696
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.355358
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.234411
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.948412
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.303146
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.741108
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.235251
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.476275
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.284668
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.245114
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.322879
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.225665
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.224548
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.834452
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.220405
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.242072
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.332605
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.611119
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.243648
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.760514
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.240314
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.282702
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.247809
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.574545
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.234886
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.229564
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.246273
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.212806
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.229603
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.996386
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.333452
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.607873
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.232295
+        }
+      ],
+      "final_rows_sha256": {
+        "a": "7ff93ed4adb81db27189ebfa0d83ae1b213e6b313cae4fdf809af6d222b8e2ae",
+        "b": "239caeb20cc944a438d0e1953f50938975ad9eb83760ee90adac55061872b5da"
+      },
+      "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts and active backend/wait states are sampled with progress and can miss brief peaks. Wait samples describe observed states, not CPU attribution. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward."
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-184342-82829da1/results.json",
+      "status": "error",
+      "error": "mirror failed to drain within its bounded timeout",
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "86e655ef8745d6fbfd595316e4100e6974a886aa8af87cac141170693f7fb463",
+        "entries_or_characters": 2,
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "failures": []
+      },
+      "cleanup_returncode": 0,
+      "prelock_targets": true,
+      "native_runtime": {
+        "experimental": true,
+        "scope": "Private superuser-only SQL bridge to the existing transaction-scoped native table update lock; optional publication wrapper locks every mapped target in OID order before writes",
+        "source_before_sha256": "45ac53c795bebd42907cbb3a5f553c81dd901c549fed423903db5752e343c09d",
+        "source_after_sha256": "3fc6400fa227eb069bff9bf86e9505439c0214523ce02ff9b27483685e6c1167",
+        "library_before_sha256": "385f6da2bd2389442f7b3c89afda3df75fa7474e782255bf9aa65d8f33941128",
+        "library_after_sha256": "cc47352ce0406af39707a69e678be6dfb072560535d47d5c6092fdffebcbb0b5"
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "tracked_worktree_diff_sha256": "420c3597c259c391e6ce52d6c9b29f56d388544279de333404a099e9ab62c282",
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-prelock-v14",
+          "id": "sha256:0272165ee0024e5584042f9a0f2bf1126137d35195b48e930d2f69e351f70405",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5ebc8c63af89507f49a6e5332ebe877ad9c6b42b7a8c120f1e2a67a35627aa4b",
+        "entries_or_characters": 224
+      },
+      "summary": {
+        "offered_tps": 8.0,
+        "source_transactions": 7200,
+        "status": "error",
+        "error": "mirror failed to drain within its bounded timeout",
+        "checks_passed": 2,
+        "cleanup_returncode": 0,
+        "deadlock_retries": 0,
+        "maximum_retries_for_one_publication": 0,
+        "cpu_seconds": {
+          "postgres": 768.94468,
+          "pgduck": 223.764019
+        },
+        "total_cpu_seconds": 992.7086989999999,
+        "cpu_window": "measurement start through post-failure diagnostics; not a complete-publication total",
+        "last_regular_sample": {
+          "elapsed_seconds": 989.4054602920078,
+          "published_application_commits": 6319,
+          "observed_application_commits": 7200
+        },
+        "maximum_sampled_backlog": 1416,
+        "vacuum_events": 54,
+        "vacuum_elapsed_sum_seconds": 458.076841,
+        "vacuum_elapsed_max_seconds": 17.0371,
+        "observed_file_count_drops": 50,
+        "maximum_sampled_current_files": 1157,
+        "cgroup_peak_bytes": {
+          "postgres": 536870912,
+          "pgduck": 1028227072
+        },
+        "memory_event_deltas": {
+          "postgres": {
+            "low": 0,
+            "high": 0,
+            "max": 1296,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "pgduck": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          }
+        },
+        "publisher_wait_samples": [
+          {
+            "wait_event_type": null,
+            "wait_event": null,
+            "samples": 326
+          },
+          {
+            "wait_event_type": "Extension",
+            "wait_event": "Extension",
+            "samples": 152
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueReceive",
+            "samples": 46
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerShutdown",
+            "samples": 27
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueInternal",
+            "samples": 10
+          },
+          {
+            "wait_event_type": "Lock",
+            "wait_event": "advisory",
+            "samples": 9
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerStartup",
+            "samples": 7
+          }
+        ],
+        "failure_diagnostic": {
+          "heap_a_rows": 21602,
+          "heap_b_rows": 21602,
+          "journal_states": null,
+          "slots": [
+            {
+              "wal_status": "reserved",
+              "retained_wal_bytes": 146791984
+            }
+          ]
+        }
+      },
+      "minute_progress": [
+        {
+          "minute": 0,
+          "samples": 23,
+          "last_elapsed_seconds": 59.14272670797072,
+          "last_published": 438,
+          "last_observed": 474,
+          "maximum_backlog": 43
+        },
+        {
+          "minute": 1,
+          "samples": 23,
+          "last_elapsed_seconds": 117.66780662513338,
+          "last_published": 847,
+          "last_observed": 942,
+          "maximum_backlog": 107
+        },
+        {
+          "minute": 2,
+          "samples": 24,
+          "last_elapsed_seconds": 178.63720466708764,
+          "last_published": 1263,
+          "last_observed": 1430,
+          "maximum_backlog": 172
+        },
+        {
+          "minute": 3,
+          "samples": 24,
+          "last_elapsed_seconds": 239.92786487517878,
+          "last_published": 1647,
+          "last_observed": 1920,
+          "maximum_backlog": 273
+        },
+        {
+          "minute": 4,
+          "samples": 23,
+          "last_elapsed_seconds": 298.56107441708446,
+          "last_published": 2063,
+          "last_observed": 2389,
+          "maximum_backlog": 338
+        },
+        {
+          "minute": 5,
+          "samples": 24,
+          "last_elapsed_seconds": 359.98284762515686,
+          "last_published": 2415,
+          "last_observed": 2880,
+          "maximum_backlog": 465
+        },
+        {
+          "minute": 6,
+          "samples": 23,
+          "last_elapsed_seconds": 418.500221000053,
+          "last_published": 2831,
+          "last_observed": 3348,
+          "maximum_backlog": 535
+        },
+        {
+          "minute": 7,
+          "samples": 24,
+          "last_elapsed_seconds": 479.6196837921161,
+          "last_published": 3183,
+          "last_observed": 3837,
+          "maximum_backlog": 677
+        },
+        {
+          "minute": 8,
+          "samples": 23,
+          "last_elapsed_seconds": 538.3427714169957,
+          "last_published": 3567,
+          "last_observed": 4307,
+          "maximum_backlog": 755
+        },
+        {
+          "minute": 9,
+          "samples": 24,
+          "last_elapsed_seconds": 599.5590678330045,
+          "last_published": 3983,
+          "last_observed": 4797,
+          "maximum_backlog": 826
+        },
+        {
+          "minute": 10,
+          "samples": 23,
+          "last_elapsed_seconds": 658.3669037499931,
+          "last_published": 4367,
+          "last_observed": 5267,
+          "maximum_backlog": 912
+        },
+        {
+          "minute": 11,
+          "samples": 24,
+          "last_elapsed_seconds": 719.549354000017,
+          "last_published": 4719,
+          "last_observed": 5757,
+          "maximum_backlog": 1038
+        },
+        {
+          "minute": 12,
+          "samples": 23,
+          "last_elapsed_seconds": 778.2664243751206,
+          "last_published": 5071,
+          "last_observed": 6227,
+          "maximum_backlog": 1156
+        },
+        {
+          "minute": 13,
+          "samples": 24,
+          "last_elapsed_seconds": 839.666947292164,
+          "last_published": 5423,
+          "last_observed": 6718,
+          "maximum_backlog": 1295
+        },
+        {
+          "minute": 14,
+          "samples": 23,
+          "last_elapsed_seconds": 898.7778892081697,
+          "last_published": 5775,
+          "last_observed": 7191,
+          "maximum_backlog": 1416
+        },
+        {
+          "minute": 15,
+          "samples": 23,
+          "last_elapsed_seconds": 958.5402192079928,
+          "last_published": 6127,
+          "last_observed": 7200,
+          "maximum_backlog": 1393
+        },
+        {
+          "minute": 16,
+          "samples": 12,
+          "last_elapsed_seconds": 989.4054602920078,
+          "last_published": 6319,
+          "last_observed": 7200,
+          "maximum_backlog": 1073
+        }
+      ],
+      "resource_before": {
+        "postgres": {
+          "cpu_usec": 4230895,
+          "memory_bytes": 140988416,
+          "process_rss_kib_sum": 253664,
+          "process_pss_kib_sum": 62827,
+          "memory_peak_bytes": 146612224,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 34455552,
+            "file": 93593600,
+            "kernel": 11694080,
+            "shmem": 24907776
+          },
+          "direct_workers": [
+            {
+              "pid": 239,
+              "VmHWM": 2120,
+              "VmRSS": 2120,
+              "Rss": 2120,
+              "Pss": 961
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 1731015,
+          "memory_bytes": 142241792,
+          "process_rss_kib_sum": 109124,
+          "process_pss_kib_sum": 102839,
+          "memory_peak_bytes": 226848768,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 55980032,
+            "file": 73203712,
+            "kernel": 4128768,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "resource_after_or_failure": {
+        "postgres": {
+          "cpu_usec": 773175575,
+          "memory_bytes": 526651392,
+          "process_rss_kib_sum": 439908,
+          "process_pss_kib_sum": 155665,
+          "memory_peak_bytes": 536870912,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 1296,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 60141568,
+            "file": 370487296,
+            "kernel": 81805312,
+            "shmem": 92950528
+          },
+          "direct_workers": [
+            {
+              "pid": 239,
+              "VmHWM": 3212,
+              "VmRSS": 3212,
+              "Rss": 3212,
+              "Pss": 2063
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 225495034,
+          "memory_bytes": 1011642368,
+          "process_rss_kib_sum": 648176,
+          "process_pss_kib_sum": 642200,
+          "memory_peak_bytes": 1028227072,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 606580736,
+            "file": 251146240,
+            "kernel": 145616896,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "vacuum_events": [
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.011974
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.004211
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.132655
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.123445
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.218076
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.232431
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.697402
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.243901
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 7.03128
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 7.159104
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 10.635474
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 11.905651
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 5.614194
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 12.13218
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 5.952198
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.314069
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 9.655229
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.517412
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 10.935663
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 12.314618
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 6.977668
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.9856
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 10.210591
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.621893
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 11.482735
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 12.694151
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 12.494306
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 10.085412
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 6.969981
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.769699
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 11.261996
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 13.158439
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 3.842884
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 6.531722
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 7.434594
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 13.271655
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 7.554413
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 12.840732
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 8.522962
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 9.133799
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 10.9213
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 9.478998
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 17.0371
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 15.367218
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 13.352286
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 9.728509
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 4.743086
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 13.536758
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 8.563798
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 9.662487
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 9.081581
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 10.661988
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 7.899545
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 14.365788
+        }
+      ],
+      "final_rows_sha256": null,
+      "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts and active backend/wait states are sampled with progress and can miss brief peaks. Wait samples describe observed states, not CPU attribution. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward."
+    }
+  ],
+  "six_tps_comparison": {
+    "cpu_seconds_before": 677.661169,
+    "cpu_seconds_after": 589.025672,
+    "cpu_reduction_seconds": 88.63549699999999,
+    "cpu_reduction_percent": 13.07961870248463,
+    "one_run_each": true,
+    "baseline_evidence": "2026-11-16-wal-direct-sustained-maintenance.json",
+    "final_row_hashes_match_baseline": true
+  },
+  "initial_harness_failure": {
+    "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-181935-ca9a658f/results.json",
+    "status": "error",
+    "error": "local mirror timed out: '0' != '1'",
+    "cleanup_returncode": 0,
+    "cause": "Fixture requested 128-byte streamed chunks below the existing 256-byte minimum; corrected fixture uses 256. No runtime-limit change.",
+    "worker_error": "direct_resources lifetime_peak_rss_kib=14096 lifetime_cpu_seconds=0.007158\ndirect publication failed (unpublished WAL remains unacknowledged): invalid LAKE_DIRECT_CHUNK_BYTES"
+  },
+  "caveats": [
+    "ARM64 local fixtures; one run per rate/configuration; descriptive comparison.",
+    "No release image, vendor checkout or production native semantics changed.",
+    "Full-mapping locks add serialization; arbitrary external writers and native upgrades remain unqualified.",
+    "8 TPS incomplete-publication CPU is not comparable to a completed-workload cost.",
+    "Wait samples are not CPU attribution, and vacuum elapsed durations overlap publication."
+  ]
+}

@@ -88,7 +88,7 @@ def build(mode,base,output):
         (package/'EXTENSION').write_text(extension+'\n')
         (package/'TARGETARCH').write_text(architecture+'\n')
         (package/'POSTGRES_VERSION').write_text(postgres+'\n')
-        (package/'README.md').write_text('Optional PostgreSQL 18 source-push prototype. See docs/push-replication.md and the companion README in the source repository. Install only with stopped managed subscriptions and a stopped server; retain the matching default worker bundle for rollback. Source and destination companions are independent. This artifact does not include PostgreSQL, pg_lake, pgduck, object credentials or a production support guarantee.\n')
+        (package/'README.md').write_text('Optional PostgreSQL 18 source-push prototype. See docs/design/push-replication.md and the companion README in the source repository. Install only with stopped managed subscriptions and a stopped server; retain the matching default worker bundle for rollback. Source and destination companions are independent. This artifact does not include PostgreSQL, pg_lake, pgduck, object credentials or a production support guarantee.\n')
         manifest=dict(format_version=1,prototype=True,component=extension,architecture=architecture,
             postgres=postgres,image_id=info['Id'],base_image_id=base_info['Id'],input_sha256=digest,inputs=provenance,
             source_commit=run('git','rev-parse','HEAD'),source_worktree=run('git','status','--porcelain'),

@@ -194,9 +194,9 @@ keylessly signs every archive, SBOM, and checksum manifest with Sigstore
 Cosign, and publishes them in a GitHub release. All third-party workflow
 actions are pinned to immutable commit SHAs. Audit evidence is retained as a
 workflow artifact even on failure. Follow the
-[independent verification procedure](https://github.com/proddata/lake_replication/blob/main/docs/release-verification.md) after
+[independent verification procedure](https://github.com/proddata/lake_replication/blob/main/docs/guides/release-verification.md) after
 publication; a signed download and native installation are separate release
-checks. The [draft release notes](https://github.com/proddata/lake_replication/blob/main/docs/beta5-release-notes.md) remain
+checks. The [draft release notes](https://github.com/proddata/lake_replication/blob/main/docs/qualification/beta5-release-notes.md) remain
 preparation until every required gate passes.
 
 The bundle and GitHub release both include `COMPATIBILITY.md`. It distinguishes

@@ -176,7 +176,7 @@ docker build --pull=false --build-arg BASE_IMAGE=lake-push-faults:8180647-v1 \
 PUSH_PG_LAKE_IMAGE=lake-push-capture-faults:prototype-v1 python3 tests/push_capture/native_faults.py
 ```
 
-The instrumented image is test-only. See [implementation status](../../docs/push-replication.md)
+The instrumented image is test-only. See [implementation status](../../docs/design/push-replication.md)
 for retained results and remaining release gates.
 
 `maintenance.py` protects pinned readers, checks importer exclusion, and observes
@@ -235,7 +235,7 @@ Source crash images also run `schema_capture_faults.py`. Destination crash image
 run `schema_publisher_faults.py`; the latter is included in
 `make push-publisher-fault-test`. Both inject actual backend SIGKILL around upload
 and COMMIT and retain restart/replay evidence. These opt-in test images must not
-be distributed as release artifacts. See the [activation contract](../../docs/push-schema-evolution.md).
+be distributed as release artifacts. See the [activation contract](../../docs/design/push-schema-evolution.md).
 
 The empty ordered baseline regression is included in `make push-prototype-test`.
 `make push-logical-compatibility-test` runs the existing archive upgrade, logical

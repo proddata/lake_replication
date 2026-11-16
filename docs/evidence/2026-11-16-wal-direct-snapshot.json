@@ -1,0 +1,724 @@
+{
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-16-wal-direct-snapshot.json",
+      "sha256": "85af4effee41ed3471fcb06d3082a086c0a68de6d361bc42df756945db74cff1",
+      "bytes": 337232,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-snapshot.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
+  "status": "passed",
+  "scope": "Bounded same-instance exported snapshot, direct native Iceberg writes, frozen supported schema, 2000 source rows",
+  "snapshot_checks": 138,
+  "regression_checks": 104,
+  "runs": [
+    {
+      "case": "normal",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094406-e0e2ec15/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094406-e0e2ec15",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "48ee8f748647176a284b440f9ee7085c0a9eb29bd74958f6000d746f39575062",
+          "entries_or_characters": 30,
+          "total": 30,
+          "passed": 30,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "stop",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094427-c6eb8cdd/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094427-c6eb8cdd",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "944c2baf980748e9e63a40ec2aeaec97c4ce07c56d72200fc0d2fea23cc2625e",
+          "entries_or_characters": 14,
+          "total": 14,
+          "passed": 14,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "response",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094440-a715a204/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094440-a715a204",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "34435969b36cda94abd659e693c2550364c8936454006e68bf0ae82f990d7e64",
+          "entries_or_characters": 14,
+          "total": 14,
+          "passed": 14,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "existing",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094458-30e60bc8/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094458-30e60bc8",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "da99383925c75d941ff28b184a56698dced338b36125675277ca5e241ffee68c",
+          "entries_or_characters": 5,
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "guards",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094509-9afa2a7f/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094509-9afa2a7f",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "2aead38f5f0a6836db5e597459459f6b783e132485a5d8142aa3ee2944326609",
+          "entries_or_characters": 18,
+          "total": 18,
+          "passed": 18,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "guard_loss",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094530-fbb59bd4/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094530-fbb59bd4",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "dba0b7f160ef573277c29891fe41557a02a69746da47b5341bea554386696540",
+          "entries_or_characters": 13,
+          "total": 13,
+          "passed": 13,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "before_upload_completion",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094532-63f2141b/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094532-63f2141b",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "ee358a2b432991ed0caf92b9a8920f9754da7c3ff57b1821da0d44bc4bbaa1c6",
+          "entries_or_characters": 15,
+          "total": 15,
+          "passed": 15,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg-faults:wal-direct-v8",
+            "id": "sha256:6fdf1641d33d499e2c5bd6b5f0fdf67a2e3fc9c71e82d209e8c3496ca31e6e40",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "after_upload_completion",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094544-552764a1/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094544-552764a1",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "43a987909c4a1ff729f58bd72e034f7af97e3d2f57a422c71a1fc849282a8eb5",
+          "entries_or_characters": 15,
+          "total": 15,
+          "passed": 15,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg-faults:wal-direct-v8",
+            "id": "sha256:6fdf1641d33d499e2c5bd6b5f0fdf67a2e3fc9c71e82d209e8c3496ca31e6e40",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "after_commit",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094603-fdf1c5f9/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094603-fdf1c5f9",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "14e9cc35ad124af27955d2f7df548c6a8f57ee684b6b406ad9294f394f533e80",
+          "entries_or_characters": 14,
+          "total": 14,
+          "passed": 14,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg-faults:wal-direct-v8",
+            "id": "sha256:6fdf1641d33d499e2c5bd6b5f0fdf67a2e3fc9c71e82d209e8c3496ca31e6e40",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    }
+  ],
+  "regressions": [
+    {
+      "case": "stream",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094720-7733f502/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094720-7733f502",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "9d642677c69fb9783fdd34e95a4cb5ab7037249de14018b34f510d881a75bc51",
+          "entries_or_characters": 52,
+          "total": 52,
+          "passed": 52,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "experimental WAL-backed direct final-Iceberg publication, empty bootstrap, frozen schemas",
+        "unqualified": [
+          "nonempty snapshot bootstrap",
+          "streamed/oversized transactions",
+          "managed lifecycle",
+          "power loss",
+          "production sizing",
+          "performance"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "case": "coalescing",
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-094738-6435d892/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-094738-6435d892",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "d7c189ab6ecb924bde126b666a654c2561f82b726c230a3c3e4738412dba0093",
+          "entries_or_characters": 52,
+          "total": 52,
+          "passed": 52,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded direct batching: ordering, pressure, idle flush, stop/replay and crashes.",
+        "unqualified": [
+          "nonempty snapshot",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory/WAL budgets"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d25792cd09f13b7b6f74ec22b41f9e930b9a01bbcd4c42972176c29fdc3a34f5",
+          "entries_or_characters": 23
+        },
+        "tracked_worktree_diff_sha256": "c5033b4fb4d06d65256fb681dd32b02f4eeb1198b5103743be27d7aac288f157",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "614419a1ce771e0e68e7662a7bc2cbab5c453724c7d163a07060f57ccaa79b83",
+          "entries_or_characters": 200
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v8",
+            "id": "sha256:717efec5de8523179a16916f7bed6142294e9a683ae06d6e251255ab6c6f1126",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    }
+  ],
+  "limitations": [
+    "One snapshot transaction; 100000-row/64-MiB input caps are not production capacity or hard RSS qualification",
+    "No resumable large-copy chunks or streaming/spill",
+    "Manual superuser/loopback singleton prototype",
+    "No general DDL, lineage/failover, WAL-pressure/outage or physical power-loss qualification"
+  ],
+  "validation": {
+    "make check": "passed",
+    "cargo test --workspace --all-features": "passed",
+    "git diff --check": "passed"
+  }
+}

@@ -58,7 +58,7 @@ The fix uses explicit escape literals shared by all four workers; this is not a
 conversion of the simple-query client to the extended parameterized protocol.
 
 Launcher log configuration and upgrade permissions are documented in
-[the operations guide](../../docs/operations.md#structured-worker-logs).
+[the operations guide](../../docs/guides/operations.md#structured-worker-logs).
 
 Run the native TLS regression using a cached PostgreSQL 18/pg_lake destination
 image with its compiler, OpenSSL, and `gosu` installed:

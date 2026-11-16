@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-12-update-key-filter.json",
+      "sha256": "04a3b8e23690a64cee2c5cb572cc5d8314b8e08160cd940894ff75ad681f73d1",
+      "bytes": 25325,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-update-key-filter.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "active_drop_failure": {
     "cleanup_returncode": 0,
     "error": "baseline native source slot is removed: expected '0', got '1'",
@@ -109,256 +120,16 @@
       "architecture": "arm64",
       "archive": "lake_replication-0.1.0-beta.5.tar.gz",
       "archive_sha256": "4df0267cb8a36d6437299f95e90a16f0fcab2033fe414d5bbdb4a9f3baf2dfef",
-      "checks": [
-        {
-          "actual": "4df0267cb8a36d6437299f95e90a16f0fcab2033fe414d5bbdb4a9f3baf2dfef",
-          "expected": "4df0267cb8a36d6437299f95e90a16f0fcab2033fe414d5bbdb4a9f3baf2dfef",
-          "name": "release archive checksum",
-          "passed": true
-        },
-        {
-          "actual": "arm64",
-          "expected": "arm64",
-          "name": "archive architecture matches qualification host",
-          "passed": true
-        },
-        {
-          "actual": [
-            "2:two,20:again"
-          ],
-          "expected": [
-            "2:two,20:again"
-          ],
-          "name": "filtered updates preserve ordered key changes",
-          "passed": true
-        },
-        {
-          "actual": [
-            "two"
-          ],
-          "expected": [
-            "two"
-          ],
-          "name": "filtered update rollback preserves data",
-          "passed": true
-        },
-        {
-          "actual": true,
-          "expected": true,
-          "name": "filtered update rejects missing identity",
-          "passed": true
-        },
-        {
-          "actual": true,
-          "expected": true,
-          "name": "filtered update rejects repeated identity",
-          "passed": true
-        },
-        {
-          "actual": [
-            "two"
-          ],
-          "expected": [
-            "two"
-          ],
-          "name": "rejected updates leave data intact",
-          "passed": true
-        },
-        {
-          "actual": [
-            "new"
-          ],
-          "expected": [
-            "new"
-          ],
-          "name": "nullable identities retain baseline null-safe matching",
-          "passed": true
-        },
-        {
-          "actual": [
-            "a:new,b:untouched"
-          ],
-          "expected": [
-            "a:new,b:untouched"
-          ],
-          "name": "composite identities retain the full baseline predicate",
-          "passed": true
-        },
-        {
-          "actual": "streaming",
-          "expected": "streaming",
-          "name": "baseline native initial copy completes",
-          "passed": true
-        },
-        {
-          "actual": [
-            "1000001|1000001|t"
-          ],
-          "expected": [
-            "1000001|1000001|t"
-          ],
-          "name": "baseline native exact rows and payloads",
-          "passed": true
-        },
-        {
-          "actual": [
-            "2026-11-12 07:09:09.583306+00"
-          ],
-          "expected": [
-            "2026-11-12 07:09:09.583306+00"
-          ],
-          "name": "baseline native updates preserve the destination postmaster",
-          "passed": true
-        },
-        {
-          "actual": "stopped",
-          "expected": "stopped",
-          "name": "baseline native subscription stops",
-          "passed": true
-        },
-        {
-          "actual": "f",
-          "expected": "f",
-          "name": "baseline native source slot is inactive",
-          "passed": true
-        },
-        {
-          "actual": "0",
-          "expected": "0",
-          "name": "baseline native source slot is removed",
-          "passed": true
-        },
-        {
-          "actual": [
-            "1"
-          ],
-          "expected": [
-            "1"
-          ],
-          "name": "installed diagnostic retains nullable fallback",
-          "passed": true
-        },
-        {
-          "actual": "streaming",
-          "expected": "streaming",
-          "name": "key_filter native initial copy completes",
-          "passed": true
-        },
-        {
-          "actual": [
-            "true"
-          ],
-          "expected": [
-            "true"
-          ],
-          "name": "native bigint identity enables the filter",
-          "passed": true
-        },
-        {
-          "actual": [
-            "1000001|1000001|t"
-          ],
-          "expected": [
-            "1000001|1000001|t"
-          ],
-          "name": "key_filter native exact rows and payloads",
-          "passed": true
-        },
-        {
-          "actual": "true",
-          "expected": "true",
-          "name": "filtered candidate replaces the killed supervisor",
-          "passed": true
-        },
-        {
-          "actual": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
-          "expected": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
-          "name": "filtered candidate recovers committed source update",
-          "passed": true
-        },
-        {
-          "actual": [
-            "1000001|1000001|t"
-          ],
-          "expected": [
-            "1000001|1000001|t"
-          ],
-          "name": "key_filter native exact rows and payloads after crash",
-          "passed": true
-        },
-        {
-          "actual": [
-            "2026-11-12 07:09:09.583306+00"
-          ],
-          "expected": [
-            "2026-11-12 07:09:09.583306+00"
-          ],
-          "name": "key_filter native updates preserve the destination postmaster",
-          "passed": true
-        },
-        {
-          "actual": "stopped",
-          "expected": "stopped",
-          "name": "key_filter native subscription stops",
-          "passed": true
-        },
-        {
-          "actual": "f",
-          "expected": "f",
-          "name": "key_filter native source slot is inactive",
-          "passed": true
-        },
-        {
-          "actual": "0",
-          "expected": "0",
-          "name": "key_filter native source slot is removed",
-          "passed": true
-        },
-        {
-          "actual": "streaming",
-          "expected": "streaming",
-          "name": "baseline native initial copy completes",
-          "passed": true
-        },
-        {
-          "actual": [
-            "1000001|1000001|t"
-          ],
-          "expected": [
-            "1000001|1000001|t"
-          ],
-          "name": "baseline native exact rows and payloads",
-          "passed": true
-        },
-        {
-          "actual": [
-            "2026-11-12 07:09:09.583306+00"
-          ],
-          "expected": [
-            "2026-11-12 07:09:09.583306+00"
-          ],
-          "name": "baseline native updates preserve the destination postmaster",
-          "passed": true
-        },
-        {
-          "actual": "stopped",
-          "expected": "stopped",
-          "name": "baseline native subscription stops",
-          "passed": true
-        },
-        {
-          "actual": "f",
-          "expected": "f",
-          "name": "baseline native source slot is inactive",
-          "passed": true
-        },
-        {
-          "actual": "0",
-          "expected": "0",
-          "name": "baseline native source slot is removed",
-          "passed": true
-        }
-      ],
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "84fd422166a4aac7d2433dac6345e990af1622753cdb04fd428726fe11c8bd97",
+        "entries_or_characters": 32,
+        "total": 32,
+        "passed": 32,
+        "failed": 0,
+        "failures": []
+      },
       "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
       "run": "qualification_20261112_070854",
       "source_revision": "d50223a8bde09d13c15369f72bbf2bcaaec72b43-update-key-filter"

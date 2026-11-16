@@ -1,0 +1,2866 @@
+{
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-15-wal-direct-performance.json",
+      "sha256": "aade8c18c138292b3f144ad6ada97ba92f27769a4c696ecba8c6132f6e3b09b5",
+      "bytes": 519709,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-15-wal-direct-performance.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
+  "status": "passed",
+  "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+  "settings": {
+    "repetitions": 2,
+    "transactions": 120,
+    "workload": null,
+    "smoke": false
+  },
+  "runs": [
+    {
+      "workload": "inserts",
+      "repetition": 1,
+      "mode": "journal_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203026-fec454f9/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203026-fec454f9",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "85af56ebea81ab954dc8af0bd6ed8cbe7f5c68e240694fcb28bb188d4d07b773",
+          "entries_or_characters": 7,
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_per_commit",
+        "workload_pattern": "inserts",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3465152,
+              "memory_bytes": 144891904,
+              "process_rss_kib_sum": 308964,
+              "process_pss_kib_sum": 65766
+            },
+            "pgduck": {
+              "cpu_usec": 1285548,
+              "memory_bytes": 178495488,
+              "process_rss_kib_sum": 144600,
+              "process_pss_kib_sum": 138355
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 13569730,
+              "memory_bytes": 151855104,
+              "process_rss_kib_sum": 325720,
+              "process_pss_kib_sum": 69145
+            },
+            "pgduck": {
+              "cpu_usec": 10028270,
+              "memory_bytes": 199921664,
+              "process_rss_kib_sum": 152012,
+              "process_pss_kib_sum": 145772
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "e78001878ecd46854dfbcdb8d1eab755589bad2cf3ea8ff11e9e80169fca5073",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0016125619877129793,
+          "application_commit_p95_seconds": 0.0026994580402970314,
+          "application_commit_p99_seconds": 0.004771166946738958,
+          "write_phase_seconds": 30.000117999967188,
+          "end_to_end_seconds": 30.157858208054677,
+          "cpu_seconds": {
+            "postgres": 10.104578,
+            "pgduck": 8.742722
+          },
+          "total_database_and_engine_cpu_seconds": 18.8473,
+          "database_bytes_delta": 1785856,
+          "wal_bytes": 3425872,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 360124
+              },
+              "local_mirror": {
+                "requests": 1442,
+                "api:s3.ListObjectsV2": 240,
+                "status:200": 1202,
+                "request_bytes": 12339243,
+                "response_bytes": 85440,
+                "kind:discovery_or_other:requests": 480,
+                "kind:discovery_or_other:request_bytes": 40320,
+                "kind:discovery_or_other:response_bytes": 85440,
+                "request_duration_ns_sum": 2390013443,
+                "api:s3.HeadObject": 240,
+                "status:404": 240,
+                "api:s3.PutObject": 962,
+                "kind:data_parquet:requests": 240,
+                "kind:data_parquet:request_bytes": 360958,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_avro:requests": 482,
+                "kind:metadata_avro:request_bytes": 3341316,
+                "kind:metadata_avro:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8596649,
+                "kind:metadata_json:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.999984266732926,
+          "publication_transactions_per_second": 3.9790624112673205,
+          "post_write_drain_seconds": 0.157740208087489,
+          "maximum_observed_backlog_transactions": 2,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 1.3967516254633665,
+            "p95": 2.40946495893877,
+            "maximum": 2.6174990830477327,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 78397,
+            "pgduck": 160267
+          },
+          "total_peak_sampled_pss_kib": 234921,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "f24732e13ec6f15d60b1df211f368704e6750e718c688839f043e2b78d2928e2",
+            "entries_or_characters": 14
+          },
+          "journal_relation_bytes_after": 638976,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 2364792,
+          "final_retained_wal_bytes": 2364792,
+          "publication_latency_upper_bound_p95_seconds": 2.40946495893877,
+          "observed_object_requests": 1442
+        },
+        "final_rows_sha256": {
+          "a": "386114823ec2c619f331ffd0e547ecf19eb5c2e09ec4d22723e293ab1b00bce9",
+          "b": "a505091582d745f05beb077f1f46024a8a562b5083ecf3fb8ff1e980a003b05f"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "inserts",
+      "repetition": 1,
+      "mode": "direct_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203111-be192172/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203111-be192172",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "0512955cea02a1e6834cd7e5773b2ca8c7d606b63c1e834bd4837082dcadc290",
+          "entries_or_characters": 7,
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": null
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "direct_per_commit",
+        "workload_pattern": "inserts",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3196746,
+              "memory_bytes": 135065600,
+              "process_rss_kib_sum": 236084,
+              "process_pss_kib_sum": 57138
+            },
+            "pgduck": {
+              "cpu_usec": 2268374,
+              "memory_bytes": 208261120,
+              "process_rss_kib_sum": 180724,
+              "process_pss_kib_sum": 174458
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 13168632,
+              "memory_bytes": 134234112,
+              "process_rss_kib_sum": 193120,
+              "process_pss_kib_sum": 50715
+            },
+            "pgduck": {
+              "cpu_usec": 13930975,
+              "memory_bytes": 228290560,
+              "process_rss_kib_sum": 188392,
+              "process_pss_kib_sum": 182404
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "8833e3404e5dad1e3ca027ec8cef6e4cc17541a2d6a2eeb255faa70a12d1ae29",
+            "entries_or_characters": 12
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.002418104442767799,
+          "application_commit_p95_seconds": 0.004570249933749437,
+          "application_commit_p99_seconds": 0.005494209006428719,
+          "write_phase_seconds": 30.001762499916367,
+          "end_to_end_seconds": 30.25737529201433,
+          "cpu_seconds": {
+            "postgres": 9.971886,
+            "pgduck": 11.662601
+          },
+          "total_database_and_engine_cpu_seconds": 21.634487,
+          "database_bytes_delta": 1236992,
+          "wal_bytes": 2429872,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 828834
+              },
+              "local_mirror": {
+                "requests": 1442,
+                "api:s3.ListObjectsV2": 240,
+                "status:200": 1202,
+                "request_bytes": 12340350,
+                "response_bytes": 85440,
+                "kind:discovery_or_other:requests": 480,
+                "kind:discovery_or_other:request_bytes": 40320,
+                "kind:discovery_or_other:response_bytes": 85440,
+                "request_duration_ns_sum": 2700608039,
+                "api:s3.HeadObject": 240,
+                "status:404": 240,
+                "api:s3.PutObject": 962,
+                "kind:data_parquet:requests": 240,
+                "kind:data_parquet:request_bytes": 360958,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8597659,
+                "kind:metadata_json:response_bytes": 0,
+                "kind:metadata_avro:requests": 482,
+                "kind:metadata_avro:request_bytes": 3341413,
+                "kind:metadata_avro:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.9997650138165888,
+          "publication_transactions_per_second": 3.9659751991664316,
+          "post_write_drain_seconds": 0.2556127920979634,
+          "maximum_observed_backlog_transactions": 2,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 1.4377381460508332,
+            "p95": 2.5592653329949826,
+            "maximum": 2.86229512502905,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 66190,
+            "pgduck": 189142
+          },
+          "total_peak_sampled_pss_kib": 255332,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "d7b9dd01b3fec13ac39bd7727c7da536708cae1abe839ba67f29ae8160d14382",
+            "entries_or_characters": 13
+          },
+          "journal_relation_bytes_after": 65536,
+          "direct_control_relation_bytes_after": 81920,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 2248144,
+          "final_retained_wal_bytes": 220560,
+          "publication_latency_upper_bound_p95_seconds": 2.5592653329949826,
+          "observed_object_requests": 1442
+        },
+        "final_rows_sha256": {
+          "a": "386114823ec2c619f331ffd0e547ecf19eb5c2e09ec4d22723e293ab1b00bce9",
+          "b": "a505091582d745f05beb077f1f46024a8a562b5083ecf3fb8ff1e980a003b05f"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "inserts",
+      "repetition": 1,
+      "mode": "journal_coalesced",
+      "evidence": ".qualification/lake-push-probe-20261115-203155-ee9792b1/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203155-ee9792b1",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "4238796cd4eb2e7c790503a8646a8cb76caaaca38dab70cd007b45a65929df9c",
+          "entries_or_characters": 5,
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 1000,
+          "group_independent_inserts": true,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_coalesced",
+        "workload_pattern": "inserts",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 4196369,
+              "memory_bytes": 144482304,
+              "process_rss_kib_sum": 309604,
+              "process_pss_kib_sum": 65871
+            },
+            "pgduck": {
+              "cpu_usec": 1669113,
+              "memory_bytes": 177881088,
+              "process_rss_kib_sum": 147260,
+              "process_pss_kib_sum": 141020
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 9199288,
+              "memory_bytes": 149921792,
+              "process_rss_kib_sum": 323952,
+              "process_pss_kib_sum": 69105
+            },
+            "pgduck": {
+              "cpu_usec": 4177977,
+              "memory_bytes": 157716480,
+              "process_rss_kib_sum": 126252,
+              "process_pss_kib_sum": 119900
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "63b0857b3faa5c06ded079d3b22354ae679ff2acbb2eeb927731565acd63a4f4",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.003238250035792589,
+          "application_commit_p95_seconds": 0.007326457998715341,
+          "application_commit_p99_seconds": 0.009230625000782311,
+          "write_phase_seconds": 30.002910583047196,
+          "end_to_end_seconds": 31.511901707970537,
+          "cpu_seconds": {
+            "postgres": 5.002919,
+            "pgduck": 2.508864
+          },
+          "total_database_and_engine_cpu_seconds": 7.511783,
+          "database_bytes_delta": 1081344,
+          "wal_bytes": 1985224,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 510333
+              },
+              "local_mirror": {
+                "requests": 300,
+                "api:s3.ListObjectsV2": 50,
+                "status:200": 250,
+                "request_bytes": 1161849,
+                "response_bytes": 17800,
+                "kind:discovery_or_other:requests": 100,
+                "kind:discovery_or_other:request_bytes": 8400,
+                "kind:discovery_or_other:response_bytes": 17800,
+                "request_duration_ns_sum": 505071458,
+                "api:s3.HeadObject": 50,
+                "status:404": 50,
+                "api:s3.PutObject": 200,
+                "kind:data_parquet:requests": 50,
+                "kind:data_parquet:request_bytes": 80258,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_avro:requests": 100,
+                "kind:metadata_avro:request_bytes": 631737,
+                "kind:metadata_avro:response_bytes": 0,
+                "kind:metadata_json:requests": 50,
+                "kind:metadata_json:request_bytes": 441454,
+                "kind:metadata_json:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.999611959907804,
+          "publication_transactions_per_second": 3.8080849931582366,
+          "post_write_drain_seconds": 1.508991124923341,
+          "maximum_observed_backlog_transactions": 5,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 2.2642549374722876,
+            "p95": 3.4382958749774843,
+            "maximum": 3.6954917080001906,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 76986,
+            "pgduck": 141612
+          },
+          "total_peak_sampled_pss_kib": 208383,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "73c8069cd32d5beca9d54403bd0aabdecd393ef4ac5bb6c9f30258aa002e7bba",
+            "entries_or_characters": 17
+          },
+          "journal_relation_bytes_after": 655360,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 25,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 2,
+            "3": 1,
+            "5": 22,
+            "6": 1
+          },
+          "peak_observed_retained_wal_bytes": 1475696,
+          "final_retained_wal_bytes": 1475696,
+          "publication_latency_upper_bound_p95_seconds": 3.4382958749774843,
+          "observed_object_requests": 300
+        },
+        "final_rows_sha256": {
+          "a": "386114823ec2c619f331ffd0e547ecf19eb5c2e09ec4d22723e293ab1b00bce9",
+          "b": "a505091582d745f05beb077f1f46024a8a562b5083ecf3fb8ff1e980a003b05f"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "inserts",
+      "repetition": 2,
+      "mode": "journal_coalesced",
+      "evidence": ".qualification/lake-push-probe-20261115-203249-dea730b3/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203249-dea730b3",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "4238796cd4eb2e7c790503a8646a8cb76caaaca38dab70cd007b45a65929df9c",
+          "entries_or_characters": 5,
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 1000,
+          "group_independent_inserts": true,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_coalesced",
+        "workload_pattern": "inserts",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 4041524,
+              "memory_bytes": 144044032,
+              "process_rss_kib_sum": 309372,
+              "process_pss_kib_sum": 65845
+            },
+            "pgduck": {
+              "cpu_usec": 1432750,
+              "memory_bytes": 174997504,
+              "process_rss_kib_sum": 148716,
+              "process_pss_kib_sum": 142490
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 8775342,
+              "memory_bytes": 150220800,
+              "process_rss_kib_sum": 323580,
+              "process_pss_kib_sum": 69054
+            },
+            "pgduck": {
+              "cpu_usec": 3671152,
+              "memory_bytes": 170246144,
+              "process_rss_kib_sum": 131956,
+              "process_pss_kib_sum": 125612
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "586f510ce78af672e5a5467ccf05f9cfae7926a01d3c9f7a8706b02d0349fd71",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0037201454979367554,
+          "application_commit_p95_seconds": 0.006160291028209031,
+          "application_commit_p99_seconds": 0.007320958073250949,
+          "write_phase_seconds": 30.003633415908553,
+          "end_to_end_seconds": 31.40146374993492,
+          "cpu_seconds": {
+            "postgres": 4.733818,
+            "pgduck": 2.238402
+          },
+          "total_database_and_engine_cpu_seconds": 6.97222,
+          "database_bytes_delta": 1056768,
+          "wal_bytes": 1983920,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 477417
+              },
+              "local_mirror": {
+                "requests": 300,
+                "api:s3.ListObjectsV2": 50,
+                "status:200": 250,
+                "request_bytes": 1161895,
+                "response_bytes": 17800,
+                "kind:discovery_or_other:requests": 100,
+                "kind:discovery_or_other:request_bytes": 8400,
+                "kind:discovery_or_other:response_bytes": 17800,
+                "request_duration_ns_sum": 452931829,
+                "api:s3.HeadObject": 50,
+                "status:404": 50,
+                "api:s3.PutObject": 200,
+                "kind:data_parquet:requests": 50,
+                "kind:data_parquet:request_bytes": 80258,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_json:requests": 50,
+                "kind:metadata_json:request_bytes": 441449,
+                "kind:metadata_json:response_bytes": 0,
+                "kind:metadata_avro:requests": 100,
+                "kind:metadata_avro:request_bytes": 631788,
+                "kind:metadata_avro:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.999515603212693,
+          "publication_transactions_per_second": 3.8214779080242303,
+          "post_write_drain_seconds": 1.3978303340263665,
+          "maximum_observed_backlog_transactions": 5,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 2.0938737919786945,
+            "p95": 3.3549890419235453,
+            "maximum": 3.6937820420134813,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 69056,
+            "pgduck": 142490
+          },
+          "total_peak_sampled_pss_kib": 208335,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "148f08e5a08245454138ec34c96a10dce3bc1b384daf06ed34a98a0c213fea7a",
+            "entries_or_characters": 17
+          },
+          "journal_relation_bytes_after": 630784,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 25,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 2,
+            "3": 1,
+            "5": 22,
+            "6": 1
+          },
+          "peak_observed_retained_wal_bytes": 1134536,
+          "final_retained_wal_bytes": 323248,
+          "publication_latency_upper_bound_p95_seconds": 3.3549890419235453,
+          "observed_object_requests": 300
+        },
+        "final_rows_sha256": {
+          "a": "386114823ec2c619f331ffd0e547ecf19eb5c2e09ec4d22723e293ab1b00bce9",
+          "b": "a505091582d745f05beb077f1f46024a8a562b5083ecf3fb8ff1e980a003b05f"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "inserts",
+      "repetition": 2,
+      "mode": "direct_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203336-a6308f34/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203336-a6308f34",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "0512955cea02a1e6834cd7e5773b2ca8c7d606b63c1e834bd4837082dcadc290",
+          "entries_or_characters": 7,
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": null
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "direct_per_commit",
+        "workload_pattern": "inserts",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3162858,
+              "memory_bytes": 135028736,
+              "process_rss_kib_sum": 235984,
+              "process_pss_kib_sum": 57123
+            },
+            "pgduck": {
+              "cpu_usec": 1279760,
+              "memory_bytes": 182226944,
+              "process_rss_kib_sum": 154972,
+              "process_pss_kib_sum": 148706
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 11569083,
+              "memory_bytes": 135659520,
+              "process_rss_kib_sum": 193356,
+              "process_pss_kib_sum": 50707
+            },
+            "pgduck": {
+              "cpu_usec": 10040381,
+              "memory_bytes": 191373312,
+              "process_rss_kib_sum": 145776,
+              "process_pss_kib_sum": 139815
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "aa3ef2dc2826d3906af40980fd72a6e55bb14a8c17c74a4f2f424e4206bcbfd6",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0022496249875985086,
+          "application_commit_p95_seconds": 0.006138209020718932,
+          "application_commit_p99_seconds": 0.006776791997253895,
+          "write_phase_seconds": 30.004980916972272,
+          "end_to_end_seconds": 30.15343358402606,
+          "cpu_seconds": {
+            "postgres": 8.406225,
+            "pgduck": 8.760621
+          },
+          "total_database_and_engine_cpu_seconds": 17.166846,
+          "database_bytes_delta": 1187840,
+          "wal_bytes": 2400448,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 486000
+              },
+              "local_mirror": {
+                "requests": 1442,
+                "api:s3.ListObjectsV2": 240,
+                "status:200": 1202,
+                "request_bytes": 12343032,
+                "response_bytes": 85440,
+                "kind:discovery_or_other:requests": 480,
+                "kind:discovery_or_other:request_bytes": 40320,
+                "kind:discovery_or_other:response_bytes": 85440,
+                "request_duration_ns_sum": 2045590135,
+                "api:s3.HeadObject": 240,
+                "status:404": 240,
+                "api:s3.PutObject": 962,
+                "kind:data_parquet:requests": 240,
+                "kind:data_parquet:request_bytes": 360958,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_avro:requests": 482,
+                "kind:metadata_avro:request_bytes": 3341628,
+                "kind:metadata_avro:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8600126,
+                "kind:metadata_json:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.9993359879833212,
+          "publication_transactions_per_second": 3.97964628690149,
+          "post_write_drain_seconds": 0.1484526670537889,
+          "maximum_observed_backlog_transactions": 1,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 1.3272897085407749,
+            "p95": 2.3551792500074953,
+            "maximum": 2.5088574590627104,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 66088,
+            "pgduck": 159726
+          },
+          "total_peak_sampled_pss_kib": 218879,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "de40aa61d5e91379388c4aa2430e00412110b0bb62117c2d227b200426848c45",
+            "entries_or_characters": 14
+          },
+          "journal_relation_bytes_after": 65536,
+          "direct_control_relation_bytes_after": 81920,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 1595840,
+          "final_retained_wal_bytes": 1595840,
+          "publication_latency_upper_bound_p95_seconds": 2.3551792500074953,
+          "observed_object_requests": 1442
+        },
+        "final_rows_sha256": {
+          "a": "386114823ec2c619f331ffd0e547ecf19eb5c2e09ec4d22723e293ab1b00bce9",
+          "b": "a505091582d745f05beb077f1f46024a8a562b5083ecf3fb8ff1e980a003b05f"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "inserts",
+      "repetition": 2,
+      "mode": "journal_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203420-c7fd927f/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203420-c7fd927f",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "85af56ebea81ab954dc8af0bd6ed8cbe7f5c68e240694fcb28bb188d4d07b773",
+          "entries_or_characters": 7,
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_per_commit",
+        "workload_pattern": "inserts",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3597131,
+              "memory_bytes": 144523264,
+              "process_rss_kib_sum": 309144,
+              "process_pss_kib_sum": 65739
+            },
+            "pgduck": {
+              "cpu_usec": 2496269,
+              "memory_bytes": 210280448,
+              "process_rss_kib_sum": 182944,
+              "process_pss_kib_sum": 176703
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 14955271,
+              "memory_bytes": 154083328,
+              "process_rss_kib_sum": 326284,
+              "process_pss_kib_sum": 69108
+            },
+            "pgduck": {
+              "cpu_usec": 12591810,
+              "memory_bytes": 240095232,
+              "process_rss_kib_sum": 193016,
+              "process_pss_kib_sum": 186775
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "b0d815ac016187cc755701cd34002172fc57e9d3f76856c284f8479f34219254",
+            "entries_or_characters": 12
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0017639375291764736,
+          "application_commit_p95_seconds": 0.0027255830354988575,
+          "application_commit_p99_seconds": 0.006758917006663978,
+          "write_phase_seconds": 30.00502358295489,
+          "end_to_end_seconds": 30.248683082987554,
+          "cpu_seconds": {
+            "postgres": 11.35814,
+            "pgduck": 10.095541
+          },
+          "total_database_and_engine_cpu_seconds": 21.453681000000003,
+          "database_bytes_delta": 1761280,
+          "wal_bytes": 3402512,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 495417
+              },
+              "local_mirror": {
+                "requests": 1442,
+                "api:s3.ListObjectsV2": 240,
+                "status:200": 1202,
+                "request_bytes": 12345840,
+                "response_bytes": 85440,
+                "kind:discovery_or_other:requests": 480,
+                "kind:discovery_or_other:request_bytes": 40320,
+                "kind:discovery_or_other:response_bytes": 85440,
+                "request_duration_ns_sum": 2316017467,
+                "api:s3.HeadObject": 240,
+                "status:404": 240,
+                "api:s3.PutObject": 962,
+                "kind:data_parquet:requests": 240,
+                "kind:data_parquet:request_bytes": 360958,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_avro:requests": 482,
+                "kind:metadata_avro:request_bytes": 3342234,
+                "kind:metadata_avro:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8602328,
+                "kind:metadata_json:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.9993303010822836,
+          "publication_transactions_per_second": 3.967114854910504,
+          "post_write_drain_seconds": 0.24365950003266335,
+          "maximum_observed_backlog_transactions": 1,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 1.4400635209749453,
+            "p95": 2.487820375012234,
+            "maximum": 2.6133775420021266,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 81268,
+            "pgduck": 195131
+          },
+          "total_peak_sampled_pss_kib": 274351,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "1499664c325cf414962d1891e7100d6c158bd9b1f490c321de506a2c4c43bcf5",
+            "entries_or_characters": 13
+          },
+          "journal_relation_bytes_after": 663552,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 2954144,
+          "final_retained_wal_bytes": 453024,
+          "publication_latency_upper_bound_p95_seconds": 2.487820375012234,
+          "observed_object_requests": 1442
+        },
+        "final_rows_sha256": {
+          "a": "386114823ec2c619f331ffd0e547ecf19eb5c2e09ec4d22723e293ab1b00bce9",
+          "b": "a505091582d745f05beb077f1f46024a8a562b5083ecf3fb8ff1e980a003b05f"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "mixed",
+      "repetition": 1,
+      "mode": "journal_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203511-4e4eec14/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203511-4e4eec14",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "9cdd7898177bc0ec2711d27b372e0293eb9431acd54d7cada86543527fc7ee78",
+          "entries_or_characters": 8,
+          "total": 8,
+          "passed": 8,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_per_commit",
+        "workload_pattern": "mixed",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3658038,
+              "memory_bytes": 138039296,
+              "process_rss_kib_sum": 308748,
+              "process_pss_kib_sum": 65741
+            },
+            "pgduck": {
+              "cpu_usec": 1382876,
+              "memory_bytes": 178999296,
+              "process_rss_kib_sum": 149652,
+              "process_pss_kib_sum": 143412
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 21024690,
+              "memory_bytes": 163876864,
+              "process_rss_kib_sum": 331352,
+              "process_pss_kib_sum": 70166
+            },
+            "pgduck": {
+              "cpu_usec": 19008169,
+              "memory_bytes": 248066048,
+              "process_rss_kib_sum": 190748,
+              "process_pss_kib_sum": 184451
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "160acd4bc447b2fa5d748a81ef5071a2743a72bb1a71cb8054ec3cff90aea1a0",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0015308959991671145,
+          "application_commit_p95_seconds": 0.002700375043787062,
+          "application_commit_p99_seconds": 0.0035689170472323895,
+          "write_phase_seconds": 30.001081958063878,
+          "end_to_end_seconds": 31.241951207979582,
+          "cpu_seconds": {
+            "postgres": 17.366652,
+            "pgduck": 17.625293
+          },
+          "total_database_and_engine_cpu_seconds": 34.991945,
+          "database_bytes_delta": 4947968,
+          "wal_bytes": 14686944,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 444208
+              },
+              "local_mirror": {
+                "requests": 3108,
+                "api:s3.ListObjectsV2": 478,
+                "status:200": 2630,
+                "request_bytes": 17450947,
+                "response_bytes": 170168,
+                "kind:discovery_or_other:requests": 956,
+                "kind:discovery_or_other:request_bytes": 80304,
+                "kind:discovery_or_other:response_bytes": 170168,
+                "request_duration_ns_sum": 4965303767,
+                "api:s3.HeadObject": 478,
+                "status:404": 478,
+                "api:s3.PutObject": 2152,
+                "kind:data_parquet:requests": 954,
+                "kind:data_parquet:request_bytes": 1407554,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8644024,
+                "kind:metadata_json:response_bytes": 0,
+                "kind:metadata_avro:requests": 958,
+                "kind:metadata_avro:request_bytes": 7319065,
+                "kind:metadata_avro:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.999855744127443,
+          "publication_transactions_per_second": 3.840989290366426,
+          "post_write_drain_seconds": 1.2408692499157041,
+          "maximum_observed_backlog_transactions": 12,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 2.0693383124889806,
+            "p95": 4.0660209589404985,
+            "maximum": 5.066236958955415,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 88494,
+            "pgduck": 186525
+          },
+          "total_peak_sampled_pss_kib": 269226,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "18551fd3bb09799a02f1b05520d0f1cdcada50e3630d0d1a2460b5c5a539ce84",
+            "entries_or_characters": 17
+          },
+          "journal_relation_bytes_after": 811008,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 10705912,
+          "final_retained_wal_bytes": 10136640,
+          "publication_latency_upper_bound_p95_seconds": 4.0660209589404985,
+          "observed_object_requests": 3108
+        },
+        "final_rows_sha256": {
+          "a": "8e0ac41e100d3dbca2566475ca3b11e8df62bc01c9d9284526c1eeb503ff1113",
+          "b": "1a9aea64dfbea906a13d7bd9913802c28ac0f7186e8f5df4c982a7a72aae9917"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "mixed",
+      "repetition": 1,
+      "mode": "direct_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203557-fcbc853e/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203557-fcbc853e",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "de6761203268a0a8bc1a3c1ab51e984401a47ba5239284a046c62507ce495dbf",
+          "entries_or_characters": 8,
+          "total": 8,
+          "passed": 8,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": null
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "direct_per_commit",
+        "workload_pattern": "mixed",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3307532,
+              "memory_bytes": 133275648,
+              "process_rss_kib_sum": 235780,
+              "process_pss_kib_sum": 57157
+            },
+            "pgduck": {
+              "cpu_usec": 1545081,
+              "memory_bytes": 176431104,
+              "process_rss_kib_sum": 150412,
+              "process_pss_kib_sum": 144146
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 19424334,
+              "memory_bytes": 145805312,
+              "process_rss_kib_sum": 197092,
+              "process_pss_kib_sum": 51062
+            },
+            "pgduck": {
+              "cpu_usec": 19307965,
+              "memory_bytes": 193933312,
+              "process_rss_kib_sum": 135772,
+              "process_pss_kib_sum": 129760
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "1c0a5dbd7c56700a88fd8d787d237bdc3c340d48e9cc14a9ae45ad259257c766",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0016058125183917582,
+          "application_commit_p95_seconds": 0.0026488329749554396,
+          "application_commit_p99_seconds": 0.00433204194996506,
+          "write_phase_seconds": 30.001395042054355,
+          "end_to_end_seconds": 30.5365378750721,
+          "cpu_seconds": {
+            "postgres": 16.116802,
+            "pgduck": 17.762884
+          },
+          "total_database_and_engine_cpu_seconds": 33.879686,
+          "database_bytes_delta": 4161536,
+          "wal_bytes": 13099112,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 456917
+              },
+              "local_mirror": {
+                "requests": 3108,
+                "api:s3.ListObjectsV2": 478,
+                "status:200": 2630,
+                "request_bytes": 17446066,
+                "response_bytes": 170168,
+                "kind:discovery_or_other:requests": 956,
+                "kind:discovery_or_other:request_bytes": 80304,
+                "kind:discovery_or_other:response_bytes": 170168,
+                "request_duration_ns_sum": 5243581346,
+                "api:s3.HeadObject": 478,
+                "status:404": 478,
+                "api:s3.PutObject": 2152,
+                "kind:data_parquet:requests": 954,
+                "kind:data_parquet:request_bytes": 1407554,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8639229,
+                "kind:metadata_json:response_bytes": 0,
+                "kind:metadata_avro:requests": 958,
+                "kind:metadata_avro:request_bytes": 7318979,
+                "kind:metadata_avro:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.999814003041872,
+          "publication_transactions_per_second": 3.9297185715987677,
+          "post_write_drain_seconds": 0.5351428330177441,
+          "maximum_observed_backlog_transactions": 9,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 1.872392916411627,
+            "p95": 3.561408375040628,
+            "maximum": 4.3151320409961045,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 79671,
+            "pgduck": 185228
+          },
+          "total_peak_sampled_pss_kib": 256751,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "f06c56e710f5ebdca747e2885158e2aec3ea5c1ce57a7587afc4edb6175c63b8",
+            "entries_or_characters": 15
+          },
+          "journal_relation_bytes_after": 65536,
+          "direct_control_relation_bytes_after": 81920,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 11466288,
+          "final_retained_wal_bytes": 8499480,
+          "publication_latency_upper_bound_p95_seconds": 3.561408375040628,
+          "observed_object_requests": 3108
+        },
+        "final_rows_sha256": {
+          "a": "8e0ac41e100d3dbca2566475ca3b11e8df62bc01c9d9284526c1eeb503ff1113",
+          "b": "1a9aea64dfbea906a13d7bd9913802c28ac0f7186e8f5df4c982a7a72aae9917"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "mixed",
+      "repetition": 1,
+      "mode": "journal_coalesced",
+      "evidence": ".qualification/lake-push-probe-20261115-203647-ac5f2f45/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203647-ac5f2f45",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "a1ceabccb2b26920bf8cc4ff6e8ac878ab65f45c9fa9eb7c9e7ddb6438818120",
+          "entries_or_characters": 6,
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 1000,
+          "group_independent_inserts": true,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_coalesced",
+        "workload_pattern": "mixed",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3878303,
+              "memory_bytes": 144379904,
+              "process_rss_kib_sum": 309520,
+              "process_pss_kib_sum": 65873
+            },
+            "pgduck": {
+              "cpu_usec": 1407758,
+              "memory_bytes": 174927872,
+              "process_rss_kib_sum": 146220,
+              "process_pss_kib_sum": 139979
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 12627594,
+              "memory_bytes": 158785536,
+              "process_rss_kib_sum": 330644,
+              "process_pss_kib_sum": 71460
+            },
+            "pgduck": {
+              "cpu_usec": 8407128,
+              "memory_bytes": 184995840,
+              "process_rss_kib_sum": 148284,
+              "process_pss_kib_sum": 141985
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "72e8d12c9939098e1186d53545bd62c4713e52b2a1ce4853b245dc2c2c7d4c76",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0021555625135079026,
+          "application_commit_p95_seconds": 0.008374708937481046,
+          "application_commit_p99_seconds": 0.009383291006088257,
+          "write_phase_seconds": 30.003511416958645,
+          "end_to_end_seconds": 30.88892370800022,
+          "cpu_seconds": {
+            "postgres": 8.749291,
+            "pgduck": 6.99937
+          },
+          "total_database_and_engine_cpu_seconds": 15.748660999999998,
+          "database_bytes_delta": 4808704,
+          "wal_bytes": 12055896,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 448291
+              },
+              "local_mirror": {
+                "requests": 2086,
+                "api:s3.ListObjectsV2": 478,
+                "status:200": 1608,
+                "request_bytes": 2775616,
+                "response_bytes": 170168,
+                "kind:discovery_or_other:requests": 956,
+                "kind:discovery_or_other:request_bytes": 80304,
+                "kind:discovery_or_other:response_bytes": 170168,
+                "request_duration_ns_sum": 1752817950,
+                "api:s3.HeadObject": 478,
+                "status:404": 478,
+                "api:s3.PutObject": 1130,
+                "kind:data_parquet:requests": 954,
+                "kind:data_parquet:request_bytes": 1407554,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_json:requests": 36,
+                "kind:metadata_json:request_bytes": 247170,
+                "kind:metadata_json:response_bytes": 0,
+                "kind:metadata_avro:requests": 140,
+                "kind:metadata_avro:request_bytes": 1040588,
+                "kind:metadata_avro:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.9995318658659853,
+          "publication_transactions_per_second": 3.88488770714015,
+          "post_write_drain_seconds": 0.8854122910415754,
+          "maximum_observed_backlog_transactions": 10,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 2.7394552295445465,
+            "p95": 4.154096875106916,
+            "maximum": 4.658980708103627,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 84385,
+            "pgduck": 165603
+          },
+          "total_peak_sampled_pss_kib": 249988,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "ad910b49ddea099a977621bdb06a461cdd0225b26fdad98308ae7ca72f324b85",
+            "entries_or_characters": 16
+          },
+          "journal_relation_bytes_after": 892928,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 18,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 1,
+            "3": 1,
+            "5": 1,
+            "6": 3,
+            "7": 10,
+            "8": 3
+          },
+          "peak_observed_retained_wal_bytes": 6234840,
+          "final_retained_wal_bytes": 2762096,
+          "publication_latency_upper_bound_p95_seconds": 4.154096875106916,
+          "observed_object_requests": 2086
+        },
+        "final_rows_sha256": {
+          "a": "8e0ac41e100d3dbca2566475ca3b11e8df62bc01c9d9284526c1eeb503ff1113",
+          "b": "1a9aea64dfbea906a13d7bd9913802c28ac0f7186e8f5df4c982a7a72aae9917"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "mixed",
+      "repetition": 2,
+      "mode": "journal_coalesced",
+      "evidence": ".qualification/lake-push-probe-20261115-203734-bc7eb8fe/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203734-bc7eb8fe",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "a1ceabccb2b26920bf8cc4ff6e8ac878ab65f45c9fa9eb7c9e7ddb6438818120",
+          "entries_or_characters": 6,
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 1000,
+          "group_independent_inserts": true,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_coalesced",
+        "workload_pattern": "mixed",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3854921,
+              "memory_bytes": 142647296,
+              "process_rss_kib_sum": 309096,
+              "process_pss_kib_sum": 65817
+            },
+            "pgduck": {
+              "cpu_usec": 1423794,
+              "memory_bytes": 169201664,
+              "process_rss_kib_sum": 141860,
+              "process_pss_kib_sum": 135621
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 12731809,
+              "memory_bytes": 162557952,
+              "process_rss_kib_sum": 330848,
+              "process_pss_kib_sum": 71112
+            },
+            "pgduck": {
+              "cpu_usec": 8295673,
+              "memory_bytes": 182849536,
+              "process_rss_kib_sum": 151784,
+              "process_pss_kib_sum": 145487
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "24ca871badd2c148c8e171c47c567d40a70755e854ad38fe59d552c8e63e5f8f",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.0022837709984742105,
+          "application_commit_p95_seconds": 0.008666915935464203,
+          "application_commit_p99_seconds": 0.01018224994186312,
+          "write_phase_seconds": 30.00359108299017,
+          "end_to_end_seconds": 31.304272125009447,
+          "cpu_seconds": {
+            "postgres": 8.876888,
+            "pgduck": 6.871879
+          },
+          "total_database_and_engine_cpu_seconds": 15.748766999999999,
+          "database_bytes_delta": 4800512,
+          "wal_bytes": 12061352,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 420625
+              },
+              "local_mirror": {
+                "requests": 2086,
+                "api:s3.ListObjectsV2": 478,
+                "status:200": 1608,
+                "request_bytes": 2775310,
+                "response_bytes": 170168,
+                "kind:discovery_or_other:requests": 956,
+                "kind:discovery_or_other:request_bytes": 80304,
+                "kind:discovery_or_other:response_bytes": 170168,
+                "request_duration_ns_sum": 1666461679,
+                "api:s3.HeadObject": 478,
+                "status:404": 478,
+                "api:s3.PutObject": 1130,
+                "kind:data_parquet:requests": 954,
+                "kind:data_parquet:request_bytes": 1407554,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_avro:requests": 140,
+                "kind:metadata_avro:request_bytes": 1040388,
+                "kind:metadata_avro:response_bytes": 0,
+                "kind:metadata_json:requests": 36,
+                "kind:metadata_json:request_bytes": 247064,
+                "kind:metadata_json:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.9995212462427934,
+          "publication_transactions_per_second": 3.8333426032330653,
+          "post_write_drain_seconds": 1.3006810420192778,
+          "maximum_observed_backlog_transactions": 10,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 2.5942831250140443,
+            "p95": 3.9948101250920445,
+            "maximum": 4.6890184169169515,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 82953,
+            "pgduck": 165277
+          },
+          "total_peak_sampled_pss_kib": 248230,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "d6ebbb1e2e69ea55966e4b5db8d655daa51bf5f647f80a8dada96cdb53180596",
+            "entries_or_characters": 17
+          },
+          "journal_relation_bytes_after": 851968,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 18,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 1,
+            "3": 1,
+            "5": 1,
+            "6": 1,
+            "7": 14,
+            "8": 1
+          },
+          "peak_observed_retained_wal_bytes": 8918808,
+          "final_retained_wal_bytes": 8918808,
+          "publication_latency_upper_bound_p95_seconds": 3.9948101250920445,
+          "observed_object_requests": 2086
+        },
+        "final_rows_sha256": {
+          "a": "8e0ac41e100d3dbca2566475ca3b11e8df62bc01c9d9284526c1eeb503ff1113",
+          "b": "1a9aea64dfbea906a13d7bd9913802c28ac0f7186e8f5df4c982a7a72aae9917"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "mixed",
+      "repetition": 2,
+      "mode": "direct_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203821-cfe4a6b0/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203821-cfe4a6b0",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "de6761203268a0a8bc1a3c1ab51e984401a47ba5239284a046c62507ce495dbf",
+          "entries_or_characters": 8,
+          "total": 8,
+          "passed": 8,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": null
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "direct_per_commit",
+        "workload_pattern": "mixed",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3394481,
+              "memory_bytes": 132890624,
+              "process_rss_kib_sum": 235836,
+              "process_pss_kib_sum": 57036
+            },
+            "pgduck": {
+              "cpu_usec": 1531805,
+              "memory_bytes": 177934336,
+              "process_rss_kib_sum": 150676,
+              "process_pss_kib_sum": 144410
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 19305390,
+              "memory_bytes": 152887296,
+              "process_rss_kib_sum": 197120,
+              "process_pss_kib_sum": 50959
+            },
+            "pgduck": {
+              "cpu_usec": 19093592,
+              "memory_bytes": 234717184,
+              "process_rss_kib_sum": 178812,
+              "process_pss_kib_sum": 172800
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "169b4cffe84d705bf7830e1c5f04a3cd853cefad4c26c8bdb5e6e969c446c0e8",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.001591666485182941,
+          "application_commit_p95_seconds": 0.0027518339920789003,
+          "application_commit_p99_seconds": 0.0030111250234767795,
+          "write_phase_seconds": 30.005030250060372,
+          "end_to_end_seconds": 30.15875858301297,
+          "cpu_seconds": {
+            "postgres": 15.910909,
+            "pgduck": 17.561787
+          },
+          "total_database_and_engine_cpu_seconds": 33.472696,
+          "database_bytes_delta": 4112384,
+          "wal_bytes": 13072472,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 584541
+              },
+              "local_mirror": {
+                "requests": 3108,
+                "api:s3.ListObjectsV2": 478,
+                "status:200": 2630,
+                "request_bytes": 17453103,
+                "response_bytes": 170168,
+                "kind:discovery_or_other:requests": 956,
+                "kind:discovery_or_other:request_bytes": 80304,
+                "kind:discovery_or_other:response_bytes": 170168,
+                "request_duration_ns_sum": 5082371679,
+                "api:s3.HeadObject": 478,
+                "status:404": 478,
+                "api:s3.PutObject": 2152,
+                "kind:data_parquet:requests": 954,
+                "kind:data_parquet:request_bytes": 1407554,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_avro:requests": 958,
+                "kind:metadata_avro:request_bytes": 7319319,
+                "kind:metadata_avro:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8645926,
+                "kind:metadata_json:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.999329412432722,
+          "publication_transactions_per_second": 3.9789436183089593,
+          "post_write_drain_seconds": 0.15372833295259625,
+          "maximum_observed_backlog_transactions": 8,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 1.8257805000175722,
+            "p95": 3.3330757500370964,
+            "maximum": 4.078057417063974,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 78803,
+            "pgduck": 193337
+          },
+          "total_peak_sampled_pss_kib": 265698,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "d62ebaef813405fc211d4621943249a3e61271f3d95dab58eaa727fec3d33952",
+            "entries_or_characters": 14
+          },
+          "journal_relation_bytes_after": 65536,
+          "direct_control_relation_bytes_after": 81920,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 11591544,
+          "final_retained_wal_bytes": 8495808,
+          "publication_latency_upper_bound_p95_seconds": 3.3330757500370964,
+          "observed_object_requests": 3108
+        },
+        "final_rows_sha256": {
+          "a": "8e0ac41e100d3dbca2566475ca3b11e8df62bc01c9d9284526c1eeb503ff1113",
+          "b": "1a9aea64dfbea906a13d7bd9913802c28ac0f7186e8f5df4c982a7a72aae9917"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "workload": "mixed",
+      "repetition": 2,
+      "mode": "journal_per_commit",
+      "evidence": ".qualification/lake-push-probe-20261115-203911-1d394b26/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261115-203911-1d394b26",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "9cdd7898177bc0ec2711d27b372e0293eb9431acd54d7cada86543527fc7ee78",
+          "entries_or_characters": 8,
+          "total": 8,
+          "passed": 8,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Same-runtime direct prototype versus matched and coalesced journal pipelines.",
+        "unqualified": [
+          "production sizing",
+          "cold cache",
+          "long-duration stability",
+          "exact publication latency",
+          "host/controller/storage CPU"
+        ],
+        "workload": {
+          "transactions": 120,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.25,
+          "text_bytes": 256,
+          "publish_interval_ms": 0,
+          "group_independent_inserts": false,
+          "journal_max_transactions": 32
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+        "mode": "journal_per_commit",
+        "workload_pattern": "mixed",
+        "source_commit": "c6815eba34ef1d05acb9286ec054686d3f813dc3",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8504b0f35d9ba8fdd40f25e54c6c54f2610b14cfc4db83f49cdf895315b0a209",
+          "entries_or_characters": 10
+        },
+        "tracked_worktree_diff_sha256": "3e1c010ca2fa98981b3e853bc2d356c66cb89ee38f3431ac33b45cbabd337268",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "db436cfbb9fb8d9eff1568d5adffa51e61433c5a63d5a4608cb8756d6d0a0413",
+          "entries_or_characters": 196
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v3",
+            "id": "sha256:fa8365a5d08d3f853d4811669b54be289c7028c297b29dd6b2b6bbfd14b13885",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "measurement": {
+          "status": "passed",
+          "before": {
+            "postgres": {
+              "cpu_usec": 3688525,
+              "memory_bytes": 144269312,
+              "process_rss_kib_sum": 308800,
+              "process_pss_kib_sum": 65733
+            },
+            "pgduck": {
+              "cpu_usec": 1388088,
+              "memory_bytes": 176349184,
+              "process_rss_kib_sum": 147604,
+              "process_pss_kib_sum": 141366
+            }
+          },
+          "after": {
+            "postgres": {
+              "cpu_usec": 20902347,
+              "memory_bytes": 162906112,
+              "process_rss_kib_sum": 330008,
+              "process_pss_kib_sum": 70182
+            },
+            "pgduck": {
+              "cpu_usec": 18693885,
+              "memory_bytes": 263897088,
+              "process_rss_kib_sum": 205476,
+              "process_pss_kib_sum": 199181
+            }
+          },
+          "samples": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "be1ea30f0f63c8519c8e6cc8a0a505241c40f2c5b1ec16130820e525227c2cb2",
+            "entries_or_characters": 13
+          },
+          "application_commits": 120,
+          "application_commit_median_seconds": 0.001569228945299983,
+          "application_commit_p95_seconds": 0.0030502090230584145,
+          "application_commit_p99_seconds": 0.003768417052924633,
+          "write_phase_seconds": 30.00505595805589,
+          "end_to_end_seconds": 31.380540000041947,
+          "cpu_seconds": {
+            "postgres": 17.213822,
+            "pgduck": 17.305797
+          },
+          "total_database_and_engine_cpu_seconds": 34.519619,
+          "database_bytes_delta": 4939776,
+          "wal_bytes": 14712960,
+          "object_operations": {
+            "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+            "readiness_witness": true,
+            "completion_witness": true,
+            "categories": {
+              "bucket_or_other": {
+                "requests": 2,
+                "api:s3.GetBucketLocation": 2,
+                "status:200": 2,
+                "request_bytes": 186,
+                "response_bytes": 256,
+                "kind:discovery_or_other:requests": 2,
+                "kind:discovery_or_other:request_bytes": 186,
+                "kind:discovery_or_other:response_bytes": 256,
+                "request_duration_ns_sum": 475959
+              },
+              "local_mirror": {
+                "requests": 3108,
+                "api:s3.ListObjectsV2": 478,
+                "status:200": 2630,
+                "request_bytes": 17452169,
+                "response_bytes": 170168,
+                "kind:discovery_or_other:requests": 956,
+                "kind:discovery_or_other:request_bytes": 80304,
+                "kind:discovery_or_other:response_bytes": 170168,
+                "request_duration_ns_sum": 4969530658,
+                "api:s3.HeadObject": 478,
+                "status:404": 478,
+                "api:s3.PutObject": 2152,
+                "kind:data_parquet:requests": 954,
+                "kind:data_parquet:request_bytes": 1407554,
+                "kind:data_parquet:response_bytes": 0,
+                "kind:metadata_avro:requests": 958,
+                "kind:metadata_avro:request_bytes": 7319327,
+                "kind:metadata_avro:response_bytes": 0,
+                "kind:metadata_json:requests": 240,
+                "kind:metadata_json:request_bytes": 8644984,
+                "kind:metadata_json:response_bytes": 0
+              }
+            }
+          },
+          "application_transactions_per_second": 3.9993259858521233,
+          "publication_transactions_per_second": 3.8240259727792956,
+          "post_write_drain_seconds": 1.3754840419860557,
+          "maximum_observed_backlog_transactions": 12,
+          "observed_publication_latency_upper_bound_seconds": {
+            "median": 2.125353228999302,
+            "p95": 4.1946737500838935,
+            "maximum": 5.192399249994196,
+            "sample_interval_seconds": 2
+          },
+          "sampled_peak_pss_kib": {
+            "postgres": 89356,
+            "pgduck": 202778
+          },
+          "total_peak_sampled_pss_kib": 288346,
+          "retained_wal_samples_bytes": {
+            "_omitted_detail": true,
+            "reason": "Raw timeline, inspection or repeated provenance is archived",
+            "canonical_json_sha256": "bb8f71d7b1c6f0f7212912fab7ca6ad3c8eacf9bca55c3021b91acc642c1ac40",
+            "entries_or_characters": 17
+          },
+          "journal_relation_bytes_after": 786432,
+          "direct_control_relation_bytes_after": 40960,
+          "publications": 120,
+          "transactions_per_publication_distribution_including_warmup": {
+            "1": 121
+          },
+          "peak_observed_retained_wal_bytes": 5930768,
+          "final_retained_wal_bytes": 3403072,
+          "publication_latency_upper_bound_p95_seconds": 4.1946737500838935,
+          "observed_object_requests": 3108
+        },
+        "final_rows_sha256": {
+          "a": "8e0ac41e100d3dbca2566475ca3b11e8df62bc01c9d9284526c1eeb503ff1113",
+          "b": "1a9aea64dfbea906a13d7bd9913802c28ac0f7186e8f5df4c982a7a72aae9917"
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    }
+  ],
+  "summary": {
+    "inserts": {
+      "journal_per_commit": {
+        "total_database_and_engine_cpu_seconds": {
+          "median": 20.150490500000004,
+          "minimum": 18.8473,
+          "maximum": 21.453681000000003
+        },
+        "wal_bytes": {
+          "median": 3414192.0,
+          "minimum": 3402512,
+          "maximum": 3425872
+        },
+        "observed_object_requests": {
+          "median": 1442.0,
+          "minimum": 1442,
+          "maximum": 1442
+        },
+        "application_commit_p99_seconds": {
+          "median": 0.005765041976701468,
+          "minimum": 0.004771166946738958,
+          "maximum": 0.006758917006663978
+        },
+        "post_write_drain_seconds": {
+          "median": 0.20069985406007618,
+          "minimum": 0.157740208087489,
+          "maximum": 0.24365950003266335
+        },
+        "publication_latency_upper_bound_p95_seconds": {
+          "median": 2.448642666975502,
+          "minimum": 2.40946495893877,
+          "maximum": 2.487820375012234
+        },
+        "peak_observed_retained_wal_bytes": {
+          "median": 2659468.0,
+          "minimum": 2364792,
+          "maximum": 2954144
+        },
+        "total_peak_sampled_pss_kib": {
+          "median": 254636.0,
+          "minimum": 234921,
+          "maximum": 274351
+        },
+        "database_bytes_delta": {
+          "median": 1773568.0,
+          "minimum": 1761280,
+          "maximum": 1785856
+        },
+        "journal_relation_bytes_after": {
+          "median": 651264.0,
+          "minimum": 638976,
+          "maximum": 663552
+        },
+        "direct_control_relation_bytes_after": {
+          "median": 40960.0,
+          "minimum": 40960,
+          "maximum": 40960
+        },
+        "publications": {
+          "median": 120.0,
+          "minimum": 120,
+          "maximum": 120
+        }
+      },
+      "direct_per_commit": {
+        "total_database_and_engine_cpu_seconds": {
+          "median": 19.4006665,
+          "minimum": 17.166846,
+          "maximum": 21.634487
+        },
+        "wal_bytes": {
+          "median": 2415160.0,
+          "minimum": 2400448,
+          "maximum": 2429872
+        },
+        "observed_object_requests": {
+          "median": 1442.0,
+          "minimum": 1442,
+          "maximum": 1442
+        },
+        "application_commit_p99_seconds": {
+          "median": 0.006135500501841307,
+          "minimum": 0.005494209006428719,
+          "maximum": 0.006776791997253895
+        },
+        "post_write_drain_seconds": {
+          "median": 0.20203272957587615,
+          "minimum": 0.1484526670537889,
+          "maximum": 0.2556127920979634
+        },
+        "publication_latency_upper_bound_p95_seconds": {
+          "median": 2.457222291501239,
+          "minimum": 2.3551792500074953,
+          "maximum": 2.5592653329949826
+        },
+        "peak_observed_retained_wal_bytes": {
+          "median": 1921992.0,
+          "minimum": 1595840,
+          "maximum": 2248144
+        },
+        "total_peak_sampled_pss_kib": {
+          "median": 237105.5,
+          "minimum": 218879,
+          "maximum": 255332
+        },
+        "database_bytes_delta": {
+          "median": 1212416.0,
+          "minimum": 1187840,
+          "maximum": 1236992
+        },
+        "journal_relation_bytes_after": {
+          "median": 65536.0,
+          "minimum": 65536,
+          "maximum": 65536
+        },
+        "direct_control_relation_bytes_after": {
+          "median": 81920.0,
+          "minimum": 81920,
+          "maximum": 81920
+        },
+        "publications": {
+          "median": 120.0,
+          "minimum": 120,
+          "maximum": 120
+        }
+      },
+      "journal_coalesced": {
+        "total_database_and_engine_cpu_seconds": {
+          "median": 7.242001500000001,
+          "minimum": 6.97222,
+          "maximum": 7.511783
+        },
+        "wal_bytes": {
+          "median": 1984572.0,
+          "minimum": 1983920,
+          "maximum": 1985224
+        },
+        "observed_object_requests": {
+          "median": 300.0,
+          "minimum": 300,
+          "maximum": 300
+        },
+        "application_commit_p99_seconds": {
+          "median": 0.00827579153701663,
+          "minimum": 0.007320958073250949,
+          "maximum": 0.009230625000782311
+        },
+        "post_write_drain_seconds": {
+          "median": 1.4534107294748537,
+          "minimum": 1.3978303340263665,
+          "maximum": 1.508991124923341
+        },
+        "publication_latency_upper_bound_p95_seconds": {
+          "median": 3.396642458450515,
+          "minimum": 3.3549890419235453,
+          "maximum": 3.4382958749774843
+        },
+        "peak_observed_retained_wal_bytes": {
+          "median": 1305116.0,
+          "minimum": 1134536,
+          "maximum": 1475696
+        },
+        "total_peak_sampled_pss_kib": {
+          "median": 208359.0,
+          "minimum": 208335,
+          "maximum": 208383
+        },
+        "database_bytes_delta": {
+          "median": 1069056.0,
+          "minimum": 1056768,
+          "maximum": 1081344
+        },
+        "journal_relation_bytes_after": {
+          "median": 643072.0,
+          "minimum": 630784,
+          "maximum": 655360
+        },
+        "direct_control_relation_bytes_after": {
+          "median": 40960.0,
+          "minimum": 40960,
+          "maximum": 40960
+        },
+        "publications": {
+          "median": 25.0,
+          "minimum": 25,
+          "maximum": 25
+        }
+      }
+    },
+    "mixed": {
+      "journal_per_commit": {
+        "total_database_and_engine_cpu_seconds": {
+          "median": 34.755781999999996,
+          "minimum": 34.519619,
+          "maximum": 34.991945
+        },
+        "wal_bytes": {
+          "median": 14699952.0,
+          "minimum": 14686944,
+          "maximum": 14712960
+        },
+        "observed_object_requests": {
+          "median": 3108.0,
+          "minimum": 3108,
+          "maximum": 3108
+        },
+        "application_commit_p99_seconds": {
+          "median": 0.0036686670500785112,
+          "minimum": 0.0035689170472323895,
+          "maximum": 0.003768417052924633
+        },
+        "post_write_drain_seconds": {
+          "median": 1.30817664595088,
+          "minimum": 1.2408692499157041,
+          "maximum": 1.3754840419860557
+        },
+        "publication_latency_upper_bound_p95_seconds": {
+          "median": 4.130347354512196,
+          "minimum": 4.0660209589404985,
+          "maximum": 4.1946737500838935
+        },
+        "peak_observed_retained_wal_bytes": {
+          "median": 8318340.0,
+          "minimum": 5930768,
+          "maximum": 10705912
+        },
+        "total_peak_sampled_pss_kib": {
+          "median": 278786.0,
+          "minimum": 269226,
+          "maximum": 288346
+        },
+        "database_bytes_delta": {
+          "median": 4943872.0,
+          "minimum": 4939776,
+          "maximum": 4947968
+        },
+        "journal_relation_bytes_after": {
+          "median": 798720.0,
+          "minimum": 786432,
+          "maximum": 811008
+        },
+        "direct_control_relation_bytes_after": {
+          "median": 40960.0,
+          "minimum": 40960,
+          "maximum": 40960
+        },
+        "publications": {
+          "median": 120.0,
+          "minimum": 120,
+          "maximum": 120
+        }
+      },
+      "direct_per_commit": {
+        "total_database_and_engine_cpu_seconds": {
+          "median": 33.676191,
+          "minimum": 33.472696,
+          "maximum": 33.879686
+        },
+        "wal_bytes": {
+          "median": 13085792.0,
+          "minimum": 13072472,
+          "maximum": 13099112
+        },
+        "observed_object_requests": {
+          "median": 3108.0,
+          "minimum": 3108,
+          "maximum": 3108
+        },
+        "application_commit_p99_seconds": {
+          "median": 0.0036715834867209196,
+          "minimum": 0.0030111250234767795,
+          "maximum": 0.00433204194996506
+        },
+        "post_write_drain_seconds": {
+          "median": 0.3444355829851702,
+          "minimum": 0.15372833295259625,
+          "maximum": 0.5351428330177441
+        },
+        "publication_latency_upper_bound_p95_seconds": {
+          "median": 3.4472420625388622,
+          "minimum": 3.3330757500370964,
+          "maximum": 3.561408375040628
+        },
+        "peak_observed_retained_wal_bytes": {
+          "median": 11528916.0,
+          "minimum": 11466288,
+          "maximum": 11591544
+        },
+        "total_peak_sampled_pss_kib": {
+          "median": 261224.5,
+          "minimum": 256751,
+          "maximum": 265698
+        },
+        "database_bytes_delta": {
+          "median": 4136960.0,
+          "minimum": 4112384,
+          "maximum": 4161536
+        },
+        "journal_relation_bytes_after": {
+          "median": 65536.0,
+          "minimum": 65536,
+          "maximum": 65536
+        },
+        "direct_control_relation_bytes_after": {
+          "median": 81920.0,
+          "minimum": 81920,
+          "maximum": 81920
+        },
+        "publications": {
+          "median": 120.0,
+          "minimum": 120,
+          "maximum": 120
+        }
+      },
+      "journal_coalesced": {
+        "total_database_and_engine_cpu_seconds": {
+          "median": 15.748714,
+          "minimum": 15.748660999999998,
+          "maximum": 15.748766999999999
+        },
+        "wal_bytes": {
+          "median": 12058624.0,
+          "minimum": 12055896,
+          "maximum": 12061352
+        },
+        "observed_object_requests": {
+          "median": 2086.0,
+          "minimum": 2086,
+          "maximum": 2086
+        },
+        "application_commit_p99_seconds": {
+          "median": 0.009782770473975688,
+          "minimum": 0.009383291006088257,
+          "maximum": 0.01018224994186312
+        },
+        "post_write_drain_seconds": {
+          "median": 1.0930466665304266,
+          "minimum": 0.8854122910415754,
+          "maximum": 1.3006810420192778
+        },
+        "publication_latency_upper_bound_p95_seconds": {
+          "median": 4.07445350009948,
+          "minimum": 3.9948101250920445,
+          "maximum": 4.154096875106916
+        },
+        "peak_observed_retained_wal_bytes": {
+          "median": 7576824.0,
+          "minimum": 6234840,
+          "maximum": 8918808
+        },
+        "total_peak_sampled_pss_kib": {
+          "median": 249109.0,
+          "minimum": 248230,
+          "maximum": 249988
+        },
+        "database_bytes_delta": {
+          "median": 4804608.0,
+          "minimum": 4800512,
+          "maximum": 4808704
+        },
+        "journal_relation_bytes_after": {
+          "median": 872448.0,
+          "minimum": 851968,
+          "maximum": 892928
+        },
+        "direct_control_relation_bytes_after": {
+          "median": 40960.0,
+          "minimum": 40960,
+          "maximum": 40960
+        },
+        "publications": {
+          "median": 18.0,
+          "minimum": 18,
+          "maximum": 18
+        }
+      }
+    }
+  },
+  "raw_evidence": ".qualification/wal-direct-comparison-20261115-203026-b243c8d4/results.json",
+  "checks": 82,
+  "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions, publishes one transaction/commit and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim.",
+  "workload": {
+    "transactions": 120,
+    "offered_transactions_per_second": 4,
+    "inserted_rows_per_table_per_transaction": 4,
+    "text_bytes": 256,
+    "mixed": "After the first transaction, UPDATE one and DELETE one row/table from the preceding transaction. One pre-measurement seed row/table."
+  },
+  "metadata_corrections": [
+    "Corrected direct per-publication distribution to include the one warmup transaction (121 rather than 120). Timed counters/metrics and original raw evidence are unchanged."
+  ],
+  "limitations": [
+    "Two trials per mode/workload, descriptive medians/ranges only",
+    "Implementation comparison, not isolated journal cost",
+    "No production capacity or outage/retention-budget claim",
+    "Two-second sampled publication-latency upper bounds, not exact latency",
+    "Memory is sampled PSS, not hard admission",
+    "Same host and shared caches; host/controller/MinIO CPU excluded"
+  ],
+  "validation": {
+    "make check": "passed",
+    "git diff --check": "passed"
+  }
+}

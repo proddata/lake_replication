@@ -9,10 +9,10 @@ supervisor/importer. The source separately needs `lake_replication_capture`.
 The current supported group is two explicitly registered heap
 tables with primary keys and boolean/integer/bigint/text columns. Empty, paused
 and bounded online baselines, row mutations, conservative retention and crash
-recovery have [retained evidence](../../docs/push-replication.md). Frozen schema is
+recovery have [retained evidence](../../docs/design/push-replication.md). Frozen schema is
 the default. Explicit `schema_mode=ordered` activation supports bounded nullable
 additions/column renames through the optional ordered publisher; see the
-[activation contract](../../docs/push-schema-evolution.md). Automatic failover,
+[activation contract](../../docs/design/push-schema-evolution.md). Automatic failover,
 unbounded snapshots and general release support remain open.
 
 ## Build the optional archives

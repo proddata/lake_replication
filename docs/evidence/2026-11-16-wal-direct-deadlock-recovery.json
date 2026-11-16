@@ -1,0 +1,2253 @@
+{
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-16-wal-direct-deadlock-recovery.json",
+      "sha256": "24acb04853cb2cab1b5bd33c5f571ba96d4b1259025ce5a8eab5ed773d297fc7",
+      "bytes": 1426893,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-deadlock-recovery.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
+  "status": "bounded_recovery_passed_with_capacity_limit",
+  "all_load_envelopes_passed": false,
+  "scope": "Whole-publication retry on protocol-confirmed 40P01 abort; normal/coalesced and streamed paths, exact rows under concurrent native maintenance",
+  "summary": {
+    "steady_source_transactions": 1000,
+    "offered_tps": 4,
+    "steady_cpu_seconds": {
+      "postgres": 79.530207,
+      "pgduck": 43.331802
+    },
+    "final_drain_seconds": 1.1835700840456411,
+    "maximum_observed_backlog": 25,
+    "foreground_deadlock_retries": 1,
+    "maximum_retries_for_one_publication": 1,
+    "successful_native_vacuum_events": 24,
+    "observed_file_count_drops": 12,
+    "steady_cgroup_peak_bytes": {
+      "postgres": 304447488,
+      "pgduck": 416100352
+    },
+    "overload_deadlock_retries": 15,
+    "overload_last_sample_published": 2672,
+    "overload_source_transactions": 3000,
+    "overload_failure": "mirror failed to drain within its bounded timeout"
+  },
+  "native_v13_checks": 345,
+  "v13_regressions": [
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141339-dda71c39/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141339-dda71c39",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "f7352f92341a043f67d05e962f6c2c06dbdb99525ef960e785f33ebbb2fb8db9",
+          "entries_or_characters": 53,
+          "total": 53,
+          "passed": 53,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Whole-publication deadlock retry, including streamed rewind and COMMIT abort.",
+        "unqualified": [
+          "production retry sizing",
+          "arbitrary error retry",
+          "power loss",
+          "managed direct lifecycle"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141404-fd806673/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141404-fd806673",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "691f6cbade2690543c418d70c685ee78add5fbd9e930a1b8ebeaa619aa14f237",
+          "entries_or_characters": 52,
+          "total": 52,
+          "passed": 52,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded direct batching: ordering, pressure, idle flush, stop/replay and crashes.",
+        "unqualified": [
+          "nonempty snapshot",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory/WAL budgets"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141431-a065453b/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141431-a065453b",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "339835d56b8d6acd0c84fa7f74b60b4cd0c205e11a40f0683c413411d55cf1e2",
+          "entries_or_characters": 49,
+          "total": 49,
+          "passed": 49,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Streamed direct publication: atomic chunks, subabort, spill limits and WAL replay.",
+        "unqualified": [
+          "production sizing",
+          "power loss",
+          "managed lifecycle",
+          "storage outage"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141458-ae73a492/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141458-ae73a492",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "7ec658a0836c4f187a31571eb3675936a81c50adb5951cb1aeb8ee67f951558d",
+          "entries_or_characters": 30,
+          "total": 30,
+          "passed": 30,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded exported-snapshot bootstrap directly into final Iceberg tables.",
+        "unqualified": [
+          "general resumable large copy",
+          "arbitrary DDL",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory sizing"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141522-1a7319d6/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141522-1a7319d6",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "1725290fc8704f147efb4fe3261437a4292f32b5ce5f4b7a61efb36d949f6ffe",
+          "entries_or_characters": 18,
+          "total": 18,
+          "passed": 18,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "local initial-copy and WAL fidelity for supported scalar types, compound keys and external TOAST",
+        "unqualified": [
+          "arrays, domains and enums",
+          "all floating-point edge cases",
+          "unbounded values"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "654cd55ca53d9bd662cfd3e5c3f252c5941ca0a207dc45807d92a2595598bcb8",
+          "entries_or_characters": 207
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141547-e3ad78b0/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141547-e3ad78b0",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "f32f9c1b5978696d73c05ba3fa44312e74b957d721222ef23396976fe24d5b62",
+          "entries_or_characters": 21,
+          "total": 21,
+          "passed": 21,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "one PostgreSQL instance and database: local WAL -> local journal -> final Iceberg tables",
+        "unqualified": [
+          "production resource sizing",
+          "power-loss recovery",
+          "all schema operations"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "654cd55ca53d9bd662cfd3e5c3f252c5941ca0a207dc45807d92a2595598bcb8",
+          "entries_or_characters": 207
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141606-341e6ca1/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141606-341e6ca1",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "a48ad6345d5787991aa3787399d71fd0f852d5294ff24856462ade968c4d1270",
+          "entries_or_characters": 76,
+          "total": 76,
+          "passed": 76,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Bounded direct batching: ordering, pressure, idle flush, stop/replay and crashes.",
+        "unqualified": [
+          "nonempty snapshot",
+          "streaming/spill",
+          "managed lifecycle",
+          "power loss",
+          "production memory/WAL budgets"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg-faults:wal-direct-v13",
+            "id": "sha256:39518950b20c99addbeaec9f708d2d0acdcd3009c042f942d3357ee16886c6f6",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141630-51e17e3e/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141630-51e17e3e",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "ba7b28777c73dc9a9df6949a3bdf167d60c94b7a2233e4762b463b184e3dee42",
+          "entries_or_characters": 7,
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Streamed direct publication: atomic chunks, subabort, spill limits and WAL replay.",
+        "unqualified": [
+          "production sizing",
+          "power loss",
+          "managed lifecycle",
+          "storage outage"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg-faults:wal-direct-v13",
+            "id": "sha256:39518950b20c99addbeaec9f708d2d0acdcd3009c042f942d3357ee16886c6f6",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141648-82de5922/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141648-82de5922",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "e03785bf8018883d448792ca744683de631882521494f0ef5f6768941ef7b1ae",
+          "entries_or_characters": 7,
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Streamed direct publication: atomic chunks, subabort, spill limits and WAL replay.",
+        "unqualified": [
+          "production sizing",
+          "power loss",
+          "managed lifecycle",
+          "storage outage"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg-faults:wal-direct-v13",
+            "id": "sha256:39518950b20c99addbeaec9f708d2d0acdcd3009c042f942d3357ee16886c6f6",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-141700-ad4b7634/results.json",
+      "fixture": {
+        "project": "lake-push-probe-20261116-141700-ad4b7634",
+        "checks": {
+          "_omitted_detail": true,
+          "reason": "Individual successful assertion values are archived",
+          "canonical_json_sha256": "127b5ec3ee516f9b2d5110dc962652cfa5cdf93ab43bd0b04a6ecf437658b5ad",
+          "entries_or_characters": 7,
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "failures": []
+        },
+        "scope": "Streamed direct publication: atomic chunks, subabort, spill limits and WAL replay.",
+        "unqualified": [
+          "production sizing",
+          "power loss",
+          "managed lifecycle",
+          "storage outage"
+        ],
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+          "entries_or_characters": 44
+        },
+        "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg-faults:wal-direct-v13",
+            "id": "sha256:39518950b20c99addbeaec9f708d2d0acdcd3009c042f942d3357ee16886c6f6",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "status": "passed",
+        "cleanup_returncode": 0
+      }
+    }
+  ],
+  "steady_maintenance": {
+    "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-140620-4fc90dde/results.json",
+    "fixture": {
+      "project": "lake-push-probe-20261116-140620-4fc90dde",
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "3b38c26d75fb6fef717d09b95b59f796eff6594e604e222c8cf22ea7c0bbc93d",
+        "entries_or_characters": 25,
+        "total": 25,
+        "passed": 25,
+        "failed": 0,
+        "failures": []
+      },
+      "scope": "Bounded direct mixed load with the existing native autovacuum on a shorter interval.",
+      "unqualified": [
+        "production sizing",
+        "24-hour stability",
+        "hard process RSS admission",
+        "cold cache",
+        "exact publication latency",
+        "maximum capacity"
+      ],
+      "workload": {
+        "transactions": 1000,
+        "rows_per_table_per_transaction": 4,
+        "transaction_interval_seconds": 0.25,
+        "text_bytes": 256,
+        "publish_interval_ms": 1000,
+        "group_independent_inserts": true,
+        "journal_max_transactions": null
+      },
+      "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts are sampled with progress and can miss brief peaks. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward.",
+      "mode": "direct_coalesced",
+      "workload_pattern": "mixed",
+      "phase": "sustained",
+      "text_bytes": 256,
+      "engine_budget": "expanded",
+      "native_autovacuum_naptime_seconds": 20,
+      "offered_transactions_per_second": 4.0,
+      "file_samples": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "58ccf47a32b5fb57289db6e760877b28b39b2640cdb47cf92fbc3d9fd021a808",
+        "entries_or_characters": 100
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "worktree_status": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "5eca4968ceadd80be60bff2775e5c579abe78732bfc84325e10bfea5a599dcfc",
+        "entries_or_characters": 44
+      },
+      "tracked_worktree_diff_sha256": "72787c6a554916f7fdb253196763bce5b8a3bdd28733ce162d0eeb41174475d0",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "d2c8fcac0736b6dd81160d1158e4fb8c0af5810260862a9f5a5e2e13503c301e",
+        "entries_or_characters": 218
+      },
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-v13",
+          "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "writer_configuration": {
+        "target_row_group_size_mb": 16,
+        "query_threads": 1,
+        "query_memory_limit": "1536MB",
+        "group_independent_inserts": true,
+        "logical_decoding_work_mem": "64kB"
+      },
+      "autovacuum_default_seconds": 600,
+      "measurement": {
+        "status": "passed",
+        "before": {
+          "postgres": {
+            "cpu_usec": 3862226,
+            "memory_bytes": 130457600,
+            "process_rss_kib_sum": 246812,
+            "process_pss_kib_sum": 59979,
+            "memory_peak_bytes": 149762048,
+            "memory_max": "536870912",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 33566720,
+              "file": 90787840,
+              "kernel": 11714560,
+              "shmem": 22188032
+            },
+            "direct_workers": [
+              {
+                "pid": 222,
+                "VmHWM": 2120,
+                "VmRSS": 2120,
+                "Rss": 2120,
+                "Pss": 960
+              }
+            ]
+          },
+          "pgduck": {
+            "cpu_usec": 1692835,
+            "memory_bytes": 142004224,
+            "process_rss_kib_sum": 109172,
+            "process_pss_kib_sum": 102900,
+            "memory_peak_bytes": 226373632,
+            "memory_max": "2147483648",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 56037376,
+              "file": 73203712,
+              "kernel": 4169728,
+              "shmem": 0
+            },
+            "direct_workers": []
+          }
+        },
+        "after": {
+          "postgres": {
+            "cpu_usec": 83392433,
+            "memory_bytes": 268132352,
+            "process_rss_kib_sum": 239280,
+            "process_pss_kib_sum": 74302,
+            "memory_peak_bytes": 304447488,
+            "memory_max": "536870912",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 30068736,
+              "file": 208916480,
+              "kernel": 25419776,
+              "shmem": 41373696
+            },
+            "direct_workers": []
+          },
+          "pgduck": {
+            "cpu_usec": 45024637,
+            "memory_bytes": 399224832,
+            "process_rss_kib_sum": 283764,
+            "process_pss_kib_sum": 277661,
+            "memory_peak_bytes": 416100352,
+            "memory_max": "2147483648",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 231022592,
+              "file": 123445248,
+              "kernel": 34603008,
+              "shmem": 0
+            },
+            "direct_workers": []
+          }
+        },
+        "samples": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "8a78c8a3b8423fdba81310de3f88772df4fb029b8247d93877d1ea59f2fd8111",
+          "entries_or_characters": 97
+        },
+        "application_commits": 1000,
+        "application_commit_median_seconds": 0.002090687456075102,
+        "application_commit_p95_seconds": 0.007428125012665987,
+        "application_commit_p99_seconds": 0.009004499996080995,
+        "write_phase_seconds": 250.0005308330292,
+        "end_to_end_seconds": 251.18410091707483,
+        "cpu_seconds": {
+          "postgres": 79.530207,
+          "pgduck": 43.331802
+        },
+        "total_database_and_engine_cpu_seconds": 122.862009,
+        "database_bytes_delta": 14745600,
+        "wal_bytes": 91155144,
+        "object_operations": {
+          "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+          "readiness_witness": true,
+          "completion_witness": true,
+          "categories": {
+            "bucket_or_other": {
+              "requests": 87,
+              "api:s3.GetBucketLocation": 2,
+              "status:200": 87,
+              "request_bytes": 424994,
+              "response_bytes": 426842,
+              "kind:discovery_or_other:requests": 87,
+              "kind:discovery_or_other:request_bytes": 424994,
+              "kind:discovery_or_other:response_bytes": 426842,
+              "request_duration_ns_sum": 386263293,
+              "api:s3.DeleteMultipleObjects": 85
+            },
+            "local_mirror": {
+              "requests": 17822,
+              "api:s3.ListObjectsV2": 4004,
+              "status:200": 13821,
+              "request_bytes": 39461678,
+              "response_bytes": 1426300,
+              "kind:discovery_or_other:requests": 8005,
+              "kind:discovery_or_other:request_bytes": 672420,
+              "kind:discovery_or_other:response_bytes": 1426300,
+              "request_duration_ns_sum": 14007285870,
+              "api:s3.HeadObject": 4001,
+              "status:404": 4001,
+              "api:s3.PutObject": 9817,
+              "kind:data_parquet:requests": 8022,
+              "kind:data_parquet:request_bytes": 11978338,
+              "kind:data_parquet:response_bytes": 0,
+              "kind:metadata_json:requests": 325,
+              "kind:metadata_json:request_bytes": 15653723,
+              "kind:metadata_json:response_bytes": 0,
+              "kind:metadata_avro:requests": 1470,
+              "kind:metadata_avro:request_bytes": 11157197,
+              "kind:metadata_avro:response_bytes": 0
+            }
+          }
+        },
+        "application_transactions_per_second": 3.9999915066895673,
+        "publication_transactions_per_second": 3.9811436963923805,
+        "post_write_drain_seconds": 1.1835700840456411,
+        "maximum_observed_backlog_transactions": 25,
+        "observed_publication_latency_upper_bound_seconds": {
+          "median": 3.1156914585153572,
+          "p95": 5.190485541941598,
+          "maximum": 8.77052545803599,
+          "sample_interval_seconds": 2
+        },
+        "sampled_peak_pss_kib": {
+          "postgres": 105709,
+          "pgduck": 277661
+        },
+        "total_peak_sampled_pss_kib": 369203,
+        "retained_wal_samples_bytes": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "188b47448b0af67159d9f87b40e8c0b8feac79d1367fdfe90a0deb888239f5fa",
+          "entries_or_characters": 100
+        },
+        "journal_relation_bytes_after": 65536,
+        "direct_control_relation_bytes_after": 81920,
+        "publications": 142,
+        "transactions_per_publication_distribution_including_warmup": {
+          "1": 2,
+          "4": 1,
+          "6": 45,
+          "7": 72,
+          "9": 1,
+          "10": 3,
+          "13": 1,
+          "19": 1,
+          "11": 2,
+          "8": 14,
+          "16": 1
+        },
+        "peak_observed_retained_wal_bytes": 13040616,
+        "final_retained_wal_bytes": 8439912,
+        "publication_latency_upper_bound_p95_seconds": 5.190485541941598,
+        "observed_object_requests": 17822,
+        "cgroup_lifetime_peak_bytes": {
+          "postgres": 304447488,
+          "pgduck": 416100352
+        },
+        "worker_peak_observed_hwm_kib": 2716,
+        "worker_lifetime_peak_rss_kib": 13956,
+        "worker_lifetime_cpu_seconds": 0.257935,
+        "spill_peak_observed_bytes": 0
+      },
+      "final_rows_sha256": {
+        "a": "d5a4b1a56beac06a847f838804d63ca54d4eb7575cc64b3c7e8ed12263089a91",
+        "b": "c380147f85fe7910f63f59cc3e079c3bf8707f8d535d959e07aa55c0d318cd92"
+      },
+      "deadlock_retries": 1,
+      "maximum_retries_for_one_publication": 1,
+      "vacuum_events": [
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.491473
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.122546
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.184113
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.166245
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.196092
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.166952
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.183432
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.176802
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.171197
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.186005
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.75196
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.171812
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.30001
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.170608
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.885901
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.198715
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.213865
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.212609
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.787089
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.187244
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.335817
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.836513
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.236001
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.299706
+        }
+      ],
+      "observed_compaction_drops": [
+        {
+          "before": {
+            "monotonic_seconds": 1038924.025176583,
+            "published_source_transactions": 53,
+            "observed_source_transactions": 62,
+            "files": {
+              "iceberg_mirror.a": 106,
+              "iceberg_mirror.b": 106
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038926.637662,
+            "published_source_transactions": 67,
+            "observed_source_transactions": 73,
+            "files": {
+              "iceberg_mirror.a": 17,
+              "iceberg_mirror.b": 17
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1038944.525040125,
+            "published_source_transactions": 136,
+            "observed_source_transactions": 144,
+            "files": {
+              "iceberg_mirror.b": 155,
+              "iceberg_mirror.a": 155
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038947.135381666,
+            "published_source_transactions": 149,
+            "observed_source_transactions": 155,
+            "files": {
+              "iceberg_mirror.a": 17,
+              "iceberg_mirror.b": 17
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1038965.118011125,
+            "published_source_transactions": 201,
+            "observed_source_transactions": 226,
+            "files": {
+              "iceberg_mirror.a": 121,
+              "iceberg_mirror.b": 121
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038967.654536208,
+            "published_source_transactions": 214,
+            "observed_source_transactions": 237,
+            "files": {
+              "iceberg_mirror.a": 1,
+              "iceberg_mirror.b": 1
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1038985.591552708,
+            "published_source_transactions": 302,
+            "observed_source_transactions": 308,
+            "files": {
+              "iceberg_mirror.a": 179,
+              "iceberg_mirror.b": 179
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038988.1151965,
+            "published_source_transactions": 315,
+            "observed_source_transactions": 318,
+            "files": {
+              "iceberg_mirror.a": 15,
+              "iceberg_mirror.b": 15
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039006.099667416,
+            "published_source_transactions": 385,
+            "observed_source_transactions": 390,
+            "files": {
+              "iceberg_mirror.b": 155,
+              "iceberg_mirror.a": 155
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039008.689733958,
+            "published_source_transactions": 392,
+            "observed_source_transactions": 401,
+            "files": {
+              "iceberg_mirror.a": 1,
+              "iceberg_mirror.b": 1
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039029.293337291,
+            "published_source_transactions": 472,
+            "observed_source_transactions": 483,
+            "files": {
+              "iceberg_mirror.b": 163,
+              "iceberg_mirror.a": 163
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039031.815055416,
+            "published_source_transactions": 479,
+            "observed_source_transactions": 493,
+            "files": {
+              "iceberg_mirror.a": 16,
+              "iceberg_mirror.b": 177
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039049.727497041,
+            "published_source_transactions": 557,
+            "observed_source_transactions": 565,
+            "files": {
+              "iceberg_mirror.a": 172,
+              "iceberg_mirror.b": 333
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039052.328823875,
+            "published_source_transactions": 565,
+            "observed_source_transactions": 575,
+            "files": {
+              "iceberg_mirror.a": 1,
+              "iceberg_mirror.b": 1
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039070.307188291,
+            "published_source_transactions": 639,
+            "observed_source_transactions": 647,
+            "files": {
+              "iceberg_mirror.b": 151,
+              "iceberg_mirror.a": 151
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039072.88462875,
+            "published_source_transactions": 653,
+            "observed_source_transactions": 658,
+            "files": {
+              "iceberg_mirror.b": 1,
+              "iceberg_mirror.a": 179
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039072.88462875,
+            "published_source_transactions": 653,
+            "observed_source_transactions": 658,
+            "files": {
+              "iceberg_mirror.b": 1,
+              "iceberg_mirror.a": 179
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039075.47743525,
+            "published_source_transactions": 660,
+            "observed_source_transactions": 668,
+            "files": {
+              "iceberg_mirror.b": 17,
+              "iceberg_mirror.a": 17
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039090.996777291,
+            "published_source_transactions": 721,
+            "observed_source_transactions": 730,
+            "files": {
+              "iceberg_mirror.b": 139,
+              "iceberg_mirror.a": 139
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039093.551154083,
+            "published_source_transactions": 735,
+            "observed_source_transactions": 740,
+            "files": {
+              "iceberg_mirror.a": 1,
+              "iceberg_mirror.b": 1
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039114.159202916,
+            "published_source_transactions": 815,
+            "observed_source_transactions": 823,
+            "files": {
+              "iceberg_mirror.b": 163,
+              "iceberg_mirror.a": 163
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039116.739822541,
+            "published_source_transactions": 822,
+            "observed_source_transactions": 833,
+            "files": {
+              "iceberg_mirror.a": 16,
+              "iceberg_mirror.b": 177
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1039137.331703541,
+            "published_source_transactions": 902,
+            "observed_source_transactions": 915,
+            "files": {
+              "iceberg_mirror.b": 337,
+              "iceberg_mirror.a": 176
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1039139.913053708,
+            "published_source_transactions": 910,
+            "observed_source_transactions": 926,
+            "files": {
+              "iceberg_mirror.b": 19,
+              "iceberg_mirror.a": 18
+            }
+          }
+        }
+      ],
+      "status": "passed",
+      "cleanup_returncode": 0
+    }
+  },
+  "failed_overload": {
+    "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-135709-2e1ae499/results.json",
+    "fixture": {
+      "project": "lake-push-probe-20261116-135709-2e1ae499",
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "86e655ef8745d6fbfd595316e4100e6974a886aa8af87cac141170693f7fb463",
+        "entries_or_characters": 2,
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "failures": []
+      },
+      "scope": "Bounded direct mixed load with the existing native autovacuum on a shorter interval.",
+      "unqualified": [
+        "production sizing",
+        "24-hour stability",
+        "hard process RSS admission",
+        "cold cache",
+        "exact publication latency",
+        "maximum capacity"
+      ],
+      "workload": {
+        "transactions": 3000,
+        "rows_per_table_per_transaction": 4,
+        "transaction_interval_seconds": 0.1,
+        "text_bytes": 256,
+        "publish_interval_ms": 1000,
+        "group_independent_inserts": true,
+        "journal_max_transactions": null
+      },
+      "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts are sampled with progress and can miss brief peaks. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward.",
+      "mode": "direct_coalesced",
+      "workload_pattern": "mixed",
+      "phase": "sustained",
+      "text_bytes": 256,
+      "engine_budget": "expanded",
+      "native_autovacuum_naptime_seconds": 20,
+      "file_samples": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "8509359bd10853c82990bc65b15821c3b691b945956fde9174a53b133f0d5467",
+        "entries_or_characters": 353
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "worktree_status": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "42d0014cbecee6b266415f4b0e96a8b13695e39a29b9e41d6a37ed591fe9f07c",
+        "entries_or_characters": 43
+      },
+      "tracked_worktree_diff_sha256": "7c7ff569213dd3435f4c04556b31b9a08c5596bc7016cc9eb32b80ca6ce43c29",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "72568b0cc982f7bc64ff56326625bf0e8c1dca0426b806a51fd1c0e508ec1957",
+        "entries_or_characters": 218
+      },
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-v13",
+          "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "writer_configuration": {
+        "target_row_group_size_mb": 16,
+        "query_threads": 1,
+        "query_memory_limit": "1536MB",
+        "group_independent_inserts": true,
+        "logical_decoding_work_mem": "64kB"
+      },
+      "autovacuum_default_seconds": 600,
+      "measurement": {
+        "status": "error",
+        "samples": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "85927cd722c966601811eb70152db20efae3d88ae41a4a759291b0fd9fd0587a",
+          "entries_or_characters": 153
+        },
+        "before": {
+          "postgres": {
+            "cpu_usec": 3682041,
+            "memory_bytes": 142835712,
+            "process_rss_kib_sum": 246816,
+            "process_pss_kib_sum": 59978,
+            "memory_peak_bytes": 150138880,
+            "memory_max": "536870912",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 33570816,
+              "file": 90787840,
+              "kernel": 11841536,
+              "shmem": 22188032
+            },
+            "direct_workers": [
+              {
+                "pid": 222,
+                "VmHWM": 2120,
+                "VmRSS": 2120,
+                "Rss": 2120,
+                "Pss": 962
+              }
+            ]
+          },
+          "pgduck": {
+            "cpu_usec": 1700262,
+            "memory_bytes": 144158720,
+            "process_rss_kib_sum": 109172,
+            "process_pss_kib_sum": 102902,
+            "memory_peak_bytes": 224952320,
+            "memory_max": "2147483648",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 53936128,
+              "file": 73203712,
+              "kernel": 4165632,
+              "shmem": 0
+            },
+            "direct_workers": []
+          }
+        },
+        "before_database": {
+          "wal_lsn": "0/207BE88",
+          "database_bytes": 11040447
+        },
+        "error": "mirror failed to drain within its bounded timeout",
+        "application_commits": 3000,
+        "application_xids": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "2bd6e3971788c61f2556db0fd8647f61c5c767ac522f4c2b7fe275897b770676",
+          "entries_or_characters": 3000
+        },
+        "failure_diagnostic": "{\"heap_a_rows\" : 9002, \"heap_b_rows\" : 9002, \"journal_states\" : null, \"slots\" : [{\"wal_status\": \"reserved\", \"retained_wal_bytes\": 112320128}]}"
+      },
+      "failure_container_states": {
+        "_omitted_detail": true,
+        "reason": "Full container inspection is archived",
+        "canonical_json_sha256": "a2507f28fd31d964352f2a35d4dea9fb26a326b98ca2f76c19f4f7879df77d07",
+        "entries_or_characters": 5,
+        "states": [
+          {
+            "Id": "564edc7a5cabb48a294222778085a71803d4cde37bb8478fb5f422f3ecd5e8fb",
+            "Name": "/lake-push-probe-20261116-135709-2e1ae499-permissions-1",
+            "State": {
+              "Status": "exited",
+              "Running": false,
+              "Paused": false,
+              "Restarting": false,
+              "OOMKilled": false,
+              "Dead": false,
+              "Pid": 0,
+              "ExitCode": 0,
+              "Error": "",
+              "StartedAt": "2026-11-16T13:57:10.717781887Z",
+              "FinishedAt": "2026-11-16T13:57:11.014284638Z"
+            }
+          },
+          {
+            "Id": "ae144bfc32a59796428f651812e7c9078a0cae6833ad799516a1b5fe2a4b52ad",
+            "Name": "/lake-push-probe-20261116-135709-2e1ae499-pgduck-1",
+            "State": {
+              "Status": "running",
+              "Running": true,
+              "Paused": false,
+              "Restarting": false,
+              "OOMKilled": false,
+              "Dead": false,
+              "Pid": 37117,
+              "ExitCode": 0,
+              "Error": "",
+              "StartedAt": "2026-11-16T13:57:12.69628918Z",
+              "FinishedAt": "0001-01-01T00:00:00Z",
+              "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                  {
+                    "Start": "2026-11-16T14:03:52.366385587Z",
+                    "End": "2026-11-16T14:03:52.395093629Z",
+                    "ExitCode": 0,
+                    "Output": " 1 \n---\n 1\n(1 row)\n\n"
+                  },
+                  {
+                    "Start": "2026-11-16T14:03:54.39656563Z",
+                    "End": "2026-11-16T14:03:54.421416255Z",
+                    "ExitCode": 0,
+                    "Output": " 1 \n---\n 1\n(1 row)\n\n"
+                  },
+                  {
+                    "Start": "2026-11-16T14:03:56.422027839Z",
+                    "End": "2026-11-16T14:03:56.451734756Z",
+                    "ExitCode": 0,
+                    "Output": " 1 \n---\n 1\n(1 row)\n\n"
+                  },
+                  {
+                    "Start": "2026-11-16T14:03:58.452747673Z",
+                    "End": "2026-11-16T14:03:58.477832757Z",
+                    "ExitCode": 0,
+                    "Output": " 1 \n---\n 1\n(1 row)\n\n"
+                  },
+                  {
+                    "Start": "2026-11-16T14:04:00.478166716Z",
+                    "End": "2026-11-16T14:04:00.506463341Z",
+                    "ExitCode": 0,
+                    "Output": " 1 \n---\n 1\n(1 row)\n\n"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Id": "e1ecdee0ec50f64b115b00740d20f9ecbb2011848765f95b27e7000bd5055be9",
+            "Name": "/lake-push-probe-20261116-135709-2e1ae499-postgres-1",
+            "State": {
+              "Status": "running",
+              "Running": true,
+              "Paused": false,
+              "Restarting": false,
+              "OOMKilled": false,
+              "Dead": false,
+              "Pid": 37394,
+              "ExitCode": 0,
+              "Error": "",
+              "StartedAt": "2026-11-16T13:57:21.272003003Z",
+              "FinishedAt": "0001-01-01T00:00:00Z",
+              "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                  {
+                    "Start": "2026-11-16T14:03:51.415424462Z",
+                    "End": "2026-11-16T14:03:51.44338967Z",
+                    "ExitCode": 0,
+                    "Output": ""
+                  },
+                  {
+                    "Start": "2026-11-16T14:03:53.444128671Z",
+                    "End": "2026-11-16T14:03:53.469314546Z",
+                    "ExitCode": 0,
+                    "Output": ""
+                  },
+                  {
+                    "Start": "2026-11-16T14:03:55.470084422Z",
+                    "End": "2026-11-16T14:03:55.501125589Z",
+                    "ExitCode": 0,
+                    "Output": ""
+                  },
+                  {
+                    "Start": "2026-11-16T14:03:57.502740256Z",
+                    "End": "2026-11-16T14:03:57.533472173Z",
+                    "ExitCode": 0,
+                    "Output": ""
+                  },
+                  {
+                    "Start": "2026-11-16T14:03:59.534192924Z",
+                    "End": "2026-11-16T14:03:59.56788009Z",
+                    "ExitCode": 0,
+                    "Output": ""
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Id": "eb166129fd062c1042c40710ddf18eef84cd9f1e83a9305635d311b83013bf9c",
+            "Name": "/lake-push-probe-20261116-135709-2e1ae499-storage-1",
+            "State": {
+              "Status": "running",
+              "Running": true,
+              "Paused": false,
+              "Restarting": false,
+              "OOMKilled": false,
+              "Dead": false,
+              "Pid": 36856,
+              "ExitCode": 0,
+              "Error": "",
+              "StartedAt": "2026-11-16T13:57:11.026789554Z",
+              "FinishedAt": "0001-01-01T00:00:00Z"
+            }
+          },
+          {
+            "Id": "ae052c3146267d2ce7dbbe0abb18861f3b13e715084e3ace2ab1421199548175",
+            "Name": "/lake-push-probe-20261116-135709-2e1ae499-storage-init-1",
+            "State": {
+              "Status": "exited",
+              "Running": false,
+              "Paused": false,
+              "Restarting": false,
+              "OOMKilled": false,
+              "Dead": false,
+              "Pid": 0,
+              "ExitCode": 0,
+              "Error": "",
+              "StartedAt": "2026-11-16T13:57:11.111869138Z",
+              "FinishedAt": "2026-11-16T13:57:12.521807847Z"
+            }
+          }
+        ]
+      },
+      "failure_resources": {
+        "postgres": {
+          "cpu_usec": 287516414,
+          "memory_bytes": 520806400,
+          "process_rss_kib_sum": 385320,
+          "process_pss_kib_sum": 127087,
+          "memory_peak_bytes": 534790144,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 58310656,
+            "file": 409821184,
+            "kernel": 46723072,
+            "shmem": 65335296
+          },
+          "direct_workers": [
+            {
+              "pid": 222,
+              "VmHWM": 3236,
+              "VmRSS": 3236,
+              "Rss": 3236,
+              "Pss": 2087
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 89194919,
+          "memory_bytes": 455606272,
+          "process_rss_kib_sum": 274988,
+          "process_pss_kib_sum": 269014,
+          "memory_peak_bytes": 476839936,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 226533376,
+            "file": 153968640,
+            "kernel": 66138112,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "status": "error",
+      "error": "mirror failed to drain within its bounded timeout",
+      "cleanup_returncode": 0
+    }
+  },
+  "earlier_v12_maintenance_pilot": {
+    "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-135222-74037b57/results.json",
+    "fixture": {
+      "project": "lake-push-probe-20261116-135222-74037b57",
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "fb0ff6cd1f62e3a60c18c940248fd62b02f1e8115e09b24e717a25fab6c812ba",
+        "entries_or_characters": 25,
+        "total": 25,
+        "passed": 25,
+        "failed": 0,
+        "failures": []
+      },
+      "scope": "Bounded direct mixed load with the existing native autovacuum on a shorter interval.",
+      "unqualified": [
+        "production sizing",
+        "24-hour stability",
+        "hard process RSS admission",
+        "cold cache",
+        "exact publication latency",
+        "maximum capacity"
+      ],
+      "workload": {
+        "transactions": 600,
+        "rows_per_table_per_transaction": 4,
+        "transaction_interval_seconds": 0.1,
+        "text_bytes": 256,
+        "publish_interval_ms": 1000,
+        "group_independent_inserts": true,
+        "journal_max_transactions": null
+      },
+      "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts are sampled with progress and can miss brief peaks. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward.",
+      "mode": "direct_coalesced",
+      "workload_pattern": "mixed",
+      "phase": "sustained",
+      "text_bytes": 256,
+      "engine_budget": "expanded",
+      "native_autovacuum_naptime_seconds": 20,
+      "file_samples": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "11089302014f4413df3f99107d8cb7e23da6a0c21f574e6967173a2d9f9aad14",
+        "entries_or_characters": 37
+      },
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "worktree_status": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "42d0014cbecee6b266415f4b0e96a8b13695e39a29b9e41d6a37ed591fe9f07c",
+        "entries_or_characters": 43
+      },
+      "tracked_worktree_diff_sha256": "7c7ff569213dd3435f4c04556b31b9a08c5596bc7016cc9eb32b80ca6ce43c29",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "c5fa42ebab52d506d749f939fb67be59c208dc882dddb8dd04e71db2a65a815c",
+        "entries_or_characters": 218
+      },
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-v12",
+          "id": "sha256:a1c86d94d5d2b8730ecfdf6f066f23e9537295660af4198b2965db8523bf49a6",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "writer_configuration": {
+        "target_row_group_size_mb": 16,
+        "query_threads": 1,
+        "query_memory_limit": "1536MB",
+        "group_independent_inserts": true,
+        "logical_decoding_work_mem": "64kB"
+      },
+      "autovacuum_default_seconds": 600,
+      "measurement": {
+        "status": "passed",
+        "before": {
+          "postgres": {
+            "cpu_usec": 3591870,
+            "memory_bytes": 156086272,
+            "process_rss_kib_sum": 246924,
+            "process_pss_kib_sum": 59816,
+            "memory_peak_bytes": 156872704,
+            "memory_max": "536870912",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 31182848,
+              "file": 98930688,
+              "kernel": 11878400,
+              "shmem": 22188032
+            },
+            "direct_workers": [
+              {
+                "pid": 223,
+                "VmHWM": 2120,
+                "VmRSS": 2120,
+                "Rss": 2120,
+                "Pss": 965
+              }
+            ]
+          },
+          "pgduck": {
+            "cpu_usec": 1586460,
+            "memory_bytes": 144846848,
+            "process_rss_kib_sum": 109952,
+            "process_pss_kib_sum": 103694,
+            "memory_peak_bytes": 224747520,
+            "memory_max": "2147483648",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 54755328,
+              "file": 73203712,
+              "kernel": 4120576,
+              "shmem": 0
+            },
+            "direct_workers": []
+          }
+        },
+        "after": {
+          "postgres": {
+            "cpu_usec": 36504343,
+            "memory_bytes": 236916736,
+            "process_rss_kib_sum": 235808,
+            "process_pss_kib_sum": 73014,
+            "memory_peak_bytes": 274923520,
+            "memory_max": "536870912",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 30081024,
+              "file": 186109952,
+              "kernel": 19132416,
+              "shmem": 42549248
+            },
+            "direct_workers": []
+          },
+          "pgduck": {
+            "cpu_usec": 18427198,
+            "memory_bytes": 215621632,
+            "process_rss_kib_sum": 146384,
+            "process_pss_kib_sum": 140296,
+            "memory_peak_bytes": 236081152,
+            "memory_max": "2147483648",
+            "swap_max": "0",
+            "swap_current_bytes": 0,
+            "cpu_max": "100000 100000",
+            "memory_events": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "memory_stat": {
+              "anon": 92479488,
+              "file": 90402816,
+              "kernel": 21069824,
+              "shmem": 0
+            },
+            "direct_workers": []
+          }
+        },
+        "samples": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "fbbbca2fadb3782c5f53b587366106e270c0525b91d8baaa54108c9ae4dd59da",
+          "entries_or_characters": 25
+        },
+        "application_commits": 600,
+        "application_commit_median_seconds": 0.001129999989643693,
+        "application_commit_p95_seconds": 0.004393124952912331,
+        "application_commit_p99_seconds": 0.005552499904297292,
+        "write_phase_seconds": 60.00064554205164,
+        "end_to_end_seconds": 65.2430116670439,
+        "cpu_seconds": {
+          "postgres": 32.912473,
+          "pgduck": 16.840738
+        },
+        "total_database_and_engine_cpu_seconds": 49.753211,
+        "database_bytes_delta": 16015360,
+        "wal_bytes": 53506784,
+        "object_operations": {
+          "scope": "observed fixture S3 requests by object prefix; bucket-wide requests remain separate",
+          "readiness_witness": true,
+          "completion_witness": true,
+          "categories": {
+            "bucket_or_other": {
+              "requests": 54,
+              "api:s3.GetBucketLocation": 2,
+              "status:200": 54,
+              "request_bytes": 294911,
+              "response_bytes": 296631,
+              "kind:discovery_or_other:requests": 54,
+              "kind:discovery_or_other:request_bytes": 294911,
+              "kind:discovery_or_other:response_bytes": 296631,
+              "request_duration_ns_sum": 243009166,
+              "api:s3.DeleteMultipleObjects": 52
+            },
+            "local_mirror": {
+              "requests": 9883,
+              "api:s3.ListObjectsV2": 2402,
+              "status:200": 7483,
+              "request_bytes": 9867491,
+              "response_bytes": 855696,
+              "kind:discovery_or_other:requests": 4802,
+              "kind:discovery_or_other:request_bytes": 403368,
+              "kind:discovery_or_other:response_bytes": 855696,
+              "request_duration_ns_sum": 6855538271,
+              "api:s3.HeadObject": 2400,
+              "status:404": 2400,
+              "api:s3.PutObject": 5081,
+              "kind:data_parquet:requests": 4802,
+              "kind:data_parquet:request_bytes": 7111652,
+              "kind:data_parquet:response_bytes": 0,
+              "kind:metadata_json:requests": 53,
+              "kind:metadata_json:request_bytes": 492103,
+              "kind:metadata_json:response_bytes": 0,
+              "kind:metadata_avro:requests": 226,
+              "kind:metadata_avro:request_bytes": 1860368,
+              "kind:metadata_avro:response_bytes": 0
+            }
+          }
+        },
+        "application_transactions_per_second": 9.999892410815615,
+        "publication_transactions_per_second": 9.196387240092367,
+        "post_write_drain_seconds": 5.242366124992259,
+        "maximum_observed_backlog_transactions": 60,
+        "observed_publication_latency_upper_bound_seconds": {
+          "median": 5.412957937456667,
+          "p95": 7.5090122079709545,
+          "maximum": 8.515489499899559,
+          "sample_interval_seconds": 2
+        },
+        "sampled_peak_pss_kib": {
+          "postgres": 100207,
+          "pgduck": 140296
+        },
+        "total_peak_sampled_pss_kib": 237922,
+        "retained_wal_samples_bytes": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "e565d68ef218afa95936fdfd8f2fd9e5ff531af62eff9c6148da28e0e4e0f4a2",
+          "entries_or_characters": 37
+        },
+        "journal_relation_bytes_after": 65536,
+        "direct_control_relation_bytes_after": 81920,
+        "publications": 21,
+        "transactions_per_publication_distribution_including_warmup": {
+          "1": 1,
+          "10": 1,
+          "18": 1,
+          "24": 1,
+          "27": 1,
+          "30": 1,
+          "32": 15,
+          "11": 1
+        },
+        "peak_observed_retained_wal_bytes": 30443584,
+        "final_retained_wal_bytes": 19478648,
+        "publication_latency_upper_bound_p95_seconds": 7.5090122079709545,
+        "observed_object_requests": 9883,
+        "cgroup_lifetime_peak_bytes": {
+          "postgres": 274923520,
+          "pgduck": 236081152
+        },
+        "worker_peak_observed_hwm_kib": 3212,
+        "worker_lifetime_peak_rss_kib": 14072,
+        "worker_lifetime_cpu_seconds": 0.066341,
+        "spill_peak_observed_bytes": 0
+      },
+      "final_rows_sha256": {
+        "a": "7fe5dd6fb0a4ce0d38a00f928327b28231d806333ed4728a93cfacc4cf55c6a7",
+        "b": "555f52d9d7066e12c7398e12347a46f73cce5b5918f39061b2d02ac69ad0b2d5"
+      },
+      "deadlock_retries": 1,
+      "maximum_retries_for_one_publication": 1,
+      "vacuum_events": [
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.505376
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.16991
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 2.301243
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.265613
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 3.85613
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.155186
+        }
+      ],
+      "observed_compaction_drops": [
+        {
+          "before": {
+            "monotonic_seconds": 1038086.751059416,
+            "published_source_transactions": 109,
+            "observed_source_transactions": 153,
+            "files": {
+              "iceberg_mirror.b": 218,
+              "iceberg_mirror.a": 218
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038089.283137208,
+            "published_source_transactions": 141,
+            "observed_source_transactions": 178,
+            "files": {
+              "iceberg_mirror.b": 1,
+              "iceberg_mirror.a": 1
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1038109.46557425,
+            "published_source_transactions": 333,
+            "observed_source_transactions": 380,
+            "files": {
+              "iceberg_mirror.b": 387,
+              "iceberg_mirror.a": 387
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038111.983099958,
+            "published_source_transactions": 365,
+            "observed_source_transactions": 405,
+            "files": {
+              "iceberg_mirror.b": 1,
+              "iceberg_mirror.a": 1
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1038134.012524291,
+            "published_source_transactions": 589,
+            "observed_source_transactions": 600,
+            "files": {
+              "iceberg_mirror.b": 451,
+              "iceberg_mirror.a": 451
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038134.570900041,
+            "published_source_transactions": 589,
+            "observed_source_transactions": 600,
+            "files": {
+              "iceberg_mirror.a": 1,
+              "iceberg_mirror.b": 451
+            }
+          }
+        },
+        {
+          "before": {
+            "monotonic_seconds": 1038136.341190833,
+            "published_source_transactions": 589,
+            "observed_source_transactions": 600,
+            "files": {
+              "iceberg_mirror.a": 1,
+              "iceberg_mirror.b": 451
+            }
+          },
+          "after": {
+            "monotonic_seconds": 1038136.774770375,
+            "published_source_transactions": 600,
+            "observed_source_transactions": 600,
+            "files": {
+              "iceberg_mirror.b": 24,
+              "iceberg_mirror.a": 25
+            }
+          }
+        }
+      ],
+      "status": "passed",
+      "cleanup_returncode": 0
+    }
+  },
+  "earlier_v12_retry_probe": {
+    "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-134943-94f31238/results.json",
+    "fixture": {
+      "project": "lake-push-probe-20261116-134943-94f31238",
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "f7d4fbf49052cab2b7a846ee73febd1014eadbaa8429587f6fb9a8f589f13418",
+        "entries_or_characters": 49,
+        "total": 49,
+        "passed": 49,
+        "failed": 0,
+        "failures": []
+      },
+      "scope": "Whole-publication deadlock retry, including streamed rewind and COMMIT abort.",
+      "unqualified": [
+        "production retry sizing",
+        "arbitrary error retry",
+        "power loss",
+        "managed direct lifecycle"
+      ],
+      "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+      "worktree_status": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "42d0014cbecee6b266415f4b0e96a8b13695e39a29b9e41d6a37ed591fe9f07c",
+        "entries_or_characters": 43
+      },
+      "tracked_worktree_diff_sha256": "7c7ff569213dd3435f4c04556b31b9a08c5596bc7016cc9eb32b80ca6ce43c29",
+      "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+      "files_sha256": {
+        "_omitted_detail": true,
+        "reason": "Raw timeline, inspection or repeated provenance is archived",
+        "canonical_json_sha256": "80672673f8cfa2aaa65fe085e31d149e0cb5eccd7b449ac194e622ffa47342e2",
+        "entries_or_characters": 218
+      },
+      "images": {
+        "PUSH_PG_LAKE_IMAGE": {
+          "reference": "lake-local-iceberg:wal-direct-v12",
+          "id": "sha256:a1c86d94d5d2b8730ecfdf6f066f23e9537295660af4198b2965db8523bf49a6",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_IMAGE": {
+          "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+          "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+          "architecture": "arm64",
+          "digests": []
+        },
+        "PUSH_STORAGE_INIT_IMAGE": {
+          "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+          "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+          "architecture": "arm64",
+          "digests": []
+        }
+      },
+      "status": "passed",
+      "cleanup_returncode": 0
+    }
+  },
+  "validation": [
+    "cargo test --locked --all-features",
+    "make check",
+    "cargo fmt --all --check",
+    "git diff --check"
+  ],
+  "implementation": {
+    "default_additional_retries": 3,
+    "maximum_additional_retries": 8,
+    "sqlstate": "40P01",
+    "backoff_ms": [
+      100,
+      200,
+      400,
+      800,
+      1600,
+      1600,
+      1600,
+      1600
+    ],
+    "replay_preconditions": [
+      "Complete ErrorResponse and ReadyForQuery",
+      "Server error with protocol SQLSTATE 40P01",
+      "Successful ROLLBACK before replay"
+    ],
+    "unknown_commit_policy": "Exit, retain WAL and reconcile committed checkpoint on next invocation"
+  },
+  "limitations": [
+    "Local ARM64 fixtures; no new AMD64 or full release qualification.",
+    "Four offered TPS for 1000 source transactions is a bounded working point, not maximum production capacity or a long soak.",
+    "Ten offered TPS for 3000 source transactions still misses the 90-second drain deadline, despite 15 recovered foreground deadlocks.",
+    "No automatic process/connection restart or slot replacement; retry exhaustion and all other SQLSTATEs stop the worker.",
+    "Existing native lock ordering is unchanged; native scan/pruning costs, memory admission, broader contention and managed direct lifecycle remain open."
+  ]
+}

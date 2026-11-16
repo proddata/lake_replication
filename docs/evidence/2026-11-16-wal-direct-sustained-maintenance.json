@@ -1,0 +1,1423 @@
+{
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-16-wal-direct-sustained-maintenance.json",
+      "sha256": "63dae6e03786cfb2d80e23dd7422160cdfd73ee09e793442be2b88f237529ae2",
+      "bytes": 104623,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-16-wal-direct-sustained-maintenance.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
+  "status": "partial",
+  "scope": "15-minute sequential ARM64 mixed-write maintenance fixtures at 6 and 8 transactions/second on unchanged v13 runtime",
+  "all_load_envelopes_passed": false,
+  "runs": [
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-162434-0d46ece9/results.json",
+      "summary": {
+        "offered_tps": 6.0,
+        "source_transactions": 5400,
+        "status": "passed",
+        "error": null,
+        "checks_passed": 25,
+        "cleanup_returncode": 0,
+        "deadlock_retries": 11,
+        "maximum_retries_for_one_publication": 2,
+        "cpu_seconds": {
+          "postgres": 478.100139,
+          "pgduck": 199.56103
+        },
+        "total_cpu_seconds": 677.661169,
+        "cpu_window": "complete measurement",
+        "last_regular_sample": {
+          "elapsed_seconds": 911.5778087920044,
+          "published_application_commits": 5400,
+          "observed_application_commits": 5400
+        },
+        "maximum_sampled_backlog": 294,
+        "vacuum_events": 74,
+        "vacuum_elapsed_sum_seconds": 156.619573,
+        "vacuum_elapsed_max_seconds": 42.294696,
+        "observed_file_count_drops": 43,
+        "maximum_sampled_current_files": 1099,
+        "cgroup_peak_bytes": {
+          "postgres": 536870912,
+          "pgduck": 1294680064
+        },
+        "memory_event_deltas": {
+          "postgres": {
+            "low": 0,
+            "high": 0,
+            "max": 1270,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "pgduck": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          }
+        },
+        "publisher_wait_samples": [
+          {
+            "wait_event_type": null,
+            "wait_event": null,
+            "samples": 139
+          },
+          {
+            "wait_event_type": "Extension",
+            "wait_event": "Extension",
+            "samples": 88
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerShutdown",
+            "samples": 18
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueReceive",
+            "samples": 18
+          },
+          {
+            "wait_event_type": "Lock",
+            "wait_event": "advisory",
+            "samples": 10
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueInternal",
+            "samples": 8
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerStartup",
+            "samples": 2
+          }
+        ],
+        "blocked_backend_samples": 10,
+        "write_phase_seconds": 900.0035925840493,
+        "post_write_drain_seconds": 11.83347270800732,
+        "observed_publication_latency_upper_bound_seconds": {
+          "median": 5.092883770470507,
+          "p95": 43.52057791594416,
+          "maximum": 51.473840999999084,
+          "sample_interval_seconds": 2
+        },
+        "wal_bytes": 493126696,
+        "observed_object_requests": 90578,
+        "publications": 301,
+        "peak_observed_retained_wal_bytes": 56830432,
+        "worker_lifetime_peak_rss_kib": 14076,
+        "worker_lifetime_cpu_seconds": 0.839644
+      },
+      "minute_progress": [
+        {
+          "minute": 0,
+          "samples": 23,
+          "last_elapsed_seconds": 58.579167834017426,
+          "last_published": 289,
+          "last_observed": 352,
+          "maximum_backlog": 63
+        },
+        {
+          "minute": 1,
+          "samples": 24,
+          "last_elapsed_seconds": 119.49689212499652,
+          "last_published": 698,
+          "last_observed": 717,
+          "maximum_backlog": 124
+        },
+        {
+          "minute": 2,
+          "samples": 23,
+          "last_elapsed_seconds": 178.36729487509,
+          "last_published": 1042,
+          "last_observed": 1071,
+          "maximum_backlog": 34
+        },
+        {
+          "minute": 3,
+          "samples": 23,
+          "last_elapsed_seconds": 237.38614595902618,
+          "last_published": 1410,
+          "last_observed": 1425,
+          "maximum_backlog": 46
+        },
+        {
+          "minute": 4,
+          "samples": 24,
+          "last_elapsed_seconds": 299.19352341699414,
+          "last_published": 1786,
+          "last_observed": 1796,
+          "maximum_backlog": 27
+        },
+        {
+          "minute": 5,
+          "samples": 23,
+          "last_elapsed_seconds": 358.1092184589943,
+          "last_published": 2134,
+          "last_observed": 2149,
+          "maximum_backlog": 24
+        },
+        {
+          "minute": 6,
+          "samples": 24,
+          "last_elapsed_seconds": 419.57736912509426,
+          "last_published": 2503,
+          "last_observed": 2518,
+          "maximum_backlog": 25
+        },
+        {
+          "minute": 7,
+          "samples": 23,
+          "last_elapsed_seconds": 478.47295025002677,
+          "last_published": 2778,
+          "last_observed": 2871,
+          "maximum_backlog": 93
+        },
+        {
+          "minute": 8,
+          "samples": 23,
+          "last_elapsed_seconds": 537.7019360420527,
+          "last_published": 2970,
+          "last_observed": 3227,
+          "maximum_backlog": 294
+        },
+        {
+          "minute": 9,
+          "samples": 24,
+          "last_elapsed_seconds": 598.8259972500382,
+          "last_published": 3450,
+          "last_observed": 3593,
+          "maximum_backlog": 287
+        },
+        {
+          "minute": 10,
+          "samples": 23,
+          "last_elapsed_seconds": 657.6272064590594,
+          "last_published": 3935,
+          "last_observed": 3946,
+          "maximum_backlog": 142
+        },
+        {
+          "minute": 11,
+          "samples": 24,
+          "last_elapsed_seconds": 719.2497203750536,
+          "last_published": 4299,
+          "last_observed": 4316,
+          "maximum_backlog": 27
+        },
+        {
+          "minute": 12,
+          "samples": 23,
+          "last_elapsed_seconds": 778.184889834025,
+          "last_published": 4649,
+          "last_observed": 4670,
+          "maximum_backlog": 27
+        },
+        {
+          "minute": 13,
+          "samples": 24,
+          "last_elapsed_seconds": 839.5773926670663,
+          "last_published": 5014,
+          "last_observed": 5038,
+          "maximum_backlog": 37
+        },
+        {
+          "minute": 14,
+          "samples": 23,
+          "last_elapsed_seconds": 898.6245552920736,
+          "last_published": 5354,
+          "last_observed": 5392,
+          "maximum_backlog": 55
+        },
+        {
+          "minute": 15,
+          "samples": 5,
+          "last_elapsed_seconds": 911.5778087920044,
+          "last_published": 5400,
+          "last_observed": 5400,
+          "maximum_backlog": 46
+        }
+      ],
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "6f55967bf71696cef225610743d24eada3aad13d2fc2a32f90e1b28714bcb88f",
+        "entries_or_characters": 25,
+        "total": 25,
+        "passed": 25,
+        "failed": 0,
+        "failures": []
+      },
+      "vacuum_events": [
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.361747
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.136843
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.419619
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.192347
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 14.715638
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.168878
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.324853
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.081434
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.528874
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.250281
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.202516
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.225871
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.970442
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.247221
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.30263
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.269639
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 3.281989
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.239346
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.542843
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.184735
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.459619
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.234974
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.328579
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.290491
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.039071
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.213503
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.276971
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.207694
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.254538
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.229684
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.254956
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.22648
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.328297
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.217886
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.295139
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.213012
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 3.215933
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.240804
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 3.932355
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.226401
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 42.294696
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 5.651585
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.906385
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.799322
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 4.098254
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.809054
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.633963
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 5.170155
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.457995
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.355181
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.421608
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.235842
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.343833
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.341864
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.238072
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.238542
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.147098
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.219376
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.492719
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.315122
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.358172
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.281015
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.318055
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.275874
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.881959
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.224074
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.647605
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.234066
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.515669
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.271052
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 3.399397
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.247808
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 15.09337
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.366658
+        }
+      ],
+      "final_rows_sha256": {
+        "a": "7ff93ed4adb81db27189ebfa0d83ae1b213e6b313cae4fdf809af6d222b8e2ae",
+        "b": "239caeb20cc944a438d0e1953f50938975ad9eb83760ee90adac55061872b5da"
+      },
+      "provenance": {
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "ca23ab2b3a2131160bc81189b0f5e7f5007d1aabfd0a4f7eaa61e996e7586c22",
+          "entries_or_characters": 45
+        },
+        "tracked_worktree_diff_sha256": "e0f5ec5411226902a5edbbd37f2dbefe8440e4af2c220e9f9829a1f27990d51d",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "ce3d764286434d4107e2b9f62f622af986db245f5fe44e24deeef05d67d8fc83",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "writer_configuration": {
+          "target_row_group_size_mb": 16,
+          "query_threads": 1,
+          "query_memory_limit": "1536MB",
+          "group_independent_inserts": true,
+          "logical_decoding_work_mem": "64kB"
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts and active backend/wait states are sampled with progress and can miss brief peaks. Wait samples describe observed states, not CPU attribution. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward.",
+        "workload": {
+          "transactions": 5400,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.16666666666666666,
+          "text_bytes": 256,
+          "publish_interval_ms": 1000,
+          "group_independent_inserts": true,
+          "journal_max_transactions": null
+        }
+      },
+      "resource_before": {
+        "postgres": {
+          "cpu_usec": 3902533,
+          "memory_bytes": 345415680,
+          "process_rss_kib_sum": 247136,
+          "process_pss_kib_sum": 60093,
+          "memory_peak_bytes": 352665600,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 26640384,
+            "file": 296525824,
+            "kernel": 13152256,
+            "shmem": 22188032
+          },
+          "direct_workers": [
+            {
+              "pid": 222,
+              "VmHWM": 2124,
+              "VmRSS": 2124,
+              "Rss": 2124,
+              "Pss": 965
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 1525983,
+          "memory_bytes": 237572096,
+          "process_rss_kib_sum": 108984,
+          "process_pss_kib_sum": 102714,
+          "memory_peak_bytes": 312930304,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 55840768,
+            "file": 168783872,
+            "kernel": 4956160,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "resource_after_or_failure": {
+        "postgres": {
+          "cpu_usec": 482002672,
+          "memory_bytes": 489091072,
+          "process_rss_kib_sum": 313036,
+          "process_pss_kib_sum": 102919,
+          "memory_peak_bytes": 536870912,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 1270,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 37912576,
+            "file": 379969536,
+            "kernel": 69996544,
+            "shmem": 64765952
+          },
+          "direct_workers": []
+        },
+        "pgduck": {
+          "cpu_usec": 201087013,
+          "memory_bytes": 1271279616,
+          "process_rss_kib_sum": 745612,
+          "process_pss_kib_sum": 739510,
+          "memory_peak_bytes": 1294680064,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 706048000,
+            "file": 423002112,
+            "kernel": 133971968,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      }
+    },
+    {
+      "raw_evidence": "/Users/georg/Developer/proddata/lake_replication/.qualification/lake-push-probe-20261116-164011-74fcfe51/results.json",
+      "summary": {
+        "offered_tps": 8.0,
+        "source_transactions": 7200,
+        "status": "error",
+        "error": "mirror failed to drain within its bounded timeout",
+        "checks_passed": 2,
+        "cleanup_returncode": 0,
+        "deadlock_retries": 45,
+        "maximum_retries_for_one_publication": 2,
+        "cpu_seconds": {
+          "postgres": 722.415442,
+          "pgduck": 217.922846
+        },
+        "total_cpu_seconds": 940.3382879999999,
+        "cpu_window": "measurement start through post-failure resource diagnostic; worker already stopped; no full-publication total",
+        "last_regular_sample": {
+          "elapsed_seconds": 989.290927125141,
+          "published_application_commits": 5959,
+          "observed_application_commits": 7200
+        },
+        "maximum_sampled_backlog": 1657,
+        "vacuum_events": 60,
+        "vacuum_elapsed_sum_seconds": 380.893255,
+        "vacuum_elapsed_max_seconds": 13.80623,
+        "observed_file_count_drops": 45,
+        "maximum_sampled_current_files": 1221,
+        "cgroup_peak_bytes": {
+          "postgres": 536870912,
+          "pgduck": 1007681536
+        },
+        "memory_event_deltas": {
+          "postgres": {
+            "low": 0,
+            "high": 0,
+            "max": 1405,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "pgduck": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          }
+        },
+        "publisher_wait_samples": [
+          {
+            "wait_event_type": null,
+            "wait_event": null,
+            "samples": 329
+          },
+          {
+            "wait_event_type": "Extension",
+            "wait_event": "Extension",
+            "samples": 137
+          },
+          {
+            "wait_event_type": "Lock",
+            "wait_event": "advisory",
+            "samples": 37
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueReceive",
+            "samples": 28
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerShutdown",
+            "samples": 28
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "BgworkerStartup",
+            "samples": 6
+          },
+          {
+            "wait_event_type": "IPC",
+            "wait_event": "MessageQueueInternal",
+            "samples": 6
+          }
+        ],
+        "blocked_backend_samples": 37,
+        "failure_diagnostic": {
+          "heap_a_rows": 21602,
+          "heap_b_rows": 21602,
+          "journal_states": null,
+          "slots": [
+            {
+              "wal_status": "reserved",
+              "retained_wal_bytes": 124985336
+            }
+          ]
+        }
+      },
+      "minute_progress": [
+        {
+          "minute": 0,
+          "samples": 23,
+          "last_elapsed_seconds": 58.98350000008941,
+          "last_published": 440,
+          "last_observed": 472,
+          "maximum_backlog": 46
+        },
+        {
+          "minute": 1,
+          "samples": 23,
+          "last_elapsed_seconds": 117.64186166704167,
+          "last_published": 903,
+          "last_observed": 942,
+          "maximum_backlog": 73
+        },
+        {
+          "minute": 2,
+          "samples": 24,
+          "last_elapsed_seconds": 178.9671091249911,
+          "last_published": 1287,
+          "last_observed": 1432,
+          "maximum_backlog": 145
+        },
+        {
+          "minute": 3,
+          "samples": 23,
+          "last_elapsed_seconds": 237.839479458984,
+          "last_published": 1607,
+          "last_observed": 1903,
+          "maximum_backlog": 302
+        },
+        {
+          "minute": 4,
+          "samples": 24,
+          "last_elapsed_seconds": 299.2243602920789,
+          "last_published": 1959,
+          "last_observed": 2394,
+          "maximum_backlog": 459
+        },
+        {
+          "minute": 5,
+          "samples": 23,
+          "last_elapsed_seconds": 357.80363874998875,
+          "last_published": 2471,
+          "last_observed": 2863,
+          "maximum_backlog": 426
+        },
+        {
+          "minute": 6,
+          "samples": 24,
+          "last_elapsed_seconds": 419.16522345901467,
+          "last_published": 2727,
+          "last_observed": 3354,
+          "maximum_backlog": 627
+        },
+        {
+          "minute": 7,
+          "samples": 23,
+          "last_elapsed_seconds": 478.06661187508143,
+          "last_published": 3079,
+          "last_observed": 3825,
+          "maximum_backlog": 757
+        },
+        {
+          "minute": 8,
+          "samples": 24,
+          "last_elapsed_seconds": 539.5730653339997,
+          "last_published": 3399,
+          "last_observed": 4317,
+          "maximum_backlog": 918
+        },
+        {
+          "minute": 9,
+          "samples": 23,
+          "last_elapsed_seconds": 598.3147091669962,
+          "last_published": 3751,
+          "last_observed": 4787,
+          "maximum_backlog": 1048
+        },
+        {
+          "minute": 10,
+          "samples": 24,
+          "last_elapsed_seconds": 659.6883348750416,
+          "last_published": 4103,
+          "last_observed": 5278,
+          "maximum_backlog": 1201
+        },
+        {
+          "minute": 11,
+          "samples": 23,
+          "last_elapsed_seconds": 718.3634045419749,
+          "last_published": 4583,
+          "last_observed": 5747,
+          "maximum_backlog": 1167
+        },
+        {
+          "minute": 12,
+          "samples": 24,
+          "last_elapsed_seconds": 779.780968667008,
+          "last_published": 4903,
+          "last_observed": 6239,
+          "maximum_backlog": 1347
+        },
+        {
+          "minute": 13,
+          "samples": 23,
+          "last_elapsed_seconds": 838.5623467920814,
+          "last_published": 5223,
+          "last_observed": 6709,
+          "maximum_backlog": 1486
+        },
+        {
+          "minute": 14,
+          "samples": 23,
+          "last_elapsed_seconds": 897.9642265001312,
+          "last_published": 5543,
+          "last_observed": 7184,
+          "maximum_backlog": 1641
+        },
+        {
+          "minute": 15,
+          "samples": 23,
+          "last_elapsed_seconds": 957.9668796251062,
+          "last_published": 5831,
+          "last_observed": 7200,
+          "maximum_backlog": 1657
+        },
+        {
+          "minute": 16,
+          "samples": 12,
+          "last_elapsed_seconds": 989.290927125141,
+          "last_published": 5959,
+          "last_observed": 7200,
+          "maximum_backlog": 1337
+        }
+      ],
+      "checks": {
+        "_omitted_detail": true,
+        "reason": "Individual successful assertion values are archived",
+        "canonical_json_sha256": "86e655ef8745d6fbfd595316e4100e6974a886aa8af87cac141170693f7fb463",
+        "entries_or_characters": 2,
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "failures": []
+      },
+      "vacuum_events": [
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 1.186904
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.161036
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.666033
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.241725
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.501275
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.240086
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 0.235501
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 0.251966
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 4.983703
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.768321
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 5.232214
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 5.234195
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 12.093578
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 10.300639
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 9.174828
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.69025
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 12.343679
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 9.252047
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 4.735864
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.011714
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.482677
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.169232
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 3.576762
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 5.212206
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 13.543234
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 10.412674
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 9.179433
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.981378
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 13.363041
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 9.473387
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 10.582113
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.923425
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 13.626082
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 10.521114
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.409448
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.986802
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 13.80623
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 9.423628
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 1.966328
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.306394
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.917149
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.261075
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 5.948202
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 6.960723
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 8.020039
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.392148
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 9.724763
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 4.958743
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 7.23582
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.101937
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 9.061284
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 5.322054
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 8.149028
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 8.615432
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 2.319755
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 5.585182
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 13.014114
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 10.147048
+        },
+        {
+          "table": "iceberg_mirror.b",
+          "elapsed_seconds": 4.301631
+        },
+        {
+          "table": "iceberg_mirror.a",
+          "elapsed_seconds": 5.605982
+        }
+      ],
+      "final_rows_sha256": null,
+      "provenance": {
+        "source_commit": "c90a93bb59863fac5ef2739a6fe6e82f9d34c745",
+        "worktree_status": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "ca23ab2b3a2131160bc81189b0f5e7f5007d1aabfd0a4f7eaa61e996e7586c22",
+          "entries_or_characters": 45
+        },
+        "tracked_worktree_diff_sha256": "e0f5ec5411226902a5edbbd37f2dbefe8440e4af2c220e9f9829a1f27990d51d",
+        "pg_lake_revision": "8180647d4535fdb1ed223f92f301ba6094a8ec3e",
+        "files_sha256": {
+          "_omitted_detail": true,
+          "reason": "Raw timeline, inspection or repeated provenance is archived",
+          "canonical_json_sha256": "ce3d764286434d4107e2b9f62f622af986db245f5fe44e24deeef05d67d8fc83",
+          "entries_or_characters": 218
+        },
+        "images": {
+          "PUSH_PG_LAKE_IMAGE": {
+            "reference": "lake-local-iceberg:wal-direct-v13",
+            "id": "sha256:b8e6f20c22181ef90c503cafad383a48c3d8cce522f922409cb3aa6960612475",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_IMAGE": {
+            "reference": "lake-replication-fixture-minio:0d7408fc9969-033deb905017-arm64",
+            "id": "sha256:7aa54ecf47aa7a2877e5eef53a475cd7b6c27cc5f4d525d7b14b84377bfd6d07",
+            "architecture": "arm64",
+            "digests": []
+          },
+          "PUSH_STORAGE_INIT_IMAGE": {
+            "reference": "lake-replication-fixture-mc:b00526b153a3-033deb905017-arm64",
+            "id": "sha256:ef6edb0502fbe6be9e0574aab879551e15d4b70703e111b605722263265b4c61",
+            "architecture": "arm64",
+            "digests": []
+          }
+        },
+        "writer_configuration": {
+          "target_row_group_size_mb": 16,
+          "query_threads": 1,
+          "query_memory_limit": "1536MB",
+          "group_independent_inserts": true,
+          "logical_decoding_work_mem": "64kB"
+        },
+        "methodology": "Fresh private volumes and identical cached PostgreSQL/core/pgduck/storage images in every mode. Both paths use the same text-valued events and current apply_change_run functions. One warmup transaction (one seed row per table) is published before measurement; it is excluded from publication counts and object traces. Direct worker persists across all measured transactions and uses bounded 1-second/32-transaction coalescing and uses a loopback superuser. Journal uses the existing managed supervisor, unprivileged worker, source schema validation and protocol streaming; a test-only next_batch wrapper caps publications at 1 for the matched control or 32 for the coalesced reference. Original journal admission, publication, generation fencing and recovery functions remain unchanged. This compares the implementations, not just the isolated cost of journal durability: worker lifecycle, privileges, metadata checks and protocol differ. Coalesced reference uses a 1-second interval and INSERT grouping. Two-second resource/progress observers are identical; CPU includes observer processes in database/engine containers, excludes host/controller/MinIO. Publication delay is a sampled upper bound. No competing local qualification, no cache clearing, no production capacity or significance claim. This cohort uses one CPU/512 MiB for PostgreSQL and one CPU/2 GiB for pgduck (1536-MB engine query limit). Postgres-user observers read database/engine process memory; a separate root observer adds the root-owned direct worker without requiring ptrace capabilities. All modes run both observers. Worker exit diagnostics record its lifetime RSS peak and CPU, including warmup. memory.peak includes fixture startup and page cache; it is not process RSS. Sustained phase has paced mixed transactions; memory phase has one large INSERT transaction and no offered pacing. Memory payloads use per-row MD5 strings with varied blocks. Samples are every two seconds and can miss short peaks; cgroup lifetime peak and worker VmHWM supplement samples. Expanded profile disables swap; both RAM and swap limits are recorded. Logical decoding work memory is 64 KiB in both modes, so larger transactions stream without the immediate debug setting. No concurrent qualification runs. This fixture configures native pg_lake autovacuum through private ALTER SYSTEM settings and reloads its existing worker. The release and deployment defaults are unchanged. File counts and active backend/wait states are sampled with progress and can miss brief peaks. Wait samples describe observed states, not CPU attribution. Maintenance CPU, WAL and S3 operations are inside measurement; source/mirror verification is afterward.",
+        "workload": {
+          "transactions": 7200,
+          "rows_per_table_per_transaction": 4,
+          "transaction_interval_seconds": 0.125,
+          "text_bytes": 256,
+          "publish_interval_ms": 1000,
+          "group_independent_inserts": true,
+          "journal_max_transactions": null
+        }
+      },
+      "resource_before": {
+        "postgres": {
+          "cpu_usec": 4002234,
+          "memory_bytes": 140746752,
+          "process_rss_kib_sum": 246580,
+          "process_pss_kib_sum": 60083,
+          "memory_peak_bytes": 152600576,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 26648576,
+            "file": 93364224,
+            "kernel": 11857920,
+            "shmem": 22188032
+          },
+          "direct_workers": [
+            {
+              "pid": 221,
+              "VmHWM": 2124,
+              "VmRSS": 2124,
+              "Rss": 2124,
+              "Pss": 964
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 1560855,
+          "memory_bytes": 141946880,
+          "process_rss_kib_sum": 109212,
+          "process_pss_kib_sum": 102940,
+          "memory_peak_bytes": 224776192,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 58400768,
+            "file": 73220096,
+            "kernel": 4100096,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      },
+      "resource_after_or_failure": {
+        "postgres": {
+          "cpu_usec": 726417676,
+          "memory_bytes": 531873792,
+          "process_rss_kib_sum": 450040,
+          "process_pss_kib_sum": 161682,
+          "memory_peak_bytes": 536870912,
+          "memory_max": "536870912",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 1405,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 66220032,
+            "file": 362504192,
+            "kernel": 78737408,
+            "shmem": 95879168
+          },
+          "direct_workers": [
+            {
+              "pid": 221,
+              "VmHWM": 3212,
+              "VmRSS": 3212,
+              "Rss": 3212,
+              "Pss": 2056
+            }
+          ]
+        },
+        "pgduck": {
+          "cpu_usec": 219483701,
+          "memory_bytes": 993771520,
+          "process_rss_kib_sum": 648532,
+          "process_pss_kib_sum": 642553,
+          "memory_peak_bytes": 1007681536,
+          "memory_max": "2147483648",
+          "swap_max": "0",
+          "swap_current_bytes": 0,
+          "cpu_max": "100000 100000",
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "memory_stat": {
+            "anon": 606638080,
+            "file": 239267840,
+            "kernel": 137535488,
+            "shmem": 0
+          },
+          "direct_workers": []
+        }
+      }
+    }
+  ],
+  "caveats": [
+    "One run per rate, no repeat or production capacity claim.",
+    "6 TPS passes final exact rows but p95 sampled lag is 43.52 seconds and PostgreSQL reaches its memory cap.",
+    "8 TPS fails drain; no final exact-row comparison or completed-workload CPU total.",
+    "Wait samples are observations, not CPU attribution. Vacuum elapsed sums can overlap publication and include waits; do not add to CPU or worker wall time.",
+    "No native optimization or release default change."
+  ]
+}

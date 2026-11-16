@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-13-worker-login-requirement.json",
+      "sha256": "2b6778af2b9b371d7fd195a1f52ca87c19326377279d4381d0d3872d550de5d0",
+      "bytes": 6297,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-13-worker-login-requirement.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "archive": {
     "path": ".qualification/worker-identity/archive/lake_replication-0.1.0-beta.5.tar.gz",
     "sha256": "c8e0eca87c4bee129640d907b0d8f8a84e20e89b785327ba40d5053553525b9c",

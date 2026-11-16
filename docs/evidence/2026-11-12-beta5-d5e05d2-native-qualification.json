@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json",
+      "sha256": "44be4c4fb4a65fd3bfcd02aacaf081f9b9a3fad4773f9a7f62fd1b49deecbcc5",
+      "bytes": 7436,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-12-beta5-d5e05d2-native-qualification.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "architectures": {
     "amd64": {
       "artifact_id": 13928033339,

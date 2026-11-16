@@ -55,9 +55,9 @@ COPY --from=extension-builder \
     payload/extension/
 COPY deploy/install/install.sh deploy/install/uninstall.sh \
      deploy/install/README.md deploy/install/COMPATIBILITY.md ./
-COPY docs/upgrade-and-rollback.md UPGRADE.md
+COPY docs/guides/upgrade-and-rollback.md UPGRADE.md
 COPY deploy/install/worker-grants.sql WORKER_GRANTS.sql
-COPY docs/worker-runtime-grants.md WORKER_GRANTS.md
+COPY docs/guides/worker-runtime-grants.md WORKER_GRANTS.md
 COPY migrations/0029_source_tls_policy.sql DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
 RUN sed -i 's@MODULE_PATHNAME@$libdir/lake_replication@g' DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
 COPY migrations/0030_update_key_filter.sql DEVELOPMENT_UPDATES/0030_update_key_filter.sql

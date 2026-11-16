@@ -352,3 +352,42 @@ local-iceberg-update-stream-test:
 	python3 tests/local_iceberg/update_conversion_stream.py
 local-iceberg-update-conversion-compare:
 	python3 tests/local_iceberg/update_conversion_compare.py
+
+.PHONY: local-iceberg-wal-direct-test local-iceberg-wal-direct-compare local-iceberg-wal-direct-coalescing-test
+local-iceberg-wal-direct-test:
+	python3 tests/local_iceberg/wal_direct.py
+local-iceberg-wal-direct-compare:
+	python3 tests/local_iceberg/wal_direct_compare.py
+
+local-iceberg-wal-direct-coalescing-test:
+	python3 tests/local_iceberg/wal_direct_coalescing.py
+
+.PHONY: local-iceberg-wal-direct-snapshot-test
+local-iceberg-wal-direct-snapshot-test:
+	python3 tests/local_iceberg/wal_direct_snapshot.py
+
+.PHONY: local-iceberg-wal-direct-streaming-test
+local-iceberg-wal-direct-streaming-test:
+	python3 tests/local_iceberg/wal_direct_streaming.py
+
+.PHONY: local-iceberg-wal-direct-outages-test
+local-iceberg-wal-direct-outages-test:
+	python3 tests/local_iceberg/wal_direct_outages.py
+
+.PHONY: local-iceberg-wal-direct-sizing
+local-iceberg-wal-direct-sizing:
+	python3 tests/local_iceberg/wal_direct_sizing.py --phase sustained --engine-budget expanded
+
+.PHONY: local-iceberg-wal-direct-profile local-iceberg-wal-direct-maintenance
+local-iceberg-wal-direct-profile:
+	python3 tests/local_iceberg/wal_direct_profile.py --windows 32
+local-iceberg-wal-direct-maintenance:
+	python3 tests/local_iceberg/wal_direct_maintenance.py --transactions 3000
+
+.PHONY: local-iceberg-wal-direct-retry-test
+local-iceberg-wal-direct-retry-test:
+	python3 tests/local_iceberg/wal_direct_retry.py
+
+.PHONY: local-iceberg-wal-direct-prelock-test
+local-iceberg-wal-direct-prelock-test:
+	python3 tests/local_iceberg/wal_direct_prelock.py

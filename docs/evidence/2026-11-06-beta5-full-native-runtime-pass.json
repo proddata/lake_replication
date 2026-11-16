@@ -1,4 +1,15 @@
 {
+  "_retention": {
+    "format": "derived_summary_v1",
+    "raw_source": {
+      "commit": "378993de4c42042a6a29c3f1843b7b31776a20cb",
+      "path": "docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json",
+      "sha256": "ecc0648a99bde045a5cebfabdd87d0ee12b4c0098753f5fcea073845e98c3548",
+      "bytes": 50946,
+      "url": "https://github.com/proddata/lake_replication/blob/378993de4c42042a6a29c3f1843b7b31776a20cb/docs/evidence/2026-11-06-beta5-full-native-runtime-pass.json"
+    },
+    "detail_policy": "Raw timelines, repeated source hashes, large dumps and successful assertion values are archived; outcomes, reported metrics, failures and scalar metadata remain. Per-window measurements retain phase ranges."
+  },
   "scope": "Full artifact-only supported-runtime native qualification; corrected receiver fixture",
   "run_url": "https://github.com/proddata/lake_replication/actions/runs/42201838803",
   "source_revision": "b0a703ab9f65a8f26904b21ed91c87df1944cdbc",

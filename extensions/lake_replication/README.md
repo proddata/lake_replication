@@ -37,7 +37,7 @@ The generated SQL files are build output. Version boundaries are explicit:
 Both development-baseline upgrade paths are shipped. The beta.1 scripts match
 the previously qualified archive; an already-fixed beta.1 installation can also
 upgrade because migration 0022 replaces functions without changing table shape.
-Follow the stopped-server procedure in `docs/upgrade-and-rollback.md`; the new
+Follow the stopped-server procedure in `docs/guides/upgrade-and-rollback.md`; the new
 binary never starts a legacy static launcher. No online handoff or SQL downgrade
 is supported. Existing destination bindings require explicit verified adoption;
 copied metadata cannot authorize dispatch or deletion of the original source slot.
@@ -65,6 +65,6 @@ is captured at copy startup and pauses after staging COMMIT. These settings
 bound admitted sessions, not total CPU, RSS or remote snapshot retention.
 
 The logical checkpoint and row interfaces remain writable, while their physical
-storage changes. Read [migration contracts](../../docs/checkpoint-chunk-migration-results.md)
+storage changes. Read [migration contracts](../../docs/qualification/checkpoint-chunk-migration-results.md)
 before upgrade or logical restore; validate restored runtime state before
 resuming subscriptions.

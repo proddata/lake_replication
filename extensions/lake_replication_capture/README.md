@@ -76,7 +76,7 @@ PostgreSQL checks this allowlist before loading an output plugin; see the
 [PostgreSQL 18 implementation](https://github.com/postgres/postgres/blob/REL_18_STABLE/src/backend/replication/logical/logical.c).
 
 See [the live/fault harness](../../tests/push_capture/README.md) and
-[implementation status](../../docs/push-replication.md) for evidence and limits.
+[implementation status](../../docs/design/push-replication.md) for evidence and limits.
 The first prototype is not a production mirroring release.
 
 ## Lifecycle
@@ -254,4 +254,4 @@ Call `enable_schema_auditing(stream_id)` on a stopped, initialized source before
 registering consumers to opt into nullable additions and column renames. The
 owning replication LOGIN must have the capture lease and retained eligible
 definitions. Register ordered consumers with `register_consumer(stream_id,true)`.
-See [ordered schema activation and bounds](../../docs/push-schema-evolution.md).
+See [ordered schema activation and bounds](../../docs/design/push-schema-evolution.md).
