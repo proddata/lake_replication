@@ -19,6 +19,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 COPY extensions/lake_replication /src/extensions/lake_replication
 COPY migrations /src/migrations
+COPY deploy/install/build-current-beta5-refresh.sh /src/deploy/install/build-current-beta5-refresh.sh
+RUN sh /src/deploy/install/build-current-beta5-refresh.sh > /src/current_beta5.sql
 RUN make -C /src/extensions/lake_replication all \
     && strip --strip-unneeded /src/extensions/lake_replication/lake_replication.so
 
@@ -59,6 +61,7 @@ COPY docs/worker-runtime-grants.md WORKER_GRANTS.md
 COPY migrations/0029_source_tls_policy.sql DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
 RUN sed -i 's@MODULE_PATHNAME@$libdir/lake_replication@g' DEVELOPMENT_UPDATES/0029_source_tls_policy.sql
 COPY migrations/0030_update_key_filter.sql DEVELOPMENT_UPDATES/0030_update_key_filter.sql
+COPY --from=extension-builder /src/current_beta5.sql DEVELOPMENT_UPDATES/current_beta5.sql
 COPY deploy/pg_lake ./PG_LAKE_PREREQUISITE/
 COPY LICENSE ./
 COPY --from=worker-builder /src/Cargo.lock ./Cargo.lock

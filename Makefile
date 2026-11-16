@@ -246,6 +246,7 @@ check:
 	$(POC_COMPOSE) config --quiet
 	QUALIFICATION_SOURCE_IMAGE=check QUALIFICATION_DESTINATION_IMAGE=check QUALIFICATION_STORAGE_IMAGE=check QUALIFICATION_STORAGE_INIT_IMAGE=check QUAL_ADMIN_PASSWORD=check QUAL_SOURCE_PASSWORD=check QUAL_ROTATED_SOURCE_PASSWORD=check-rotated $(QUALIFICATION_COMPOSE) config --quiet
 	bash -n deploy/local/wal-disk-entrypoint.sh
+	sh -n deploy/install/build-current-beta5-refresh.sh
 	PUSH_PG_LAKE_IMAGE=check PUSH_STORAGE_IMAGE=check PUSH_STORAGE_INIT_IMAGE=check docker compose -f deploy/local/compose.yml config --quiet
 	@set -e; for overlay in limits wal-retention wal-disk pgdata-disk remote-pull; do PUSH_PG_LAKE_IMAGE=check PUSH_STORAGE_IMAGE=check PUSH_STORAGE_INIT_IMAGE=check docker compose -f deploy/local/compose.yml -f deploy/local/$$overlay.compose.yml config --quiet; done
 
